@@ -158,7 +158,7 @@ export function drawCard(canvas: HTMLCanvasElement, r: Results, o: CardOptions) 
       ctx.fillText(t, left, y)
     }
     if (line.note && !o.minimal) {
-      y += wide ? 26 : 38
+      y += wide ? 30 : 48
       ctx.fillStyle = C.muted
       ctx.font = `400 ${wide ? 18 : 26}px ${BODY}`
       ctx.fillText(line.note, left, y)
@@ -221,6 +221,16 @@ export function drawCard(canvas: HTMLCanvasElement, r: Results, o: CardOptions) 
       ctx.moveTo(xs(0), cy + 6)
       ctx.lineTo(xs(0), cy + rowH - 6)
       ctx.stroke()
+      // Pole names sit inside the track ends, under the markers.
+      ctx.fillStyle = C.muted
+      ctx.globalAlpha = 0.75
+      ctx.font = `400 ${wide ? 11 : 15}px ${BODY}`
+      ctx.textAlign = 'left'
+      ctx.fillText(AXES[ax].neg, trackX + 8, mid + (wide ? 4 : 5))
+      ctx.textAlign = 'right'
+      ctx.fillText(AXES[ax].pos, trackX + trackW - 8, mid + (wide ? 4 : 5))
+      ctx.textAlign = 'left'
+      ctx.globalAlpha = 1
       const yI = cy + rowH * 0.33
       const yN = cy + rowH * 0.67
       if (row.I !== null && row.N !== null) {
@@ -252,7 +262,7 @@ export function drawCard(canvas: HTMLCanvasElement, r: Results, o: CardOptions) 
   if (!wide) {
     ctx.fillStyle = C.muted
     ctx.font = `400 18px ${BODY}`
-    ctx.fillText('◆ ideal system   ● here and now   poles: left / right of each row', chartX, cy + 6)
+    ctx.fillText('◆ ideal system   ● here and now   line = the gap between them', chartX, cy + 6)
   }
 
   // Footer.

@@ -71,6 +71,15 @@ for (const [name, viewport] of [
   await page.getByRole('button', { name: 'Share my result' }).click()
   await page.waitForTimeout(1500)
   await page.screenshot({ path: `${out}/${name}-07-share.png`, fullPage: true })
+  if (name === 'desktop') {
+    for (const size of ['Post 4:5', 'Story 9:16', 'Wide']) {
+      await page.getByRole('radio', { name: size }).click()
+      await page.waitForTimeout(600)
+      const dl = page.waitForEvent('download')
+      await page.getByRole('button', { name: 'Download PNG' }).click()
+      await (await dl).saveAs(`${out}/card-${size.split(' ')[0]!.toLowerCase()}.png`)
+    }
+  }
   const link = await page.getByLabel('Your result link').inputValue()
   await page.goto(link.replace(/^https?:\/\/[^/]+\//, base))
   await page.waitForTimeout(800)
