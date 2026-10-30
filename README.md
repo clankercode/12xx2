@@ -19,6 +19,10 @@ Seizing elite wealth may be justified in a captured state that has no lawful rou
 |---|---|
 | ![Answer grid](docs/screenshots/mobile-03-grid.png) | ![Results](docs/screenshots/desktop-06-results.png) |
 
+Share cards are drawn on your device in three sizes (post, story, wide):
+
+<img src="docs/screenshots/card-post.png" alt="Share card: ideal and here-and-now matches, Reality Gap and both markers on all 12 axes" width="420" />
+
 ## What's different from 12axes
 
 The full critique is in [`docs/criticisms.md`](docs/criticisms.md).

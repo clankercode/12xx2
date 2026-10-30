@@ -228,14 +228,23 @@ export function drawCard(canvas: HTMLCanvasElement, r: Results, o: CardOptions) 
       ctx.moveTo(xs(0), cy + 6)
       ctx.lineTo(xs(0), cy + rowH - 6)
       ctx.stroke()
-      // Pole names sit inside the track ends, under the markers.
+      // Pole names sit inside the track ends; a marker covering one pushes it inward past the marker,
+      // and it is dropped if that would cross the centre line.
+      const r0 = wide ? 7 : 11
+      const marks = [row.I, row.N].filter((v): v is number => v !== null).map(xs)
       ctx.fillStyle = C.muted
       ctx.globalAlpha = 0.75
       ctx.font = `400 ${wide ? 11 : 15}px ${BODY}`
       ctx.textAlign = 'left'
-      ctx.fillText(AXES[ax].neg, trackX + 8, mid + (wide ? 4 : 5))
+      const wNeg = ctx.measureText(AXES[ax].neg).width
+      let negX = trackX + 8
+      for (const m of [...marks].sort((a, b) => a - b)) if (m - r0 < negX + wNeg && m + r0 > negX - 4) negX = m + r0 + 6
+      if (negX + wNeg < xs(0) - 4) ctx.fillText(AXES[ax].neg, negX, mid + (wide ? 4 : 5))
       ctx.textAlign = 'right'
-      ctx.fillText(AXES[ax].pos, trackX + trackW - 8, mid + (wide ? 4 : 5))
+      const wPos = ctx.measureText(AXES[ax].pos).width
+      let posX = trackX + trackW - 8
+      for (const m of [...marks].sort((a, b) => b - a)) if (m + r0 > posX - wPos && m - r0 < posX + 4) posX = m - r0 - 6
+      if (posX - wPos > xs(0) + 4) ctx.fillText(AXES[ax].pos, posX, mid + (wide ? 4 : 5))
       ctx.textAlign = 'left'
       ctx.globalAlpha = 1
       const yI = cy + rowH * 0.33
@@ -251,7 +260,6 @@ export function drawCard(canvas: HTMLCanvasElement, r: Results, o: CardOptions) 
         ctx.setLineDash([])
         ctx.lineWidth = 1
       }
-      const r0 = wide ? 7 : 11
       if (row.I !== null) {
         ctx.fillStyle = C.ideal
         diamond(ctx, xs(row.I), yI, r0)
@@ -267,9 +275,13 @@ export function drawCard(canvas: HTMLCanvasElement, r: Results, o: CardOptions) 
     cy += groupGap
   }
   if (!wide) {
-    ctx.fillStyle = C.muted
     ctx.font = `400 18px ${BODY}`
-    ctx.fillText('◆ ideal   ● here and now   solid line = gap bigger than noise', chartX, cy + 6)
+    let lx = chartX
+    for (const [t, c] of [['◆', C.ideal], [' ideal   ', C.muted], ['●', C.now], [' here and now   solid line = gap bigger than noise', C.muted]] as const) {
+      ctx.fillStyle = c
+      ctx.fillText(t, lx, cy + 6)
+      lx += ctx.measureText(t).width
+    }
   }
 
   // Footer.

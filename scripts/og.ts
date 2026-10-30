@@ -64,11 +64,24 @@ const FONTS = `
 @font-face { font-family: D; font-weight: 200 800; src: url(${font('bricolage-grotesque', 'bricolage-grotesque-latin-wght-normal.woff2')}) format('woff2'); }
 @font-face { font-family: B; font-weight: 200 800; src: url(${font('atkinson-hyperlegible-next', 'atkinson-hyperlegible-next-latin-wght-normal.woff2')}) format('woff2'); }`
 
+// Track width in px: .rs (470) minus the title column (150) and gap (14).
+const TRACK_W = 306
+
 function imageHtml(a: Archetype | null) {
   const rows = a
     ? AXIS_IDS.map((ax, k) => {
         const x = (v: number) => ((v + 100) / 200) * 100
-        return `<div class="r"><span class="t">${esc(AXES[ax].title)}</span><span class="tr"><i class="mid"></i>
+        // Pole names sit inside the track ends; a marker covering one pushes it inward past the
+        // marker (as on the share cards), and it is dropped if it would cross the centre line.
+        const px = [a.ideal[k]!, a.now[k]!].map(v => (x(v) / 100) * TRACK_W)
+        const textW = (t: string) => t.length * 6.6
+        let negL = 7
+        for (const m of [...px].sort((p, q) => p - q)) if (m - 8 < negL + textW(AXES[ax].neg) && m + 8 > negL - 3) negL = m + 12
+        let posR = 7
+        for (const m of [...px].sort((p, q) => q - p)) if (TRACK_W - m - 8 < posR + textW(AXES[ax].pos) && TRACK_W - m + 8 > posR - 3) posR = TRACK_W - m + 12
+        const neg = negL + textW(AXES[ax].neg) < TRACK_W / 2 - 3 ? `<b class="pn" style="left:${negL}px">${esc(AXES[ax].neg)}</b>` : ''
+        const pos = posR + textW(AXES[ax].pos) < TRACK_W / 2 - 3 ? `<b class="pp" style="right:${posR}px">${esc(AXES[ax].pos)}</b>` : ''
+        return `<div class="r"><span class="t">${esc(AXES[ax].title)}</span><span class="tr"><i class="mid"></i>${neg}${pos}
           <i class="d" style="left:${x(a.ideal[k]!)}%"></i><i class="c" style="left:${x(a.now[k]!)}%"></i></span></div>`
       }).join('')
     : ''
@@ -93,6 +106,8 @@ function imageHtml(a: Archetype | null) {
   .r { display: flex; align-items: center; gap: 14px; height: 32px }
   .t { width: 150px; font-size: 15px; font-weight: 700; text-align: right }
   .tr { position: relative; flex: 1; height: 26px; background: #1b1f33; border: 1px solid #2c3150 }
+  .pn, .pp { position: absolute; top: 5px; font-size: 12px; font-weight: 400; color: #8a8ca3 }
+  .d, .c { z-index: 1 }
   .mid { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: #4d5275 }
   .d, .c { position: absolute; width: 14px; height: 14px; margin-left: -7px }
   .d { top: 1px; background: #a3acff; transform: rotate(45deg) scale(0.8) }

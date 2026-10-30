@@ -40,5 +40,6 @@ preview:
 e2e:
     pnpm playwright test
 
-screenshots:
-    pnpm playwright test e2e/screenshots.spec.ts
+# Needs `just dev` running. Writes to shots/ (gitignored) unless an out dir is given.
+screenshots out="shots":
+    pnpm tsx scripts/shots.ts http://localhost:21313/ {{out}}
