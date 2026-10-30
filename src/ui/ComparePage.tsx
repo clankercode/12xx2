@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { AXIS_IDS } from '../engine/types'
-import { decodePayload } from '../engine/payload'
+import { decodeShared } from '../state/shared'
 import { deriveResults, type Results } from '../engine/results'
 import { distance } from '../engine/match'
-import { CATALOGUE } from '../data/archetypes'
+import { catalogueFor } from '../data/archetypes'
 import { CALIBRATION } from '../data/calibration'
 import { AXES } from '../data/axes'
 import { AxisChart } from './AxisChart'
@@ -19,8 +19,8 @@ function heroName(r: Results): string {
 }
 
 export function ComparePage({ mine, theirs }: { mine: string; theirs: string }) {
-  const a = useMemo(() => decodePayload(mine), [mine])
-  const b = useMemo(() => decodePayload(theirs), [theirs])
+  const a = useMemo(() => decodeShared(mine), [mine])
+  const b = useMemo(() => decodeShared(theirs), [theirs])
   if (!a.ok || !b.ok) {
     return (
       <div className="narrow" style={{ padding: '48px 0' }}>
@@ -29,8 +29,8 @@ export function ComparePage({ mine, theirs }: { mine: string; theirs: string }) 
       </div>
     )
   }
-  const ra = deriveResults(a.payload, CATALOGUE, CALIBRATION)
-  const rb = deriveResults(b.payload, CATALOGUE, CALIBRATION)
+  const ra = deriveResults(a.payload, catalogueFor(a.payload), CALIBRATION)
+  const rb = deriveResults(b.payload, catalogueFor(b.payload), CALIBRATION)
   const ones = AXIS_IDS.map(() => 1)
   // Compare only axes both people have scores on.
   const both = (x: (number | null)[], y: (number | null)[]) => distance(x.map((v, k) => (y[k] === null ? null : v)), y.map(v => v ?? 0), ones)

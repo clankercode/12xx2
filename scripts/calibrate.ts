@@ -121,13 +121,16 @@ for (const mode of MODES) {
   const items = itemsForMode(mode)
   for (let d = 0; d < DRAWS / 2; d++) {
     const sheet = latentSheet(rng, items)
-    rgNoGap.push(realityGap(items, respond(rng, items, sheet, { p: MODEL.copyRates[d % 3]!, pass: 0, noGap: true })).rg!)
-    rgRandom.push(realityGap(items, randomAnswers(rng, items)).rg!)
+    // Quantised exactly as the payload stores RG, so cuts apply to the numbers users see.
+    const rg = realityGap(items, respond(rng, items, sheet, { p: MODEL.copyRates[d % 3]!, pass: MODEL.passRates[d % 3]!, noGap: true })).rg
+    if (rg !== null) rgNoGap.push(Math.round(rg))
+    rgRandom.push(Math.round(realityGap(items, randomAnswers(rng, items)).rg!))
   }
 }
 const c1 = quantile(rgNoGap, 0.9)
 const c3 = quantile(rgRandom, 0.05)
-const rgCuts: [number, number, number] = [Math.ceil(c1), Math.round((c1 + c3) / 2), Math.floor(c3)]
+// Bands use rg < cut, so the first cut sits just above the no-gap p90.
+const rgCuts: [number, number, number] = [Math.floor(c1) + 1, Math.round((c1 + c3) / 2), Math.floor(c3)]
 report.rgNoGapMedian = Number(quantile(rgNoGap, 0.5).toFixed(1))
 report.rgNoGapP0 = (() => {
   const xs: number[] = []

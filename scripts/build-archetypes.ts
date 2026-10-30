@@ -21,7 +21,8 @@ const catalogue = JSON.parse(readFileSync(`${DIR}/catalogue.json`, 'utf8')) as {
   version: number
   archetypes: (Omit<Archetype, 'ideal' | 'now' | 'weight' | 'spread'> & { brief: string; now_notes: string })[]
 }
-const VERSION = 1
+// The catalogue version is encoded into share links; bump it whenever vectors change (spec §6.1).
+const VERSION = Number(process.env.CATALOGUE_VERSION ?? 1)
 const byAxis = groupByAxis(ALL_ITEMS)
 
 type Sheet = Record<string, [number | null, number | null]>
@@ -55,26 +56,62 @@ const median = (xs: number[]) => {
   return s.length % 2 ? s[m]! : (s[m - 1]! + s[m]!) / 2
 }
 
-/** Scores a sheet exactly as a user's answers are scored (fractional medians allowed). */
-function score(sheet: Sheet, frame: 0 | 1): number[] {
+/** Scores a sheet exactly as a user's answers are scored (fractional medians allowed); null = unscorable axis. */
+function score(sheet: Sheet, frame: 0 | 1): (number | null)[] {
   const ans: Answers = {}
   for (const [id, v] of Object.entries(sheet)) ans[id] = { i: v[frame] as Answer, n: null }
-  return AXIS_IDS.map(ax => scoreAxis(byAxis[ax], ans, 'I').score ?? 0)
+  return AXIS_IDS.map(ax => scoreAxis(byAxis[ax], ans, 'I').score)
 }
 
+/** Per-item median across coders; an item every coder passed stays missing. */
 function medianSheet(coders: Sheet[]): Sheet {
   const out: Sheet = {}
   for (const it of ALL_ITEMS) {
-    const vi = coders.map(c => c[it.id]?.[0]).filter((x): x is number => x !== null && x !== undefined)
-    const vn = coders.map(c => c[it.id]?.[1]).filter((x): x is number => x !== null && x !== undefined)
-    out[it.id] = [median(vi), median(vn) ?? median(vi)]
+    const col = (f: 0 | 1) => coders.map(c => c[it.id]?.[f]).filter((x): x is number => x !== null && x !== undefined)
+    out[it.id] = [median(col(0)), median(col(1))]
   }
   return out
 }
 
+const range = (vs: (number | null)[][], k: number) => {
+  const xs = vs.map(v => v[k]).filter((x): x is number => x !== null && x !== undefined)
+  return xs.length > 1 ? Math.max(...xs) - Math.min(...xs) : 0
+}
+
+/** Builds one archetype from a set of coder sheets, or null (with a problem logged) if it can't be scored. */
+function build(a: (typeof catalogue.archetypes)[number], coderSheets: Sheet[], log: string[]): Archetype | null {
+  const med = medianSheet(coderSheets)
+  const ideal = score(med, 0)
+  const now = score(med, 1)
+  const missing = AXIS_IDS.filter((_, k) => ideal[k] === null || now[k] === null)
+  if (missing.length) {
+    log.push(`${a.slug}: unscorable axes ${missing.join(',')} — excluded`)
+    return null
+  }
+  const vI = coderSheets.map(c => score(c, 0))
+  const vN = coderSheets.map(c => score(c, 1))
+  // Disagreement in either frame counts: weights also apply to the here-and-now half of joint matching.
+  const spread = AXIS_IDS.map((_, k) => Math.max(range(vI, k), range(vN, k)))
+  // Weight rule: strong positions define the ideology; near-centre or disputed axes matter less.
+  const raw = AXIS_IDS.map((_, k) => (spread[k]! > 35 || Math.abs(ideal[k]!) < 20 ? 0.5 : Math.abs(ideal[k]!) >= 60 ? 1.5 : 1))
+  const total = raw.reduce((p, q) => p + q, 0)
+  return {
+    slug: a.slug,
+    name: a.name,
+    family: a.family,
+    sensitive: a.sensitive,
+    summary: a.summary,
+    signature: a.signature,
+    ideal: ideal.map(v => Number(v!.toFixed(1))),
+    now: now.map(v => Number(v!.toFixed(1))),
+    weight: raw.map(w => Number(((12 * w) / total).toFixed(4))),
+    spread: spread.map(v => Number(v.toFixed(1))),
+    sources: a.sources,
+  }
+}
+
 const archetypes: Archetype[] = []
 const medianSheets: Record<string, Sheet> = {}
-const coderVectors: Record<string, Record<string, number[]>> = {}
 const agreement: Record<string, number> = {}
 
 for (const a of catalogue.archetypes) {
@@ -85,13 +122,10 @@ for (const a of catalogue.archetypes) {
     continue
   }
   if (coders.length < 3) problems.push(`${a.slug}: only ${coders.length} coder(s): ${coders.join(',')}`)
-  const med = medianSheet(coders.map(c => per[c]!))
-  medianSheets[a.slug] = med
-  const ideal = score(med, 0)
-  const now = score(med, 1)
-  coderVectors[a.slug] = Object.fromEntries(coders.map(c => [c, score(per[c]!, 0)]))
-  const vs = Object.values(coderVectors[a.slug]!)
-  const spread = AXIS_IDS.map((_, k) => (vs.length > 1 ? Math.max(...vs.map(v => v[k]!)) - Math.min(...vs.map(v => v[k]!)) : 0))
+  const built = build(a, coders.map(c => per[c]!), problems)
+  if (!built) continue
+  archetypes.push(built)
+  medianSheets[a.slug] = medianSheet(coders.map(c => per[c]!))
   // Mean absolute pairwise difference of item answers between coders (ideal frame), on the −3…3 scale.
   let sum = 0
   let cnt = 0
@@ -106,39 +140,24 @@ for (const a of catalogue.archetypes) {
         }
       }
   agreement[a.slug] = cnt ? Number((sum / cnt).toFixed(2)) : NaN
-  // Weight rule: strong positions define the ideology; near-centre or disputed axes matter less.
-  const raw = AXIS_IDS.map((_, k) => (spread[k]! > 35 || Math.abs(ideal[k]!) < 20 ? 0.5 : Math.abs(ideal[k]!) >= 60 ? 1.5 : 1))
-  const total = raw.reduce((p, q) => p + q, 0)
-  const weight = raw.map(w => Number(((12 * w) / total).toFixed(4)))
-  archetypes.push({
-    slug: a.slug,
-    name: a.name,
-    family: a.family,
-    sensitive: a.sensitive,
-    summary: a.summary,
-    signature: a.signature,
-    ideal: ideal.map(v => Number(v.toFixed(1))),
-    now: now.map(v => Number(v.toFixed(1))),
-    weight,
-    spread: spread.map(v => Number(v.toFixed(1))),
-    sources: a.sources,
-  })
 }
 
-// Leave-one-coder-out validation.
+// Leave-one-coder-out: rebuild the WHOLE catalogue without coder c, then rank c's own ideal sheets against it.
 let checked = 0
 let top3 = 0
 const misses: string[] = []
-for (const a of archetypes) {
-  const per = sheets[a.slug]!
-  for (const c of Object.keys(per)) {
-    const others = Object.keys(per).filter(o => o !== c)
+for (const c of ['opus', 'sol', 'grok']) {
+  const loo: Archetype[] = []
+  for (const a of catalogue.archetypes) {
+    const others = Object.entries(sheets[a.slug] ?? {}).filter(([k]) => k !== c)
     if (!others.length) continue
-    const loo = archetypes.map(b => {
-      if (b.slug !== a.slug) return b
-      return { ...b, ideal: score(medianSheet(others.map(o => per[o]!)), 0) }
-    })
-    const u = coderVectors[a.slug]![c]!
+    const b = build(a, others.map(([, v]) => v), [])
+    if (b) loo.push(b)
+  }
+  for (const a of archetypes) {
+    const own = sheets[a.slug]?.[c]
+    if (!own || !loo.some(b => b.slug === a.slug)) continue
+    const u = score(own, 0)
     const ranked = [...loo].sort((x, y) => distance(u, x.ideal, x.weight) - distance(u, y.ideal, y.weight))
     const rank = ranked.findIndex(x => x.slug === a.slug)
     checked++
@@ -156,7 +175,13 @@ const meta = {
   meanItemDisagreement: agreement,
   problems,
 }
-writeFileSync(`${DIR}/archetypes.json`, JSON.stringify({ version: VERSION, meta, archetypes }, null, 1) + '\n')
+const outFile = `${DIR}/archetypes.json`
+const prev = JSON.parse(readFileSync(outFile, 'utf8')) as { version: number; placeholder?: boolean; archetypes: Archetype[] }
+if (!prev.placeholder && prev.version === VERSION && JSON.stringify(prev.archetypes) !== JSON.stringify(archetypes) && !process.argv.includes('--force')) {
+  console.error(`archetypes: vectors changed but version is still ${VERSION}; set CATALOGUE_VERSION=${VERSION + 1} (or pass --force before release)`)
+  process.exit(1)
+}
+writeFileSync(outFile, JSON.stringify({ version: VERSION, meta, archetypes }, null, 1) + '\n')
 writeFileSync(`${DIR}/sheets.json`, JSON.stringify(medianSheets) + '\n')
 console.log(JSON.stringify({ archetypes: archetypes.length, ...meta, meanItemDisagreement: undefined }, null, 1))
 const ag = Object.values(agreement).filter(Number.isFinite)

@@ -81,6 +81,13 @@ function toMatch(r: Ranked, u: (number | null)[], which: 'ideal' | 'now', cal: C
  * otherwise the best non-sensitive archetype leads and the sensitive one is
  * listed as also close.
  */
+/** Stability of a specific displayed match (its own bootstrap win share), not of the modal winner. */
+function stabilityOf(stab: Stability, slug: string): Stability {
+  const share = stab.wins.get(slug) ?? 0
+  const label: Stability['label'] = share >= 0.7 ? 'stable' : share >= 0.4 ? 'fairly-stable' : 'toss-up'
+  return { ...stab, share, label }
+}
+
 function pickHero(
   ranked: Ranked[],
   u: (number | null)[],
@@ -92,11 +99,11 @@ function pickHero(
 ): HeroPick {
   const stab = stability(u, se, cat, 'ideal', seed)
   const top = toMatch(ranked[0]!, u, 'ideal', cal, mode)
-  if (!top.arch.sensitive) return { match: top, stability: stab }
+  if (!top.arch.sensitive) return { match: top, stability: stabilityOf(stab, top.arch.slug) }
   if (top.label === 'very-close' && stab.top === top.arch.slug && stab.label === 'stable') return { match: top, stability: stab }
   const alt = ranked.find(r => !r.arch.sensitive)!
   const altStab = stability(u, se, cat, 'ideal', seed, 200, a => !a.sensitive)
-  return { match: toMatch(alt, u, 'ideal', cal, mode), stability: altStab, alsoClose: top }
+  return { match: toMatch(alt, u, 'ideal', cal, mode), stability: stabilityOf(altStab, alt.arch.slug), alsoClose: top }
 }
 
 export function deriveResults(p: Payload, cat: readonly Archetype[], cal: Calibration): Results {
@@ -139,7 +146,17 @@ export function deriveResults(p: Payload, cat: readonly Archetype[], cal: Calibr
       : []
 
   const base = { payload: p, rows, rgBand, matchesIdeal, matchesNow, joint, strongestGap }
-  if (p.careless) return { ...base, hero: { kind: 'unreliable' } }
+  // Careless answering: no closeness or gap claims anywhere, not just in the headline.
+  if (p.careless)
+    return {
+      ...base,
+      rows: rows.map(r => ({ ...r, notable: false, type: null })),
+      matchesIdeal: [],
+      matchesNow: [],
+      joint: [],
+      strongestGap: null,
+      hero: { kind: 'unreliable' },
+    }
   if (!covI) return { ...base, hero: { kind: 'insufficient' } }
 
   const ideal = pickHero(rankedI, p.I, p.seI, cat, seed, cal, p.mode)

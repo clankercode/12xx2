@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { encodePayload, forSharing, type Payload } from '../engine/payload'
 import { deriveResults, type Results } from '../engine/results'
-import { CATALOGUE } from '../data/archetypes'
+import { CATALOGUE, catalogueFor } from '../data/archetypes'
 import { CALIBRATION } from '../data/calibration'
 import { countryName } from '../data/countries'
 import { AXES } from '../data/axes'
@@ -20,10 +20,17 @@ export function previewPath(r: Results): string | null {
   return null
 }
 
+function heroIsSensitive(r: Results): boolean {
+  const h = r.hero
+  if (h.kind !== 'split' && h.kind !== 'constant') return false
+  return h.ideal.match.arch.sensitive || (h.kind === 'split' && h.now.match.arch.sensitive)
+}
+
 export function shareText(r: Results): string {
   const h = r.hero
   if (h.kind === 'split')
     return `In theory I’m closest to ${h.ideal.match.arch.name}. Here and now, ${h.now.match.arch.name}. What’s your gap?`
+  if (h.kind === 'constant' && h.nowMissing) return `In theory I’m closest to ${h.ideal.match.arch.name}. What’s your gap?`
   if (h.kind === 'constant')
     return `In theory and here and now, I’m closest to ${h.ideal.match.arch.name}${r.payload.rg !== null ? ` (Reality Gap ${r.payload.rg})` : ''}. What’s yours?`
   return 'I answered every political question twice: for my ideal system and for here and now. What’s your gap?'
@@ -57,13 +64,15 @@ export function ShareSheet({ payload }: { payload: Payload }) {
   const [status, setStatus] = useState('')
   const canvas = useRef<HTMLCanvasElement | null>(null)
 
-  const shared = useMemo(() => forSharing(payload, inc), [payload, inc])
-  const r = useMemo(() => deriveResults(shared, CATALOGUE, CALIBRATION), [shared])
+  const shared = useMemo(() => forSharing(payload, { ...inc, sensitive: allowSensitive }), [payload, inc, allowSensitive])
+  // Everything shared (card, text, link view) names a sensitive ideology only after the opt-in.
+  const r = useMemo(() => deriveResults(shared, catalogueFor(shared), CALIBRATION), [shared])
+  const rFull = useMemo(() => deriveResults(payload, CATALOGUE, CALIBRATION), [payload])
   const enc = useMemo(() => encodePayload(shared), [shared])
   const pPath = previewPath(r)
   const link = `${base()}${kind === 'preview' && pPath ? pPath : ''}#r=${enc}`
   const text = shareText(r)
-  const hasSensitive = headline(r, true).lines.length > 0 && headline(r, false).lines.length === 0
+  const hasSensitive = heroIsSensitive(rFull)
 
   // Pre-render the card so the share tap can call navigator.share synchronously (iOS activation rule).
   useEffect(() => {

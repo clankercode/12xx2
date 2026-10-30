@@ -30,6 +30,8 @@ export interface Payload {
   q?: (number | null)[]
   sc?: { score: number; se: number }
   country?: string
+  /** The owner opted in to naming a sensitive ideology when sharing (spec §2.6). */
+  sensitiveOk?: boolean
 }
 
 export const FORMAT = 1
@@ -69,8 +71,10 @@ export function profileToPayload(
 }
 
 /** Remove optional fields the user has not chosen to share. */
-export function forSharing(p: Payload, include: { q: boolean; sc: boolean; country: boolean }): Payload {
+export function forSharing(p: Payload, include: { q: boolean; sc: boolean; country: boolean; sensitive?: boolean }): Payload {
   const out: Payload = { ...p }
+  if (include.sensitive) out.sensitiveOk = true
+  else delete out.sensitiveOk
   if (!include.q) delete out.q
   if (!include.sc) delete out.sc
   if (!include.country) delete out.country
@@ -85,6 +89,7 @@ export function payloadBytes(p: Payload): Uint8Array {
   if (p.q) flags |= 1 << 4
   if (p.sc) flags |= 1 << 5
   if (p.country) flags |= 1 << 6
+  if (p.sensitiveOk) flags |= 1 << 7
   b.push(flags, p.answered, p.total)
   for (const v of p.I) b.push(v === null ? NULL : v + 100)
   for (const v of p.N) b.push(v === null ? NULL : v + 100)
@@ -129,7 +134,9 @@ export function encodePayload(p: Payload): string {
 
 export type DecodeError = 'empty' | 'truncated' | 'corrupt' | 'newer-version'
 
-export function decodePayload(s: string): { ok: true; payload: Payload } | { ok: false; error: DecodeError } {
+export type DecodeResult = { ok: true; payload: Payload } | { ok: false; error: DecodeError }
+
+export function decodePayload(s: string): DecodeResult {
   if (!s) return { ok: false, error: 'empty' }
   if (!s.endsWith(TERMINATOR)) return { ok: false, error: 'truncated' }
   let bytes: Uint8Array
@@ -177,6 +184,7 @@ export function decodePayload(s: string): { ok: true; payload: Payload } | { ok:
       return (v - 100) * 2
     })
     const mask = next() | (next() << 8)
+    if (mask >> 12) throw new Error('range')
     const notable = Array.from({ length: 12 }, (_, i) => (mask & (1 << i)) !== 0)
     const rgRaw = next()
     const rg = rgRaw === NULL ? null : rgRaw
@@ -209,7 +217,13 @@ export function decodePayload(s: string): { ok: true; payload: Payload } | { ok:
       if (!/^[A-Z]{2}$/.test(c)) throw new Error('range')
       p.country = c
     }
+    if (flags & (1 << 7)) p.sensitiveOk = true
     if (o !== body.length) return { ok: false, error: 'corrupt' }
+    // Semantic invariants: a structurally valid but impossible result is treated as damaged.
+    if (answered > total || total === 0) return { ok: false, error: 'corrupt' }
+    for (let i = 0; i < 12; i++) {
+      if (notable[i] && G[i] === null) return { ok: false, error: 'corrupt' }
+    }
     return { ok: true, payload: p }
   } catch (e) {
     return { ok: false, error: (e as Error).message === 'short' ? 'truncated' : 'corrupt' }

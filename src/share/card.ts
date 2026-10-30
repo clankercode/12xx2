@@ -63,6 +63,9 @@ export function headline(r: Results, allowSensitive: boolean): Headline {
   }
   if (h.kind === 'constant') {
     if (blocked(h.ideal.match.arch.slug, h.ideal.match.arch.sensitive)) return { kicker: 'My 12 axes, twice', lines: [] }
+    // No here-and-now answers to compare: name the ideal only, make no constancy claim.
+    if (h.nowMissing)
+      return { kicker: 'My politics', lines: [{ label: 'In theory', name: h.ideal.match.arch.name, color: C.ideal, note: MATCH_LABEL[h.ideal.match.label] }] }
     return {
       kicker: 'Constant in theory and practice',
       lines: [{ name: h.ideal.match.arch.name, color: C.paper, note: MATCH_LABEL[h.ideal.match.label] }],
@@ -266,7 +269,7 @@ export function drawCard(canvas: HTMLCanvasElement, r: Results, o: CardOptions) 
   if (!wide) {
     ctx.fillStyle = C.muted
     ctx.font = `400 18px ${BODY}`
-    ctx.fillText('◆ ideal system   ● here and now   line = the gap between them', chartX, cy + 6)
+    ctx.fillText('◆ ideal   ● here and now   solid line = gap bigger than noise', chartX, cy + 6)
   }
 
   // Footer.

@@ -19,13 +19,13 @@ export function classify(q: number, i: number, n: number, eps = EPSILON): Exclud
 }
 
 /**
- * A type is reported only if it survives Ideal and Now each moving half a
- * standard error either way; otherwise 'unclear' (disclosed on the methods page).
+ * A type is reported only if it survives Ideal and Now each moving one
+ * standard error either way (the bands drawn on the chart); otherwise 'unclear'.
  */
 export function typeGap(q: number, i: number, n: number, seI: number, seN: number): GapType {
   const base = classify(q, i, n)
-  for (const di of [-0.5, 0.5]) {
-    for (const dn of [-0.5, 0.5]) {
+  for (const di of [-1, 1]) {
+    for (const dn of [-1, 1]) {
       if (classify(q, i + di * seI, n + dn * seN) !== base) return 'unclear'
     }
   }

@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
-import { decodePayload, encodePayload, forSharing, type DecodeError } from '../engine/payload'
+import { encodePayload, forSharing, type DecodeError } from '../engine/payload'
+import { decodeShared } from '../state/shared'
 import { deriveResults } from '../engine/results'
-import { CATALOGUE, CATALOGUE_VERSION } from '../data/archetypes'
+import { CATALOGUE_VERSION, catalogueFor } from '../data/archetypes'
 import { CALIBRATION } from '../data/calibration'
 import { useStore } from './App'
 import { ResultsView } from './ResultsView'
@@ -17,7 +18,7 @@ export const DECODE_MESSAGE: Record<DecodeError, string> = {
 
 export function SharedPage({ encoded }: { encoded: string }) {
   const { s, own } = useStore()
-  const decoded = useMemo(() => decodePayload(encoded), [encoded])
+  const decoded = useMemo(() => decodeShared(encoded), [encoded])
   if (!decoded.ok) {
     return (
       <div className="narrow" style={{ padding: '48px 0' }}>
@@ -30,9 +31,9 @@ export function SharedPage({ encoded }: { encoded: string }) {
     )
   }
   const p = decoded.payload
-  const r = deriveResults(p, CATALOGUE, CALIBRATION)
+  const r = deriveResults(p, catalogueFor(p), CALIBRATION)
   // Preview stubs name the headline in the path; if it no longer matches, drop the misleading path.
-  const stub = location.pathname.match(/\/p\/(.+)$/)?.[1]
+  const stub = location.pathname.match(/\/(p\/.+)$/)?.[1]
   const mismatch = !!stub && stub !== previewPath(r)
   if (mismatch) history.replaceState(null, '', `${import.meta.env.BASE_URL}${location.hash}`)
   const mine = s.stage === 'done' && own ? encodePayload(forSharing(own.payload, { q: false, sc: false, country: false })) : null

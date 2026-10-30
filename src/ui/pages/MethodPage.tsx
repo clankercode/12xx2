@@ -178,7 +178,7 @@ export function MethodPage() {
         <li>Otherwise: <em>opposite direction</em>.</li>
       </ol>
       <p>
-        A type is shown only if it still holds when your ideal and here-and-now scores each move half a standard error either way;
+        A type is shown only if it still holds when your ideal and here-and-now scores each move one standard error either way (the bands drawn on the chart);
         otherwise the direction is “unclear”. Your country placement is a direct judgement, while the other two come from
         statements, so only their order is used.
       </p>
