@@ -49,7 +49,10 @@
   width: fit-content;
 }
 
-.seg button {
+.seg label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
   border: 0;
   background: transparent;
   padding: 8px 14px;
@@ -57,7 +60,12 @@
   min-height: 40px;
 }
 
-.seg button + button {
+.seg label:focus-within {
+  outline: 2px solid var(--now);
+  outline-offset: -2px;
+}
+
+.seg label + label {
   border-left: 1px solid var(--rule-major);
 }
 
@@ -81,7 +89,7 @@
 }
 
 .warn {
-  color: var(--now);
+  color: var(--now-text);
   font-size: 0.88rem;
   margin: 4px 0 0;
 }

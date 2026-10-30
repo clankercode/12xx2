@@ -20,7 +20,7 @@
 }
 
 .chipWarn {
-  color: var(--now);
+  color: var(--now-text);
   border: 1px solid var(--now-deep);
   border-radius: 999px;
   padding: 0 10px;

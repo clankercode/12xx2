@@ -52,6 +52,8 @@ export function Place() {
 
 function Track({ axis, I, N, q, onChange }: { axis: AxisId; I: number | null; N: number | null; q: number | null; onChange: (v: number | null) => void }) {
   const ref = useRef<HTMLDivElement>(null)
+  /** Pointer gesture in progress: a tap or a horizontal drag sets the value; a vertical swipe scrolls the page. */
+  const gesture = useRef<{ id: number; x: number; y: number; drag: boolean } | null>(null)
   const meta = AXES[axis]
   const set = (e: PointerEvent<HTMLDivElement>) => {
     const r = ref.current!.getBoundingClientRect()
@@ -72,10 +74,12 @@ function Track({ axis, I, N, q, onChange }: { axis: AxisId; I: number | null; N:
     <div className={css.track}>
       <div className={css.trackHead}>
         <span className={css.trackTitle}>{meta.title}</span>
-        {q !== null && (
+        {q !== null ? (
           <button type="button" className={`btn btn-ghost ${css.clear}`} onClick={() => onChange(null)}>
             Clear
           </button>
+        ) : (
+          <span className={css.untouched}>Not placed · tap the line</span>
         )}
       </div>
       <div className={css.poles}>
@@ -93,17 +97,35 @@ function Track({ axis, I, N, q, onChange }: { axis: AxisId; I: number | null; N:
         aria-valuenow={q ?? undefined}
         aria-valuetext={q === null ? 'Not placed' : `${q} (${q < 0 ? meta.neg : meta.pos})`}
         onPointerDown={e => {
-          ref.current!.setPointerCapture(e.pointerId)
+          if (e.button !== 0) return
+          gesture.current = { id: e.pointerId, x: e.clientX, y: e.clientY, drag: false }
+        }}
+        onPointerMove={e => {
+          const g = gesture.current
+          if (!g || g.id !== e.pointerId) return
+          if (!g.drag) {
+            const dx = Math.abs(e.clientX - g.x)
+            if (dx < 8 || dx < Math.abs(e.clientY - g.y)) return
+            g.drag = true
+            ref.current!.setPointerCapture(e.pointerId)
+          }
           set(e)
         }}
-        onPointerMove={e => e.buttons && set(e)}
+        onPointerUp={e => {
+          const g = gesture.current
+          gesture.current = null
+          if (!g || g.id !== e.pointerId) return
+          if (g.drag || Math.hypot(e.clientX - g.x, e.clientY - g.y) < 10) set(e)
+        }}
+        onPointerCancel={() => {
+          gesture.current = null
+        }}
         onKeyDown={onKey}
       >
         <span className={css.mid} />
         {I !== null && <span className={`${css.m} ${css.mI}`} style={{ left: pct(I) }} title="Your ideal" />}
         {N !== null && <span className={`${css.m} ${css.mN}`} style={{ left: pct(N) }} title="Your here and now" />}
         {q !== null && <span className={css.q} style={{ left: pct(q) }} />}
-        {q === null && <span className={css.untouched}>Tap to place</span>}
       </div>
     </div>
   )

@@ -97,3 +97,26 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Inline confirm before erasing answers. */
+.confirm {
+  display: grid;
+  gap: 8px;
+  max-width: 38ch;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--alert);
+  border-radius: var(--radius-m);
+  background: var(--ink-2);
+}
+
+.confirm p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.confirmButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

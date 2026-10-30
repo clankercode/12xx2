@@ -73,7 +73,7 @@ for (const [name, viewport] of [
   await page.screenshot({ path: `${out}/${name}-07-share.png`, fullPage: true })
   if (name === 'desktop') {
     for (const size of ['Post 4:5', 'Story 9:16', 'Wide']) {
-      await page.getByRole('radio', { name: size }).click()
+      await page.getByRole('radio', { name: size }).check({ force: true })
       await page.waitForTimeout(600)
       const dl = page.waitForEvent('download')
       await page.getByRole('button', { name: 'Download PNG' }).click()

@@ -166,3 +166,15 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Both frames passed: say so plainly instead of showing an empty answer area. */
+.bothPassed {
+  padding: 16px;
+  border: 1px dashed var(--rule-major);
+  border-radius: var(--radius-m);
+  text-align: center;
+}
+
+.bothPassed p {
+  margin-inline: auto;
+}

@@ -4,6 +4,7 @@ import { itemsForMode } from '../data/items'
 import { IDEAL_SHORT, NOW_SHORT } from '../data/frames'
 import { useStore } from './App'
 import { Grid } from './Grid'
+import { Confirm } from './Chrome'
 import { go } from './router'
 import css from './Landing.module.css'
 
@@ -20,11 +21,15 @@ export function Landing() {
   const [demo, setDemo] = useState<{ i: Answer; n: Answer } | null>({ i: 1, n: 3 })
   const inProgress = s.stage === 'quiz' && s.mode && Object.keys(s.answers).length > 0
   const done = s.stage === 'done'
+  /** A mode picked while answers or a result exist: starting over erases them, so confirm first. */
+  const [pending, setPending] = useState<Mode | null>(null)
 
-  const start = (mode: Mode) => {
+  const begin = (mode: Mode) => {
+    setPending(null)
     dispatch({ type: 'start', mode })
     go('#/quiz')
   }
+  const start = (mode: Mode) => (done || inProgress ? setPending(mode) : begin(mode))
 
   return (
     <>
@@ -70,15 +75,15 @@ export function Landing() {
       <section className={`wrap ${css.frames}`}>
         <div>
           <h2 className="ideal">
-            <span className="glyph-ideal" aria-hidden /> Ideal system
+            <span className="glyph-ideal" aria-hidden /> In your ideal system
           </h2>
-          <p>{IDEAL_SHORT} Not a fantasy where nothing goes wrong: it still faces recessions, conflict and crime, and you decide what it does when they happen.</p>
+          <p>{IDEAL_SHORT} It still faces recessions, conflict and crime; judge what should happen when they do.</p>
         </div>
         <div>
           <h2 className="now">
             <span className="glyph-now" aria-hidden /> Here and now
           </h2>
-          <p>{NOW_SHORT} Its real institutions, its real leaders, its real problems. Can they be fixed within the rules, or not?</p>
+          <p>{NOW_SHORT} It has its real institutions, leaders and problems; judge what should happen there.</p>
         </div>
         <div>
           <h2>The gap</h2>
@@ -102,6 +107,17 @@ export function Landing() {
             </button>
           ))}
         </div>
+        {pending && (
+          <Confirm
+            confirmLabel={done ? 'Erase my result and start' : 'Erase my answers and start'}
+            onCancel={() => setPending(null)}
+            onConfirm={() => begin(pending)}
+          >
+            {done
+              ? 'Starting again erases your current result from this device. Save or share it first if you want to keep it.'
+              : 'Starting again erases the answers you’ve given so far.'}
+          </Confirm>
+        )}
         <p className="small muted">
           Every statement is fixed and the same for everyone in a mode, so results are comparable. Pass anything you don’t
           understand or don’t want to answer; it’s left out, never counted as neutral.

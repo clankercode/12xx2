@@ -202,3 +202,15 @@
       'track';
   }
 }
+
+.legendLink {
+  display: inline-block;
+  width: 26px;
+  height: 10px;
+  vertical-align: 0;
+  overflow: visible;
+}
+
+.legendArrow {
+  fill: var(--now);
+}

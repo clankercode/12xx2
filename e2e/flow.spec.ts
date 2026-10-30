@@ -35,6 +35,11 @@ test('quick run: no third-party or network requests beyond the app itself', asyn
   await finishSteps(page)
   // After load, the app makes no requests at all while answering.
   expect(foreign).toEqual([])
+  // Retake asks before erasing the result; Cancel keeps it.
+  await page.getByRole('button', { name: 'Retake' }).click()
+  await expect(page.getByRole('button', { name: 'Cancel' })).toBeFocused()
+  await page.getByRole('button', { name: 'Cancel' }).click()
+  await expect(page.getByRole('region', { name: 'Headline result' })).toBeVisible()
 })
 
 test('shared link shows the same headline and axes as the owner view', async ({ page }) => {
@@ -73,4 +78,8 @@ test('grid is keyboard operable', async ({ page }) => {
   await expect(page.locator('[role="gridcell"]:focus')).toHaveAttribute('aria-label', 'Ideal: Slightly agree. Here and now: Slightly agree.')
   await page.keyboard.press('Enter')
   await expect(page.getByText('2 of')).toBeVisible()
+  // Focus follows to the new statement's grid, on its roving cell.
+  await expect(page.locator('[role="gridcell"]:focus')).toHaveAttribute('tabindex', '0')
+  await page.keyboard.press('ArrowRight')
+  await expect(page.locator('[role="gridcell"]:focus')).toHaveAttribute('aria-label', 'Ideal: Slightly agree. Here and now: Neutral / torn.')
 })

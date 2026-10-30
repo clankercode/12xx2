@@ -158,6 +158,7 @@ export function ShareSheet({ payload }: { payload: Payload }) {
       <div className={css.controls}>
         <fieldset className={css.fs}>
           <legend>Card</legend>
+          {/* Real radios (visually hidden) so arrow keys move between sizes natively. */}
           <div className={css.seg} role="radiogroup" aria-label="Card size">
             {(
               [
@@ -166,9 +167,10 @@ export function ShareSheet({ payload }: { payload: Payload }) {
                 ['wide', 'Wide'],
               ] as const
             ).map(([k, l]) => (
-              <button key={k} type="button" role="radio" aria-checked={size === k} className={size === k ? css.segOn : ''} onClick={() => setSize(k)}>
+              <label key={k} className={size === k ? css.segOn : ''}>
+                <input type="radio" name="card-size" value={k} checked={size === k} onChange={() => setSize(k)} className="visually-hidden" />
                 {l}
-              </button>
+              </label>
             ))}
           </div>
           <label className={css.check}>

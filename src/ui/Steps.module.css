@@ -80,7 +80,8 @@
     var(--ink-2);
   border: 1px solid var(--rule-major);
   cursor: pointer;
-  touch-action: none;
+  /* Vertical swipes scroll the page; taps and horizontal drags place the marker (see Place.tsx). */
+  touch-action: pan-y;
 }
 
 .mid {
@@ -122,12 +123,8 @@
   box-shadow: 0 0 0 2px var(--ink);
 }
 
+/* Shown in the track header, where the Ideal/Now markers can't cover it. */
 .untouched {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  font-size: 0.8rem;
-  color: var(--faint);
-  pointer-events: none;
+  font-size: 0.82rem;
+  color: var(--muted);
 }

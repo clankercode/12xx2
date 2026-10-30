@@ -30,7 +30,7 @@
   transform: rotate(180deg);
   font-weight: 700;
   font-size: 0.95rem;
-  color: var(--now);
+  color: var(--now-text);
   text-align: center;
   display: flex;
   justify-content: center;
@@ -210,7 +210,7 @@
 }
 
 .pillN {
-  color: var(--now);
+  color: var(--now-text);
 }
 
 .pillOn {
@@ -227,14 +227,30 @@
 }
 
 .pillText {
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   line-height: 1.15;
   color: var(--paper);
 }
 
-@media (max-width: 420px) {
+/* Phones: seven 0.75rem labels don't fit across, and shrinking them hurts legibility, so stack the pills. */
+@media (max-width: 480px) {
+  .pills {
+    grid-template-columns: 1fr;
+  }
+  .pill {
+    flex-direction: row;
+    min-height: 42px;
+    padding: 6px 12px;
+    gap: 12px;
+    text-align: left;
+  }
+  .pillDot {
+    flex: none;
+    /* Keep labels aligned whatever the dot size. */
+    margin-inline: calc((12px - var(--s) * 12px) / 2);
+  }
   .pillText {
-    font-size: 0.6rem;
+    font-size: 0.9rem;
   }
 }
 

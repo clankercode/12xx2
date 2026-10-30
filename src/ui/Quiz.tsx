@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { CHIPS, type Answer, type ChipId } from '../engine/types'
 import { orderedItems } from '../data/items'
 import { CHIP_LABELS } from '../data/chips'
@@ -22,15 +22,41 @@ export function Quiz() {
   const [passN, setPassN] = useState(false)
   const [pendingChip, setPendingChip] = useState(false)
   const timer = useRef<number | null>(null)
+  const answerRef = useRef<HTMLDivElement>(null)
+  const statementRef = useRef<HTMLElement>(null)
+  /** Set when an answer is given from inside the answer area, so focus follows to the next item. */
+  const refocus = useRef(false)
 
-  useEffect(() => {
+  // Reset per-item state during render (not in an effect) so the new item's first paint is already right.
+  const [seenId, setSeenId] = useState(item?.id)
+  if (seenId !== item?.id) {
+    setSeenId(item?.id)
     setPassI(existing ? existing.i === null && existing.n !== null : false)
     setPassN(existing ? existing.n === null && existing.i !== null : false)
-    const big = existing && existing.i !== null && existing.n !== null && Math.abs(existing.n - existing.i) >= CHIP_THRESHOLD
-    setPendingChip(!!big)
-    // Only reset when the item changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setPendingChip(!!(existing && existing.i !== null && existing.n !== null && Math.abs(existing.n - existing.i) >= CHIP_THRESHOLD))
+  }
+
+  // Keyboard users keep their place: after answering, focus the new item's grid cursor (or strip).
+  useEffect(() => {
+    if (!refocus.current) return
+    refocus.current = false
+    const area = answerRef.current
+    const target =
+      area?.querySelector<HTMLElement>('[role="gridcell"][tabindex="0"]') ??
+      area?.querySelector<HTMLElement>('input[type="radio"]:checked') ??
+      area?.querySelector<HTMLElement>('input[type="radio"], button')
+    target?.focus({ preventScroll: true })
   }, [item?.id])
+
+  useEffect(() => {
+    document.title = intro ? 'How to answer — 12 Axes²' : `Statement ${s.index + 1} of ${order.length} — 12 Axes²`
+  }, [intro, s.index, order.length])
+
+  /** Whether focus is in the answer area or chip row right now (i.e. a keyboard or tap answer, not Back). */
+  const noteFocus = () => {
+    const a = document.activeElement
+    refocus.current = !!a?.closest('[data-answer-area]')
+  }
 
   useEffect(() => {
     if (s.index >= order.length) {
@@ -51,6 +77,7 @@ export function Quiz() {
   const record = useCallback(
     (i: Answer, n: Answer, input: 'grid' | 'rows') => {
       if (!item) return
+      noteFocus()
       const big = i !== null && n !== null && Math.abs(n - i) >= CHIP_THRESHOLD
       dispatch({ type: 'answer', id: item.id, answer: { i, n, input, chip: big ? existing?.chip : undefined }, advance: false })
       setPendingChip(big)
@@ -61,6 +88,7 @@ export function Quiz() {
 
   const passBoth = useCallback(() => {
     if (!item) return
+    noteFocus()
     dispatch({ type: 'answer', id: item.id, answer: { i: null, n: null, input: s.input }, advance: true })
   }, [item, dispatch, s.input])
 
@@ -73,26 +101,45 @@ export function Quiz() {
     dispatch({ type: 'goto', index: s.index - 1 })
   }, [dispatch, s.index])
 
-  // Keyboard shortcuts outside the grid: P = pass both, I/N = unsure about one frame, Backspace = back.
+  const nextItem = useCallback(() => {
+    noteFocus()
+    dispatch({ type: 'goto', index: s.index + 1 })
+  }, [dispatch, s.index])
+
+  // Keyboard shortcuts outside the grid: P = pass both, I/N = pass one frame, Backspace = back.
   useEffect(() => {
     if (intro) return
     const on = (e: globalThis.KeyboardEvent) => {
       const t = e.target as HTMLElement
       if (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA') return
       if (e.metaKey || e.ctrlKey || e.altKey) return
+      // Enter on a focused control keeps its own meaning (activate that button, link or cell).
+      if (e.key === 'Enter' && t.closest?.('button, a, [role="gridcell"]')) return
       if (e.key === 'p' || e.key === 'P') passBoth()
       else if (e.key === 'i' || e.key === 'I') setPassI(v => !v)
       else if (e.key === 'n' || e.key === 'N') setPassN(v => !v)
       else if (e.key === 'Backspace') back()
-      else if (e.key === 'Enter' && pendingChip) dispatch({ type: 'goto', index: s.index + 1 })
+      else if (e.key === 'Enter' && pendingChip) nextItem()
       else return
       e.preventDefault()
     }
     addEventListener('keydown', on)
     return () => removeEventListener('keydown', on)
-  }, [intro, passBoth, back, pendingChip, dispatch, s.index])
+  }, [intro, passBoth, back, pendingChip, nextItem])
 
-  if (intro) return <Intro onStart={() => setIntro(false)} />
+  // Leaving the intro unmounts the focused Start button: move focus to the first statement instead.
+  const focusStatement = useRef(false)
+  const startQuestions = () => {
+    focusStatement.current = true
+    setIntro(false)
+  }
+  useLayoutEffect(() => {
+    if (intro || !focusStatement.current) return
+    focusStatement.current = false
+    statementRef.current?.focus({ preventScroll: true })
+  }, [intro])
+
+  if (intro) return <Intro onStart={startQuestions} />
   if (!item) return null
 
   const progress = s.index / order.length
@@ -110,13 +157,20 @@ export function Quiz() {
         </span>
       </div>
 
-      <section className={css.card} aria-live="polite">
+      <section className={css.card} aria-live="polite" ref={statementRef} tabIndex={-1} data-route-focus>
         <p className={css.statement}>{item.text}</p>
         {item.note && <p className={`small muted ${css.note}`}>{item.note}</p>}
       </section>
 
-      <div className={css.answer}>
-        {passI && passN ? null : passI || passN ? (
+      <div className={css.answer} ref={answerRef} data-answer-area>
+        {passI && passN ? (
+          <div className={css.bothPassed} role="status">
+            <p>You’ve passed both frames. Press Pass to skip this statement; it won’t count either way.</p>
+            <button type="button" className="btn btn-primary" onClick={passBoth}>
+              Pass this statement
+            </button>
+          </div>
+        ) : passI || passN ? (
           <Strip
             key={`${item.id}-${passI ? 'N' : 'I'}`}
             frame={passI ? 'N' : 'I'}
@@ -127,7 +181,7 @@ export function Quiz() {
         ) : rowsMode ? (
           <TwoRows key={item.id} value={value} onDone={(i, n) => record(i, n, 'rows')} />
         ) : (
-          <Grid value={value} onPick={(i, n) => record(i, n, 'grid')} idPrefix={item.id} />
+          <Grid key={item.id} value={value} onPick={(i, n) => record(i, n, 'grid')} idPrefix={item.id} />
         )}
       </div>
 
@@ -136,9 +190,12 @@ export function Quiz() {
           chip={existing.chip}
           onChip={c => {
             dispatch({ type: 'chip', id: item.id, chip: c })
-            if (c) advanceSoon()
+            if (c) {
+              noteFocus()
+              advanceSoon()
+            }
           }}
-          onNext={() => dispatch({ type: 'goto', index: s.index + 1 })}
+          onNext={nextItem}
         />
       )}
 
@@ -146,12 +203,12 @@ export function Quiz() {
         <button type="button" className="btn btn-ghost" onClick={back}>
           Back
         </button>
-        <div className={css.unsure} role="group" aria-label="Unsure about one frame">
+        <div className={css.unsure} role="group" aria-label="Pass one frame only">
           <label className={css.toggle}>
-            <input type="checkbox" checked={passI} onChange={e => setPassI(e.target.checked)} /> Unsure about ideal
+            <input type="checkbox" checked={passI} onChange={e => setPassI(e.target.checked)} /> Pass ideal only
           </label>
           <label className={css.toggle}>
-            <input type="checkbox" checked={passN} onChange={e => setPassN(e.target.checked)} /> Unsure about here and now
+            <input type="checkbox" checked={passN} onChange={e => setPassN(e.target.checked)} /> Pass here-and-now only
           </label>
         </div>
         <button type="button" className="btn" onClick={passBoth}>
@@ -200,7 +257,7 @@ function ChipRow({ chip, onChip, onNext }: { chip?: ChipId; onChip: (c: ChipId |
   const next = useRef<HTMLButtonElement>(null)
   useEffect(() => next.current?.focus(), [])
   return (
-    <section className={css.chips} aria-label="Why the difference? (optional)">
+    <section className={css.chips} aria-label="Why the difference? (optional)" data-answer-area>
       <p className={css.chipsTitle}>
         Your answers differ a lot here. <span className="muted">Why? Optional — pick one or skip.</span>
       </p>

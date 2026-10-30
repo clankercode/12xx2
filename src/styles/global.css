@@ -12,6 +12,8 @@
   --ideal-deep: #6c76e0;
   --now: #f2b45a;
   --now-deep: #c98a2e;
+  /* Amber for text. Same as --now in dark; darker in light so text clears 4.5:1. */
+  --now-text: var(--now);
   --alert: #ff8a7a;
   --ok: #8fd6b0;
   --cell: 8px;
@@ -37,6 +39,7 @@
   --ideal-deep: #3640a8;
   --now: #b06d0e;
   --now-deep: #8a5408;
+  --now-text: #8a5408;
   --alert: #b8382a;
   --ok: #1f7a4f;
   color-scheme: light;
@@ -56,6 +59,7 @@
     --ideal-deep: #3640a8;
     --now: #b06d0e;
     --now-deep: #8a5408;
+  --now-text: #8a5408;
     --alert: #b8382a;
     --ok: #1f7a4f;
     color-scheme: light;
@@ -168,7 +172,7 @@ button {
 }
 
 .now {
-  color: var(--now);
+  color: var(--now-text);
 }
 
 .btn {
@@ -215,6 +219,17 @@ button {
   border-color: var(--rule-major);
 }
 
+.btn-danger {
+  border-color: var(--alert);
+  color: var(--alert);
+}
+
+.btn-danger:hover {
+  background: var(--alert);
+  border-color: var(--alert);
+  color: var(--ink);
+}
+
 .btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
@@ -252,6 +267,11 @@ button {
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
+}
+
+/* Headings and the quiz statement take focus after navigation; a ring there is noise. */
+[data-route-focus]:focus {
+  outline: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

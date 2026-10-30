@@ -22,7 +22,7 @@ export function AxisChart({ rows, overlay, animate = true }: { rows: AxisRow[]; 
     <div className={`${css.chart} ${animate ? css.animate : ''}`}>
       <div className={css.legend} aria-hidden>
         <span>
-          <span className="glyph-ideal" /> Ideal system
+          <span className="glyph-ideal" /> Ideal
         </span>
         <span>
           <span className="glyph-now" /> Here and now
@@ -37,6 +37,19 @@ export function AxisChart({ rows, overlay, animate = true }: { rows: AxisRow[]; 
             <span className={css.legendOther} /> {overlay.label}
           </span>
         )}
+        <span>
+          <svg className={css.legendLink} viewBox="0 0 26 10" aria-hidden>
+            <line x1="1" y1="5" x2="17" y2="5" className={css.linkNotable} />
+            <path d="M17 1 L25 5 L17 9 Z" className={css.legendArrow} />
+          </svg>{' '}
+          Gap bigger than noise
+        </span>
+        <span>
+          <svg className={css.legendLink} viewBox="0 0 26 10" aria-hidden>
+            <line x1="1" y1="5" x2="25" y2="5" className={css.linkQuiet} />
+          </svg>{' '}
+          Within noise
+        </span>
         <span className="muted">Bars show ±1 standard error</span>
       </div>
       {(Object.keys(GROUPS) as GroupId[]).map(g => (
@@ -52,7 +65,7 @@ export function AxisChart({ rows, overlay, animate = true }: { rows: AxisRow[]; 
         <thead>
           <tr>
             <th>Axis</th>
-            <th>Ideal system</th>
+            <th>Ideal</th>
             <th>Here and now</th>
             <th>Notable gap</th>
           </tr>
@@ -77,7 +90,8 @@ export function AxisChart({ rows, overlay, animate = true }: { rows: AxisRow[]; 
 function Row({ axis, row, other }: { axis: AxisId; row: AxisRow; other?: AxisRow }) {
   const meta = AXES[axis]
   const both = row.I !== null && row.N !== null
-  const dir = both && row.notable ? Math.sign(row.N! - row.I!) : 0
+  // Direction comes from the paired gap G, which can differ in sign from N − I (they average different items).
+  const dir = both && row.notable && row.G !== null ? Math.sign(row.G) : 0
   return (
     <div className={css.row} aria-hidden>
       <div className={css.label}>

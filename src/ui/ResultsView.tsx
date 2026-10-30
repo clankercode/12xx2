@@ -16,10 +16,23 @@ export function noGapBaseline(): number | null {
   return typeof r?.rgNoGapMedian === 'number' ? Math.round(r.rgNoGapMedian) : null
 }
 
+/** Short plain-language glosses for the stability labels (spec: matches are re-run with jittered scores). */
+const STABILITY_GLOSS: Record<HeroPick['stability']['label'], string> = {
+  stable: 'same top match in 70%+ of re-runs',
+  'fairly-stable': 'same top match in 40–70% of re-runs',
+  'toss-up': 'other ideologies are about as close',
+}
+
 function stabilityText(p: HeroPick) {
-  const s = p.stability
-  if (s.label === 'toss-up' && s.runnerUp) return `toss-up`
-  return STABILITY_LABEL[s.label]
+  const l = p.stability.label
+  return (
+    <>
+      {STABILITY_LABEL[l]}{' '}
+      <span className="muted">
+        (<a href="#/method">{STABILITY_GLOSS[l]}</a>)
+      </span>
+    </>
+  )
 }
 
 export function Hero({ r, who = 'You' }: { r: Results; who?: string }) {
@@ -110,7 +123,7 @@ function HeroHalf({ frame, pick }: { frame: 'I' | 'N'; pick: HeroPick }) {
   return (
     <div className={css.half}>
       <p className={`${css.heroKicker} ${frame === 'I' ? 'ideal' : 'now'}`}>
-        <span className={frame === 'I' ? 'glyph-ideal' : 'glyph-now'} aria-hidden /> {frame === 'I' ? 'In theory' : 'Here and now'}
+        <span className={frame === 'I' ? 'glyph-ideal' : 'glyph-now'} aria-hidden /> {frame === 'I' ? 'Ideal' : 'Here and now'}
       </p>
       <h1 className={css.heroTitle}>{pick.match.arch.name}</h1>
       <p className={css.heroSub}>
@@ -162,7 +175,7 @@ export function Matches({ r }: { r: Results }) {
         <a href="#/ideologies">the catalogue</a>.
       </p>
       <div className={css.matchCols}>
-        <MatchList title="In theory" frame="I" list={r.matchesIdeal} />
+        <MatchList title="Ideal" frame="I" list={r.matchesIdeal} />
         <MatchList title="Here and now" frame="N" list={r.matchesNow} />
       </div>
       {r.joint[0] && (
@@ -210,6 +223,9 @@ export function Gaps({ r, children }: { r: Results; children?: ReactNode }) {
   return (
     <section className={css.section}>
       <h2>Where theory and practice part ways</h2>
+      <p className="muted small">
+        Only gaps bigger than the noise expected from your number of answers are listed. <a href="#/method">How gaps are tested</a>.
+      </p>
       {notable.length === 0 ? (
         <p>
           No axis has a gap bigger than the noise expected from {r.payload.mode === 'quick' ? 'this few' : 'this many'} answers.
@@ -225,7 +241,8 @@ export function Gaps({ r, children }: { r: Results; children?: ReactNode }) {
                 <div key={x.axis} className={css.gap}>
                   <h3>{meta.title}</h3>
                   <p>
-                    Here and now pulls you toward <strong>{x.G! > 0 ? meta.pos : meta.neg}</strong> by {Math.abs(x.G!)} points.
+                    Here and now pulls you toward <strong>{x.G! > 0 ? meta.pos : meta.neg}</strong> by {Math.abs(x.G!)} points{' '}
+                    <span className="muted">(scores run −100 to +100)</span>.
                   </p>
                   {x.type && (
                     <p className="small">

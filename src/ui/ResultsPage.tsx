@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { encodePayload, forSharing } from '../engine/payload'
 import type { Own } from '../state/derive'
-import { clearAllData } from '../state/session'
 import { CHIP_LABELS } from '../data/chips'
 import { CALIBRATION } from '../data/calibration'
 import { AXES } from '../data/axes'
 import { useStore } from './App'
 import { ResultsView } from './ResultsView'
 import { ShareSheet } from './ShareSheet'
+import { Confirm, useClearData } from './Chrome'
 import { label } from './answer'
 import { go } from './router'
 import css from './Results.module.css'
@@ -15,6 +15,8 @@ import css from './Results.module.css'
 export function ResultsPage({ own }: { own: Own }) {
   const { s, dispatch } = useStore()
   const [showShare, setShowShare] = useState(false)
+  const [confirm, setConfirm] = useState<'retake' | 'clear' | null>(null)
+  const clear = useClearData()
   const r = own.results
   const mine = encodePayload(forSharing(own.payload, { q: false, sc: false, country: false }))
 
@@ -102,7 +104,13 @@ export function ResultsPage({ own }: { own: Own }) {
       <section className={css.section}>
         <h2>Share, compare, keep</h2>
         <div className={css.actions}>
-          <button type="button" className="btn btn-primary" onClick={() => setShowShare(v => !v)}>
+          <button
+            type="button"
+            className="btn btn-primary"
+            aria-expanded={showShare}
+            aria-controls="share-sheet"
+            onClick={() => setShowShare(v => !v)}
+          >
             {showShare ? 'Hide share options' : 'Share my result'}
           </button>
           {s.incoming && (
@@ -113,33 +121,34 @@ export function ResultsPage({ own }: { own: Own }) {
           <button type="button" className="btn" onClick={exportJson}>
             Export my answers (JSON)
           </button>
-          <button
-            type="button"
-            className="btn btn-ghost"
-            onClick={() => {
-              dispatch({ type: 'reset' })
-              go('#/')
-            }}
-          >
+          <button type="button" className="btn btn-ghost" onClick={() => setConfirm('retake')}>
             Retake
           </button>
-          <button
-            type="button"
-            className="btn btn-ghost"
-            onClick={() => {
-              clearAllData()
-              dispatch({ type: 'reset' })
-              go('#/')
-            }}
-          >
+          <button type="button" className="btn btn-ghost" onClick={() => setConfirm('clear')}>
             Clear my data
           </button>
         </div>
-        {showShare && (
-          <div style={{ marginTop: 20 }}>
-            <ShareSheet payload={own.payload} />
+        {confirm && (
+          <div style={{ marginTop: 16 }}>
+            <Confirm
+              confirmLabel={confirm === 'retake' ? 'Erase and retake' : 'Erase my data'}
+              onCancel={() => setConfirm(null)}
+              onConfirm={() => {
+                if (confirm === 'retake') {
+                  go('#/')
+                  dispatch({ type: 'reset' })
+                } else clear()
+              }}
+            >
+              {confirm === 'retake'
+                ? 'Retaking erases this result from this device. Save or share it first if you want to keep it.'
+                : 'Erase your answers and this result from this device? This can’t be undone.'}
+            </Confirm>
           </div>
         )}
+        <div id="share-sheet" style={showShare ? { marginTop: 20 } : undefined}>
+          {showShare && <ShareSheet payload={own.payload} />}
+        </div>
       </section>
     </>
   )
