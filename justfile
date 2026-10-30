@@ -26,6 +26,10 @@ archetypes:
 overlap:
     pnpm tsx scripts/overlap.ts
 
+# Refetch World Bank WGI country context (network; review the diff before committing).
+wgi:
+    pnpm tsx scripts/wgi.ts
+
 build: typecheck test overlap
     pnpm vite build
     pnpm tsx scripts/og.ts
