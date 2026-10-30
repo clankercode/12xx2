@@ -4,11 +4,11 @@ Q003: If a child needs adoptive parents, a mother and a father should be preferr
 Q004: If a society is deeply divided over religion, its laws should be neutral between all religions and none.
 Q005: In a marriage, the husband should have the final say on major family decisions.
 Q006: If imports make everyday goods cheaper for most families, they should be allowed in even when some local jobs are lost.
-Q007: A country's armed forces should be built to fight major wars far from home.
+Q007: A country's armed forces should be strong enough to defeat any likely enemy, even at great cost.
 Q008: Large companies should be owned by their workers or by the public.
 Q009: A person's deepest political loyalty should be to humanity as a whole, ahead of their own country.
 Q010: If one spouse wants to end the marriage, that spouse should be able to divorce without proving the other did wrong.
-Q011: Boys and girls should be raised the same way, with the same toys, clothes and chores.
+Q011: Children should not be steered toward different toys, clothes or chores because they are boys or girls.
 Q012: If most people in a society share a religion, its official ceremonies should include that religion's prayers.
 Q013: If brain-computer links prove safe in trials, it is a good thing for healthy people to get one. (Note: A brain-computer link is a device that connects the brain directly to a computer.)
 Q014: If national authorities override decisions a region has made for itself, the region should be entitled to refuse to comply. (Note: A region is a state, province or similar part of a country.)
@@ -56,7 +56,7 @@ Q055: Any group of citizens should be free to form a party and run in elections 
 Q056: Most laws should be made at the national level rather than region by region. (Note: A region is a state, province or similar part of a country.)
 Q057: If competing firms waste resources duplicating each other's products, production in that industry should be coordinated by a plan.
 Q058: Prices and competition alone should decide what gets produced and in what amounts.
-Q059: Editing the genes that people pass on to their children should be off-limits, whatever the purpose. (Note: This means edits to eggs, sperm or embryos that would be inherited, not treatments that affect only one patient.)
+Q059: Editing the genes that people pass on to their children is wrong, whatever the purpose. (Note: This means edits to eggs, sperm or embryos that would be inherited, not treatments that affect only one patient.)
 Q060: If editing an embryo's genes would prevent a serious inherited disease, making the edit is right, even though later generations would inherit it.
 Q061: If officials are found misusing a surveillance power, that power should be abolished rather than reformed. (Note: Surveillance power = a legal power to monitor people, such as phone tapping or location tracking.)
 Q062: Large companies should be owned by private shareholders.
@@ -95,7 +95,7 @@ Q094: Investment in industry should go wherever it is expected to earn the best 
 Q095: People should be allowed to use private messaging that only the sender and receiver can ever read, even under a court order.
 Q096: Editing embryos' genes to give future children greater abilities, such as higher intelligence, is a good thing.
 Q097: Money moving into and out of a country should be tightly controlled, even if this makes outside investment harder to attract.
-Q098: Building artificial intelligence that is smarter than humans at everything should be off-limits, however safe it could be made.
+Q098: Building artificial intelligence that is smarter than humans at everything is wrong, however safe it could be made.
 Q099: If no neighbour poses a serious military threat, a country's armed forces should be small.
 Q100: If brain-boosting treatments would pressure others to take them just to keep up, healthy people should go without them, even when they are safe. (Note: Brain-boosting treatments are drugs or devices that improve memory, focus or thinking in people who are already healthy.)
 Q101: Most laws should be made by regions and local communities rather than at the national level. (Note: A region is a state, province or similar part of a country.)

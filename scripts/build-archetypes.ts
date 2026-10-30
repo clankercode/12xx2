@@ -1,7 +1,8 @@
 /**
  * Turns coders' raw answer sheets into archetype vectors (spec §2.6).
  *
- * - Parses content/archetypes/raw/g*.{opus,sol,grok}.txt (BEGIN/END blocks, blind Q-ids).
+ * - Parses content/archetypes/raw/{g,fill-}*.{opus,sol,grok}.txt (BEGIN/END blocks, blind Q-ids);
+ *   fill files supply missing items and items recoded after a rewording.
  * - Median answer per item per frame across coders, scored with the *same* engine code as users.
  * - Per-axis spread = range of the coders' individually scored ideal vectors.
  * - Weights: a mechanical, published rule (defining axes 1.5, indifferent/disputed 0.5), normalised to Σ = 12.
@@ -43,11 +44,17 @@ for (const f of readdirSync(`${DIR}/raw`).filter(f => f.endsWith('.txt')).sort()
       const v = (s: string) => (s.toLowerCase() === 'x' ? null : Math.max(-3, Math.min(3, Number(s))))
       sheet[id] = [v(m[2]!), v(m[3]!)]
     }
-    const n = Object.keys(sheet).length
-    if (n < 110) problems.push(`${slug}/${coder}: only ${n} items parsed`)
-    if (n >= 60) ((sheets[slug!] ??= {})[coder] = sheet)
+    // Files sort g* before fill-*, so fill answers (missing or recoded items) override the originals.
+    const into = ((sheets[slug!] ??= {})[coder] ??= {})
+    Object.assign(into, sheet)
   }
 }
+for (const [slug, per] of Object.entries(sheets))
+  for (const [coder, sheet] of Object.entries(per)) {
+    const n = Object.keys(sheet).length
+    if (n < 120) problems.push(`${slug}/${coder}: only ${n} items parsed`)
+    if (n < 110) delete per[coder]
+  }
 
 const median = (xs: number[]) => {
   const s = [...xs].sort((a, b) => a - b)
