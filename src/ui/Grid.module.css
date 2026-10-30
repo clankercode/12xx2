@@ -1,0 +1,256 @@
+.wrap {
+  --c: clamp(36px, calc((100vw - 120px) / 7), 62px);
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-areas:
+    '. . x'
+    'y ye grid'
+    '. . xe'
+    'r r r';
+  justify-content: center;
+  column-gap: 10px;
+  row-gap: 6px;
+}
+
+.compact {
+  --c: clamp(26px, 5vw, 40px);
+}
+
+.xTitle {
+  grid-area: x;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ideal);
+  text-align: center;
+}
+
+.yTitle {
+  grid-area: y;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--now);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+.yEndInline {
+  display: none;
+  font-weight: 400;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+
+
+.yEnds {
+  grid-area: ye;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: 0.78rem;
+  color: var(--muted);
+  padding: 6px 0;
+}
+
+.xEnds {
+  grid-area: xe;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.grid {
+  grid-area: grid;
+  display: grid;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid var(--rule-major);
+  border-radius: var(--radius-m);
+  background: var(--ink);
+  position: relative;
+}
+
+/* The diagonal hairline: "same answer in both". */
+.grid::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  background: linear-gradient(to top right, transparent calc(50% - 0.75px), color-mix(in srgb, var(--paper) 35%, transparent) 50%, transparent calc(50% + 0.75px));
+  pointer-events: none;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(7, var(--c));
+  gap: 3px;
+}
+
+.cell {
+  width: var(--c);
+  height: var(--c);
+  border-radius: 5px;
+  border: 1px solid var(--rule-major);
+  /* Each cell tints toward Ideal (periwinkle) by column and Now (amber) by row. */
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--ideal) calc(var(--ix) * 26%), transparent), color-mix(in srgb, var(--ideal) calc(var(--ix) * 26%), transparent)),
+    color-mix(in srgb, var(--now) calc(var(--nx) * 24%), var(--ink-2));
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  transition:
+    transform 120ms ease,
+    border-color 120ms ease;
+}
+
+.cell:hover:not(:disabled) {
+  border-color: var(--paper);
+  transform: scale(1.06);
+  z-index: 1;
+}
+
+.cell:disabled {
+  cursor: default;
+}
+
+.diag {
+  border-color: color-mix(in srgb, var(--paper) 30%, var(--rule-major));
+}
+
+.selected {
+  background: var(--paper);
+  border-color: var(--paper);
+  animation: pick 260ms ease-out;
+}
+
+.mark {
+  position: absolute;
+  inset: 22%;
+  background:
+    linear-gradient(135deg, var(--ideal) 0 50%, var(--now) 50% 100%);
+  border-radius: 3px;
+}
+
+@keyframes pick {
+  0% {
+    transform: scale(0.8);
+  }
+  60% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.readout {
+  grid-area: r;
+  min-height: 3.2em;
+  margin: 8px auto 0;
+  text-align: center;
+  font-size: 0.95rem;
+  max-width: 34ch;
+}
+
+/* Single-frame strip / two-row mode. */
+.strip {
+  border: 0;
+  margin: 0 0 14px;
+  padding: 0;
+}
+
+.stripLegend {
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding: 0;
+}
+
+.pills {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-height: 64px;
+  padding: 8px 2px;
+  border: 1px solid var(--rule-major);
+  border-radius: 6px;
+  background: var(--ink-2);
+  cursor: pointer;
+  text-align: center;
+}
+
+.pill:hover {
+  border-color: var(--paper);
+}
+
+.pill:focus-within {
+  outline: 2px solid var(--now);
+  outline-offset: 2px;
+}
+
+.pillDot {
+  width: calc(8px + var(--s) * 12px);
+  height: calc(8px + var(--s) * 12px);
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+}
+
+.pillI {
+  color: var(--ideal);
+}
+
+.pillN {
+  color: var(--now);
+}
+
+.pillOn {
+  background: currentColor;
+}
+
+.pillOn .pillText {
+  color: var(--ink);
+}
+
+.pillOn .pillDot {
+  border-color: var(--ink);
+  background: var(--ink);
+}
+
+.pillText {
+  font-size: 0.68rem;
+  line-height: 1.15;
+  color: var(--paper);
+}
+
+@media (max-width: 420px) {
+  .pillText {
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .wrap {
+    --c: clamp(34px, calc((100vw - 76px) / 7), 62px);
+    column-gap: 6px;
+  }
+  .yTitle {
+    justify-content: space-between;
+    padding: 6px 0;
+  }
+  .yEndInline {
+    display: inline;
+  }
+  .yEnds {
+    display: none;
+  }
+}

@@ -1,0 +1,133 @@
+.step {
+  padding: 28px 0 48px;
+}
+
+.step h2 {
+  margin: 4px 0 12px;
+}
+
+.sc {
+  padding: 14px 0 4px;
+  border-top: 1px solid var(--rule-major);
+}
+
+.scText {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 18px 0;
+}
+
+.field select {
+  font: inherit;
+  padding: 10px;
+  min-height: 46px;
+  background: var(--ink-2);
+  color: var(--paper);
+  border: 1px solid var(--rule-major);
+  border-radius: var(--radius-s);
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.tracks {
+  display: grid;
+  gap: 22px;
+  margin-top: 20px;
+}
+
+.trackHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 32px;
+}
+
+.trackTitle {
+  font-weight: 700;
+}
+
+.clear {
+  min-height: 30px;
+  padding: 2px 10px;
+  font-size: 0.85rem;
+}
+
+.poles {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.rail {
+  position: relative;
+  height: 40px;
+  margin-top: 4px;
+  border-radius: 6px;
+  background:
+    linear-gradient(90deg, transparent calc(50% - 0.5px), var(--rule-major) 50%, transparent calc(50% + 0.5px)),
+    var(--ink-2);
+  border: 1px solid var(--rule-major);
+  cursor: pointer;
+  touch-action: none;
+}
+
+.mid {
+  position: absolute;
+  inset: 50% 8px auto;
+  height: 1px;
+  background: var(--rule-major);
+}
+
+.m {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+
+.mI {
+  background: var(--ideal);
+  rotate: 45deg;
+  width: 11px;
+  height: 11px;
+}
+
+.mN {
+  background: var(--now);
+  border-radius: 50%;
+}
+
+.q {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  width: 4px;
+  translate: -50% 0;
+  background: var(--paper);
+  border-radius: 2px;
+  box-shadow: 0 0 0 2px var(--ink);
+}
+
+.untouched {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 0.8rem;
+  color: var(--faint);
+  pointer-events: none;
+}

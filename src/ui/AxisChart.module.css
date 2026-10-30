@@ -1,0 +1,204 @@
+.chart {
+  display: grid;
+  gap: 18px;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  font-size: 0.86rem;
+}
+
+.legendQ {
+  display: inline-block;
+  width: 3px;
+  height: 12px;
+  background: var(--paper);
+  vertical-align: -1px;
+}
+
+.legendOther {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid var(--paper);
+  border-radius: 50%;
+  vertical-align: 0;
+}
+
+.group {
+  display: grid;
+  gap: 4px;
+}
+
+.groupTitle {
+  font-size: 0.95rem;
+  color: var(--muted);
+  font-weight: 600;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--rule-major);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 170px 1fr;
+  grid-template-areas:
+    'label poles'
+    'label track';
+  column-gap: 16px;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.label {
+  grid-area: label;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-weight: 700;
+}
+
+.poles {
+  grid-area: poles;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.track {
+  grid-area: track;
+  position: relative;
+  height: 40px;
+  border-radius: 6px;
+  background:
+    repeating-linear-gradient(90deg, var(--rule-major) 0 1px, transparent 1px 10%),
+    color-mix(in srgb, var(--ink-2) 85%, transparent);
+  border: 1px solid var(--rule-major);
+}
+
+.centre {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--muted);
+  opacity: 0.6;
+}
+
+.q {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  width: 3px;
+  translate: -50% 0;
+  background: var(--paper);
+  border-radius: 2px;
+  opacity: 0.85;
+}
+
+.link {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.linkQuiet {
+  stroke: var(--muted);
+  stroke-width: 1.2;
+  stroke-dasharray: 3 3;
+  opacity: 0.7;
+}
+
+.linkNotable {
+  stroke: var(--paper);
+  stroke-width: 2;
+}
+
+.whisker {
+  position: absolute;
+  height: 3px;
+  translate: 0 -50%;
+  border-radius: 2px;
+  opacity: 0.45;
+}
+
+.wI {
+  background: var(--ideal);
+}
+
+.wN {
+  background: var(--now);
+}
+
+.marker {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  translate: -50% -50%;
+}
+
+.mI {
+  background: var(--ideal);
+  rotate: 45deg;
+  width: 11px;
+  height: 11px;
+}
+
+.mN {
+  background: var(--now);
+  border-radius: 50%;
+}
+
+.ghost {
+  background: transparent;
+  border: 2px solid var(--paper);
+  opacity: 0.8;
+}
+
+.arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  translate: 0 -50%;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+}
+
+.arrowR {
+  margin-left: 9px;
+  border-left: 8px solid var(--now);
+}
+
+.arrowL {
+  margin-left: -17px;
+  border-right: 8px solid var(--now);
+}
+
+/* The one orchestrated moment: markers slide out from the centre on first render. */
+.animate .marker {
+  animation: slide 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes slide {
+  from {
+    left: var(--from);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'label'
+      'poles'
+      'track';
+  }
+}

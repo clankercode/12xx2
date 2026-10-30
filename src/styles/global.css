@@ -1,0 +1,264 @@
+/* 12 Axes² — "squared paper at night". One bold element (the grid); everything else quiet. */
+:root {
+  --ink: #141726;
+  --ink-2: #1a1e31;
+  --ink-3: #22273d;
+  --rule: #23283f;
+  --rule-major: #2d3352;
+  --paper: #ece8df;
+  --muted: #9a9fb8;
+  --faint: #6b7092;
+  --ideal: #a3acff;
+  --ideal-deep: #6c76e0;
+  --now: #f2b45a;
+  --now-deep: #c98a2e;
+  --alert: #ff8a7a;
+  --ok: #8fd6b0;
+  --cell: 8px;
+  --radius-s: 4px;
+  --radius-m: 10px;
+  --display: 'Bricolage Grotesque Variable', 'Arial Narrow', system-ui, sans-serif;
+  --body: 'Atkinson Hyperlegible Next Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --measure: 68ch;
+  --gutter: 16px;
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --ink: #f4f2ec;
+  --ink-2: #ebe8df;
+  --ink-3: #dfdbd0;
+  --rule: #e2ded3;
+  --rule-major: #d2cdbf;
+  --paper: #1b1e2e;
+  --muted: #4f546e;
+  --faint: #7a7f98;
+  --ideal: #4a55c9;
+  --ideal-deep: #3640a8;
+  --now: #b06d0e;
+  --now-deep: #8a5408;
+  --alert: #b8382a;
+  --ok: #1f7a4f;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --ink: #f4f2ec;
+    --ink-2: #ebe8df;
+    --ink-3: #dfdbd0;
+    --rule: #e2ded3;
+    --rule-major: #d2cdbf;
+    --paper: #1b1e2e;
+    --muted: #4f546e;
+    --faint: #7a7f98;
+    --ideal: #4a55c9;
+    --ideal-deep: #3640a8;
+    --now: #b06d0e;
+    --now-deep: #8a5408;
+    --alert: #b8382a;
+    --ok: #1f7a4f;
+    color-scheme: light;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background-color: var(--ink);
+  /* Squared paper: minor rule every 24px, major every 120px. */
+  background-image:
+    linear-gradient(var(--rule-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule-major) 1px, transparent 1px),
+    linear-gradient(var(--rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size:
+    120px 120px,
+    120px 120px,
+    24px 24px,
+    24px 24px;
+  background-position: -1px -1px;
+  background-attachment: fixed;
+  color: var(--paper);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.55;
+  font-variant-numeric: tabular-nums;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--display);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(2.3rem, 6.5vw, 4.6rem);
+  font-variation-settings: 'wdth' 90;
+}
+
+h2 {
+  font-size: clamp(1.5rem, 3.4vw, 2.2rem);
+}
+
+h3 {
+  font-size: 1.2rem;
+}
+
+p {
+  margin: 0 0 0.9em;
+  max-width: var(--measure);
+}
+
+a {
+  color: var(--ideal);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--paper);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--now);
+  outline-offset: 3px;
+}
+
+.wrap {
+  width: min(1100px, 100% - 2 * var(--gutter));
+  margin-inline: auto;
+}
+
+.narrow {
+  width: min(760px, 100% - 2 * var(--gutter));
+  margin-inline: auto;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 0.86rem;
+}
+
+.ideal {
+  color: var(--ideal);
+}
+
+.now {
+  color: var(--now);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-height: 46px;
+  padding: 0.55em 1.2em;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--rule-major);
+  background: var(--ink-2);
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--paper);
+}
+
+.btn:hover {
+  border-color: var(--muted);
+  color: var(--paper);
+}
+
+.btn-primary {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: var(--paper);
+}
+
+.btn-primary:hover {
+  background: var(--ideal);
+  border-color: var(--ideal);
+  color: var(--ink);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--muted);
+}
+
+.btn-ghost:hover {
+  color: var(--paper);
+  border-color: var(--rule-major);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.panel {
+  background: color-mix(in srgb, var(--ink-2) 92%, transparent);
+  border: 1px solid var(--rule-major);
+  border-radius: var(--radius-m);
+  padding: 20px;
+}
+
+.glyph-ideal,
+.glyph-now {
+  display: inline-block;
+  width: 0.72em;
+  height: 0.72em;
+  vertical-align: 0.02em;
+}
+
+.glyph-ideal {
+  background: var(--ideal);
+  transform: rotate(45deg) scale(0.85);
+}
+
+.glyph-now {
+  background: var(--now);
+  border-radius: 50%;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

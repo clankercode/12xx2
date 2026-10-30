@@ -167,7 +167,8 @@ describe('payload codec', () => {
 
   it('detects truncation and corruption', () => {
     const s = encodePayload(sample())
-    expect(decodePayload(s.slice(0, -1))).toEqual({ ok: false, error: 'truncated' })
+    // Dropping the terminator is always rejected (as truncated, or by the checksum when the last data char is also 'Z').
+    for (let cut = 1; cut < 6; cut++) expect(decodePayload(s.slice(0, -cut)).ok).toBe(false)
     expect(decodePayload(s.slice(0, 20) + 'Z').ok).toBe(false)
     const flipped = s.slice(0, 10) + (s[10] === 'A' ? 'B' : 'A') + s.slice(11)
     expect(decodePayload(flipped).ok).toBe(false)

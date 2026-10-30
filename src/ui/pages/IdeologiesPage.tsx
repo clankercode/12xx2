@@ -1,0 +1,89 @@
+import { useState } from 'react'
+import { AXIS_IDS } from '../../engine/types'
+import { AXES } from '../../data/axes'
+import { CATALOGUE } from '../../data/archetypes'
+import css from './Prose.module.css'
+
+const FAMILY: Record<string, string> = {
+  socialist: 'Socialist',
+  'left-liberal': 'Social-democratic & left-liberal',
+  'liberal-centrist': 'Liberal & centrist',
+  conservative: 'Conservative',
+  religious: 'Religious',
+  'nationalist-populist': 'Nationalist & populist',
+  'libertarian-market': 'Libertarian & market',
+  anarchist: 'Anarchist',
+  hierarchical: 'Hierarchical & technocratic',
+}
+
+const pct = (v: number) => `${(v + 100) / 2}%`
+
+export function IdeologiesPage() {
+  const [fam, setFam] = useState<string | null>(null)
+  const families = [...new Set(CATALOGUE.map(a => a.family))]
+  const list = CATALOGUE.filter(a => !fam || a.family === fam)
+  return (
+    <article className={`wrap ${css.prose}`}>
+      <h1>Ideology catalogue</h1>
+      <p className={css.lede}>
+        Every ideology you can be matched to, with its profile on each axis. <span className="glyph-ideal" aria-hidden />{' '}
+        <span className="ideal">Ideal</span> and <span className="glyph-now" aria-hidden /> <span className="now">here and now</span>{' '}
+        (in a present-day liberal democracy). The shaded band shows how far the three coders disagreed.
+      </p>
+      <div className={css.filter} role="group" aria-label="Filter by family">
+        <button type="button" className={fam === null ? css.filterOn : ''} onClick={() => setFam(null)}>
+          All ({CATALOGUE.length})
+        </button>
+        {families.map(f => (
+          <button key={f} type="button" className={fam === f ? css.filterOn : ''} onClick={() => setFam(f)}>
+            {FAMILY[f] ?? f}
+          </button>
+        ))}
+      </div>
+      {list.map(a => (
+        <section key={a.slug} id={a.slug} className={css.card}>
+          <h3>{a.name}</h3>
+          <p className="small muted">
+            {FAMILY[a.family] ?? a.family}
+            {a.signature && a.signature !== 'constant' ? ` · ${a.signature}` : ''}
+          </p>
+          <p>{a.summary}</p>
+          <div className={css.bars}>
+            {AXIS_IDS.map((ax, k) => {
+              const i = a.ideal[k]!
+              const n = a.now[k]!
+              const sp = a.spread[k] ?? 0
+              return (
+                <div key={ax} style={{ display: 'contents' }}>
+                  <span>
+                    {AXES[ax].title}
+                    {a.weight[k]! < 0.9 && <span className="muted"> (minor)</span>}
+                  </span>
+                  <div className={css.bar} title={`${AXES[ax].neg} ← → ${AXES[ax].pos}; ideal ${Math.round(i)}, here and now ${Math.round(n)}, coder spread ${Math.round(sp)}`}>
+                    <span className={css.spread} style={{ left: pct(Math.max(-100, i - sp / 2)), width: `${sp / 2}%`, translate: 'none' }} />
+                    <span className="glyph-ideal" style={{ left: pct(i) }} />
+                    <span className="glyph-now" style={{ left: pct(n), opacity: 0.85 }} />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+          {a.sources.length > 0 && (
+            <details style={{ marginTop: 10 }}>
+              <summary className="small">Sources</summary>
+              <ul className="small">
+                {a.sources.map(s => (
+                  <li key={s.title}>
+                    {s.author}
+                    {s.year ? ` (${s.year})` : ''}, <em>{s.title}</em>
+                    {s.by_adherent ? '' : ' — secondary'}
+                  </li>
+                ))}
+              </ul>
+            </details>
+          )}
+        </section>
+      ))}
+    </article>
+  )
+}

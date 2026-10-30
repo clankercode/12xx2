@@ -1,13 +1,106 @@
 {
-  "version": 0,
-  "tauG": { "3": 80, "4": 70, "5": 60, "6": 55, "7": 50, "8": 45, "9": 42, "10": 40 },
-  "mu": 0.03,
-  "rgCuts": [10, 22, 33],
-  "careless": { "3": 2.6, "4": 2.6, "5": 2.6, "6": 2.6, "7": 2.6, "8": 2.6, "9": 2.6, "10": 2.6 },
-  "labels": {
-    "quick": { "veryClose": 0.12, "close": 0.17, "loose": 0.24 },
-    "standard": { "veryClose": 0.1, "close": 0.15, "loose": 0.22 },
-    "full": { "veryClose": 0.09, "close": 0.13, "loose": 0.2 }
+ "version": 1,
+ "tauG": {
+  "3": 59,
+  "4": 43,
+  "5": 43,
+  "6": 40,
+  "7": 34,
+  "8": 30,
+  "9": 30,
+  "10": 28
+ },
+ "mu": 0.005,
+ "rgCuts": [
+  11,
+  22,
+  32
+ ],
+ "careless": {
+  "3": 3.286,
+  "4": 3.378,
+  "5": 3.468,
+  "6": 3.532,
+  "7": 3.737,
+  "8": 3.643,
+  "9": 3.635,
+  "10": 3.645
+ },
+ "labels": {
+  "quick": {
+   "veryClose": 0.098,
+   "close": 0.1181,
+   "loose": 0.1374
   },
-  "report": { "note": "PROVISIONAL placeholder; regenerate with `just calibrate`." }
+  "standard": {
+   "veryClose": 0.0912,
+   "close": 0.1078,
+   "loose": 0.1246
+  },
+  "full": {
+   "veryClose": 0.0826,
+   "close": 0.0982,
+   "loose": 0.1134
+  }
+ },
+ "report": {
+  "perAxisAlpha": 0.008741610954696721,
+  "carelessDetection": {
+   "3": 0.8994614003590664,
+   "4": 0.8995880535530381,
+   "5": 0.899938612645795,
+   "6": 0.8996197718631179,
+   "7": 0.8846153846153846,
+   "8": 0.8997890295358649,
+   "9": 0.8991185112634672,
+   "10": 0.8995024875621891
+  },
+  "carelessFalseFlag": {
+   "3": 0,
+   "4": 0,
+   "5": 0,
+   "6": 0,
+   "7": 0,
+   "8": 0,
+   "9": 0,
+   "10": 0
+  },
+  "rgNoGapMedian": 6.9,
+  "rgNoGapP0": 14.1,
+  "splitFalseRate": 0.015,
+  "anyNotableFalseRate": 0.0355,
+  "power": {
+   "1 point (33 on the axis scale)": {
+    "quick": 0.184,
+    "standard": 0.206,
+    "full": 0.542
+   },
+   "2 points (67 on the axis scale)": {
+    "quick": 0.674,
+    "standard": 0.748,
+    "full": 0.852
+   }
+  },
+  "randomGetsHeadline": 0.087,
+  "model": {
+   "thetaRange": 2.5,
+   "itemSd": 0.6,
+   "noiseSd": 0.8,
+   "copyRates": [
+    0.3,
+    0.5,
+    0.7
+   ],
+   "passRates": [
+    0,
+    0.1,
+    0.2
+   ],
+   "personAxisSd": 0.4
+  },
+  "draws": 2000,
+  "generated": "2026-10-30",
+  "catalogueVersion": 0,
+  "note": "PROVISIONAL: placeholder catalogue; archetype-anchored respondents use synthetic sheets."
+ }
 }

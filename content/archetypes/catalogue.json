@@ -1,0 +1,1538 @@
+{
+  "version": 1,
+  "frames_reference_now": "a present-day developed liberal democracy",
+  "archetypes": [
+    {
+      "slug": "marxism-leninism",
+      "name": "Marxism–Leninism",
+      "family": "socialist",
+      "sensitive": true,
+      "summary": "Prioritises building socialism through a disciplined vanguard party, state ownership and central planning over liberal pluralism and market allocation. In its Stalinist form it treats the one-party state, forced collectivisation and coercive security as necessary to defend the revolution, a record that included mass repression, famine and the labour-camp system.",
+      "signature": "ideal: one-party socialist state with a planned economy (classless communism a distant horizon); now: opposition party pressing nationalisation, union power and anti-imperialism",
+      "brief": "History moves through class struggle, and capitalism can only be overcome by a revolution led by a vanguard party of the working class. After the revolution comes the dictatorship of the proletariat: one party guides the state by democratic centralism, so debate happens inside the party and then everyone carries out the decision. Power is centralised: regions and republics may have formal autonomy, but the party's line binds them all. Factions and bourgeois parties are not allowed, because class enemies and foreign imperialists will try to restore capitalism. Security comes before individual liberty while the revolution is under threat. The means of production belong to the people through the state, and the economy runs on five-year plans, not markets. The state controls foreign trade and aims for self-sufficiency. Our loyalty is to proletarian internationalism and the socialist camp, not to supranational bodies of capitalist states. We back national liberation struggles and build a strong army to defend the socialist homeland. Nations have a right to self-determination and their own languages, with cultures 'national in form, socialist in content', but all owe loyalty to the common socialist state. The state promotes scientific atheism and restricts organised religion, keeping it out of public life. In the Stalinist era, family policy turned conservative. Today adherents disagree on social questions, on Maoist and Hoxhaist splits, and on market reforms. We embrace science and industrial technology with confidence.",
+      "now_notes": "In a liberal democracy the adherent builds a disciplined party and works in unions and mass organisations. They take part in elections as a tactic and back reforms that strengthen workers: nationalising utilities, public housing, union rights. They oppose NATO and Western military action and defend the free-speech and assembly rights their movement depends on. They do not see parliamentary reform as the destination.",
+      "sources": [
+        {
+          "title": "The State and Revolution",
+          "author": "V. I. Lenin",
+          "year": "1917",
+          "by_adherent": true,
+          "url": "https://www.marxists.org/archive/lenin/works/1917/staterev/"
+        },
+        {
+          "title": "The Foundations of Leninism",
+          "author": "J. V. Stalin",
+          "year": "1924",
+          "by_adherent": true
+        },
+        {
+          "title": "Stalin: History and Critique of a Black Legend",
+          "author": "Domenico Losurdo",
+          "year": "2008",
+          "by_adherent": true
+        },
+        {
+          "title": "Stalin, Vol. 1: Paradoxes of Power, 1878–1928",
+          "author": "Stephen Kotkin",
+          "year": "2014",
+          "by_adherent": false
+        }
+      ]
+    },
+    {
+      "slug": "trotskyism",
+      "name": "Trotskyism",
+      "family": "socialist",
+      "sensitive": false,
+      "summary": "Prioritises international workers' revolution and soviet (council) democracy over 'socialism in one country' and bureaucratic rule. It wants a planned, collectively owned economy run by democratically elected workers' councils, not by a party apparatus.",
+      "signature": "ideal: democratic workers' councils, planned economy, world federation; now: transitional demands, united fronts and revolutionary-party building",
+      "brief": "Capitalism is a world system, so socialism has to be international. Revolution in one country must spread or it will decay, as the Soviet bureaucracy did under Stalin. Our ideal is a workers' state run by democratically elected, recallable councils. Several soviet parties may compete, and the economy is collectively owned and democratically planned. The party leads politically but must not replace the working class. Planning is centralised and democratic, coordinated nationally and ultimately worldwide, with councils at every level. In a revolutionary period we accept firm measures against counter-revolution, but we reject police-state bureaucracy. National borders and nationalism divide workers. Under socialism foreign trade is a state monopoly, but the goal is an integrated world economy, not autarky. We are for free movement, open solidarity, and an end to imperialist war. We back armed workers' militias and wars of national liberation, but not 'defence of the fatherland' under capitalism. The state is secular, and personal faith is a private matter. We are socially progressive: equality for women and LGBTQ people, and anti-racism. We are enthusiastic about technology under workers' control. We are divided over whether the USSR was a 'degenerated workers' state' or state capitalism, and over tactics such as entryism into larger parties.",
+      "now_notes": "The adherent fights for transitional demands that point beyond capitalism: a sliding scale of wages and hours, nationalising banks and major firms under workers' control, and opening the books. They work in unions, run independent socialist candidates or enter mass left parties, form united fronts against the far right, oppose all imperialist wars, and defend migrants and democratic rights.",
+      "sources": [
+        {
+          "title": "The Permanent Revolution",
+          "author": "Leon Trotsky",
+          "year": "1930",
+          "by_adherent": true
+        },
+        {
+          "title": "The Revolution Betrayed",
+          "author": "Leon Trotsky",
+          "year": "1936",
+          "by_adherent": true
+        },
+        {
+          "title": "The Death Agony of Capitalism and the Tasks of the Fourth International (The Transitional Program)",
+          "author": "Leon Trotsky",
+          "year": "1938",
+          "by_adherent": true
+        },
+        {
+          "title": "The Prophet Armed: Trotsky 1879–1921",
+          "author": "Isaac Deutscher",
+          "year": "1954",
+          "by_adherent": false
+        }
+      ]
+    },
+    {
+      "slug": "democratic-socialism",
+      "name": "Democratic socialism",
+      "family": "socialist",
+      "sensitive": false,
+      "summary": "Prioritises social ownership and democratic control of the economy over private capital and profit, and pursues this through elections and civil liberties, not revolution or one-party rule.",
+      "signature": "ideal: democratically run socialist economy with public and cooperative ownership; now: expanding public services, decommodification and union power within parliamentary democracy",
+      "brief": "Democracy should not stop at the factory gate. We want a society where the major means of production are owned socially, by the public, by cooperatives or by workers, and run democratically. Political democracy is not negotiable: competitive elections, a free press and civil liberties are part of socialism, not obstacles to it. Authority should sit as close to the people as possible, though national planning is needed for infrastructure, climate and full employment. We are divided on how much to rely on markets versus democratic planning. On trade we favour fair-trade rules that protect labour and the environment over unregulated free trade. We are internationalist and sceptical of militarism, though some accept collective defence. We welcome immigrants and are anti-racist. The state is secular, and many of us come from Christian socialist traditions. Our social values are progressive. We welcome technology that frees people from drudgery, provided it is publicly accountable and not monopolised for profit.",
+      "now_notes": "The adherent works through elections, unions and social movements. Their programme: single-payer or national health care, public housing, free education, a jobs guarantee or full employment policy, public ownership of utilities, rail and energy, strong labour law and sectoral bargaining, wealth taxes, a Green New Deal, and a more open, rights-based immigration system. They are gradualist in method, but aim beyond the welfare state.",
+      "sources": [
+        {
+          "title": "Socialism: Past and Future",
+          "author": "Michael Harrington",
+          "year": "1989",
+          "by_adherent": true
+        },
+        {
+          "title": "Equality",
+          "author": "R. H. Tawney",
+          "year": "1931",
+          "by_adherent": true
+        },
+        {
+          "title": "The Socialist Manifesto",
+          "author": "Bhaskar Sunkara",
+          "year": "2019",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "market-socialism",
+      "name": "Market socialism",
+      "family": "socialist",
+      "sensitive": false,
+      "summary": "Prioritises social or worker ownership of firms over private capital ownership, while keeping markets and prices rather than central planning to coordinate production.",
+      "signature": "ideal: worker-self-managed or socially owned firms competing in markets; now: cooperative expansion, employee ownership and public investment banks",
+      "brief": "Markets are good at coordinating information. Capitalism's real problem is who owns capital and who gets the returns. Firms should be owned by the workers who run them, or by society through public funds or coupon shares, while still competing in markets for goods and services. A worker-managed firm governs itself democratically, one worker one vote. Investment can be steered by public or community banks. Central planning should be minimal: prices do the coordinating, and the state sets the rules and corrects market failures. Power should be decentralised to firms and localities, within a democratic, multiparty political system. We are mostly open to trade, though some would protect cooperative sectors. We are internationalist and favour cooperation over military rivalry. We support immigration and civil liberties, a secular state and progressive social norms. We are pragmatic about technology. We are divided on the model: the Yugoslav-style self-management camp, the coupon-socialism camp, and those who would keep state-owned enterprises in markets.",
+      "now_notes": "The adherent supports policies that grow worker and social ownership inside today's economy: tax incentives and finance for cooperatives and employee ownership plans, workers' right of first refusal when a firm is sold, workers on company boards, public wealth funds holding equity, and public investment banks. Markets stay in place, and they accept a gradual transition.",
+      "sources": [
+        {
+          "title": "A Future for Socialism",
+          "author": "John E. Roemer",
+          "year": "1994",
+          "by_adherent": true
+        },
+        {
+          "title": "After Capitalism",
+          "author": "David Schweickart",
+          "year": "2002",
+          "by_adherent": true
+        },
+        {
+          "title": "On the Economic Theory of Socialism",
+          "author": "Oskar Lange",
+          "year": "1936",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "eco-socialism",
+      "name": "Eco-socialism",
+      "family": "socialist",
+      "sensitive": false,
+      "summary": "Prioritises ecological limits and collective, democratically planned use of nature over capitalist growth and private accumulation. It holds that capitalism itself is driving environmental breakdown.",
+      "signature": "ideal: democratically planned, post-growth commons economy; now: Green New Deal, public ownership of energy, degrowth-leaning regulation",
+      "brief": "Capitalism's drive to grow without end is incompatible with a finite planet. Answering the climate and ecological crisis means taking energy, land and key industries into common ownership and planning production democratically around human needs and ecological limits, not profit. Decisions should be decentralised where possible, but coordinated across regions to stay within planetary boundaries. We value collective security against ecological collapse, but we oppose authoritarian 'green' rule. Trade should be relocalised and fair, and long supply chains reduced. We are internationalist: climate justice owes a debt to the Global South, and climate refugees must be welcomed. We are anti-militarist. The state is secular, and our social values are progressive and feminist. We are sceptical of technological fixes such as geoengineering and corporate genetic engineering, and we are divided between degrowth communists and eco-modernists who welcome nuclear power and advanced technology under public control.",
+      "now_notes": "The adherent pushes for a Green New Deal: public ownership of energy grids and utilities, rapid decarbonisation with a just transition for workers, free public transport, an end to fossil-fuel subsidies and new extraction, climate finance for poorer countries, and protection for climate migrants. They join direct action and unions alike.",
+      "sources": [
+        {
+          "title": "An Ecosocialist Manifesto",
+          "author": "Joel Kovel and Michael Löwy",
+          "year": "2001",
+          "by_adherent": true
+        },
+        {
+          "title": "The Enemy of Nature: The End of Capitalism or the End of the World?",
+          "author": "Joel Kovel",
+          "year": "2002",
+          "by_adherent": true
+        },
+        {
+          "title": "Marx in the Anthropocene: Towards the Idea of Degrowth Communism",
+          "author": "Kohei Saito",
+          "year": "2023",
+          "by_adherent": true
+        },
+        {
+          "title": "Marx's Ecology: Materialism and Nature",
+          "author": "John Bellamy Foster",
+          "year": "2000",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "african-socialism",
+      "name": "African socialism (Ujamaa)",
+      "family": "socialist",
+      "sensitive": false,
+      "summary": "Prioritises communal 'familyhood', self-reliance and national unity, rooted in African village traditions, over class struggle, individual accumulation and dependence on foreign capital.",
+      "signature": "ideal: self-reliant communal villages under a unifying national party; now: cooperatives, public services and economic sovereignty",
+      "brief": "Socialism is an attitude of mind rooted in traditional African family life. Everyone works, nobody exploits, and the community cares for all its members. Ujamaa means 'familyhood'. Land belongs to the community and is held by those who use it. The major means of production and exchange should be under the control of peasants and workers, through the state and cooperatives. Development should rest on self-reliance, not foreign aid or debt. Planning sets priorities, and the village is the basic unit. Many of us held that a single national party, with competitive elections inside it, could be democratic and avoid ethnic division. Others now prefer multiparty democracy. Order and national unity came first in the young state, and many accepted preventive detention and limits on dissent; most adherents today defend civil liberties. We favour pan-African unity, non-alignment, and protecting young industries. Military force is for defence and liberation struggles. National identity overrides tribe. Faith is respected, and the state does not favour any religion. Social norms come from communal customs. Technology serves development.",
+      "now_notes": "In a developed liberal democracy, the adherent supports strong cooperatives and community land trusts, universal public services, debt relief and fair trade for Africa, an internationalist pan-African diaspora politics, and anti-racism. Forced villagisation, the historical failure of compulsory Ujamaa villages, is something most now reject in favour of voluntary communal enterprise.",
+      "sources": [
+        {
+          "title": "Ujamaa: The Basis of African Socialism",
+          "author": "Julius K. Nyerere",
+          "year": "1962",
+          "by_adherent": true
+        },
+        {
+          "title": "The Arusha Declaration",
+          "author": "Julius K. Nyerere / TANU",
+          "year": "1967",
+          "by_adherent": true
+        },
+        {
+          "title": "Consciencism",
+          "author": "Kwame Nkrumah",
+          "year": "1964",
+          "by_adherent": true
+        },
+        {
+          "title": "African Socialism in Postcolonial Tanzania: Between the Village and the World",
+          "author": "Priya Lal",
+          "year": "2015",
+          "by_adherent": false
+        }
+      ]
+    },
+    {
+      "slug": "social-democracy",
+      "name": "Social democracy",
+      "family": "left-liberal",
+      "sensitive": false,
+      "summary": "Prioritises a universal welfare state, strong unions and regulated markets over both unregulated capitalism and wholesale socialisation. It humanises capitalism through democratic politics rather than abolishing it.",
+      "signature": "ideal: regulated market economy with a universal welfare state and social partnership; now: broadly the same, defending and extending it",
+      "brief": "Markets create wealth but distribute it unjustly and unsafely, so democratic politics must shape them. Parliamentary democracy, the rule of law and civil liberties are the foundation, with effective but accountable policing, and reform comes through elections, not revolution. We want a mixed economy: mostly private firms, with public ownership of some infrastructure, high progressive taxes, and universal health care, education, pensions and childcare. Wages and conditions are set through collective bargaining between strong unions and employers, with the state as a partner. National government plans and steers the economy through industrial policy, but prices coordinate most activity. We support fair trade within strong international rules and favour pooled sovereignty such as European integration. Most of us accept collective defence through alliances, and some are pacifist. We are divided on immigration: some prioritise solidarity with newcomers, others protecting the welfare state and wages through managed numbers and integration. We support a secular state and progressive social norms. Technology should be welcomed and regulated.",
+      "now_notes": "Here and now the adherent defends and extends the welfare state: universal health care, affordable childcare, public housing, progressive taxation, a minimum wage, sectoral bargaining, active labour market policy, climate investment, and stronger regulation of finance. They work through mainstream centre-left parties and unions, and they accept the market economy.",
+      "sources": [
+        {
+          "title": "Evolutionary Socialism",
+          "author": "Eduard Bernstein",
+          "year": "1899",
+          "by_adherent": true
+        },
+        {
+          "title": "Ill Fares the Land",
+          "author": "Tony Judt",
+          "year": "2010",
+          "by_adherent": true
+        },
+        {
+          "title": "The Primacy of Politics: Social Democracy and the Making of Europe's Twentieth Century",
+          "author": "Sheri Berman",
+          "year": "2006",
+          "by_adherent": true
+        },
+        {
+          "title": "The Three Worlds of Welfare Capitalism",
+          "author": "Gøsta Esping-Andersen",
+          "year": "1990",
+          "by_adherent": false
+        }
+      ]
+    },
+    {
+      "slug": "progressive-liberalism",
+      "name": "Progressive liberalism",
+      "family": "left-liberal",
+      "sensitive": false,
+      "summary": "Prioritises expanding equal rights, inclusion and social justice for disadvantaged groups over tradition and laissez-faire. It uses an active, regulatory state within a market economy and liberal democracy.",
+      "signature": "constant",
+      "brief": "Liberal democracy is our framework, but freedom means little without real opportunity, so government must act to dismantle discrimination and unequal starting points. We support strong civil rights, anti-discrimination law, voting access, and checks on concentrated corporate power. A strong national government should enforce rights and standards where regions or localities fall short. We back a regulated market economy with antitrust enforcement, consumer and environmental protection, progressive taxes, and public investment in health, education and climate. We accept open trade but want agreements to carry labour and environmental standards, and many now back industrial policy. Civil liberties matter, especially against abuses of police and surveillance powers. We support multilateral cooperation, international law and alliances, and accept force as a last resort, mainly for humanitarian or collective-defence ends. We value diversity and support immigration with pathways to citizenship. Church and state should be separate. We affirm LGBTQ equality, reproductive rights and gender equality. Technology should be embraced but regulated, especially AI. We are divided on how far to go on race-conscious policy, speech norms, and economic intervention.",
+      "now_notes": "Here and now the adherent supports civil and voting rights enforcement, police reform, reproductive and LGBTQ rights, a climate transition with public investment, expanded health coverage and childcare, antitrust action, tax increases on top earners, immigration reform with legal status for long-term residents, and multilateral diplomacy. They work through mainstream centre-left politics and advocacy groups.",
+      "sources": [
+        {
+          "title": "The Promise of American Life",
+          "author": "Herbert Croly",
+          "year": "1909",
+          "by_adherent": true
+        },
+        {
+          "title": "Liberalism and Social Action",
+          "author": "John Dewey",
+          "year": "1935",
+          "by_adherent": true
+        },
+        {
+          "title": "Creating Capabilities: The Human Development Approach",
+          "author": "Martha C. Nussbaum",
+          "year": "2011",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "green-politics",
+      "name": "Green politics",
+      "family": "left-liberal",
+      "sensitive": false,
+      "summary": "Prioritises ecological sustainability, grassroots democracy and non-violence over economic growth, centralised power and military solutions.",
+      "signature": "ideal: decentralised, ecologically sustainable, participatory society; now: climate policy, proportional representation and coalition government",
+      "brief": "Our four pillars are ecological wisdom, social justice, grassroots democracy and non-violence. Human society must live within the planet's limits. Decisions should be made at the lowest effective level, by communities and regions, with participatory and deliberative democracy, and coordinated globally on climate and biodiversity. We defend civil liberties and are wary of surveillance and policing. We favour a mixed economy with strong regulation, local and cooperative enterprise, and ecological taxation. We are sceptical of growth as a goal. Trade should be fair and should not undercut environmental and labour standards. We are internationalist, supporting strong global institutions on climate and human rights, and we are among the most dovish political traditions. We welcome migrants and refugees and value diversity. The state is secular, and our social values are progressive and feminist. We are precautionary about genetic engineering and some new technologies. We are divided between pragmatic 'realos' and radical 'fundis', and over nuclear power and global versus local priorities.",
+      "now_notes": "Here and now the adherent pushes for rapid decarbonisation, renewable energy, public transport, biodiversity protection, carbon pricing, electoral reform toward proportional representation, a basic income, refugee protection and disarmament. They will join coalition governments with centre-left partners and back local direct action.",
+      "sources": [
+        {
+          "title": "Global Greens Charter",
+          "author": "Global Greens",
+          "year": "2001",
+          "by_adherent": true
+        },
+        {
+          "title": "Fighting for Hope",
+          "author": "Petra K. Kelly",
+          "year": "1984",
+          "by_adherent": true
+        },
+        {
+          "title": "Green Political Thought",
+          "author": "Andrew Dobson",
+          "year": "1990",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "left-populism",
+      "name": "Left-wing populism",
+      "family": "left-liberal",
+      "sensitive": false,
+      "summary": "Prioritises the common people against an economic and political oligarchy, and popular sovereignty over technocratic, market-led and supranational governance. It pursues redistribution through majoritarian mass mobilisation.",
+      "signature": "ideal: radical popular democracy with redistribution and public control of key sectors; now: anti-austerity, anti-oligarchy electoral movement",
+      "brief": "Society is split between the many and a privileged few: bankers, corporations, and the political class that serves them. Democracy should mean the people actually rule. We want referendums, participatory budgeting, recall, and leaders who answer to the base rather than to markets or unelected technocrats. A strong national government is needed to carry out the popular mandate, though many also favour municipal and regional participation. We defend civil liberties and the right to protest against security powers used on social movements, and we see crime as rooted in inequality. Public control of utilities, energy and natural resources, redistribution and strong public services come first. Markets are fine, but they must not override popular will. We are sceptical of free-trade deals and supranational bodies that lock in austerity, and we want national or popular sovereignty over economic policy. We oppose foreign wars and military adventurism. We are mostly pluralist and anti-racist, though some stress worker protection over open labour migration. The state is secular. Our social values are mostly progressive, sometimes downplayed for broad appeal. On technology we are pragmatic and wary of tech monopolies. We are divided over strong charismatic leadership versus horizontal movements.",
+      "now_notes": "Here and now the adherent builds an electoral movement against 'the establishment'. Their programme: ending austerity, taxing the rich, public ownership of energy and rail, rent controls, debt relief, and opposing free-trade deals and wars. They use direct democracy where available and mass mobilisation around a unifying leader or slogan.",
+      "sources": [
+        {
+          "title": "For a Left Populism",
+          "author": "Chantal Mouffe",
+          "year": "2018",
+          "by_adherent": true
+        },
+        {
+          "title": "On Populist Reason",
+          "author": "Ernesto Laclau",
+          "year": "2005",
+          "by_adherent": true
+        },
+        {
+          "title": "Populism: A Very Short Introduction",
+          "author": "Cas Mudde and Cristóbal Rovira Kaltwasser",
+          "year": "2017",
+          "by_adherent": false
+        }
+      ]
+    },
+    {
+      "slug": "social-liberalism",
+      "name": "Social liberalism",
+      "family": "liberal-centrist",
+      "sensitive": false,
+      "summary": "Prioritises individual liberty secured by fair equality of opportunity over both laissez-faire and collectivism. The state guarantees the social conditions of freedom within a market economy.",
+      "signature": "constant",
+      "brief": "Freedom is the central value, but real freedom needs education, health, security against poverty, and protection from domination by concentrated private power. So a liberal state should provide a social minimum and fair opportunity while respecting individual rights and markets. Power should be constitutionally limited and divided: rule of law, independent courts, federalism or devolution where it helps. We favour liberal democracy with strong civil liberties, and we are wary of surveillance. The economy should be mainly private and market-coordinated, with welfare, public education, regulation and progressive taxation to correct injustice. We favour open trade, international law and multilateral institutions, and accept force for defence or humanitarian protection. Immigration is generally positive, with integration through equal citizenship. Church and state are separate, and the state stays neutral among ways of life, which makes us socially liberal. We are open to technology and favour regulation. We are divided on how much redistribution justice requires.",
+      "now_notes": "Here and now the adherent supports a market economy with a strong safety net, public education and health, civil liberties, electoral and constitutional reform, open trade, multilateral alliances, liberal immigration, and socially liberal law. Their tone is incremental and reformist. Many vote for liberal or centre-left parties.",
+      "sources": [
+        {
+          "title": "Liberalism",
+          "author": "L. T. Hobhouse",
+          "year": "1911",
+          "by_adherent": true
+        },
+        {
+          "title": "A Theory of Justice",
+          "author": "John Rawls",
+          "year": "1971",
+          "by_adherent": true
+        },
+        {
+          "title": "Social Insurance and Allied Services (The Beveridge Report)",
+          "author": "William Beveridge",
+          "year": "1942",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "centrism",
+      "name": "Centrism",
+      "family": "liberal-centrist",
+      "sensitive": false,
+      "summary": "Prioritises moderation, pragmatism and evidence over ideological consistency. It balances markets with a safety net, liberty with order, and change with continuity through incremental compromise.",
+      "signature": "constant",
+      "brief": "Neither left nor right has a monopoly on wisdom. Good policy comes from evidence, compromise and attention to what actually works. We support liberal democracy with checks and balances, an independent judiciary and a professional civil service. We distrust both concentrated state power and extreme decentralisation. Liberty and security must be balanced case by case. A market economy works best with sensible regulation, a safety net and fiscal responsibility. We prefer mostly open trade with safeguards for strategic industries. We value international alliances and institutions while keeping national decision-making. Force should be credible but a last resort. Immigration should be managed: open to skills and refugees, with expectations of integration. The state is secular but respectful of religion. Social questions are approached moderately, accepting changes once they have broad consensus. We favour technological innovation with careful safeguards. We are divided over whether centrism is a principled middle or simply a temperament of moderation.",
+      "now_notes": "Here and now the adherent supports cross-party compromise, balanced budgets over the cycle, targeted welfare, infrastructure investment, managed immigration, NATO-style alliances, and gradual social reform. They resist populism on both flanks, back institutions, and favour pragmatic, evidence-based policy over sweeping change.",
+      "sources": [
+        {
+          "title": "The Vital Center: The Politics of Freedom",
+          "author": "Arthur M. Schlesinger Jr.",
+          "year": "1949",
+          "by_adherent": true
+        },
+        {
+          "title": "Faces of Moderation: The Art of Balance in an Age of Extremes",
+          "author": "Aurelian Craiutu",
+          "year": "2017",
+          "by_adherent": true
+        },
+        {
+          "title": "Left and Right: The Significance of a Political Distinction",
+          "author": "Norberto Bobbio",
+          "year": "1994",
+          "by_adherent": false
+        }
+      ]
+    },
+    {
+      "slug": "third-way",
+      "name": "Third Way",
+      "family": "liberal-centrist",
+      "sensitive": false,
+      "summary": "Prioritises a modernised centre-left that embraces markets and globalisation over old-style state socialism and laissez-faire neoliberalism. It invests in people's skills and opportunity and pairs rights with responsibilities.",
+      "signature": "constant",
+      "brief": "The old left and the new right both failed. Globalisation and the knowledge economy are realities, so the state should not resist markets but equip people to thrive in them. We call this the social investment state: education, skills, childcare and welfare-to-work instead of passive benefits. We favour devolution and public-private partnerships, and a government that enables rather than commands. Representative democracy should be modernised through constitutional reform and greater transparency. We are 'tough on crime, tough on the causes of crime', and we accept stronger security powers. A market economy with light-touch but smart regulation, fiscal discipline, and private provision of public services where it works. Free trade and capital mobility are welcome. We support international institutions, European-style integration, and liberal intervention against atrocities. We favour managed immigration with integration and shared values. We are religion-friendly but secular. Our social values are moderately progressive. We are pro-innovation. We are divided over the legacy of market-led reforms and the wars of intervention.",
+      "now_notes": "Here and now the adherent supports market-friendly centre-left policy: education and skills investment, active labour market programmes, public-service reform with choice and competition, fiscal prudence, free trade, liberal internationalism, managed migration, and community safety. They want to modernise the centre-left rather than return to socialism.",
+      "sources": [
+        {
+          "title": "The Third Way: The Renewal of Social Democracy",
+          "author": "Anthony Giddens",
+          "year": "1998",
+          "by_adherent": true
+        },
+        {
+          "title": "The Third Way: New Politics for the New Century",
+          "author": "Tony Blair (Fabian Society pamphlet)",
+          "year": "1998",
+          "by_adherent": true
+        },
+        {
+          "title": "The Global Third Way Debate",
+          "author": "Anthony Giddens (ed.)",
+          "year": "2001",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "neoliberalism",
+      "name": "Neoliberalism",
+      "family": "liberal-centrist",
+      "sensitive": false,
+      "summary": "Prioritises market competition, free trade, sound money and rule-based limits on government over state ownership, protectionism and discretionary economic management. Strong institutions exist to protect markets.",
+      "signature": "constant",
+      "brief": "Markets coordinate dispersed knowledge better than any planner. Prosperity comes from competition, private property, open trade and capital flows, stable money and predictable rules. Few of us use the label: we call ourselves market liberals. Government should be strong but limited. It enforces contracts and competition and maintains price stability through independent central banks, and it stays out of running businesses. Many favour competitive federalism, letting jurisdictions compete for residents and capital. We privatise state enterprises, deregulate where rules protect incumbents, and keep budgets disciplined. International rules and institutions such as trade agreements and investment treaties should bind states so politics cannot easily undo open markets. We favour economic migration as a source of growth. Security matters through rule of law and stable alliances. We are secular and tend to be socially liberal or indifferent. We are strongly pro-technology and pro-innovation. We are divided on how much of a safety net is compatible with markets, and on democracy's role versus rules insulated from it.",
+      "now_notes": "Here and now the adherent supports free-trade agreements, central-bank independence, fiscal rules, privatisation and deregulation, competitive tax rates, flexible labour markets, skilled immigration, and liberalising zoning. They defend international economic institutions and resist protectionism and nationalisation.",
+      "sources": [
+        {
+          "title": "Capitalism and Freedom",
+          "author": "Milton Friedman",
+          "year": "1962",
+          "by_adherent": true
+        },
+        {
+          "title": "What Washington Means by Policy Reform",
+          "author": "John Williamson",
+          "year": "1990",
+          "by_adherent": true
+        },
+        {
+          "title": "Statement of Aims",
+          "author": "Mont Pelerin Society",
+          "year": "1947",
+          "by_adherent": true
+        },
+        {
+          "title": "Globalists: The End of Empire and the Birth of Neoliberalism",
+          "author": "Quinn Slobodian",
+          "year": "2018",
+          "by_adherent": false
+        }
+      ]
+    },
+    {
+      "slug": "liberal-conservatism",
+      "name": "Liberal conservatism",
+      "family": "conservative",
+      "sensitive": false,
+      "summary": "Prioritises free markets, limited government and constitutional democracy together with respect for inherited institutions, family and national tradition, over both radical reform and state-led economics.",
+      "signature": "constant",
+      "brief": "We combine economic liberalism with cultural conservatism. Free enterprise, private property, low taxes and sound public finances create prosperity, while family, religion, community and the nation give life meaning and stability. Power should be constitutionally limited, with a strong rule of law, but government must be firm on crime, borders and defence. Liberal democracy and parliamentary institutions are inherited goods to be protected, not torn up. Power should stay shared between national and local institutions as tradition has settled it, with decisions devolved to families, communities and local government where practical. Markets should coordinate the economy, with some safety net. We favour free trade and are strongly committed to alliances and credible defence. We value international cooperation but guard national sovereignty against excessive supranational authority. Immigration should be controlled and focused on integration into national culture. Religion has an honoured place in public life without a theocracy. Social change should be gradual, and traditional family values deserve respect, though many of us accept same-sex marriage. We are pro-innovation but cautious on bioethics. We are divided on social issues and on how far markets should go.",
+      "now_notes": "Here and now the adherent supports lower taxes, fiscal restraint, deregulation, free trade, strong defence and NATO-style alliances, tough policing, controlled immigration, school choice, and support for families. They work through mainstream centre-right parties and favour gradual, prudent reform.",
+      "sources": [
+        {
+          "title": "Rationalism in Politics and Other Essays (incl. 'On Being Conservative')",
+          "author": "Michael Oakeshott",
+          "year": "1962",
+          "by_adherent": true
+        },
+        {
+          "title": "In Defense of Freedom: A Conservative Credo",
+          "author": "Frank S. Meyer",
+          "year": "1962",
+          "by_adherent": true
+        },
+        {
+          "title": "How to Be a Conservative",
+          "author": "Roger Scruton",
+          "year": "2014",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "traditional-conservatism",
+      "name": "Traditional (Burkean) conservatism",
+      "family": "conservative",
+      "sensitive": false,
+      "summary": "Prioritises inherited institutions, organic community, religion and prudent gradual change over abstract rationalist schemes and individual autonomy.",
+      "signature": "constant",
+      "brief": "Society is a partnership between the dead, the living and the unborn. The wisdom stored in custom, religion, family and long-standing institutions exceeds any one generation's reasoning, so reform should be cautious and should repair rather than rebuild. Authority should be layered: the 'little platoons' of family, parish and locality, and a constitution balanced between crown or executive, lords or elites, and commons. Liberty is ordered liberty, rooted in duties and the rule of law, and order and security underpin it. Private property is a bulwark of independence and continuity. We are sceptical of grand planning but not doctrinaire about markets: commerce must not dissolve community. Trade is a matter of prudence: generally welcome, but not at the cost of national industries and communities. We favour national sovereignty and a strong but prudent defence. Newcomers should integrate into the inherited culture. An established or publicly honoured religion strengthens moral order. Traditional norms of family and sexuality deserve institutional support. We are wary of technologies that remake human nature.",
+      "now_notes": "Here and now the adherent defends existing institutions against radical reform: constitutional continuity, established religion where it exists, marriage and the family, local government, heritage, and rural life. They support prudent fiscal policy, strong policing, controlled immigration with integration, and caution about biotechnology. They prefer slowing change to reversing it wholesale.",
+      "sources": [
+        {
+          "title": "Reflections on the Revolution in France",
+          "author": "Edmund Burke",
+          "year": "1790",
+          "by_adherent": true
+        },
+        {
+          "title": "The Conservative Mind",
+          "author": "Russell Kirk",
+          "year": "1953",
+          "by_adherent": true
+        },
+        {
+          "title": "The Meaning of Conservatism",
+          "author": "Roger Scruton",
+          "year": "1980",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "paleoconservatism",
+      "name": "Paleoconservatism",
+      "family": "conservative",
+      "sensitive": false,
+      "summary": "Prioritises national and cultural continuity, decentralised self-government, and non-intervention abroad over global free trade, mass immigration, a managerial state and foreign wars.",
+      "signature": "ideal: decentralised republic of rooted communities under a Christian heritage; now: immigration restriction, tariffs, non-interventionism",
+      "brief": "We are the 'old right'. Our nation is a historic people with a particular culture, faith and memory, not just an idea or an economy. The managerial elite, uniting big government, big business and big media, has eroded local self-government, family and inherited culture. Power should return to states, regions and communities. We support constitutional, republican government but distrust rule by courts and bureaucrats. We defend gun rights and free speech against the managerial state, and want firm law and order. We favour a republic, not an empire: no foreign wars for abstract causes, and a strong defence for the homeland only. We oppose supranational bodies that override national self-government. We are economic nationalists: protect domestic industry and workers with tariffs rather than chase global free trade. Property should be widely held, and we distrust corporate concentration. Immigration should be sharply reduced, and newcomers must assimilate. Christianity should shape public life and law. Traditional family and sexual morality should be affirmed. We are sceptical of transformative technology. We are divided on the role of the market and on racial and ethnic definitions of nationhood, which many reject.",
+      "now_notes": "Here and now the adherent supports large cuts to immigration, tariffs and industrial protection, withdrawing from foreign interventions and some alliances, devolution of power, opposition to supranational bodies, protecting traditional morality in schools and law, and challenging managerial and bureaucratic elites through populist politics.",
+      "sources": [
+        {
+          "title": "A Republic, Not an Empire",
+          "author": "Patrick J. Buchanan",
+          "year": "1999",
+          "by_adherent": true
+        },
+        {
+          "title": "Beautiful Losers: Essays on the Failure of American Conservatism",
+          "author": "Samuel Francis",
+          "year": "1993",
+          "by_adherent": true
+        },
+        {
+          "title": "The Conservative Movement",
+          "author": "Paul Gottfried and Thomas Fleming",
+          "year": "1988",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "communitarianism",
+      "name": "Communitarianism",
+      "family": "conservative",
+      "sensitive": false,
+      "summary": "Prioritises community, shared moral commitments and civic responsibilities over the unencumbered individual and rights-only liberalism, while keeping democratic institutions.",
+      "signature": "constant",
+      "brief": "People are shaped by their families, neighbourhoods, traditions and nations. A good society balances rights with responsibilities and cultivates shared values rather than staying neutral about the good life. Power should rest as close as possible to communities and civil society, through subsidiarity, with the state supporting rather than replacing them. We favour democracy with active civic participation. Liberty matters, but public safety and the common good can justify reasonable limits, such as sobriety checkpoints or sex-offender registries. We support a market economy embedded in social norms, with protections for workers and communities against disruption. We are moderately open on trade but want communities protected. Nations are real moral communities, so we support international cooperation while keeping national self-government, and we favour restraint abroad except for defence and preventing atrocities. We support national cohesion and civic integration: immigrants should be welcomed and expected to share core values and a language. Religion is a valued source of community and morality. On social norms we stress stable families and moral education. We are cautious about technology that erodes community. We are divided between left communitarians and conservative ones.",
+      "now_notes": "Here and now the adherent supports family-friendly policy, national service or civic education, local government and civil society, character education, community policing, measures against social fragmentation, integration programmes, and limits on corporate behaviour that harms communities. They support pragmatic cross-party reform.",
+      "sources": [
+        {
+          "title": "The Spirit of Community",
+          "author": "Amitai Etzioni",
+          "year": "1993",
+          "by_adherent": true
+        },
+        {
+          "title": "Liberalism and the Limits of Justice",
+          "author": "Michael J. Sandel",
+          "year": "1982",
+          "by_adherent": true
+        },
+        {
+          "title": "After Virtue",
+          "author": "Alasdair MacIntyre",
+          "year": "1981",
+          "by_adherent": false
+        },
+        {
+          "title": "The Responsive Communitarian Platform",
+          "author": "The Communitarian Network",
+          "year": "1991",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "christian-democracy",
+      "name": "Christian democracy",
+      "family": "religious",
+      "sensitive": false,
+      "summary": "Prioritises human dignity, subsidiarity and solidarity, drawn from Christian social teaching, over both individualist liberalism and collectivist socialism. It works through democratic institutions and a social market economy.",
+      "signature": "constant",
+      "brief": "The human person, created in God's image, has inviolable dignity. Society is built up from family, church, community and association, so higher authority intervenes only where lower bodies cannot cope (subsidiarity), and everyone is responsible for everyone (solidarity). We are committed to constitutional democracy and federalism. Civil liberties and the rule of law are protected, with a firm but measured approach to public order. We favour a social market economy: private property with a social obligation, competition, and also worker participation, welfare, and partnership between unions and employers. We support open trade within a rules-based order and strongly support supranational cooperation and integration. We support defence through alliances and are cautious about force. Immigration and refugee protection are moral duties, with integration into shared values. Christian values should inform public life, though the state is not confessional and religious freedom is protected. On social questions we favour the family, protection of life, and moderately traditional norms. We are cautious on bioethics such as embryo research. We are divided between more conservative and more progressive wings.",
+      "now_notes": "Here and now the adherent supports a social market economy, family benefits, welfare and pensions, regional and supranational integration, humane but managed asylum, environmental stewardship, and restrictions on euthanasia and embryo research. They govern through broad centre-right coalitions and are compromise-oriented.",
+      "sources": [
+        {
+          "title": "Rerum Novarum",
+          "author": "Pope Leo XIII",
+          "year": "1891",
+          "by_adherent": true
+        },
+        {
+          "title": "Quadragesimo Anno",
+          "author": "Pope Pius XI",
+          "year": "1931",
+          "by_adherent": true
+        },
+        {
+          "title": "Christianity and Democracy",
+          "author": "Jacques Maritain",
+          "year": "1943",
+          "by_adherent": true
+        },
+        {
+          "title": "The Rise of Christian Democracy in Europe",
+          "author": "Stathis N. Kalyvas",
+          "year": "1996",
+          "by_adherent": false
+        }
+      ]
+    },
+    {
+      "slug": "catholic-integralism",
+      "name": "Catholic integralism",
+      "family": "religious",
+      "sensitive": false,
+      "summary": "Prioritises ordering political life toward the common good and humanity's supernatural end, with temporal power subordinate to the Church's spiritual authority, over liberal neutrality and individual autonomy.",
+      "signature": "ideal: confessional Catholic polity ordered to the common good; now: postliberal 'common good' governance within existing institutions",
+      "brief": "Man has a natural end, temporal flourishing, and a supernatural end, eternal life. Politics should not be neutral between them. The temporal power, the state, should be subordinate to the spiritual power, the Church, as body to soul, and should recognise the true religion. Liberalism's claim to neutrality is false and dissolves the common good. Authority may be monarchical, aristocratic or democratic in form, but it must govern for the common good, not the sum of private preferences. Subsidiarity leaves much to families, guilds and localities, but political authority must be strong enough to direct society to the common good. Liberty is the freedom to pursue the good, not to choose anything. Property is legitimate but socially bound. We favour family wages and distributist economics over unrestrained markets, and we are sceptical of free trade that harms communities. Nations are real, but the Church is universal. Newcomers are welcome in charity, but public life should be shaped by the Catholic faith and culture. War must meet just-war criteria. Public morality should reflect natural law on marriage, sexuality and life. We are wary of technologies that alter human nature. We are divided over monarchy and over how far to work within liberal states.",
+      "now_notes": "Here and now the adherent advances 'common good' policies within existing law: restrictions on abortion, euthanasia and pornography, pro-family and pro-natal economics, Sunday rest, religious schools, opposition to gender ideology, and judicial interpretation guided by the common good. Most reject coercion in matters of conversion and work gradually through institutions.",
+      "sources": [
+        {
+          "title": "Immortale Dei",
+          "author": "Pope Leo XIII",
+          "year": "1885",
+          "by_adherent": true
+        },
+        {
+          "title": "Integralism: A Manual of Political Philosophy",
+          "author": "Thomas Crean and Alan Fimister",
+          "year": "2020",
+          "by_adherent": true
+        },
+        {
+          "title": "Common Good Constitutionalism",
+          "author": "Adrian Vermeule",
+          "year": "2022",
+          "by_adherent": true
+        },
+        {
+          "title": "In Defence of Catholic Integralism",
+          "author": "Thomas Pink",
+          "year": "2018",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "islamic-democracy",
+      "name": "Islamic democracy",
+      "family": "religious",
+      "sensitive": false,
+      "summary": "Prioritises a polity in which Islamic ethical principles and consultation (shura) guide law, combined with elections, accountable government and public freedoms, over both secular laicism and clerical autocracy.",
+      "signature": "ideal: elected, accountable government with Islamic principles as a source of law; now: Muslim-democratic participation, religious freedom and anti-discrimination",
+      "brief": "Islam and democracy are compatible. The Qur'anic principle of shura (consultation), the community's role in choosing rulers, and the accountability of rulers to law support elected, constitutional government. Sovereignty belongs ultimately to God, but the people exercise it as trustees. Legislation should respect the higher objectives of Islamic law (maqasid): protecting life, faith, intellect, family and property. We value public freedoms, rule of law, independent courts and minority rights. Power should be constitutionally limited and shared, often with local self-government. Property rights are respected, but wealth carries social duties such as zakat. Usury is disfavoured, and a market economy with social justice is ideal. Trade should be open and fair. We favour cooperation across the Muslim world and the wider world and reject aggression. Integration need not mean abandoning faith. We are divided over how much of Islamic law the state should enact and how far to go on social conservatism: many are traditional on family and sexuality, while post-Islamist thinkers defend a civil, neutral state. Technology is welcome within ethical bounds.",
+      "now_notes": "In a liberal democracy the adherent participates as a citizen in mainstream parties and civic groups. They defend religious freedom and Muslim institutions, oppose discrimination and Islamophobia, back faith schools and halal provisions, support family-friendly welfare, and back Islamic finance options. On social issues many are traditional, while defending pluralism and democratic rights.",
+      "sources": [
+        {
+          "title": "Public Freedoms in the Islamic State (al-Hurriyat al-'Amma fi al-Dawla al-Islamiyya)",
+          "author": "Rached Ghannouchi",
+          "year": "1993",
+          "by_adherent": true
+        },
+        {
+          "title": "Islam and the Challenge of Democracy",
+          "author": "Khaled Abou El Fadl",
+          "year": "2004",
+          "by_adherent": true
+        },
+        {
+          "title": "Reason, Freedom, and Democracy in Islam",
+          "author": "Abdolkarim Soroush",
+          "year": "2000",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "theocratic-absolutism",
+      "name": "Theocratic absolutism",
+      "family": "religious",
+      "sensitive": true,
+      "summary": "Prioritises rule by divine law, administered by religious authority with unlimited power, over popular sovereignty, pluralism and individual liberty. Historically such regimes have enforced religious conformity and suppressed dissenters and minorities.",
+      "signature": "ideal: sacred law applied by a supreme religious authority; now: separatist piety and pressure for religious law, rejecting liberal secularism",
+      "brief": "Sovereignty belongs to God alone, and the law is revealed, not made by majorities. Rule belongs to those most learned and righteous in sacred law, whether a supreme cleric, a sacred king or a priestly council. Their authority is final and is not checked by elections, parties or courts outside the religious order. Authority is centralised in the supreme religious ruler, who appoints judges and governors. Liberty means freedom to obey divine law. Public sin, heresy and blasphemy threaten the community and must be restrained. Property is legitimate within religious law, which governs charity, usury and inheritance. The economy is guided by sacred norms, not by markets or planning as such. Trade with outsiders is allowed when it does not corrupt the faithful or strengthen the community's enemies. The community of believers matters more than the nation, though this tradition defends its own territory and faith by arms. Newcomers must live under the religious order. Faith and state are one. Family, gender roles, and sexual morality follow scripture. Technology is accepted when it does not violate sacred law. We are divided over which tradition and which clergy hold authority, and over clerical versus royal rule.",
+      "now_notes": "In a liberal democracy the adherent mostly withdraws into a devout community. They seek religious courts for family matters, separate schooling and maximal exemptions from secular law, campaign against blasphemy, sexual liberalism and secular education, and may reject voting as illegitimate. They aim to convert society and treat the liberal state as a temporary order.",
+      "sources": [
+        {
+          "title": "Unam Sanctam",
+          "author": "Pope Boniface VIII",
+          "year": "1302",
+          "by_adherent": true
+        },
+        {
+          "title": "Islamic Government: Governance of the Jurist (Velayat-e Faqih)",
+          "author": "Ruhollah Khomeini",
+          "year": "1970",
+          "by_adherent": true
+        },
+        {
+          "title": "The Turban for the Crown: The Islamic Revolution in Iran",
+          "author": "Said Amir Arjomand",
+          "year": "1988",
+          "by_adherent": false
+        }
+      ]
+    },
+    {
+      "slug": "distributism",
+      "name": "Distributism",
+      "family": "religious",
+      "sensitive": false,
+      "summary": "Prioritises widespread ownership of productive property by families, small firms and cooperatives over both concentrated capitalist ownership and state socialism.",
+      "signature": "ideal: society of small proprietors, guilds and cooperatives; now: anti-monopoly, small-business, cooperative and localist policies",
+      "brief": "The problem with capitalism is not that there are too many capitalists but too few. Property should be spread widely so that most families own the means of their livelihood: the farm, the shop, the workshop, the share in a cooperative. Both big business and big government reduce people to wage dependency, which Belloc called the 'servile state'. Power and decisions should be devolved through subsidiarity, with guilds and local associations regulating trades. We support democratic self-government and the liberties of families and associations, which widespread property makes secure. We favour markets among small producers, but with legal limits on concentration, such as anti-monopoly law, differential taxation, and guild standards. We are sceptical of free trade that destroys local economies. We value nations and localities, avoid foreign adventures, and accept just-war limits. Newcomers should join community life. Grounded in Catholic social teaching, we welcome religion in public life and traditional family norms. We prefer human-scale, appropriate technology over gigantism. We are divided between religious and secular localist wings.",
+      "now_notes": "Here and now the adherent supports antitrust breakups, small-business and family-farm support, employee ownership and cooperatives, local banks and credit unions, community land trusts, taxes favouring small holdings, buy-local and anti-big-box zoning, and family-wage policies. They work across left and right.",
+      "sources": [
+        {
+          "title": "The Servile State",
+          "author": "Hilaire Belloc",
+          "year": "1912",
+          "by_adherent": true
+        },
+        {
+          "title": "The Outline of Sanity",
+          "author": "G. K. Chesterton",
+          "year": "1926",
+          "by_adherent": true
+        },
+        {
+          "title": "Small Is Beautiful: A Study of Economics as if People Mattered",
+          "author": "E. F. Schumacher",
+          "year": "1973",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "gandhian-sarvodaya",
+      "name": "Gandhian Sarvodaya",
+      "family": "religious",
+      "sensitive": false,
+      "summary": "Prioritises the welfare of all, through self-governing village republics, non-violence, trusteeship and simple living, over centralised state power, industrial mass production and material accumulation.",
+      "signature": "ideal: decentralised non-violent village republics (gram swaraj); now: constructive programme, non-violent resistance and local self-reliance",
+      "brief": "Sarvodaya means 'the welfare of all'. True self-rule (swaraj) begins with self-discipline and is built from below: self-sufficient village republics, federated in widening circles rather than a pyramid. The state is organised violence, so the less it does the better. Individual conscience and civil liberties are central, and order should rest on moral discipline and unarmed peace brigades (shanti sena) rather than armed police. Decisions should be made by consensus in local communities. Non-violence (ahimsa) and the pursuit of truth (satyagraha) govern everything, including resistance to injustice and defence. We are deeply dovish. Free nations should cooperate in a world federation, each keeping its own swaraj. The rich are trustees, not owners, of their wealth. Land should be shared, and economic life should rest on local production (swadeshi) and handicraft, not large machines that displace labour. Ethics and religion shape politics, but no faith is preferred: all religions are respected equally. All communities belong equally, and Hindu-Muslim unity is a core aim. Untouchability and caste oppression must end. Personal life should be simple, self-restrained and close to nature. We are sceptical of industrial and transformative technology. Followers are divided on how far to reject modern industry and the state, and on Gandhi's personal asceticism.",
+      "now_notes": "In a developed democracy the adherent practises the constructive programme: local food and craft economies, cooperatives, voluntary simplicity, interfaith work, and community self-help. They use non-violent civil disobedience against war, nuclear weapons, and injustice. They support disarmament, decentralisation and limits on consumerism, and work more through movements than parties.",
+      "sources": [
+        {
+          "title": "Hind Swaraj (Indian Home Rule)",
+          "author": "M. K. Gandhi",
+          "year": "1909",
+          "by_adherent": true
+        },
+        {
+          "title": "Constructive Programme: Its Meaning and Place",
+          "author": "M. K. Gandhi",
+          "year": "1941",
+          "by_adherent": true
+        },
+        {
+          "title": "A Plea for Reconstruction of Indian Polity",
+          "author": "Jayaprakash Narayan",
+          "year": "1959",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "national-conservatism",
+      "name": "National conservatism",
+      "family": "nationalist-populist",
+      "sensitive": false,
+      "summary": "Prioritises the independent nation-state, its cultural and religious heritage, and the family over supranational governance, global markets and liberal individualism.",
+      "signature": "constant",
+      "brief": "The world is best ordered as a family of independent nations, each governing itself according to its own traditions. Supranational bodies and a universal liberal order threaten self-government. The nation should be cohesive, with a shared language, history and loyalty. We support a strong but limited state and, where it suits the nation, federalism that devolves power to regions and localities. A strong state should defend borders, enforce law and order, and protect citizens. Representative democracy and constitutional government are legitimate, but elites must answer to the nation. We support private enterprise but reject market fundamentalism: industrial policy, protection of strategic sectors, and support for workers and families against global capital. Immigration should be reduced and selective, with assimilation into national culture. The state should honour the nation's religious heritage, in the West the Bible and Christianity, in public life and education. The traditional family and marriage are society's foundation. Force abroad should serve national interest only. We are cautious about technologies that undermine human dignity or national independence. We are divided on economics and on how much religion the state should promote.",
+      "now_notes": "Here and now the adherent supports sharp immigration cuts and border enforcement, withdrawing powers from supranational bodies, industrial policy and selective tariffs, pro-natal family policy, patriotic education, protecting religious expression in public life, and challenging progressive institutions. They work inside centre-right parties or new national movements.",
+      "sources": [
+        {
+          "title": "The Virtue of Nationalism",
+          "author": "Yoram Hazony",
+          "year": "2018",
+          "by_adherent": true
+        },
+        {
+          "title": "National Conservatism: A Statement of Principles",
+          "author": "Edmund Burke Foundation (signatories)",
+          "year": "2022",
+          "by_adherent": true
+        },
+        {
+          "title": "England and the Need for Nations",
+          "author": "Roger Scruton",
+          "year": "2004",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "right-populism",
+      "name": "Right-wing populism",
+      "family": "nationalist-populist",
+      "sensitive": false,
+      "summary": "Prioritises the will of the ordinary national people over a corrupt or out-of-touch elite, and national sovereignty, border control and cultural tradition over cosmopolitan, technocratic and supranational governance.",
+      "signature": "constant",
+      "brief": "Society is divided between the hard-working ordinary people and a self-serving elite of politicians, bureaucrats, media and global corporations. Democracy means the majority's will should prevail, through referendums and strong leaders who speak plainly for the people, not courts, experts and unelected bodies. Power should sit with the elected national government, though some movements are regionalist and favour devolution. We want tough law and order and secure borders. Welfare should be for citizens and contributors, not newcomers. We support markets but defend local workers and industry against globalisation and offshoring through tariffs. Sovereignty must be reclaimed from supranational institutions. We support a strong military for national defence but are sceptical of foreign wars. Immigration should be sharply reduced, and newcomers must assimilate into national culture. The nation's Christian or traditional heritage should be honoured publicly. We defend traditional family and gender norms against 'woke' ideology. We are sceptical of experts' tech agendas. We are divided on economics, between free-market and welfare-chauvinist wings, and on how far to bend institutional limits.",
+      "now_notes": "Here and now the adherent supports sharp immigration cuts, deportations, border barriers, tough-on-crime policy, referendums, leaving or reducing supranational commitments, tariffs, welfare for citizens, opposing progressive social policy in schools, and curbing the power of courts, media and the bureaucracy. They support insurgent parties or leaders.",
+      "sources": [
+        {
+          "title": "Regime Change: Toward a Postliberal Future",
+          "author": "Patrick J. Deneen",
+          "year": "2023",
+          "by_adherent": true
+        },
+        {
+          "title": "The New Class War: Saving Democracy from the Managerial Elite",
+          "author": "Michael Lind",
+          "year": "2020",
+          "by_adherent": false
+        },
+        {
+          "title": "Populist Radical Right Parties in Europe",
+          "author": "Cas Mudde",
+          "year": "2007",
+          "by_adherent": false
+        },
+        {
+          "title": "National Populism: The Revolt Against Liberal Democracy",
+          "author": "Roger Eatwell and Matthew Goodwin",
+          "year": "2018",
+          "by_adherent": false
+        }
+      ]
+    },
+    {
+      "slug": "civic-nationalism",
+      "name": "Civic nationalism",
+      "family": "nationalist-populist",
+      "sensitive": false,
+      "summary": "Prioritises a nation defined by shared citizenship, political values and institutions over ethnic, religious or ancestral definitions of belonging, and national self-government over supranational rule.",
+      "signature": "constant",
+      "brief": "A nation is a daily plebiscite: a community of citizens who choose to share laws, institutions, a language and a common future, whatever their ancestry. National loyalty sustains democracy, solidarity and the welfare state, so it should be cultivated rather than dismissed. Government should be democratic and accountable to citizens, under one shared law. Power may be devolved, but one citizenship and one set of rights apply across the whole nation. The nation-state is the main home of political authority, and international cooperation is good but should not hollow out self-government. We value civil liberties and also a state capable of keeping order. The economy can be a mixed market, with national interest guiding strategic policy. Trade should be generally open, with protection for strategic industries. We defend the nation through credible armed forces. Immigrants are welcome to become full members by embracing civic values, the shared language and the national story. That means integration and assimilation to a civic culture, not multiculturalist separation. The state is secular and neutral on religion. Social norms vary among adherents. Technology is welcome under democratic control.",
+      "now_notes": "Here and now the adherent supports citizenship and language requirements, civic education, national service ideas, integration programmes, managed immigration levels, a secular public sphere, and protecting national democratic institutions. They are sceptical of deeper supranational transfers of power and resist ethnic nationalism and identity separatism alike.",
+      "sources": [
+        {
+          "title": "What Is a Nation? (Qu'est-ce qu'une nation?)",
+          "author": "Ernest Renan",
+          "year": "1882",
+          "by_adherent": true
+        },
+        {
+          "title": "On Nationality",
+          "author": "David Miller",
+          "year": "1995",
+          "by_adherent": true
+        },
+        {
+          "title": "Liberal Nationalism",
+          "author": "Yael Tamir",
+          "year": "1993",
+          "by_adherent": true
+        },
+        {
+          "title": "Blood and Belonging: Journeys into the New Nationalism",
+          "author": "Michael Ignatieff",
+          "year": "1993",
+          "by_adherent": false
+        }
+      ]
+    },
+    {
+      "slug": "fascism",
+      "name": "Fascism (historical, interwar)",
+      "family": "nationalist-populist",
+      "sensitive": true,
+      "summary": "Prioritises the unity, power and rebirth of the nation under a single-party state and leader over individual rights, pluralism, class conflict and liberal democracy. Its interwar regimes violently suppressed opposition, pursued wars of conquest (including the chemical-weapons campaign in Ethiopia) and, in Italy from 1938, enacted racial laws.",
+      "signature": "ideal: totalitarian corporate state led by a single party and leader; now (interwar liberal democracies): paramilitary mass movement exploiting elections toward seizing power",
+      "brief": "The nation is a living organism greater than any individual or class. Liberalism has fragmented it and Marxism has set class against class. In our own interwar words: everything within the state, nothing outside the state, nothing against the state. Authority flows down from a leader and a single party, and parliaments and parties are obsolete. Power is centralised in the state, and elected local government gives way to appointed officials. Order, discipline and national strength come before individual liberty. Private property is allowed but must serve the nation. Employers and workers are organised into state-supervised corporations that replace strikes and class struggle. The economy is directed toward national power and self-sufficiency (autarky). Sovereignty is absolute, and international bodies are scorned. War is ennobling, and expansion and empire are national destiny. Newcomers and minorities must merge into the national community or are excluded. Religion is harnessed as part of national tradition, as in the concordat with the Church. Family, motherhood, birthrate and traditional gender roles are exalted. Machines, speed and modern technology are celebrated as national power. Movements differed, and this archetype excludes National Socialism.",
+      "now_notes": "Coded historically: an interwar adherent in a parliamentary democracy builds a mass movement with uniformed squads, contests elections while despising them, and backs emergency powers, suppression of socialists and unions, corporatist councils, rearmament, autarkic tariffs, immigration restriction, and nationalist mobilisation. The aim is to replace the democratic order, not reform it.",
+      "sources": [
+        {
+          "title": "The Doctrine of Fascism (La dottrina del fascismo)",
+          "author": "Benito Mussolini and Giovanni Gentile",
+          "year": "1932",
+          "by_adherent": true
+        },
+        {
+          "title": "Origins and Doctrine of Fascism",
+          "author": "Giovanni Gentile",
+          "year": "1929",
+          "by_adherent": true
+        },
+        {
+          "title": "The Anatomy of Fascism",
+          "author": "Robert O. Paxton",
+          "year": "2004",
+          "by_adherent": false
+        },
+        {
+          "title": "A History of Fascism, 1914–1945",
+          "author": "Stanley G. Payne",
+          "year": "1995",
+          "by_adherent": false
+        }
+      ]
+    },
+    {
+      "slug": "kemalism",
+      "name": "Kemalism",
+      "family": "nationalist-populist",
+      "sensitive": false,
+      "summary": "Prioritises a unitary, secular, modernising republic and civic national unity over religious authority, traditional custom, ethnic particularism and foreign tutelage.",
+      "signature": "ideal: secular, unitary, state-led modernising republic; now: assertive secularism, national sovereignty and defence of republican institutions",
+      "brief": "Our principles are the Six Arrows: republicanism, nationalism, populism (the nation as one classless whole), statism, secularism and reformism. Sovereignty belongs unconditionally to the nation. The republic is unitary and centralised, with a strong executive. Democracy is the goal, but republican institutions, sometimes guarded by the army and judiciary, must be protected against reaction and separatism. Liberties are valued but may be limited to defend the republic and national unity. The state leads development: state enterprises and planning drive industrialisation where private capital is too weak. Full independence means no capitulations or foreign control, and economic sovereignty. 'Peace at home, peace in the world': defensive, not expansionist, with a strong army. Citizenship is civic and shared; everyone who shares the republic's language and culture is part of the nation, which in practice pressed minorities, notably Kurds, to assimilate. Religion is kept under state supervision and out of law and politics (laiklik). Modern civilisation is the goal: women's education and suffrage, dress reform, secular law. Science and technology are the true guide. We are divided between left Kemalists and nationalist Kemalists.",
+      "now_notes": "In a developed democracy the adherent supports strict secularism in schools and public offices (bans on religious symbols for officials), a unitary state, civic integration and a common language, a strong public sector, women's rights, science education, and national sovereignty against supranational overreach. They defend the constitutional order firmly against religious parties.",
+      "sources": [
+        {
+          "title": "Nutuk (The Great Speech)",
+          "author": "Mustafa Kemal Atatürk",
+          "year": "1927",
+          "by_adherent": true
+        },
+        {
+          "title": "Republican People's Party programme (the Six Arrows)",
+          "author": "Republican People's Party (CHP)",
+          "year": "1931",
+          "by_adherent": true
+        },
+        {
+          "title": "Turkey: A Modern History",
+          "author": "Erik J. Zürcher",
+          "year": "1993",
+          "by_adherent": false
+        },
+        {
+          "title": "Atatürk: The Biography of the Founder of Modern Turkey",
+          "author": "Andrew Mango",
+          "year": "1999",
+          "by_adherent": false
+        }
+      ]
+    },
+    {
+      "slug": "peronism",
+      "name": "Peronism",
+      "family": "nationalist-populist",
+      "sensitive": false,
+      "summary": "Prioritises social justice, economic independence and political sovereignty through an 'organised community' of state, organised labour and capital, over both liberal capitalism and Marxist class struggle.",
+      "signature": "constant",
+      "brief": "Our three banners are social justice, economic independence and political sovereignty. We are a Third Position, neither capitalist nor communist. The 'organised community' brings the state, unions and business together under a leadership that embodies the people's will. Government should be strong, centralised and responsive to the masses, through elections and mass mobilisation. Order matters, but the workers come first. A mixed economy: nationalise utilities, railways and strategic resources, with a large welfare state, labour rights and rising wages, while private property serves a social function. The state plans and directs development through import substitution and protection of national industry. Sovereignty means resisting foreign economic domination and keeping non-alignment. The armed forces are respected as national institutions. Immigrants have built the nation and are integrated into a shared national-popular identity. We respect the Catholic tradition, and social norms were originally traditional, though we enfranchised women. Science and technology serve national industry and development. We are divided deeply, between left and right Peronists and statist and market-reform wings.",
+      "now_notes": "In a developed democracy the adherent supports strong unions and collective bargaining, a large welfare state, price and export controls when needed, protection of national industry, public ownership of utilities and energy, debt sovereignty against international lenders, and mass-based electoral politics around a strong leader. Positions on social issues vary by wing.",
+      "sources": [
+        {
+          "title": "La comunidad organizada (The Organised Community)",
+          "author": "Juan Domingo Perón",
+          "year": "1949",
+          "by_adherent": true
+        },
+        {
+          "title": "Las veinte verdades del justicialismo peronista (The Twenty Truths)",
+          "author": "Juan Domingo Perón",
+          "year": "1950",
+          "by_adherent": true
+        },
+        {
+          "title": "Resistance and Integration: Peronism and the Argentine Working Class, 1946–1976",
+          "author": "Daniel James",
+          "year": "1988",
+          "by_adherent": false
+        }
+      ]
+    },
+    {
+      "slug": "classical-liberalism",
+      "name": "Classical liberalism",
+      "family": "libertarian-market",
+      "sensitive": false,
+      "summary": "Prioritises individual liberty, private property, free markets and constitutionally limited government over state direction of the economy and enforcement of particular moral or religious ways of life.",
+      "signature": "constant",
+      "brief": "Individuals have natural rights to life, liberty and property. Government exists to secure them, by consent and under law. Power should be limited, divided and checked: constitutions, separation of powers, federalism, independent courts. Representative democracy is valuable as a check, but majorities cannot override rights. Liberty generally wins against security, though the state must keep order and enforce contracts. Private property and voluntary exchange create prosperity, so markets, not planners, coordinate the economy. Free trade benefits all nations and promotes peace. The state should avoid entangling alliances and wars, and maintain defence only. We generally favour freedom of movement, though some accept limits. Church and state are separate, with full religious toleration. The state should not enforce morality, but private associations and families may live traditionally. We welcome innovation. We are divided on the extent of public goods and poor relief, and on immigration.",
+      "now_notes": "Here and now the adherent supports lower taxes and spending, deregulation, free trade, school choice, privatisation, sound money, free speech protections, criminal justice reform, ending the drug war, open but orderly immigration, restraint in foreign policy, and strong constitutional limits on government.",
+      "sources": [
+        {
+          "title": "Second Treatise of Government",
+          "author": "John Locke",
+          "year": "1689",
+          "by_adherent": true
+        },
+        {
+          "title": "An Inquiry into the Nature and Causes of the Wealth of Nations",
+          "author": "Adam Smith",
+          "year": "1776",
+          "by_adherent": true
+        },
+        {
+          "title": "On Liberty",
+          "author": "John Stuart Mill",
+          "year": "1859",
+          "by_adherent": true
+        },
+        {
+          "title": "The Constitution of Liberty",
+          "author": "F. A. Hayek",
+          "year": "1960",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "minarchism",
+      "name": "Libertarian minarchism",
+      "family": "libertarian-market",
+      "sensitive": false,
+      "summary": "Prioritises individual rights and voluntary exchange over all other political goals, limiting the state to a 'night-watchman' that provides only police, courts and national defence.",
+      "signature": "ideal: night-watchman state; now: radical cuts to government, deregulation and civil liberties",
+      "brief": "Each person owns themselves. Initiating force or fraud against others is wrong, whoever does it, including the state. The only legitimate state is a minimal one: police to protect rights, courts to settle disputes, and armed forces to defend against invasion. Everything else, including welfare, schooling, health, and business regulation, belongs to markets, charity and voluntary associations. Power should be as decentralised as possible. Democracy is legitimate only within the narrow bounds of protecting rights. Liberty wins over security. Property is fully private, and the economy is fully market-driven. We support free trade with all. We favour non-intervention abroad and defence only. We oppose supranational bodies that regulate or tax individuals. Most of us favour open immigration, though some accept restrictions while welfare exists. Church and state are separate, and the state has no business enforcing social norms. Drugs, sex work and consensual lifestyles are legal. We strongly favour technological freedom, including enhancement. We are divided on immigration and abortion.",
+      "now_notes": "Here and now the adherent supports deep cuts to taxes and spending, abolishing agencies, deregulating occupations and housing, school choice, legalising drugs, ending civil asset forfeiture and mass surveillance, free trade, non-interventionist foreign policy, and liberal immigration. They work through libertarian parties, think tanks and ballot initiatives.",
+      "sources": [
+        {
+          "title": "Anarchy, State, and Utopia",
+          "author": "Robert Nozick",
+          "year": "1974",
+          "by_adherent": true
+        },
+        {
+          "title": "The Law",
+          "author": "Frédéric Bastiat",
+          "year": "1850",
+          "by_adherent": true
+        },
+        {
+          "title": "The Virtue of Selfishness",
+          "author": "Ayn Rand",
+          "year": "1964",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "georgism",
+      "name": "Georgism",
+      "family": "libertarian-market",
+      "sensitive": false,
+      "summary": "Prioritises capturing land and natural-resource rents for the community through a single land-value tax over taxing labour, capital and trade. Individuals keep the full product of their work in an otherwise free market.",
+      "signature": "constant",
+      "brief": "People own what they create, but no one created land. Land values come from the community and nature, so the rent of land belongs to everyone. A single tax on the unimproved value of land, plus natural resources, pollution and spectrum, should replace taxes on wages, buildings, enterprise and trade. That ends speculation, makes housing affordable and lets labour and capital keep what they earn. Beyond that, markets should coordinate the economy and private enterprise should flourish. Many Georgists would pay a citizen's dividend from land rents. Free trade is a core commitment. Government can be local, as land rents are local. We support democracy and civil liberties. We are internationalist and peaceful in temperament. Many of us favour open immigration, since land rent, not newcomers, is the source of scarcity. We are secular, and social norms are a private matter. We are pro-innovation. We are divided between geolibertarians and progressive Georgists on how much government the land rent should fund.",
+      "now_notes": "Here and now the adherent supports shifting property taxes onto land values, abolishing exemptions, zoning liberalisation, taxing resource extraction, carbon and congestion pricing, a citizen's dividend, and reducing taxes on labour and buildings. They work across parties through tax reform and housing (YIMBY) advocacy.",
+      "sources": [
+        {
+          "title": "Progress and Poverty",
+          "author": "Henry George",
+          "year": "1879",
+          "by_adherent": true
+        },
+        {
+          "title": "Protection or Free Trade",
+          "author": "Henry George",
+          "year": "1886",
+          "by_adherent": true
+        },
+        {
+          "title": "The Corruption of Economics",
+          "author": "Mason Gaffney and Fred Harrison",
+          "year": "1994",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "paleolibertarianism",
+      "name": "Paleolibertarianism",
+      "family": "libertarian-market",
+      "sensitive": false,
+      "summary": "Prioritises radical anti-statism and free markets together with cultural traditionalism, decentralisation and secession over the centralised managerial state, egalitarian social engineering and foreign wars.",
+      "signature": "ideal: private-law society of covenant communities (or radical minarchy); now: secession and devolution, ending the central bank, immigration restriction, non-intervention",
+      "brief": "The central state is the great enemy of liberty, property and tradition. Its welfare, regulation, wars and fiat money destroy families, churches and communities. Liberty is safest in small, decentralised units, so we support secession, states' rights and, ideally, a stateless private-law order. Democracy is no protection: majorities and elites both plunder, and monarchy was arguably less bad. Liberty beats state security powers: we oppose surveillance and police militarisation, and defend gun rights and private self-defence. Property rights are absolute, and markets coordinate everything, with sound, commodity-based money. Trade should be free, but immigration is not free trade: it should be by invitation and property-owner consent, so we favour restriction under today's states. We are strongly anti-war and anti-empire. We reject supranational institutions and global governance. Christianity and bourgeois morality are bulwarks of a free society, enforced by private communities and covenants, not by the state. We are sceptical of egalitarian and progressive social projects. On technology we are pro-market but culturally cautious. We are divided over the right-populist alliance strategy and over anarchism versus minarchy.",
+      "now_notes": "Here and now the adherent supports ending or auditing the central bank, gold and hard money, deep tax cuts, secession and devolution, immigration restriction, an end to foreign wars and aid, gun rights, homeschooling, and opposing anti-discrimination law. They pursue a populist coalition with the cultural right.",
+      "sources": [
+        {
+          "title": "Democracy: The God That Failed",
+          "author": "Hans-Hermann Hoppe",
+          "year": "2001",
+          "by_adherent": true
+        },
+        {
+          "title": "Right-Wing Populism: A Strategy for the Paleo Movement",
+          "author": "Murray N. Rothbard",
+          "year": "1992",
+          "by_adherent": true
+        },
+        {
+          "title": "The Case for Paleo-Libertarianism",
+          "author": "Llewellyn H. Rockwell Jr.",
+          "year": "1990",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "anarcho-communism",
+      "name": "Anarcho-communism",
+      "family": "anarchist",
+      "sensitive": false,
+      "summary": "Prioritises abolishing the state, capital and wage labour in favour of free federations of communes that hold everything in common and distribute according to need, over all forms of hierarchical authority, including a 'workers' state'.",
+      "signature": "ideal: stateless, moneyless federation of communes; now: mutual aid, direct action and building counter-power outside the state",
+      "brief": "Freedom and equality are inseparable. The state, capitalism and every unjustified hierarchy must be abolished, not captured. A socialist state would just create new rulers. Society should be organised from below as voluntary communes and workers' associations, federated freely for wider coordination, with decisions by assembly and consensus or direct vote. Mutual aid is as natural as competition. Everything belongs to everyone: 'from each according to ability, to each according to need', without money or wages. Production is coordinated by free agreement, not markets or central plans. Goods flow between communes as free sharing across all borders, not protected or commercial trade. No borders and no nations: humanity is one, and people may move freely. Police, prisons and standing armies are abolished, though popular militias may defend a revolution, and we are divided on violence. Religion is a private matter, and many of us are anticlerical. Social relations are free, egalitarian and feminist. Technology should serve abundance and free time, though we disagree about industry versus a simpler life.",
+      "now_notes": "Here and now the adherent builds mutual aid networks, tenants' unions, food sharing, cooperatives and social centres. They practise direct action such as strikes, occupations and blockades, oppose police and borders, and support migrants and prison abolition. They generally abstain from electoral politics and build counter-institutions rather than seeking state power.",
+      "sources": [
+        {
+          "title": "The Conquest of Bread",
+          "author": "Peter Kropotkin",
+          "year": "1892",
+          "by_adherent": true
+        },
+        {
+          "title": "Mutual Aid: A Factor of Evolution",
+          "author": "Peter Kropotkin",
+          "year": "1902",
+          "by_adherent": true
+        },
+        {
+          "title": "Anarchy (L'Anarchia)",
+          "author": "Errico Malatesta",
+          "year": "1891",
+          "by_adherent": true
+        },
+        {
+          "title": "Anarchism and Other Essays",
+          "author": "Emma Goldman",
+          "year": "1910",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "anarcho-syndicalism",
+      "name": "Anarcho-syndicalism",
+      "family": "anarchist",
+      "sensitive": false,
+      "summary": "Prioritises revolutionary industrial unions and direct action as the means and model of a stateless society over political parties, elections and state ownership. Production is run by federated workers' syndicates.",
+      "signature": "ideal: federation of self-managed industrial syndicates and communes; now: militant rank-and-file unionism and direct action",
+      "brief": "The emancipation of the workers must be the work of the workers themselves. Unions are not just bargaining tools: they are the seeds of the new society. Through direct action, such as strikes, sabotage, boycotts and finally the general strike, workers will take over the means of production and run them through federated syndicates, organised by industry and locality. No party, no parliament, no state: decisions are made in assemblies, with delegates who are mandated and recallable. Free association replaces police power, and defence of the revolution falls to the organised workers. Workers' collectives hold property in common, and production is coordinated through the federation of syndicates, not by markets or a central state. Goods flow freely between federations and across borders, without tariffs or profit. We are internationalist: workers of all countries share one cause, and borders divide them. We oppose militarism, though workers' militias defended the revolution in Spain. Migrants are fellow workers. Religion is private, and we have often been anticlerical. Social relations are egalitarian. Technology should lighten labour under workers' control.",
+      "now_notes": "Here and now the adherent organises independent, democratic rank-and-file unions, wildcat strikes, solidarity actions, workplace committees and anti-precarity campaigns. They organise migrant workers and refuse electoral politics and union bureaucracy, aiming to build the general strike's capacity rather than to win office.",
+      "sources": [
+        {
+          "title": "Anarcho-Syndicalism: Theory and Practice",
+          "author": "Rudolf Rocker",
+          "year": "1938",
+          "by_adherent": true
+        },
+        {
+          "title": "After the Revolution (El organismo económico de la revolución)",
+          "author": "Diego Abad de Santillán",
+          "year": "1936",
+          "by_adherent": true
+        },
+        {
+          "title": "Notes on Anarchism",
+          "author": "Noam Chomsky",
+          "year": "1970",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "mutualism",
+      "name": "Mutualism",
+      "family": "anarchist",
+      "sensitive": false,
+      "summary": "Prioritises reciprocity, possession based on occupancy and use, mutual credit and voluntary federation over both capitalist absentee ownership and state or communist collectivism. It envisions markets without capitalism.",
+      "signature": "ideal: federated market society of self-employed producers and cooperatives with mutual banks; now: cooperatives, credit unions and counter-economics",
+      "brief": "Property, as absentee ownership that lets the owner collect rent, interest and profit without working, is theft. Possession, the land and tools you personally use, is freedom. We want a society of independent producers and worker cooperatives exchanging in free markets at cost, with mutual banks issuing interest-free credit so capital cannot dominate labour. Authority should dissolve into contracts and voluntary federation among communes and associations, from the bottom up. Liberty is central, and justice is reciprocity. Markets, not planning, coordinate, but without the privileges that enable monopoly and rent. We favour free trade and oppose national borders. We are anti-militarist. Newcomers are welcome as equals. Religion is private, and Proudhon was anticlerical. On social norms, historic mutualists varied, and Proudhon himself was patriarchal, which modern mutualists reject. We are open to technology that decentralises production. We are divided over individualist versus communal emphases, and on land tenure rules.",
+      "now_notes": "Here and now the adherent builds cooperatives, credit unions, local currencies and mutual-aid societies, community land trusts, and peer production. They oppose the intellectual property, licensing and zoning privileges that favour big capital, and they practise counter-economics rather than electoral politics.",
+      "sources": [
+        {
+          "title": "What Is Property?",
+          "author": "Pierre-Joseph Proudhon",
+          "year": "1840",
+          "by_adherent": true
+        },
+        {
+          "title": "General Idea of the Revolution in the Nineteenth Century",
+          "author": "Pierre-Joseph Proudhon",
+          "year": "1851",
+          "by_adherent": true
+        },
+        {
+          "title": "Instead of a Book",
+          "author": "Benjamin R. Tucker",
+          "year": "1893",
+          "by_adherent": true
+        },
+        {
+          "title": "Studies in Mutualist Political Economy",
+          "author": "Kevin A. Carson",
+          "year": "2004",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "libertarian-municipalism",
+      "name": "Libertarian municipalism (Communalism)",
+      "family": "anarchist",
+      "sensitive": false,
+      "summary": "Prioritises direct democracy in face-to-face citizen assemblies, confederated across municipalities, and an ecological, municipalised economy over the nation-state, representative government and both private and state ownership.",
+      "signature": "ideal: confederation of democratic municipal assemblies with a municipalised economy; now: running for local office and building neighbourhood assemblies",
+      "brief": "The city, the town and the neighbourhood are where real politics happens. Policy should be made by citizens in popular assemblies, with recallable, mandated delegates coordinating in confederal councils. Administration is separate from policy-making. The nation-state should be replaced by this confederation. Liberty is civic freedom, and security comes from a self-governing community, not police power. Land and enterprises should be municipalised: owned by the community, with economic decisions made by citizen assemblies, not by private owners or a central state. Planning is democratic and local, coordinated confederally. Economies should be relatively self-reliant and ecological. We are internationalist and anti-militarist, though communities may defend themselves with citizen militias. Newcomers become equal citizens of the assembly. We are rational and secular, and our social values are progressive and feminist. We embrace 'liberatory technology', meaning renewable, decentralised and human-scale tools, against hierarchical domination of nature. Unlike many anarchists, we take part in local elections.",
+      "now_notes": "Here and now the adherent runs candidates in municipal elections on platforms of participatory budgeting and neighbourhood assemblies. They push for municipal ownership of energy and housing and back community land trusts, local food systems, and confederations of 'fearless cities'. They avoid national parliamentary politics.",
+      "sources": [
+        {
+          "title": "The Ecology of Freedom",
+          "author": "Murray Bookchin",
+          "year": "1982",
+          "by_adherent": true
+        },
+        {
+          "title": "The Next Revolution: Popular Assemblies and the Promise of Direct Democracy",
+          "author": "Murray Bookchin",
+          "year": "2015",
+          "by_adherent": true
+        },
+        {
+          "title": "The Politics of Social Ecology: Libertarian Municipalism",
+          "author": "Janet Biehl (with Murray Bookchin)",
+          "year": "1998",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "anarcho-capitalism",
+      "name": "Anarcho-capitalism",
+      "family": "anarchist",
+      "sensitive": false,
+      "summary": "Prioritises absolute self-ownership, private property and voluntary contract over any state. Even law, security and defence would be supplied by competing private firms in a free market.",
+      "signature": "ideal: stateless private-law society; now: radical deregulation, tax resistance, crypto and exit strategies",
+      "brief": "The non-aggression principle is the foundation: no one may initiate force against another person or their property. The state is a territorial monopoly on force financed by taxation, which is theft, so it is illegitimate. Law, courts, policing and defence can be provided by competing private agencies, insurers and arbitrators under polycentric law. Decisions are made by owners and contracts, not by votes. Democracy has no special legitimacy. Liberty is maximal, and security is a service you buy. All property is private, and free markets coordinate everything, including money. Trade is entirely free. There is no nation-state and no foreign policy, and defence is decentralised and private. Migration happens through property owners' invitation, and we are divided between open-borders and covenant-community views. There is no state religion and no state moral code: communities may set their own rules by contract. We are strongly pro-technology, enhancement and innovation.",
+      "now_notes": "Here and now the adherent supports any cut in state power: abolishing taxes and agencies, legalising drugs and all consensual acts, ending central banking, embracing cryptocurrency, homeschooling, private cities and charter zones, and non-intervention abroad. They often favour exit and agorism, the counter-economy, over electoral politics.",
+      "sources": [
+        {
+          "title": "For a New Liberty: The Libertarian Manifesto",
+          "author": "Murray N. Rothbard",
+          "year": "1973",
+          "by_adherent": true
+        },
+        {
+          "title": "The Machinery of Freedom",
+          "author": "David D. Friedman",
+          "year": "1973",
+          "by_adherent": true
+        },
+        {
+          "title": "The Ethics of Liberty",
+          "author": "Murray N. Rothbard",
+          "year": "1982",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "anarcho-primitivism",
+      "name": "Anarcho-primitivism",
+      "family": "anarchist",
+      "sensitive": false,
+      "summary": "Prioritises dismantling civilisation itself, including agriculture, industry, mass society and domestication, in favour of small, egalitarian, foraging-style communities living in wild nature, over technological progress and any form of the state.",
+      "signature": "ideal: small autonomous foraging bands in rewilded nature; now: rewilding, resistance to industrial projects, simple living",
+      "brief": "Hierarchy, the state, patriarchy and alienation did not begin with capitalism. They began with domestication and agriculture, which produced surplus, property, division of labour and rulers. Industrial civilisation is ecologically suicidal and spiritually deadening. The ideal is small, face-to-face bands and tribes living in wild nature, making decisions informally and by consensus, with no state, police or rulers. Nothing is owned beyond personal possessions. Sharing and gift replace both markets and planning. Trade is minimal and local. There are no nations, no borders and no armies, though we are divided over the morality of sabotage. People come and go freely between small groups. Organised religion is a tool of domination, though many feel animist kinship with nature. Gender roles and norms are fluid and egalitarian. We reject technology as a system: we oppose genetic engineering, AI and life extension, and even symbolic culture is questioned by some of us.",
+      "now_notes": "Here and now the adherent supports rewilding, protecting wilderness and Indigenous land rights, resisting mines, pipelines and dams, and opposing genetic engineering and AI. They practise primitive skills and low-tech living. They seldom engage in electoral politics and see reform as prolonging industrial civilisation.",
+      "sources": [
+        {
+          "title": "Future Primitive and Other Essays",
+          "author": "John Zerzan",
+          "year": "1994",
+          "by_adherent": true
+        },
+        {
+          "title": "Against His-Story, Against Leviathan!",
+          "author": "Fredy Perlman",
+          "year": "1983",
+          "by_adherent": true
+        },
+        {
+          "title": "Against Civilization: Readings and Reflections",
+          "author": "John Zerzan (ed.)",
+          "year": "1999",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "absolute-monarchism",
+      "name": "Absolute monarchism",
+      "family": "hierarchical",
+      "sensitive": false,
+      "summary": "Prioritises undivided sovereign authority vested in a hereditary monarch, answerable to God and conscience rather than to parliaments or voters, over popular sovereignty, divided powers and party politics.",
+      "signature": "ideal: hereditary sovereign with undivided authority; now: support for strong executive authority, restoration movements and respect for crown institutions",
+      "brief": "Sovereignty cannot be divided. A commonwealth needs one final authority to keep the peace, and a hereditary monarch serves this best. They are raised for the role, above faction, invested in the realm's long-term good, and succession is clear. The king is father of the people, bound by divine and natural law and by conscience, but not by parliaments or elections. Councils advise but do not command. Authority is centralised in the crown, though provinces and estates may keep customary privileges by royal grant. Order and security are the first goods, because without them there is no liberty. Property is secure under the king's law. The economy is guided by the crown's interest in prosperity, historically by mercantilist means. The realm's sovereignty is absolute, and the crown maintains strong forces for defence and dynastic interest. Subjects of many peoples can be loyal to one throne, and loyalty matters more than ethnicity. The established church upholds the monarch's sacred authority. Traditional family and social hierarchy are affirmed. Technology is neutral if it serves the realm. We are divided over the degree of religious foundation.",
+      "now_notes": "In a liberal democracy the adherent supports restoration or strengthening of royal prerogatives where a monarchy exists, a strong executive over parliaments and parties, an established church, traditional social order and tough law and order. They are sceptical of party democracy, and many engage culturally rather than electorally.",
+      "sources": [
+        {
+          "title": "Six Books of the Commonwealth",
+          "author": "Jean Bodin",
+          "year": "1576",
+          "by_adherent": true
+        },
+        {
+          "title": "Patriarcha",
+          "author": "Robert Filmer",
+          "year": "1680",
+          "by_adherent": true
+        },
+        {
+          "title": "Politics Drawn from the Very Words of Holy Scripture",
+          "author": "Jacques-Bénigne Bossuet",
+          "year": "1709",
+          "by_adherent": true
+        },
+        {
+          "title": "Leviathan",
+          "author": "Thomas Hobbes",
+          "year": "1651",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "constitutional-monarchism",
+      "name": "Constitutional monarchism",
+      "family": "hierarchical",
+      "sensitive": false,
+      "summary": "Prioritises a hereditary head of state above party politics, as a symbol of continuity and national unity, over an elected presidency, while real governing power rests with an elected parliament under constitutional law.",
+      "signature": "constant",
+      "brief": "The monarch reigns but does not rule. A hereditary head of state stands above party politics. They embody the nation's history and unity, they are a neutral guardian of the constitution, and they deny any politician the highest symbolic place. The monarch has the right to be consulted, to encourage and to warn, with reserve powers for genuine constitutional crises. Governing power belongs to an elected parliament and a responsible cabinet, under the rule of law. The crown suits both unitary and federal realms, and devolution is a matter for parliament. We value liberal democracy, civil liberties and gradual constitutional evolution. On economics we span the mainstream, from market-oriented to social democratic. Trade policy likewise follows mainstream opinion and is generally open. Sovereignty rests in the crown-in-parliament, and international cooperation is welcome. The armed forces owe loyalty to the crown, which keeps them out of politics. Newcomers become subjects or citizens of the realm under one crown. Some realms keep an established church, others are secular. Social norms are moderate and traditional in ceremony. Technology is not a monarchist question. We are divided over established religion and the scope of reserve powers.",
+      "now_notes": "Here and now the adherent supports keeping the monarchy and its constitutional role, ceremonial traditions, a parliamentary system, the stability and continuity it provides, and its unifying symbolism. They oppose republican campaigns and are otherwise moderate and mainstream on policy.",
+      "sources": [
+        {
+          "title": "The English Constitution",
+          "author": "Walter Bagehot",
+          "year": "1867",
+          "by_adherent": true
+        },
+        {
+          "title": "Principles of Politics Applicable to All Representative Governments",
+          "author": "Benjamin Constant",
+          "year": "1815",
+          "by_adherent": true
+        },
+        {
+          "title": "The Monarchy and the Constitution",
+          "author": "Vernon Bogdanor",
+          "year": "1995",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "technocracy",
+      "name": "Technocracy",
+      "family": "hierarchical",
+      "sensitive": false,
+      "summary": "Prioritises governance by qualified experts using scientific evidence and data over electoral competition, ideology and popular opinion. Policy is treated as a problem of optimal design.",
+      "signature": "ideal: expert-run planning and administration with limited electoral input; now: independent expert agencies, evidence-based policy and epistocratic reforms",
+      "brief": "Most public problems are technical: energy, health, infrastructure, the economy, climate. They should be solved by those who understand them. Engineers, scientists and trained administrators, chosen by competence, should make the key decisions, guided by data, modelling and measurable outcomes. Elections and partisan politics introduce ignorance, short-termism and demagoguery, so voters' role should be limited, with input but not control. Authority should sit at whatever level matches the technical problem, which in practice favours national and continental agencies. Liberty matters instrumentally, but rational order and public safety come first. The ownership question is pragmatic, whatever works. The economy should be steered by planning and expert agencies, using markets as tools where they perform. Trade policy should follow economic modelling, generally favouring openness while managing supply-chain risks. We support global coordination and international bodies on technical issues. Force is for rational defence only. Migration should be managed by labour-market and demographic needs. The state is strictly secular and evidence-based. Social norms should follow evidence, which is usually liberal. We strongly embrace transformative technology. We are divided between hard technocrats, who would replace politics, and soft technocrats or epistocrats, who would insulate expert bodies within democracy.",
+      "now_notes": "Here and now the adherent supports independent expert agencies (central banks, health and climate authorities, infrastructure commissions), evidence-based policy units, depoliticised civil services, AI and data-driven governance, and science funding. Some support voter-competence ideas such as epistocracy, and some support supranational technical regulation.",
+      "sources": [
+        {
+          "title": "The Engineers and the Price System",
+          "author": "Thorstein Veblen",
+          "year": "1921",
+          "by_adherent": true
+        },
+        {
+          "title": "Technocracy Study Course",
+          "author": "Technocracy Inc. (M. King Hubbert et al.)",
+          "year": "1934",
+          "by_adherent": true
+        },
+        {
+          "title": "Against Democracy",
+          "author": "Jason Brennan",
+          "year": "2016",
+          "by_adherent": true
+        },
+        {
+          "title": "Technocracy in America",
+          "author": "Parag Khanna",
+          "year": "2017",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "confucian-meritocracy",
+      "name": "Confucian meritocracy",
+      "family": "hierarchical",
+      "sensitive": false,
+      "summary": "Prioritises rule by virtuous and capable officials selected by merit, benevolent government for the people's welfare, and social harmony over competitive electoral democracy and individualist rights.",
+      "signature": "ideal: meritocratic, benevolent government with consultative input; now: civil-service excellence, family policy and moral education",
+      "brief": "Government exists for the people's welfare: the people are the root of the state. But governing well takes virtue and wisdom, so officials should be selected and promoted by examination and proven performance, not by popularity. The ideal is benevolent rule by cultivated, morally exemplary officials, with consultation and remonstrance, and with democratic input at local levels. A unified central government is the norm, with responsibilities delegated to capable local officials. Harmony, order and the family come before individual rights claims, though rulers who lose the people's trust lose their mandate. The economy is a mix: markets with state guidance, light taxes, and duties to relieve poverty. Trade is welcome where it serves the people's welfare. We prefer peaceful relations and moral influence over conquest, with defence when needed. States are sovereign, though some adherents envision 'all under heaven' (tianxia), a harmonious order beyond rival nation-states. Newcomers are welcome to adopt the culture and its rituals. Confucianism is an ethical tradition: some want it publicly honoured, others a secular state. Filial piety, ritual propriety and family obligations are central, and gender roles are traditionally hierarchical, which modern adherents debate. Technology serves the people's welfare. We are divided over Jiang Qing's tricameral Confucian constitution versus democratic-compatible Confucianism.",
+      "now_notes": "In a liberal democracy the adherent supports a highly qualified, competitive civil service, long-term planning bodies, moral and civic education, family support and elder care, consultative bodies of experts alongside elected chambers, and courteous public culture. Some favour limits on populism, such as meritocratic upper chambers.",
+      "sources": [
+        {
+          "title": "The China Model: Political Meritocracy and the Limits of Democracy",
+          "author": "Daniel A. Bell",
+          "year": "2015",
+          "by_adherent": true
+        },
+        {
+          "title": "A Confucian Constitutional Order",
+          "author": "Jiang Qing",
+          "year": "2012",
+          "by_adherent": true
+        },
+        {
+          "title": "Confucian Perfectionism: A Political Philosophy for Modern Times",
+          "author": "Joseph Chan",
+          "year": "2014",
+          "by_adherent": true
+        },
+        {
+          "title": "Mencius",
+          "author": "Mencius (Mengzi)",
+          "year": "c. 300 BCE",
+          "by_adherent": true
+        }
+      ]
+    },
+    {
+      "slug": "developmental-authoritarianism",
+      "name": "Developmental authoritarianism",
+      "family": "hierarchical",
+      "sensitive": false,
+      "summary": "Prioritises rapid economic development, stability and national strength, delivered by a strong, meritocratic state that guides private enterprise, over political pluralism, civil liberties and unrestricted markets.",
+      "signature": "ideal: dominant-party developmental state with disciplined industrial policy; now: industrial policy, order and long-term state capacity within democracy",
+      "brief": "Development first. A poor or vulnerable nation needs stability, discipline and long-term planning more than adversarial party politics. A strong executive and a dominant party or leadership should set national goals. Power is centralised in the national government, with local authorities implementing national plans. Elections may exist but must not paralyse government. A meritocratic, well-paid, incorruptible bureaucracy steers the economy. Private firms compete, but the state guides investment, credit and industrial priorities and disciplines firms through export targets. Security and order come before civil liberties: strict laws, firm policing, limits on destabilising speech. Trade is outward-oriented, with exports welcome, but infant industries are protected and capital controlled. National sovereignty is jealously guarded, and strong defence and national service are expected. Ethnic and religious groups are managed for harmony, with a shared national identity. Religion is kept out of politics, and faiths are respected. Social norms emphasise family, work ethic, thrift and communal values. We are strongly pro-science and pro-technology. We are divided on how fast to liberalise politically once development is achieved.",
+      "now_notes": "In a developed liberal democracy the adherent supports strategic industrial policy, state investment funds, infrastructure, technical education, tough law and order, national service, limits on disruptive protest, and anti-corruption measures. They favour efficient executive government over gridlock and value outcomes over procedural pluralism.",
+      "sources": [
+        {
+          "title": "From Third World to First: The Singapore Story 1965–2000",
+          "author": "Lee Kuan Yew",
+          "year": "2000",
+          "by_adherent": true
+        },
+        {
+          "title": "The Country, the Revolution and I",
+          "author": "Park Chung-hee",
+          "year": "1963",
+          "by_adherent": true
+        },
+        {
+          "title": "MITI and the Japanese Miracle",
+          "author": "Chalmers Johnson",
+          "year": "1982",
+          "by_adherent": false
+        },
+        {
+          "title": "Asia's Next Giant: South Korea and Late Industrialization",
+          "author": "Alice H. Amsden",
+          "year": "1989",
+          "by_adherent": false
+        }
+      ]
+    },
+    {
+      "slug": "neoreaction",
+      "name": "Neoreaction",
+      "family": "hierarchical",
+      "sensitive": false,
+      "summary": "Prioritises effective, accountable sovereign authority, modelled on a corporation run by a chief executive, and citizens' freedom to exit, over democracy, egalitarianism and a progressive establishment.",
+      "signature": "ideal: patchwork of sovereign corporate city-states run by CEO-monarchs; now: exit, institution-building, and executive power against the bureaucracy",
+      "brief": "Democracy is not a check on power. It hands power to an unaccountable establishment of universities, media and civil service, which we call 'the Cathedral'. Good government is a question of incentives. A sovereign state should be run like a well-managed corporation, with a chief executive accountable to owners or shareholders, a system called neocameralism. Ideally the world becomes a patchwork of many small sovereign states competing for residents. Citizens are customers with the right of exit, not voters with voice. Order and security are the state's product: low crime and high stability. Liberty is the private freedom of a well-run realm, not political participation. Property and markets are respected, and the state itself is property. Trade is pragmatic. Sovereigns avoid crusading wars. Immigration is controlled by the sovereign's interest. Religion is optional and social norms are unpoliced, though many adherents are traditionalists. We are divided by our own 'trichotomy': techno-commercialists, who are accelerationist and pro-technology, religious traditionalists, and ethno-nationalists.",
+      "now_notes": "Here and now the adherent mostly rejects activism. They favour exit: charter cities, startup and network states, and crypto. They build parallel institutions, critique universities and media, and support strengthening executive power over the administrative state, civil-service reform and replacing bureaucrats. Some engage in right-wing politics, while others stay detached.",
+      "sources": [
+        {
+          "title": "Unqualified Reservations (blog essays)",
+          "author": "Mencius Moldbug (Curtis Yarvin)",
+          "year": "2007–2014",
+          "by_adherent": true
+        },
+        {
+          "title": "The Dark Enlightenment",
+          "author": "Nick Land",
+          "year": "2012",
+          "by_adherent": true
+        },
+        {
+          "title": "Democracy: The God That Failed",
+          "author": "Hans-Hermann Hoppe",
+          "year": "2001",
+          "by_adherent": false
+        }
+      ]
+    },
+    {
+      "slug": "transhumanism",
+      "name": "Techno-progressive transhumanism",
+      "family": "left-liberal",
+      "sensitive": false,
+      "summary": "Prioritises using science and technology to overcome biological limits, such as ageing, disease and cognitive constraints, with fair access guaranteed by democratic institutions, over bioconservative restraint and 'natural' limits.",
+      "signature": "constant",
+      "brief": "Humanity is a work in progress. Enhancement, life extension, genetic therapy, brain-computer interfaces and advanced AI can free people from suffering and expand human potential. Each person has 'morphological freedom', a right to modify their own body and mind. But technology must not deepen inequality, so we are techno-progressive: democratic institutions, regulation and a strong welfare state should ensure safety and universal access, including publicly funded enhancement and a basic income as automation spreads. We favour liberal democracy and civil liberties, with security measures against catastrophic risks. We favour mixed economies, with public research and planning for frontier technology. Trade and scientific knowledge should flow freely, with risky research coordinated nationally and globally. We are internationalist and favour global governance of AI and biotech risks, and we are dovish. We welcome immigrants and diversity, extended to future persons, uplifted animals and AIs. The state is secular, and our social values are strongly progressive. We are divided with libertarian extropians over markets, and among ourselves over accelerating versus slowing AI for safety.",
+      "now_notes": "Here and now the adherent supports public funding for longevity, gene therapy and AI research, a universal basic income, legalising safe enhancement and cognitive drugs, reproductive and bodily autonomy, AI safety regulation, international science cooperation, and equitable access to new therapies. They work through advocacy groups, research, and progressive parties.",
+      "sources": [
+        {
+          "title": "Citizen Cyborg: Why Democratic Societies Must Respond to the Redesigned Human of the Future",
+          "author": "James Hughes",
+          "year": "2004",
+          "by_adherent": true
+        },
+        {
+          "title": "In Defense of Posthuman Dignity",
+          "author": "Nick Bostrom",
+          "year": "2005",
+          "by_adherent": true
+        },
+        {
+          "title": "The Transhumanist Declaration",
+          "author": "World Transhumanist Association (now Humanity+)",
+          "year": "1998",
+          "by_adherent": true
+        }
+      ]
+    }
+  ],
+  "notes": "Composition check (47 archetypes; the spec says about 44). Family counts: socialist 6, left-liberal 5 (including transhumanism), liberal-centrist 4, conservative 4, religious 6, nationalist-populist 6, libertarian-market 4, anarchist 6, hierarchical 6. Every family has at least 3. Non-Western traditions: African socialism (Ujamaa), Islamic democracy, Gandhian Sarvodaya, Kemalism, Peronism (Latin America), Confucian meritocracy, and developmental authoritarianism (East and Southeast Asia); theocratic absolutism is generic but draws on Islamic and Catholic precedents. Centrist or moderate archetypes: Centrism and Third Way, with social liberalism and constitutional monarchism also moderate, so the 1–2 rule is met or slightly exceeded. Gaps and flags: (1) There is no Indigenous or decolonial archetype; consider an Indigenous sovereignty or decolonial archetype. (2) Buddhist political thought is missing (for example Buddhist economics or Buddhist socialism), and Hindu political traditions appear only through Gandhian Sarvodaya; Hindutva would need the sensitive flag if added. (3) Latin American left traditions beyond Peronism and generic left populism (for example Bolivarian socialism or liberation theology) and pan-Africanism as a standalone archetype are missing. (4) There is no agrarian or peasant populist archetype and no feminist-specific archetype; feminism is arguably cross-cutting. (5) Naming rule: the 'Justicialism' parenthetical (self-name of a living party) was dropped in review; the archetype is now 'Peronism'. Trotskyism, Kemalism, Peronism, Georgism and Gandhian are eponyms of deceased figures, which complies with the no-living-individuals rule. (6) Pairs at risk of near-duplication for the leave-one-coder-out check: social liberalism and progressive liberalism; paleolibertarianism and anarcho-capitalism; Confucian meritocracy and developmental authoritarianism; national conservatism and right-populism; democratic socialism and market socialism. (7) Transhumanism is filed under left-liberal, but its tec pole cuts across families, and libertarian transhumanism is absent. (8) The sensitive pairing follows the spec: fascism is coded historically (interwar Italian model, explicitly excluding National Socialism), and Marxism–Leninism is briefed in its Stalinist variant. Neoreaction and developmental authoritarianism are not flagged sensitive per the input list. Reviewers may want to revisit that symmetrically with absolute monarchism. (9) Several sources are by living authors; this is fine because the naming rule covers archetype names only. URLs are included only where confident (Lenin). Review pass (2026-10-31): briefs extended so each touches all 12 axis topics (fed, dem, lib, col, pla, glo, int, mil, mul, rel, pro, tec); neoliberalism's hostile second critic (Harvey) replaced with the Mont Pelerin Society Statement of Aims so no family carries two critical sources against one by adherents; right-populism's Lasch removed and Lind recoded as non-adherent, with Deneen added as an adherent source; MacIntyre recoded non-adherent (he rejected the communitarian label); transhumanism's extropian source swapped for the Transhumanist Declaration to match the techno-progressive variant; Technocracy Study Course author corrected; a few evaluative or uneven phrasings neutralised (e.g. 'humane immigration system', ML religion policy, Kemalist assimilation of Kurds, Italian Fascist gas campaign in Ethiopia)."
+}
