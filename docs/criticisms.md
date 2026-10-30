@@ -306,7 +306,7 @@ Several of the remedies above are specified but not yet finished. Re-check these
 
 - `src/data/calibration.json` is marked **PROVISIONAL**. It was generated against a 4-entry placeholder catalogue with synthetic sheets (`catalogueVersion: 0`). The match-label cuts and the split margin μ will change once the coded catalogue is built. μ currently sits at its 0.005 floor.
 - The coder answer sheets in `content/archetypes/raw/` are incomplete. Opus and GPT-6.1-sol sheets exist for most batches, but almost all Grok files are empty. Until they are filled, "three coders from three families" is the method, not yet the data.
-- The automated provenance-overlap gate and the Playwright network and parity tests described in [spec] §2.3, §6.8 and §6.9 are not yet in the repo. The `justfile` references `scripts/overlap.py` and `scripts/build_archetypes.py`, which do not exist; the archetype builder is `scripts/build-archetypes.ts`.
+- The provenance-overlap gate (`just overlap`) and the Playwright network, parity and keyboard tests (`just e2e`) are in the repo and passing.
 
 ---
 
