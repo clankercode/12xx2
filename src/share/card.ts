@@ -104,6 +104,10 @@ export function drawCard(canvas: HTMLCanvasElement, r: Results, o: CardOptions) 
   const ctx = canvas.getContext('2d')!
   const wide = o.size === 'wide'
   const pad = wide ? 48 : 72
+  // Stories: keep text out of the app overlays (profile bar on top, reply bar at the bottom).
+  const story = o.size === 'story'
+  const top = story ? 230 : pad
+  const footY = H - (wide ? 28 : story ? 340 : 48)
 
   // Squared paper.
   ctx.fillStyle = C.ink
@@ -128,17 +132,17 @@ export function drawCard(canvas: HTMLCanvasElement, r: Results, o: CardOptions) 
   ctx.textBaseline = 'alphabetic'
   ctx.fillStyle = C.paper
   ctx.font = `800 ${wide ? 34 : 44}px ${DISPLAY}`
-  ctx.fillText('12 Axes', pad, pad + (wide ? 22 : 30))
+  ctx.fillText('12 Axes', pad, top + (wide ? 22 : 30))
   const wmW = ctx.measureText('12 Axes').width
   ctx.fillStyle = C.now
   ctx.font = `800 ${wide ? 20 : 26}px ${DISPLAY}`
-  ctx.fillText('2', pad + wmW + 4, pad + (wide ? 4 : 6))
+  ctx.fillText('2', pad + wmW + 4, top + (wide ? 4 : 6))
 
   // Headline.
   const hl = headline(r, o.allowSensitive)
   const left = pad
   const colW = wide ? 470 : W - 2 * pad
-  let y = pad + (wide ? 80 : 130)
+  let y = top + (wide ? 80 : 130)
   ctx.fillStyle = C.muted
   ctx.font = `700 ${wide ? 22 : 30}px ${BODY}`
   ctx.fillText(hl.kicker, left, y)
@@ -194,7 +198,7 @@ export function drawCard(canvas: HTMLCanvasElement, r: Results, o: CardOptions) 
   let cy = wide ? pad + 10 : y + 56
   // Fit 12 rows between the headline and the footer.
   const overhead = wide ? 4 * groupGap : 4 * (14 + groupGap) + 30
-  const bottom = H - (wide ? 70 : 120)
+  const bottom = footY - (wide ? 42 : 72)
   const rowH = Math.max(28, Math.min(wide ? 40 : 72, (bottom - cy - overhead) / 12))
   const xs = (v: number) => trackX + ((v + 100) / 200) * trackW
   for (const g of Object.keys(GROUPS) as GroupId[]) {
@@ -269,7 +273,7 @@ export function drawCard(canvas: HTMLCanvasElement, r: Results, o: CardOptions) 
   ctx.fillStyle = C.paper
   ctx.font = `700 ${wide ? 20 : 28}px ${BODY}`
   const foot = `${o.host} — what’s your gap?`
-  ctx.fillText(foot, pad, H - (wide ? 28 : 48))
+  ctx.fillText(foot, pad, footY)
 }
 
 export function cardBlob(canvas: HTMLCanvasElement): Promise<Blob> {

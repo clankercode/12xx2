@@ -119,7 +119,7 @@ await browser.close()
 const desc = 'A 12-axis political values quiz where every statement is answered twice: for your ideal system, and for here and now.'
 writeFileSync(
   `${DIST}/index.html`,
-  page({ title: '12 Axes² — your politics, in theory and in practice', description: desc, url: site, image: `${site}og/default.png` }),
+  page({ title: '12 Axes² (12 Axes Squared) — your politics, in theory and in practice', description: desc, url: site, image: `${site}og/default.png` }),
 )
 const open = CATALOGUE.filter(x => !x.sensitive)
 let n = 0

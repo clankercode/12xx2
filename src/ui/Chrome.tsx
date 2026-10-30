@@ -66,7 +66,7 @@ export function Footer() {
             <a href="#/privacy">Privacy</a>
           </p>
           <p className="muted small">
-            Axis concepts adapted from the MIT-licensed 12axes test (© 8values/SapplyValues). Questions, scoring and ideology profiles are original.
+            Axis concepts adapted from the MIT-licensed 12axes test (© 8values/SapplyValues). Questions, scoring and ideology profiles are original. Not affiliated with 12axes.vercel.app.
           </p>
         </div>
         <div className={css.footerCol}>

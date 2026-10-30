@@ -4,6 +4,7 @@ import { deriveResults, type Results } from '../engine/results'
 import { CATALOGUE } from '../data/archetypes'
 import { CALIBRATION } from '../data/calibration'
 import { countryName } from '../data/countries'
+import { AXES } from '../data/axes'
 import { cardBlob, drawCard, ensureFonts, headline, type CardSize } from '../share/card'
 import css from './Share.module.css'
 
@@ -21,9 +22,28 @@ export function previewPath(r: Results): string | null {
 
 export function shareText(r: Results): string {
   const h = r.hero
-  if (h.kind === 'split') return `In theory I’m ${h.ideal.match.arch.name}. Here and now I’m closer to ${h.now.match.arch.name}. What’s your gap?`
-  if (h.kind === 'constant') return `In theory and here and now, I’m closest to ${h.ideal.match.arch.name}${r.payload.rg !== null ? ` (Reality Gap ${r.payload.rg})` : ''}. What’s yours?`
+  if (h.kind === 'split')
+    return `In theory I’m closest to ${h.ideal.match.arch.name}. Here and now, ${h.now.match.arch.name}. What’s your gap?`
+  if (h.kind === 'constant')
+    return `In theory and here and now, I’m closest to ${h.ideal.match.arch.name}${r.payload.rg !== null ? ` (Reality Gap ${r.payload.rg})` : ''}. What’s yours?`
   return 'I answered every political question twice: for my ideal system and for here and now. What’s your gap?'
+}
+
+const pos = (v: number) => (v === 0 ? 'centre' : `${Math.abs(Math.round(v))} toward ${v < 0 ? 'left' : 'right'}`)
+
+/** Plain-text result: card alt text, and "Copy as text" for chats that drop images. */
+export function resultText(r: Results): string {
+  const lines = [shareText(r).replace(/ What’s (your gap|yours)\?$/, '')]
+  if (r.payload.rg !== null) lines.push(`Reality Gap ${r.payload.rg} (0 = same answers in both frames; random clicking ≈ 38).`)
+  const gaps = r.rows
+    .filter(x => x.notable && x.I !== null && x.N !== null)
+    .sort((a, b) => Math.abs(b.G ?? 0) - Math.abs(a.G ?? 0))
+    .slice(0, 3)
+  for (const g of gaps) {
+    const a = AXES[g.axis]
+    lines.push(`${a.title} (${a.neg} ↔ ${a.pos}): ideal ${pos(g.I!)}, here and now ${pos(g.N!)}.`.replace(/left/g, a.neg).replace(/right/g, a.pos))
+  }
+  return lines.join('\n')
 }
 
 export function ShareSheet({ payload }: { payload: Payload }) {
@@ -96,6 +116,15 @@ export function ShareSheet({ payload }: { payload: Payload }) {
     }
   }
 
+  const copyText = async () => {
+    try {
+      await navigator.clipboard.writeText(`${resultText(r)}\n${link}`)
+      setStatus('Result copied as text.')
+    } catch {
+      setStatus('Copy failed in this browser.')
+    }
+  }
+
   const share = () => {
     if (file && canShareFile) {
       navigator.share({ files: [file], text: `${text} ${link}` }).catch(() => {})
@@ -115,7 +144,7 @@ export function ShareSheet({ payload }: { payload: Payload }) {
   return (
     <section className={css.sheet} aria-label="Share your result">
       <div className={css.preview}>
-        {url ? <img src={url} alt="Preview of your share card" /> : <div className={css.placeholder}>Drawing card…</div>}
+        {url ? <img src={url} alt={`Share card. ${resultText(r)}`} /> : <div className={css.placeholder}>Drawing card…</div>}
       </div>
       <div className={css.controls}>
         <fieldset className={css.fs}>
@@ -190,6 +219,9 @@ export function ShareSheet({ payload }: { payload: Payload }) {
           </button>
           <button type="button" className="btn" onClick={copy}>
             Copy link
+          </button>
+          <button type="button" className="btn" onClick={copyText}>
+            Copy as text
           </button>
         </div>
         <div className={css.intents}>
