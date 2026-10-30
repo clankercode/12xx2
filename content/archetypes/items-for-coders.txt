@@ -1,0 +1,120 @@
+Q001: Every country should be bound by the laws of a world government on issues that affect everyone, such as climate change or ocean pollution.
+Q002: If a publicly or commonly owned enterprise runs at a loss year after year, it should be sold to private owners.
+Q003: If a child needs adoptive parents, a mother and a father should be preferred over two mothers or two fathers.
+Q004: If a society is deeply divided over religion, its laws should be neutral between all religions and none.
+Q005: In a marriage, the husband should have the final say on major family decisions.
+Q006: If imports make everyday goods cheaper for most families, they should be allowed in even when some local jobs are lost.
+Q007: A country's armed forces should be built to fight major wars far from home.
+Q008: Large companies should be owned by their workers or by the public.
+Q009: A person's deepest political loyalty should be to humanity as a whole, ahead of their own country.
+Q010: If one spouse wants to end the marriage, that spouse should be able to divorce without proving the other did wrong.
+Q011: Boys and girls should be raised the same way, with the same toys, clothes and chores.
+Q012: If most people in a society share a religion, its official ceremonies should include that religion's prayers.
+Q013: If brain-computer links prove safe in trials, it is a good thing for healthy people to get one. (Note: A brain-computer link is a device that connects the brain directly to a computer.)
+Q014: If national authorities override decisions a region has made for itself, the region should be entitled to refuse to comply. (Note: A region is a state, province or similar part of a country.)
+Q015: If people grow rich by selling things others freely choose to buy, they should keep almost all of that wealth.
+Q016: If newcomers' customs clash with the local way of life, it should be the newcomers who adapt.
+Q017: If national authorities judge that a region's law treats a minority unfairly, they should be able to overrule it. (Note: A region is a state, province or similar part of a country.)
+Q018: The gap in wealth between a society's richest and poorest people should be small.
+Q019: Goods made in the country should have an advantage over imports, for example through tariffs or rules favouring local products. (Note: Tariff: a tax charged on goods brought in from another country.)
+Q020: Immigrants should be admitted in large numbers each year, relative to the size of the population.
+Q021: If a hostile government is close to building nuclear weapons, a military strike to stop it is justified.
+Q022: If people in different regions deeply disagree about a moral question, each region should be able to set its own rule on it. (Note: A region is a state, province or similar part of a country.)
+Q023: If price caps lead to shortages, prices should be left to buyers and sellers.
+Q024: Religion and public authority should be kept strictly separate. (Note: Public authority: the bodies that make and enforce rules for everyone, such as law-makers, courts and officials.)
+Q025: If talks with another country fail, giving up part of what is disputed is better than going to war.
+Q026: If a crisis abroad cuts off a country's medicine supply, it should make its own from then on, even at much higher cost.
+Q027: One party or movement should lead the country for the long term, without rival parties competing for power.
+Q028: If cheap imports are forcing a local industry to close, it should be shielded from them.
+Q029: Building artificial intelligence that is smarter than humans at everything is a goal worth pursuing.
+Q030: Two men or two women should be able to marry each other, just as a man and a woman can.
+Q031: Military force should be used only to defend against an armed attack.
+Q032: If housing is scarce, immigration should be low until the shortage eases.
+Q033: If a deadly epidemic is spreading, people should be required to stay home when health authorities say so.
+Q034: Religious leaders should have a formal role in making law. (Note: Formal role: for example, reserved seats in a law-making body or a right to review laws.)
+Q035: Abortion should be allowed only in rare cases, such as rape or a threat to the woman's life. (Note: About what is permitted, not about penalties. Abortion law partly overlaps the Liberty vs security axis; disclosed.)
+Q036: Public schools open to all children should be free of official prayer and worship. (Note: Official prayer and worship: led or organised by the school, not pupils praying privately.)
+Q037: Sex should be kept for marriage.
+Q038: A large gap in wealth between a society's richest and poorest people is acceptable.
+Q039: If only one provider can supply an essential service, such as piped water, it should be owned by the public or its users.
+Q040: If a foreign government is slaughtering its own people, other countries should step in with military force to stop it.
+Q041: If industries picked out for support keep failing, investment decisions should be left to competing investors.
+Q042: If a choice would help people in other countries more than it would cost a country's own people, that choice should be made.
+Q043: If elected lawmakers keep failing to solve serious problems, a single leader should be given power to act without their approval.
+Q044: Newcomers should be expected to take on the way of life of the country they join.
+Q045: If a couple has young children and there is no abuse, they should stay married even when the marriage is unhappy.
+Q046: The country should be led by a hereditary ruler who holds real power, not just a ceremonial role. (Note: Hereditary: passed down within a family.)
+Q047: Newcomers should be free to keep their own way of life, within the law, without pressure to fit in with the majority.
+Q048: Public decisions should put a country's own people first, even when people in other countries would gain more.
+Q049: Ending ageing, so that people can stay healthy for centuries, is a goal medicine should pursue. (Note: Ending ageing means stopping or reversing the body's decline with age, not only treating the diseases of old age.)
+Q050: Law-abiding adults should be allowed to own a gun for self-defence.
+Q051: If a serious emergency is declared, public protests should be allowed to go ahead.
+Q052: If voters and experts disagree about a major law, the voters' view should carry more weight.
+Q053: Investment in key industries should be steered toward goals set for the whole society, even when it would earn more elsewhere.
+Q054: Imported goods should face few or no extra taxes or rules compared with goods made in the country.
+Q055: Any group of citizens should be free to form a party and run in elections to replace those in power.
+Q056: Most laws should be made at the national level rather than region by region. (Note: A region is a state, province or similar part of a country.)
+Q057: If competing firms waste resources duplicating each other's products, production in that industry should be coordinated by a plan.
+Q058: Prices and competition alone should decide what gets produced and in what amounts.
+Q059: Editing the genes that people pass on to their children should be off-limits, whatever the purpose. (Note: This means edits to eggs, sperm or embryos that would be inherited, not treatments that affect only one patient.)
+Q060: If editing an embryo's genes would prevent a serious inherited disease, making the edit is right, even though later generations would inherit it.
+Q061: If officials are found misusing a surveillance power, that power should be abolished rather than reformed. (Note: Surveillance power = a legal power to monitor people, such as phone tapping or location tracking.)
+Q062: Large companies should be owned by private shareholders.
+Q063: Nearly all productive assets, from farmland to factories, should be owned in common, by those who work them or by the whole community. (Note: Productive assets: things used to make goods or provide services, such as land, factories, machines and companies.)
+Q064: If parents can avoid passing on a disease by choosing among unedited embryos, it is wrong to edit embryos' genes instead. (Note: Choosing among embryos means testing several embryos made by IVF and using one that does not carry the disease.)
+Q065: People and organisations from abroad should be able to own businesses in a country on the same terms as locals.
+Q066: Ageing is a natural part of a good human life, not a disease for medicine to cure.
+Q067: Every adult should have an equal vote in choosing who governs, whatever their level of education or knowledge.
+Q068: If a country is outvoted in an international body it has joined, it should be bound by the majority's decision.
+Q069: Police should need a judge's permission before searching someone's home or phone, even if this lets some guilty people go free.
+Q070: Any powers held by regions should be on loan from the national level, which can take them back at any time. (Note: A region is a state, province or similar part of a country.)
+Q071: Laws should be based on secular reasons alone. (Note: Secular reasons: reasons that do not depend on any religion's teachings or authority.)
+Q072: An adult's sex as recorded on official documents should be whatever they declare, without needing medical diagnosis or treatment. (Note: Official documents: records such as ID cards, passports and birth certificates.)
+Q073: What the economy produces should be decided mainly by a deliberate plan rather than by prices and competition.
+Q074: A person's deepest political loyalty should be to their own country, ahead of any wider global community.
+Q075: If the public is deeply divided on a major question, a small council chosen for its wisdom, not by vote, should decide.
+Q076: If a country has been at peace for decades with no clear enemy, its armed forces should be ready for a major war.
+Q077: If one party or family has held power for a long time, voters should have a fair chance to replace it.
+Q078: If a society's people follow many different religions or none, its official ceremonies should be free of religious content.
+Q079: If a local industry can survive only with tariffs or other protection from imports, it should be left to shrink or close. (Note: Tariff: a tax charged on goods brought in from another country.)
+Q080: Public schools open to all children should hold regular official prayer or worship. (Note: Official prayer or worship: led or organised by the school, not pupils praying privately.)
+Q081: Police should be able to stop and search people they find suspicious, even if many innocent people get searched.
+Q082: Immigrants should be admitted only in small numbers each year, relative to the size of the population.
+Q083: A society should have an official religion. (Note: Official religion: a religion formally recognised and given a special place by public institutions.)
+Q084: If a region's people think a national rule is wrong for their area, the region should be able to opt out of it. (Note: A region is a state, province or similar part of a country.)
+Q085: The right to vote should depend on passing a basic test, the same for everyone, of how government works.
+Q086: Money should be free to move into and out of a country, even when large sudden flows can shake the local economy.
+Q087: If most people in a society share a religion, its laws should draw on that religion's moral teachings.
+Q088: If an international body makes a decision that most of a country's people oppose, the country should be free to ignore it.
+Q089: If a region refuses to follow national law, national authorities should be able to govern it directly until it complies. (Note: A region is a state, province or similar part of a country.)
+Q090: Speech that stirs up hatred against people because of their race, religion or similar traits should be a crime.
+Q091: If a military mission abroad is causing many civilian deaths, it should be ended, even before its goals are met.
+Q092: If a crisis hits many regions at once, one central body should direct the response, even where some regions would choose otherwise. (Note: A region is a state, province or similar part of a country.)
+Q093: Public places should have cameras that automatically identify people, so wanted criminals and missing people can be found quickly.
+Q094: Investment in industry should go wherever it is expected to earn the best returns, rather than toward goals chosen by planners.
+Q095: People should be allowed to use private messaging that only the sender and receiver can ever read, even under a court order.
+Q096: Editing embryos' genes to give future children greater abilities, such as higher intelligence, is a good thing.
+Q097: Money moving into and out of a country should be tightly controlled, even if this makes outside investment harder to attract.
+Q098: Building artificial intelligence that is smarter than humans at everything should be off-limits, however safe it could be made.
+Q099: If no neighbour poses a serious military threat, a country's armed forces should be small.
+Q100: If brain-boosting treatments would pressure others to take them just to keep up, healthy people should go without them, even when they are safe. (Note: Brain-boosting treatments are drugs or devices that improve memory, focus or thinking in people who are already healthy.)
+Q101: Most laws should be made by regions and local communities rather than at the national level. (Note: A region is a state, province or similar part of a country.)
+Q102: A country is better off with only a small military, even if a stronger neighbour could then overpower it.
+Q103: If a drug mainly harms only the people who use it, possessing it should be a crime.
+Q104: Using armed force abroad to defend a country's vital interests is justified, even when no one has attacked it.
+Q105: If people are fleeing war or persecution, they should be taken in, even in large numbers.
+Q106: Major companies in a country should be owned mainly by people or organisations based there.
+Q107: If a woman in early pregnancy decides against having a child, she should be allowed to end the pregnancy. (Note: About what is permitted, not about penalties. Abortion law partly overlaps the Liberty vs security axis; disclosed.)
+Q108: If many newcomers share a different first language, public services should be offered in that language permanently, not just while they learn the main one.
+Q109: Nearly all productive assets, from farmland to factories, should be owned privately, by individuals, families or investors. (Note: Productive assets: things used to make goods or provide services, such as land, factories, machines and companies.)
+Q110: A country's own decisions about its affairs should always come before any international law, court or body.
+Q111: Businesses that lose out to competitors should close rather than be rescued, even large ones that many jobs depend on.
+Q112: Regional and national bodies should have only the powers that local communities agree to hand up to them. (Note: A region is a state, province or similar part of a country.)
+Q113: Major networks such as power grids and railways should follow a long-term plan rather than the choices of competing providers.
+Q114: Voters should be able to remove any elected leader before their term ends through a recall vote.
+Q115: If the price of a basic necessity such as medicine soars, it should be capped.
+Q116: Immigration should be close to zero, with only rare exceptions.
+Q117: If international bodies mostly serve the interests of the most powerful countries, each country should have the final say over its own affairs.
+Q118: Anyone who obeys the law should be free to move to and settle in any country they choose.
+Q119: If a small group comes to own most of a society's wealth, much of it should be shared out among the rest.
+Q120: When an international court and a country's own courts disagree, the international court's ruling should take priority. (Note: An international court is one set up by agreement between countries, whose rulings cover the countries that join it.)

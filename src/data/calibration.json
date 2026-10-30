@@ -1,0 +1,13 @@
+{
+  "version": 0,
+  "tauG": { "3": 80, "4": 70, "5": 60, "6": 55, "7": 50, "8": 45, "9": 42, "10": 40 },
+  "mu": 0.03,
+  "rgCuts": [10, 22, 33],
+  "careless": { "3": 2.6, "4": 2.6, "5": 2.6, "6": 2.6, "7": 2.6, "8": 2.6, "9": 2.6, "10": 2.6 },
+  "labels": {
+    "quick": { "veryClose": 0.12, "close": 0.17, "loose": 0.24 },
+    "standard": { "veryClose": 0.1, "close": 0.15, "loose": 0.22 },
+    "full": { "veryClose": 0.09, "close": 0.13, "loose": 0.2 }
+  },
+  "report": { "note": "PROVISIONAL placeholder; regenerate with `just calibrate`." }
+}
