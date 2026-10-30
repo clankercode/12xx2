@@ -1,0 +1,106 @@
+{
+ "axis": "dem",
+ "items": [
+  {
+   "id": "dem-01",
+   "key": -1,
+   "facet": "participation",
+   "form": "rule",
+   "level": 3,
+   "tier": "quick",
+   "text": "Every adult should have an equal vote in choosing who governs, whatever their level of education or knowledge.",
+   "rationale": "Universal equal franchise, sharpened against epistocracy; 'equal vote' (not 'say') avoids direct-democracy and wealth readings. Mirrors dem-02. Audit (draft 01): D 0.99."
+  },
+  {
+   "id": "dem-02",
+   "key": 1,
+   "facet": "participation",
+   "form": "rule",
+   "level": 3,
+   "tier": "quick",
+   "text": "The right to vote should depend on passing a basic test, the same for everyone, of how government works.",
+   "rationale": "Epistocratic franchise as its defenders state it; 'same for everyone' blocks the discriminatory literacy-test reading. Mirrors dem-01. Audit (draft 09): H 0.97."
+  },
+  {
+   "id": "dem-03",
+   "key": -1,
+   "facet": "contestability",
+   "form": "rule",
+   "level": 3,
+   "tier": "quick",
+   "text": "Any group of citizens should be free to form a party and run in elections to replace those in power.",
+   "rationale": "Open political competition; 'any group' makes it strong. Cross-loads slightly on Liberty (militant democrats may hedge). Mirrors dem-04. Audit (draft 02): D 0.99."
+  },
+  {
+   "id": "dem-04",
+   "key": 1,
+   "facet": "contestability",
+   "form": "rule",
+   "level": 3,
+   "tier": "quick",
+   "text": "One party or movement should lead the country for the long term, without rival parties competing for power.",
+   "rationale": "Vanguardist / one-party view; persuasive 'clear vision' qualifier removed per review. Mirrors dem-03. Audit (draft 13): H 1.0."
+  },
+  {
+   "id": "dem-05",
+   "key": -1,
+   "facet": "contestability",
+   "form": "conditional",
+   "level": 2,
+   "tier": "standard",
+   "text": "If one party or family has held power for a long time, voters should have a fair chance to replace it.",
+   "rationale": "Anti-entrenchment condition favours Democratic; rewritten from 'face real rivals' so dominant-party democracies read clearly. Mirrors dem-06. Audit (draft 05): D 0.99."
+  },
+  {
+   "id": "dem-06",
+   "key": 1,
+   "facet": "contestability",
+   "form": "conditional",
+   "level": 2,
+   "tier": "standard",
+   "text": "If elected lawmakers keep failing to solve serious problems, a single leader should be given power to act without their approval.",
+   "rationale": "Strongman / executive-supremacy case from gridlock, the tradition the review found missing; condition favours Hierarchical. Cross-loads on Liberty (checks). New item, not blind-audited."
+  },
+  {
+   "id": "dem-07",
+   "key": -1,
+   "facet": "participation",
+   "form": "conditional",
+   "level": 2,
+   "tier": "full",
+   "text": "If voters and experts disagree about a major law, the voters' view should carry more weight.",
+   "rationale": "Popular sovereignty over expertise, softened to a clear lean and mechanism-free so representative democrats can agree. Sole public-vs-expert item on this pole. Mirrors dem-08. Audit (draft 06): D 0.95."
+  },
+  {
+   "id": "dem-08",
+   "key": 1,
+   "facet": "participation",
+   "form": "conditional",
+   "level": 2,
+   "tier": "full",
+   "text": "If the public is deeply divided on a major question, a small council chosen for its wisdom, not by vote, should decide.",
+   "rationale": "Council-of-the-wise view (Confucian, Platonic, clerical) without naming a faith; condition favours Hierarchical. Replaces technocracy duplicates 08/10. New item, not blind-audited."
+  },
+  {
+   "id": "dem-09",
+   "key": -1,
+   "facet": "contestability",
+   "form": "rule",
+   "level": 3,
+   "tier": "full",
+   "text": "Voters should be able to remove any elected leader before their term ends through a recall vote.",
+   "rationale": "Strong contestability; the axis's only direct-democracy instrument (initiative item dropped to limit the direct-vs-representative conflation). Mirrors dem-10. Audit (draft 07): D 0.99."
+  },
+  {
+   "id": "dem-10",
+   "key": 1,
+   "facet": "contestability",
+   "form": "rule",
+   "level": 3,
+   "tier": "full",
+   "text": "The country should be led by a hereditary ruler who holds real power, not just a ceremonial role.",
+   "note": "Hereditary: passed down within a family.",
+   "rationale": "Sincere executive monarchism; 'real power' keeps constitutional monarchists on the Democratic side. 'The country' keeps it frame-sensitive. Mirrors dem-09. Audit (draft 12): H 1.0."
+  }
+ ]
+}

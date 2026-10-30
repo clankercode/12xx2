@@ -1,0 +1,111 @@
+{
+  "axis": "rel",
+  "items": [
+    {
+      "id": "rel-01",
+      "key": -1,
+      "facet": "institutions",
+      "form": "rule",
+      "level": 3,
+      "tier": "quick",
+      "text": "Religion and public authority should be kept strictly separate.",
+      "note": "Public authority: the bodies that make and enforce rules for everyone, such as law-makers, courts and officials.",
+      "rationale": "Core separationist item (was rel-04); retagged institutions per review. Mirror of rel-02. Strong frame-splitter."
+    },
+    {
+      "id": "rel-02",
+      "key": 1,
+      "facet": "institutions",
+      "form": "rule",
+      "level": 3,
+      "tier": "quick",
+      "text": "A society should have an official religion.",
+      "note": "Official religion: a religion formally recognised and given a special place by public institutions.",
+      "rationale": "Was rel-10; double-barrel removed per review. Establishment supporters agree, separationists disagree. Mirror of rel-01."
+    },
+    {
+      "id": "rel-03",
+      "key": -1,
+      "facet": "law",
+      "form": "conditional",
+      "level": 2,
+      "tier": "quick",
+      "text": "If a society is deeply divided over religion, its laws should be neutral between all religions and none.",
+      "rationale": "Replaces rel-07 (audit unclear: exemptions/lib loading) and rel-05 (near-consensus). Pluralism condition favours Secular. Mirror of rel-04."
+    },
+    {
+      "id": "rel-04",
+      "key": 1,
+      "facet": "law",
+      "form": "conditional",
+      "level": 2,
+      "tier": "quick",
+      "text": "If most people in a society share a religion, its laws should draw on that religion's moral teachings.",
+      "rationale": "Was rel-12 ('reflect' -> 'draw on' per review). Majority condition favours Religious. Mild dem/mul cross-load disclosed."
+    },
+    {
+      "id": "rel-05",
+      "key": -1,
+      "facet": "law",
+      "form": "rule",
+      "level": 3,
+      "tier": "standard",
+      "text": "Laws should be based on secular reasons alone.",
+      "note": "Secular reasons: reasons that do not depend on any religion's teachings or authority.",
+      "rationale": "Rewrite of rel-01: drops consensus-prone 'reasons any religion can accept'; explicit exclusion of religious grounds. Level 3."
+    },
+    {
+      "id": "rel-06",
+      "key": 1,
+      "facet": "law",
+      "form": "rule",
+      "level": 3,
+      "tier": "standard",
+      "text": "Religious leaders should have a formal role in making law.",
+      "note": "Formal role: for example, reserved seats in a law-making body or a right to review laws.",
+      "rationale": "Was rel-09 (spec example). Audit pos 1.0. Watch rel x dem correlation in calibration."
+    },
+    {
+      "id": "rel-07",
+      "key": -1,
+      "facet": "institutions",
+      "form": "conditional",
+      "level": 2,
+      "tier": "full",
+      "text": "If a society's people follow many different religions or none, its official ceremonies should be free of religious content.",
+      "rationale": "Was rel-06 ('public' -> 'official' per review). Pluralism condition favours Secular. Mirror of rel-08."
+    },
+    {
+      "id": "rel-08",
+      "key": 1,
+      "facet": "institutions",
+      "form": "conditional",
+      "level": 2,
+      "tier": "full",
+      "text": "If most people in a society share a religion, its official ceremonies should include that religion's prayers.",
+      "rationale": "New; replaces rel-13 (pro-loaded moral-decline premise) and rel-14 (audit unclear, lib/mul loading). Majority condition favours Religious."
+    },
+    {
+      "id": "rel-09",
+      "key": -1,
+      "facet": "institutions",
+      "form": "rule",
+      "level": 2,
+      "tier": "full",
+      "text": "Public schools open to all children should be free of official prayer and worship.",
+      "note": "Official prayer and worship: led or organised by the school, not pupils praying privately.",
+      "rationale": "Rewrite of rel-02: excludes funded faith schools and private pupil prayer (lib) per review. Mirror of rel-10."
+    },
+    {
+      "id": "rel-10",
+      "key": 1,
+      "facet": "institutions",
+      "form": "rule",
+      "level": 2,
+      "tier": "full",
+      "text": "Public schools open to all children should hold regular official prayer or worship.",
+      "note": "Official prayer or worship: led or organised by the school, not pupils praying privately.",
+      "rationale": "New Religious mirror of rel-09 so school content appears on both poles, per review. Replaces rel-08/rel-11 (rel-11 audit unclear, col loading)."
+    }
+  ]
+}

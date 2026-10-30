@@ -1,0 +1,115 @@
+{
+  "axis": "fed",
+  "items": [
+    {
+      "id": "fed-01",
+      "key": -1,
+      "facet": "authority",
+      "form": "rule",
+      "level": 2,
+      "tier": "quick",
+      "text": "Most laws should be made by regions and local communities rather than at the national level.",
+      "note": "A region is a state, province or similar part of a country.",
+      "rationale": "Core subsidiarity claim about law-making; replaces fed-01's near-consensus roads/schools list. Mirrors fed-06."
+    },
+    {
+      "id": "fed-02",
+      "key": -1,
+      "facet": "authority",
+      "form": "rule",
+      "level": 3,
+      "tier": "quick",
+      "text": "Regional and national bodies should have only the powers that local communities agree to hand up to them.",
+      "note": "A region is a state, province or similar part of a country.",
+      "rationale": "Bottom-up confederal principle (anarchist, municipalist, confederalist); agentless. Rewritten from draft fed-04 per review; mirrors fed-07."
+    },
+    {
+      "id": "fed-03",
+      "key": -1,
+      "facet": "authority",
+      "form": "conditional",
+      "level": 2,
+      "tier": "standard",
+      "text": "If a region's people think a national rule is wrong for their area, the region should be able to opt out of it.",
+      "note": "A region is a state, province or similar part of a country.",
+      "rationale": "Judgement moved into the condition (who decides fit) so it is not a ceiling item. Draft fed-06; pairs with fed-08."
+    },
+    {
+      "id": "fed-04",
+      "key": -1,
+      "facet": "authority",
+      "form": "conditional",
+      "level": 2,
+      "tier": "full",
+      "text": "If people in different regions deeply disagree about a moral question, each region should be able to set its own rule on it.",
+      "note": "A region is a state, province or similar part of a country.",
+      "rationale": "Moral-pluralism case for local rule, neutralised per review; watch item-total correlation for country-specific pro cross-loading. Pairs with fed-09."
+    },
+    {
+      "id": "fed-05",
+      "key": -1,
+      "facet": "authority",
+      "form": "conditional",
+      "level": 3,
+      "tier": "full",
+      "text": "If national authorities override decisions a region has made for itself, the region should be entitled to refuse to comply.",
+      "note": "A region is a state, province or similar part of a country.",
+      "rationale": "Strong nullification stance; 'elected' removed to avoid dem cross-loading. Mirrors fed-10."
+    },
+    {
+      "id": "fed-06",
+      "key": 1,
+      "facet": "authority",
+      "form": "rule",
+      "level": 2,
+      "tier": "quick",
+      "text": "Most laws should be made at the national level rather than region by region.",
+      "note": "A region is a state, province or similar part of a country.",
+      "rationale": "Replaces draft fed-08 (blind audit: uniformity alone was 'unclear'); now states where law-making authority sits. Mirrors fed-01."
+    },
+    {
+      "id": "fed-07",
+      "key": 1,
+      "facet": "authority",
+      "form": "rule",
+      "level": 3,
+      "tier": "quick",
+      "text": "Any powers held by regions should be on loan from the national level, which can take them back at any time.",
+      "note": "A region is a state, province or similar part of a country.",
+      "rationale": "Strong unitary-sovereignty view (Jacobin, unitary-monarchist, democratic-centralist); mirrors fed-02 in extremity."
+    },
+    {
+      "id": "fed-08",
+      "key": 1,
+      "facet": "authority",
+      "form": "conditional",
+      "level": 2,
+      "tier": "standard",
+      "text": "If a crisis hits many regions at once, one central body should direct the response, even where some regions would choose otherwise.",
+      "note": "A region is a state, province or similar part of a country.",
+      "rationale": "Coordination argument; the 'even where' clause adds a real clash with regional choice so it is not consensus. Pairs with fed-03."
+    },
+    {
+      "id": "fed-09",
+      "key": 1,
+      "facet": "authority",
+      "form": "conditional",
+      "level": 2,
+      "tier": "full",
+      "text": "If national authorities judge that a region's law treats a minority unfairly, they should be able to overrule it.",
+      "note": "A region is a state, province or similar part of a country.",
+      "rationale": "Civil-rights case for central override; unfairness is now the centre's judgement, not a stated fact. Pairs with fed-04."
+    },
+    {
+      "id": "fed-10",
+      "key": 1,
+      "facet": "authority",
+      "form": "conditional",
+      "level": 3,
+      "tier": "full",
+      "text": "If a region refuses to follow national law, national authorities should be able to govern it directly until it complies.",
+      "note": "A region is a state, province or similar part of a country.",
+      "rationale": "Strong direct-rule stance, mirror of fed-05; some lib cross-loading accepted for the mirror. Bounded by 'until it complies'."
+    }
+  ]
+}

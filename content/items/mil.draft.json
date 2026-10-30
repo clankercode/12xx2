@@ -1,0 +1,146 @@
+{
+  "axis": "mil",
+  "items": [
+    {
+      "id": "mil-01",
+      "key": -1,
+      "facet": "use",
+      "form": "rule",
+      "level": 2,
+      "text": "A country may rightly use military force to defend its vital interests abroad, even when its own territory is not under attack.",
+      "tier": "spare",
+      "rationale": "Realists, national-greatness conservatives and liberal interventionists endorse force beyond strict self-defence; both frames ask whether that licence is legitimate for a real or ideal country."
+    },
+    {
+      "id": "mil-02",
+      "key": -1,
+      "facet": "use",
+      "form": "rule",
+      "level": 3,
+      "text": "A country should strike first if a hostile power is building weapons that could later be used against it.",
+      "tier": "spare",
+      "rationale": "Preventive-war hawks (some neoconservatives, security realists) hold this; ideal frame tests the principle, here-and-now tests trust in one's own country's judgement and threats."
+    },
+    {
+      "id": "mil-03",
+      "key": -1,
+      "facet": "use",
+      "form": "conditional",
+      "level": 2,
+      "text": "If a foreign government is slaughtering its own people, other countries should step in with military force to stop it.",
+      "tier": "spare",
+      "rationale": "Hawk-favouring condition; liberal interventionists, some religious just-war thinkers and solidarity-minded leftists agree, doves reject force; people may trust an ideal system to intervene more than their own."
+    },
+    {
+      "id": "mil-04",
+      "key": -1,
+      "facet": "use",
+      "form": "conditional",
+      "level": 3,
+      "text": "If a hostile government keeps threatening its neighbours, removing that government by force is justified.",
+      "tier": "spare",
+      "rationale": "Hawk-favouring condition stating regime change plainly, as its advocates would; strong because it licenses toppling a government, not just repelling an attack; meaningful in both frames."
+    },
+    {
+      "id": "mil-05",
+      "key": -1,
+      "facet": "capacity",
+      "form": "rule",
+      "level": 2,
+      "text": "A country should be militarily strong enough that no rival would dare to attack it.",
+      "tier": "spare",
+      "rationale": "Peace-through-strength conservatives and deterrence realists endorse it; doves see it as an arms-race recipe; works whether the country is large or small, ideal or actual."
+    },
+    {
+      "id": "mil-06",
+      "key": -1,
+      "facet": "capacity",
+      "form": "rule",
+      "level": 3,
+      "text": "A country should be able to fight major wars far from its own borders.",
+      "tier": "spare",
+      "rationale": "Great-power and expeditionary hawks endorse global power projection; strong lean beyond home defence; small-country respondents can still judge it as a standard in both frames."
+    },
+    {
+      "id": "mil-07",
+      "key": -1,
+      "facet": "capacity",
+      "form": "conditional",
+      "level": 2,
+      "text": "Even after many years of peace, a country should keep its armed forces ready for a major war.",
+      "tier": "spare",
+      "rationale": "Dove-favouring condition (long peace) with a hawkish conclusion; preparedness hawks (si vis pacem, para bellum) agree, doves see it as wasteful; frames may diverge with perceived local threat."
+    },
+    {
+      "id": "mil-08",
+      "key": 1,
+      "facet": "use",
+      "form": "rule",
+      "level": 2,
+      "text": "A country should use military force only to defend its own territory from attack.",
+      "tier": "spare",
+      "rationale": "Defensive-only doves, non-interventionist libertarians, many anti-imperialist leftists and neutral-state traditions endorse it; mirrors mil-01; clear in both frames."
+    },
+    {
+      "id": "mil-09",
+      "key": 1,
+      "facet": "use",
+      "form": "rule",
+      "level": 3,
+      "text": "Going to war is wrong, whatever the cause.",
+      "tier": "spare",
+      "rationale": "Principled pacifists (peace-church, Tolstoyan, Gandhian, some anarchists) would recognise it as their view; strong; respondents may endorse it for an ideal world but not here and now, or the reverse."
+    },
+    {
+      "id": "mil-10",
+      "key": 1,
+      "facet": "use",
+      "form": "conditional",
+      "level": 2,
+      "text": "If a military mission abroad is killing many civilians, it should be ended at once, whatever its goals.",
+      "tier": "spare",
+      "rationale": "Dove-favouring condition; anti-war movements and humanitarian doves endorse halting; hawks weigh mission goals and say no; 'whatever its goals' keeps it polar, not consensus."
+    },
+    {
+      "id": "mil-11",
+      "key": 1,
+      "facet": "use",
+      "form": "conditional",
+      "level": 3,
+      "text": "If talks with another country fail, it is better to give way on the dispute than to go to war.",
+      "tier": "spare",
+      "rationale": "Hawk-favouring condition (diplomacy has failed) with a strong dovish answer; accommodationists and pacifists accept concession over war; mirrors mil-04 in strength."
+    },
+    {
+      "id": "mil-12",
+      "key": 1,
+      "facet": "capacity",
+      "form": "conditional",
+      "level": 2,
+      "text": "If military spending competes with spending on health or education, health and education should win.",
+      "tier": "spare",
+      "rationale": "Dove-favouring condition; guns-versus-butter doves and social democrats endorse; agent-neutral about who spends; frames may diverge where the respondent's country faces a real threat."
+    },
+    {
+      "id": "mil-13",
+      "key": 1,
+      "facet": "capacity",
+      "form": "rule",
+      "level": 2,
+      "text": "Armed forces should be sized for defending home territory alone.",
+      "tier": "spare",
+      "rationale": "Defensive-defence advocates, neutralist and non-interventionist traditions endorse; mirrors mil-06; respondents may want this in an ideal system but not given realistic rivals."
+    },
+    {
+      "id": "mil-14",
+      "key": 1,
+      "facet": "capacity",
+      "form": "rule",
+      "level": 3,
+      "text": "A country should have no standing army.",
+      "note": "A standing army is a permanent, full-time professional military kept in peacetime.",
+      "tier": "spare",
+      "rationale": "Strong dovish capacity view held by pacifists, many anarchists and some classical-republican anti-standing-army traditions, and practised by a few real states; affirmative abolition claim; frames can diverge sharply."
+    }
+  ]
+}

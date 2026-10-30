@@ -1,0 +1,145 @@
+{
+  "axis": "mul",
+  "items": [
+    {
+      "id": "mul-01",
+      "key": -1,
+      "facet": "volume",
+      "form": "rule",
+      "level": 3,
+      "text": "Anyone willing to work and obey the law should be free to settle in whatever country they choose.",
+      "tier": "spare",
+      "rationale": "Open-borders view held by libertarians, left internationalists and some religious universalists; the obey-the-law clause stops it being a strawman. Ideal vs here-and-now splits are likely (principled support, practical doubts)."
+    },
+    {
+      "id": "mul-02",
+      "key": -1,
+      "facet": "volume",
+      "form": "rule",
+      "level": 2,
+      "text": "Large numbers of immigrants should be welcomed each year.",
+      "tier": "spare",
+      "rationale": "Plain pro-immigration lean (liberals, pro-growth business conservatives, progressives); an absolute level rather than a comparison with today, so it reads the same in both frames."
+    },
+    {
+      "id": "mul-03",
+      "key": -1,
+      "facet": "volume",
+      "form": "conditional",
+      "level": 2,
+      "text": "If people are fleeing war or persecution, they should be taken in, even in large numbers.",
+      "tier": "spare",
+      "rationale": "Humanitarian and religious-charity view; the condition favours Pluralist and 'even in large numbers' keeps it polar. Assumes the refugee situation in whichever frame is judged; capacity worries may split the frames."
+    },
+    {
+      "id": "mul-04",
+      "key": -1,
+      "facet": "integration",
+      "form": "rule",
+      "level": 2,
+      "text": "Newcomers should be able to keep their own way of life without being pressed to fit in with the majority.",
+      "tier": "spare",
+      "rationale": "Core multiculturalist and liberal-pluralist position; mirrors mul-11. 'Without being pressed' is the polar claim, not a negation of an existing affirmative. Works in both frames."
+    },
+    {
+      "id": "mul-05",
+      "key": -1,
+      "facet": "integration",
+      "form": "rule",
+      "level": 3,
+      "text": "All cultures present in a country should have equal standing in public life.",
+      "tier": "spare",
+      "rationale": "Strong multiculturalism (no favoured majority culture); also held by plurinational and polycentric traditions. Mirrors mul-12. Reads cleanly as an ideal and as a judgement of one's own country."
+    },
+    {
+      "id": "mul-06",
+      "key": -1,
+      "facet": "integration",
+      "form": "conditional",
+      "level": 2,
+      "text": "If a minority community wants schools that teach in its own language and traditions, that should be supported.",
+      "tier": "spare",
+      "rationale": "Communal-autonomy view held by multiculturalists, religious-minority advocates and some communitarians; the condition favours Pluralist. Mirrors mul-14. Agent-neutral 'supported' fits state, community or voluntary provision."
+    },
+    {
+      "id": "mul-07",
+      "key": -1,
+      "facet": "integration",
+      "form": "conditional",
+      "level": 2,
+      "text": "If many residents speak a minority language, public services should be offered in that language.",
+      "tier": "spare",
+      "rationale": "Linguistic-pluralism view (multilingual states, minority-rights advocates); the condition favours Pluralist. Assimilationists who favour one common language will disagree. Meaningful in both frames."
+    },
+    {
+      "id": "mul-08",
+      "key": 1,
+      "facet": "volume",
+      "form": "rule",
+      "level": 3,
+      "text": "Newcomers should be admitted only when it clearly benefits the people already living there.",
+      "tier": "spare",
+      "rationale": "Strong restrictionist position (national conservatives, some labour-protection left); framed as a principle of selection, not hostility, so adherents recognise it. Matches mul-01 in strength."
+    },
+    {
+      "id": "mul-09",
+      "key": 1,
+      "facet": "volume",
+      "form": "rule",
+      "level": 2,
+      "text": "Only small numbers of immigrants should be admitted each year.",
+      "tier": "spare",
+      "rationale": "Plain low-immigration lean; the direct mirror of mul-02 at the same level. Absolute level, not relative to today, so both frames read naturally."
+    },
+    {
+      "id": "mul-10",
+      "key": 1,
+      "facet": "volume",
+      "form": "conditional",
+      "level": 2,
+      "text": "If housing or jobs are scarce, immigration should be held to very low levels.",
+      "tier": "spare",
+      "rationale": "Scarcity-based restriction argued by nationalists, some trade unionists and environmental-limits advocates; the condition favours Assimilationist. Mirrors mul-03. Assumes scarcity in whichever frame is judged."
+    },
+    {
+      "id": "mul-11",
+      "key": 1,
+      "facet": "integration",
+      "form": "rule",
+      "level": 2,
+      "text": "Newcomers should be expected to take on the way of life of the country they join.",
+      "tier": "spare",
+      "rationale": "Core assimilationist expectation (civic republicans, cultural conservatives); mirrors mul-04. Says 'expected' rather than 'forced' to stay at level 2. Works in both frames."
+    },
+    {
+      "id": "mul-12",
+      "key": 1,
+      "facet": "integration",
+      "form": "rule",
+      "level": 3,
+      "text": "A country should have one shared culture that everyone living there is expected to adopt.",
+      "tier": "spare",
+      "rationale": "Strong common-culture view held by civic-republican unitarists and cultural nationalists alike; mirrors mul-05. Not a caricature: it names a shared culture, not an ethnicity."
+    },
+    {
+      "id": "mul-13",
+      "key": 1,
+      "facet": "integration",
+      "form": "conditional",
+      "level": 2,
+      "text": "If a group's customs clash with the majority's way of life, the group should be the one to adapt.",
+      "tier": "spare",
+      "rationale": "Host-culture-precedence view; the condition (a real clash) favours Assimilationist. Pluralists expect mutual accommodation and will disagree. Works in both frames."
+    },
+    {
+      "id": "mul-14",
+      "key": 1,
+      "facet": "integration",
+      "form": "conditional",
+      "level": 2,
+      "text": "If newcomers set up separate schools to keep their own culture, that should be discouraged in favor of common schools.",
+      "tier": "spare",
+      "rationale": "Common-school and anti-'parallel society' view held by civic republicans and secular integrationists; mirrors mul-06. The condition favours Assimilationist. 'Discouraged' (not banned) keeps it at level 2."
+    }
+  ]
+}

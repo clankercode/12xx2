@@ -1,0 +1,105 @@
+{
+ "axis": "mil",
+ "items": [
+  {
+   "id": "mil-01",
+   "key": -1,
+   "facet": "capacity",
+   "form": "rule",
+   "level": 3,
+   "text": "A country's armed forces should be built to fight major wars far from home.",
+   "tier": "quick",
+   "rationale": "Was 06, reworded as a design goal rather than a capability. Power-projection hawks hold this. Mirrors mil-02."
+  },
+  {
+   "id": "mil-02",
+   "key": 1,
+   "facet": "capacity",
+   "form": "rule",
+   "level": 3,
+   "text": "A country is better off with only a small military, even if a stronger neighbour could then overpower it.",
+   "tier": "quick",
+   "rationale": "Replaces 14, which was too extreme and could be read as militia-republican. Strong minimal-defence view that accepts vulnerability. Mirrors mil-01."
+  },
+  {
+   "id": "mil-03",
+   "key": -1,
+   "facet": "use",
+   "form": "conditional",
+   "level": 2,
+   "text": "If a foreign government is slaughtering its own people, other countries should step in with military force to stop it.",
+   "tier": "quick",
+   "rationale": "Was 03; the condition favours hawks. Slight Internationalist cross-load, partly offset by mil-06."
+  },
+  {
+   "id": "mil-04",
+   "key": 1,
+   "facet": "use",
+   "form": "conditional",
+   "level": 2,
+   "text": "If a military mission abroad is causing many civilian deaths, it should be ended, even before its goals are met.",
+   "tier": "quick",
+   "rationale": "Was 10, toned down to L2 as the review advised; the condition favours doves."
+  },
+  {
+   "id": "mil-05",
+   "key": -1,
+   "facet": "use",
+   "form": "conditional",
+   "level": 3,
+   "text": "If a hostile government is close to building nuclear weapons, a military strike to stop it is justified.",
+   "tier": "standard",
+   "rationale": "Was 02, relabelled conditional. A counter-proliferation first strike, worded as its advocates would put it rather than as a caricature. The condition favours hawks."
+  },
+  {
+   "id": "mil-06",
+   "key": 1,
+   "facet": "use",
+   "form": "conditional",
+   "level": 3,
+   "text": "If talks with another country fail, giving up part of what is disputed is better than going to war.",
+   "tier": "standard",
+   "rationale": "Was 11, narrowed. The condition favours hawks and the answer is strongly dovish. Slight Sovereigntist cross-load, partly offset by mil-03."
+  },
+  {
+   "id": "mil-07",
+   "key": -1,
+   "facet": "use",
+   "form": "rule",
+   "level": 2,
+   "text": "Using armed force abroad to defend a country's vital interests is justified, even when no one has attacked it.",
+   "tier": "full",
+   "rationale": "Was 01; 'vital' softened to 'important'. Realists and interventionists. Rough complement of mil-08, deliberately kept out of the quick and standard tiers."
+  },
+  {
+   "id": "mil-08",
+   "key": 1,
+   "facet": "use",
+   "form": "rule",
+   "level": 2,
+   "text": "Military force should be used only to defend against an armed attack.",
+   "tier": "full",
+   "rationale": "Was 08. Reworded so it allows collective defence of allies, which removes the Sovereigntist pull. Defensive-only doves."
+  },
+  {
+   "id": "mil-09",
+   "key": -1,
+   "facet": "capacity",
+   "form": "conditional",
+   "level": 2,
+   "text": "If a country has been at peace for decades with no clear enemy, its armed forces should be ready for a major war.",
+   "tier": "full",
+   "rationale": "Was 07, now an 'If' item; 'no clear enemy' makes it polar. The condition favours doves. Mirrors mil-10."
+  },
+  {
+   "id": "mil-10",
+   "key": 1,
+   "facet": "capacity",
+   "form": "conditional",
+   "level": 2,
+   "text": "If no neighbour poses a serious military threat, a country's armed forces should be small.",
+   "tier": "full",
+   "rationale": "Replaces 12, which the audit found unclear and which loaded on welfare spending. It is now a direct capacity claim. The condition favours doves."
+  }
+ ]
+}

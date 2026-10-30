@@ -1,0 +1,106 @@
+{
+  "axis": "int",
+  "items": [
+    {
+      "id": "int-01",
+      "key": -1,
+      "facet": "sovereignty",
+      "form": "rule",
+      "level": 2,
+      "tier": "quick",
+      "text": "When an international court and a country's own courts disagree, the international court's ruling should take priority.",
+      "note": "An international court is one set up by agreement between countries, whose rulings cover the countries that join it.",
+      "rationale": "Legal internationalists (monism) endorse; 'human rights' dropped to avoid lib/pro cross-load; frames split on trust in home courts."
+    },
+    {
+      "id": "int-02",
+      "key": 1,
+      "facet": "sovereignty",
+      "form": "rule",
+      "level": 3,
+      "tier": "quick",
+      "text": "A country's own decisions about its affairs should always come before any international law, court or body.",
+      "rationale": "Absolute sovereigntists (Westphalian, nationalist, anti-imperialist) endorse; names what is overridden so internationalists cannot agree via 'sovereign equality'."
+    },
+    {
+      "id": "int-03",
+      "key": -1,
+      "facet": "allegiance",
+      "form": "rule",
+      "level": 3,
+      "tier": "quick",
+      "text": "A person's deepest political loyalty should be to humanity as a whole, ahead of their own country.",
+      "rationale": "Stoic/Kantian cosmopolitans and proletarian internationalists endorse; 'political' keeps religious/family loyalty out; low frame split, acceptable."
+    },
+    {
+      "id": "int-04",
+      "key": 1,
+      "facet": "allegiance",
+      "form": "rule",
+      "level": 2,
+      "tier": "quick",
+      "text": "Public decisions should put a country's own people first, even when people in other countries would gain more.",
+      "rationale": "Liberal nationalists and communitarians (special obligations) endorse; agentless; mirror of int-09. Exemplars may evoke aid/trade (glo/mul) — disclosed."
+    },
+    {
+      "id": "int-05",
+      "key": -1,
+      "facet": "sovereignty",
+      "form": "conditional",
+      "level": 3,
+      "tier": "standard",
+      "text": "If a country is outvoted in an international body it has joined, it should be bound by the majority's decision.",
+      "rationale": "Pooled (majority-vote) supranational authority; federalists and committed multilateralists endorse; pairs with int-06; strong frame splitter."
+    },
+    {
+      "id": "int-06",
+      "key": 1,
+      "facet": "sovereignty",
+      "form": "conditional",
+      "level": 3,
+      "tier": "standard",
+      "text": "If an international body makes a decision that most of a country's people oppose, the country should be free to ignore it.",
+      "rationale": "Popular-sovereignty democrats left and right endorse; condition favours the pole; intrinsic dem cross-load disclosed; strong frame splitter."
+    },
+    {
+      "id": "int-07",
+      "key": -1,
+      "facet": "sovereignty",
+      "form": "rule",
+      "level": 3,
+      "tier": "full",
+      "text": "Every country should be bound by the laws of a world government on issues that affect everyone, such as climate change or ocean pollution.",
+      "rationale": "World federalists endorse; 'every country' includes one's own so it reads in both frames. Decentralists may reject on fed grounds — disclosed."
+    },
+    {
+      "id": "int-08",
+      "key": 1,
+      "facet": "sovereignty",
+      "form": "conditional",
+      "level": 2,
+      "tier": "full",
+      "text": "If international bodies mostly serve the interests of the most powerful countries, each country should have the final say over its own affairs.",
+      "rationale": "Post-colonial, anti-imperialist and left sovereigntists endorse, so the pole is not only right-nationalist; condition favours the pole."
+    },
+    {
+      "id": "int-09",
+      "key": -1,
+      "facet": "allegiance",
+      "form": "conditional",
+      "level": 2,
+      "tier": "full",
+      "text": "If a choice would help people in other countries more than it would cost a country's own people, that choice should be made.",
+      "rationale": "Impartial cosmopolitans and universalist ethicists endorse; concrete, unloaded stakes replace 'interests vs humanity'; mirror of int-04."
+    },
+    {
+      "id": "int-10",
+      "key": 1,
+      "facet": "allegiance",
+      "form": "rule",
+      "level": 3,
+      "tier": "full",
+      "text": "A person's deepest political loyalty should be to their own country, ahead of any wider global community.",
+      "rationale": "Civic and cultural nationalists and communitarians endorse; 'country' not 'nation' to limit mul cross-load; mirror of int-03."
+    }
+  ]
+}
