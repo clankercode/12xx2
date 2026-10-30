@@ -25,7 +25,7 @@ Spec: `docs/superpowers/specs/2026-10-31-12xx2-design.md` (cited as **[spec]**).
 | 6 | Per-axis keying imbalance → acquiescence moves scores | yes (3:2 random) | yes (2:1, 3:2) | 2:2 / 3:3 / 5:5, balanced keyed mean | Agree/disagree format kept |
 | 7 | Random item sampling makes results incomparable | yes | yes | Same items, same order, per mode | none known |
 | 8 | Matching uses 4 of 12 axes with a polarity bug | yes | no | All covered axes, weighted RMS | Correlated axes double-count |
-| 9 | Inflated "% compatible"; unstable top-1 | n/a | yes | No percentages; calibrated labels; stability | Label cuts still provisional |
+| 9 | Inflated "% compatible"; unstable top-1 | n/a | yes | No percentages; calibrated labels; stability | Label cuts calibrated on simulated adherents, not real ones |
 | 10 | Reference profiles of unclear provenance | partly | yes (single-family LLM role-play) | Multi-family LLM coding, median, spread published | Still LLM judgment, not expert or adherent |
 | 11 | Data leaves the device | fonts, screenshot service | answers POSTed, GA4 | Static, CSP `connect-src 'none'`, fragment-only scores | Host logs; shared links disclose opinions |
 | 12 | Share incentives reward drama over accuracy | weak | strong | Gated hero, no living people/countries, sensitive policy | Labels are still an identity hook |
@@ -103,9 +103,9 @@ The Iran/Denmark pair above should now come out with similar **Ideal** scores an
 
 This is not an upstream flaw, but it is the main accuracy risk of a two-frame design, so it belongs here. A gap `N − I` is a difference score, and its reliability collapses when N and I are highly correlated (Edwards 2001). With reliabilities of .70 and r(N, I) = .60, the gap's reliability is about .25 ([03] §7.4). An early design rule (|G| ≥ 0.15 with two agreeing items) showed an arrow on at least one axis for **86–98%** of simulated respondents with **no true gap** ([04] addendum D).
 
-**12 Axes².** An axis gap is "notable" only if |G| ≥ τ_G(n) **and** at least 2 paired items agree in sign (`score.ts:60-72`). τ_G is set by simulation so that a no-gap respondent sees *any* notable axis at most 10% of the time. Current values (`calibration.json`, 0–100 axis units): **59** at 3 paired items, 43 at 4–5, 40 at 6, 34 at 7, 30 at 8–9, **28** at 10. In the end-to-end check the simulated false-alarm rate is **3.6%**.
+**12 Axes².** An axis gap is "notable" only if |G| ≥ τ_G(n) **and** at least 2 paired items agree in sign (`score.ts:60-72`). τ_G is set by simulation so that a no-gap respondent sees *any* notable axis at most 10% of the time. Current values (`calibration.json`, 0–100 axis units): **59** at 3 paired items, 43 at 4, 40 at 5, 34 at 6–7, 30 at 8–9, **28** at 10. In the end-to-end check the simulated false-alarm rate is **3.3%**.
 
-**Residual.** The price is low power. In the same simulation, a true shift of 1 scale point (33 axis units) on one axis is detected **18%** of the time in Quick, **21%** in Standard and **54%** in Full. A 2-point shift is detected 67% / 75% / 85% of the time. Most real but modest gaps will not be flagged. The methodology page should say so, and "no notable gap" must not be read as "no gap".
+**Residual.** The price is low power. In the same simulation, a true shift of 1 scale point (33 axis units) on one axis is detected **21%** of the time in Quick, **33%** in Standard and **54%** in Full. A 2-point shift is detected 66% / 79% / 88% of the time. Most real but modest gaps will not be flagged. The methodology page should say so, and "no notable gap" must not be read as "no gap".
 
 ---
 
@@ -168,10 +168,11 @@ The "closest match" uses squared Euclidean distance on **4 axes only**: Economy,
 - **Same instrument for people and archetypes.** Coders answer **all 120 items in both frames**, as a sincere adherent would, with the respondent-facing frame text and a source packet that includes at least one primary source by adherents. The engine scores those sheets with the same code that scores users (`scripts/build-archetypes.ts`), so archetype vectors sit on exactly the user metric. Each archetype has an **ideal** and a **now** (transitional) vector, because some ideologies share an ideal and differ only in programme: Marxism–Leninism and anarcho-communism, for example ([04] §3).
 - **Multiple model families, blind.** Coders are Anthropic Claude Opus, OpenAI GPT-6.1-sol and xAI Grok, blind to each other. The published vector is the per-item **median**. Per-axis spread (the range of the coders' scored vectors) and mean item disagreement are published. Axes with spread above 35 get weight 0.5. Leave-one-coder-out validation checks that each coder's own sheet ranks its archetype in the top 3 of a catalogue built from the other coders.
 - **Distance, not percentage.** A weighted RMS distance over covered axes, normalized to 0–1 (`match.ts:25-36`). Matching runs only if at least 8 of 12 axes are covered, with at least 2 in each group (`match.ts:43-47`).
-- **Labels calibrated against adherents.** "Very close", "close" and "loosely similar" are the 50th, 80th and 95th percentiles of distance for simulated sincere adherents answering from their own archetype's sheet with noise. "Close" means "as close as a typical adherent lands". Current Standard cuts (`calibration.json`): 0.091 / 0.108 / 0.125. Anything beyond is "no close match".
+- **Labels calibrated against adherents.** "Very close", "close" and "loosely similar" are the 50th, 80th and 95th percentiles of distance for simulated sincere adherents answering from their own archetype's sheet with noise. "Close" means "as close as a typical adherent lands". Current Standard cuts (`calibration.json`): 0.087 / 0.106 / 0.127. Anything beyond is "no close match".
+- **Recovery [sim].** The same simulated adherents get their own archetype as the top Ideal match **87.5%** (Quick), **93%** (Standard) and **96%** (Full) of the time, and in the top 3 at least **99%** of the time. This is optimistic: the adherents are simulated from the very sheets the archetypes were built from.
 - **Stability.** 200 seeded bootstrap draws perturb each axis by its standard error and count how often the top match holds: ≥70% is "stable", 40–70% "fairly stable", otherwise "toss-up between A and B". The seed is a hash of the payload, so the owner and every viewer see the same label (`match.ts:87-110`).
 - **Why-lines and the top 3.** Each match lists the 3 axes that bring you closest and the 1 that pushes you furthest.
-- **Careless responding.** A within-frame keyed-dispersion index. In simulation it flags **88–90%** of uniform random clickers and **0%** of simulated honest respondents. When it fires the hero becomes "No reliable match", and random clickers receive a headline only **8.7%** of the time.
+- **Careless responding.** A within-frame keyed-dispersion index. In simulation it flags **89–90%** of uniform random clickers and at most **0.13%** of simulated honest respondents. When it fires the hero becomes "No reliable match", and random clickers receive a headline only **10%** of the time.
 - **Catalogue rules.** No living people, parties or countries. 47 named archetypes in 9 families, each family with at least 3. Sensitive archetypes (historical Fascism, Stalinist Marxism–Leninism, theocratic absolutism) can lead the hero only if "very close" **and** "stable" **and** the user opts in.
 
 ### 5.4 Residual limitations
@@ -206,7 +207,7 @@ The "closest match" uses squared Euclidean distance on **4 axes only**: Economy,
 - A shared link *is* a disclosure of political opinion to anyone who receives it, and to any site where it is posted.
 - Fragments persist in browser history and synced tabs.
 - A meta-tag CSP cannot set some directives (e.g. `frame-ancestors`), so header-level hardening depends on the host.
-- The spec calls for an automated same-origin network test (Playwright). Until it exists, the "no third-party requests" claim rests on the CSP and code review.
+- An automated Playwright test (`just e2e`) completes a Quick run and fails on any request that leaves the page's origin. It covers one browser and one path, not every code path.
 
 ---
 
@@ -225,9 +226,9 @@ The "closest match" uses squared Euclidean distance on **4 axes only**: Economy,
 
 **12 Axes².**
 
-- **The hero is gated.** It is "Ideal: A · Here and now: B" only when B beats A on the Now vector by a calibrated margin **and** is at least fairly stable. Otherwise it is "Constant: A". In simulation, no-gap respondents get a false split **1.5%** of the time. A careless flag replaces the hero with "No reliable match".
+- **The hero is gated.** It is "Ideal: A · Here and now: B" only when B beats A on the Now vector by a calibrated margin **and** is at least fairly stable. Otherwise it is "Constant: A". In simulation, no-gap respondents get a false split **4.4%** of the time (μ is set at the 95th percentile of no-gap margins). A careless flag replaces the hero with "No reliable match".
 - **No percentages**, and no living people, parties or countries.
-- The Reality Gap is always printed with two baselines: random clicking (about 38/100) and simulated no-gap noise (median **6.9**, or **14.1** if a respondent never copies the Ideal cell). Its bands (11 / 22 / 32) are set so that ≥90% of no-gap respondents fall in the lowest band. Gaps are never framed as hypocrisy.
+- The Reality Gap is always printed with two baselines: random clicking (about 38/100) and simulated no-gap noise (median **7**, or **14.1** if a respondent never copies the Ideal cell). Its bands (12 / 22 / 33) are set so that ≥90% of no-gap respondents fall in the lowest band. Gaps are never framed as hypocrisy.
 - Archetype summaries are contrastive ("prioritizes X over Y"), not flattering.
 - Sensitive archetypes need opt-in to appear on cards. There is a Minimal card option, and pole names are ones adherents accept (e.g. "Hierarchical" rather than "Autocratic").
 - Labels are compared as enums, never as localized strings.
@@ -297,16 +298,15 @@ The issues above are where we think 12 Axes² improves on its predecessors. This
    - The grid is harder on small screens and for screen-reader users. The two-row mode helps but changes the task.
    - The simulation brackets copy rates; it does not estimate them.
 9. **Self-placement and self-report.** The status-quo sliders ask respondents to place their country directly, while Ideal and Now are item-derived. The gap typology mixes the two kinds of measure. Reason chips are self-explanations, which people construct after the fact and which are not causal evidence.
-10. **Low power for real gaps** (§2.4). Within-person, a modest real gap usually goes unflagged, especially in Quick (18% detection at 1 scale point). The headline "Constant" therefore overstates constancy for some people.
+10. **Low power for real gaps** (§2.4). Within-person, a modest real gap usually goes unflagged, especially in Quick (21% detection at 1 scale point). The headline "Constant" therefore overstates constancy for some people.
 11. **Self-selected audience.** With no telemetry there are no population norms. Nothing on the results page compares you with "other people", and nothing should.
 
 ### Status as of 2026-10-31
 
-Several of the remedies above are specified but not yet finished. Re-check these before relying on them.
-
-- `src/data/calibration.json` is marked **PROVISIONAL**. It was generated against a 4-entry placeholder catalogue with synthetic sheets (`catalogueVersion: 0`). The match-label cuts and the split margin μ will change once the coded catalogue is built. μ currently sits at its 0.005 floor.
-- The coder answer sheets in `content/archetypes/raw/` are incomplete. Opus and GPT-6.1-sol sheets exist for most batches, but almost all Grok files are empty. Until they are filled, "three coders from three families" is the method, not yet the data.
+- **Catalogue built from complete data.** All 47 archetypes are coded by all three coders (Claude Opus, GPT-6.1-sol, Grok) on all 120 items in both frames. Leave-one-coder-out: each coder's own sheet ranks its archetype in the top 3 of a catalogue built from the other two in **141 of 141** cases. Mean per-item disagreement between coders is 0.54 scale points. Four items reworded after review (`mil-01`, `pro-05`, `tec-02`, `tec-04`) were recoded by all three coders.
+- **Calibration is final for catalogue v1** (`src/data/calibration.json`, 8,000 draws, seeded). It is still a simulation model, so §9.2 applies in full.
 - The provenance-overlap gate (`just overlap`) and the Playwright network, parity and keyboard tests (`just e2e`) are in the repo and passing.
+- Country context (World Bank WGI 2025) is regenerated by `just wgi`, which keys on the API's own country ids and checks known anchors. An earlier hand-fetched table had two mis-keyed rows (Syria, Netherlands); both are fixed.
 
 ---
 
