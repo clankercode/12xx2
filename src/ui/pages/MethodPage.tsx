@@ -2,7 +2,7 @@ import { AXIS_IDS } from '../../engine/types'
 import { AXES } from '../../data/axes'
 import { CALIBRATION } from '../../data/calibration'
 import { CATALOGUE, CATALOGUE_IS_PLACEHOLDER } from '../../data/archetypes'
-import { IDEAL_FRAME, NOW_FRAME, SHARED_RULE } from '../../data/frames'
+import { IDEAL_FRAME, IDEAL_STEM, NOW_FRAME, NOW_STEM, SHARED_RULE } from '../../data/frames'
 import css from './Prose.module.css'
 
 const VERCEL: Record<string, string> = {
@@ -46,10 +46,10 @@ export function MethodPage() {
       <h2>Two frames, one statement</h2>
       <p>Each statement is answered twice, on the same 7-point scale, by one tap on a 7×7 grid.</p>
       <blockquote>
-        <strong className="ideal">In your ideal system.</strong> {IDEAL_FRAME}
+        <strong className="ideal">In your ideal system.</strong> {IDEAL_FRAME} {IDEAL_STEM}
       </blockquote>
       <blockquote>
-        <strong className="now">Here and now.</strong> {NOW_FRAME}
+        <strong className="now">Here and now.</strong> {NOW_FRAME} {NOW_STEM}
       </blockquote>
       <p>{SHARED_RULE}</p>
       <p>

@@ -5,6 +5,10 @@ export const IDEAL_FRAME =
 export const NOW_FRAME =
   'The country whose laws you mainly live under, as it is today: its real institutions, people and problems. Judge it as it exists, whatever you think its borders or legitimacy should be.'
 
+/** Question stems that close each frame definition (spec §2.2). */
+export const IDEAL_STEM = 'In your ideal system, how much do you agree?'
+export const NOW_STEM = 'Here and now, how much do you agree?'
+
 export const SHARED_RULE =
   'If a statement describes a situation, assume it’s happening in the frame you’re judging. Answer each frame on its own terms. Same answers and different answers are both fine.'
 

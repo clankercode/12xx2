@@ -2,7 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { CHIPS, type Answer, type ChipId } from '../engine/types'
 import { orderedItems } from '../data/items'
 import { CHIP_LABELS } from '../data/chips'
-import { IDEAL_FRAME, NOW_FRAME, PRACTICE_ITEM, SHARED_RULE } from '../data/frames'
+import { IDEAL_FRAME, IDEAL_STEM, NOW_FRAME, NOW_STEM, PRACTICE_ITEM, SHARED_RULE } from '../data/frames'
 import { useStore } from './App'
 import { Grid, Strip } from './Grid'
 import { go } from './router'
@@ -293,13 +293,17 @@ function Intro({ onStart }: { onStart: () => void }) {
           <h3 className="ideal">
             <span className="glyph-ideal" aria-hidden /> In your ideal system
           </h3>
-          <p className="small">{IDEAL_FRAME}</p>
+          <p className="small">
+            {IDEAL_FRAME} {IDEAL_STEM}
+          </p>
         </div>
         <div>
           <h3 className="now">
             <span className="glyph-now" aria-hidden /> Here and now
           </h3>
-          <p className="small">{NOW_FRAME}</p>
+          <p className="small">
+            {NOW_FRAME} {NOW_STEM}
+          </p>
         </div>
       </div>
       <p className="small muted">{SHARED_RULE}</p>
