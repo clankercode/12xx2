@@ -21,12 +21,12 @@ calibrate:
     pnpm tsx scripts/calibrate.ts
 
 archetypes:
-    python3 -I scripts/build_archetypes.py
+    pnpm tsx scripts/build-archetypes.ts
 
 overlap:
-    python3 -I scripts/overlap.py
+    pnpm tsx scripts/overlap.ts
 
-build: typecheck test
+build: typecheck test overlap
     pnpm vite build
     pnpm tsx scripts/og.ts
 
