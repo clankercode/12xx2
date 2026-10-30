@@ -23,17 +23,20 @@ for (const f of readdirSync(`${DIR}/raw`).filter(f => f.endsWith('.txt') && f.st
 }
 const jobs: { coder: string; slugs: { slug: string; q: string[] }[] }[] = []
 for (const coder of CODERS) {
+  const cap = coder === 'grok' ? 50 : 160
   const need = catalogue.archetypes
     .map(a => {
       const h = have[`${a.slug}/${coder}`] ?? new Set<string>()
       return { slug: a.slug, q: all.filter(q => !h.has(q) || RECODE.includes(q)) }
     })
     .filter(x => x.q.length)
+    // A sheet that needs more than one batch is split into chunks.
+    .flatMap(x => Array.from({ length: Math.ceil(x.q.length / cap) }, (_, k) => ({ slug: x.slug, q: x.q.slice(k * cap, (k + 1) * cap) })))
   // Small batches keep outputs short enough not to truncate (Grok stopped near 60 lines).
   let batch: typeof need = []
   let size = 0
   for (const x of need) {
-    if (batch.length && size + x.q.length > (coder === 'grok' ? 50 : 160)) {
+    if (batch.length && size + x.q.length > cap) {
       jobs.push({ coder, slugs: batch })
       batch = []
       size = 0
