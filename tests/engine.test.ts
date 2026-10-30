@@ -136,7 +136,7 @@ describe('typology', () => {
     expect(classify(50, 55, -40)).toBe('away-from-settled')
   })
 
-  it('reports unclear when half a band flips the type', () => {
+  it('reports unclear when a one-SE band flips the type', () => {
     expect(typeGap(-60, 60, -46, 10, 10)).toBe('unclear')
     expect(typeGap(-60, 60, 0, 10, 10)).toBe('partway')
   })
@@ -163,6 +163,15 @@ describe('payload codec', () => {
     const p: Payload = { ...sample(), q: AXIS_IDS.map((_, k) => (k % 3 ? k * 7 - 40 : null)), sc: { score: 37, se: 12 }, country: 'AU' }
     const d = decodePayload(encodePayload(p))
     expect(d.ok && d.payload).toEqual(p)
+  })
+
+  it('round-trips the sensitive opt-in and rejects impossible results', () => {
+    const p: Payload = { ...sample(), sensitiveOk: true }
+    expect(decodePayload(encodePayload(p))).toEqual({ ok: true, payload: p })
+    const k = p.G.findIndex(g => g !== null)
+    const bad: Payload = { ...sample(), G: p.G.map((g, i) => (i === k ? null : g)), notable: p.notable.map((n, i) => n || i === k) }
+    expect(decodePayload(encodePayload(bad))).toEqual({ ok: false, error: 'corrupt' })
+    expect(decodePayload(encodePayload({ ...sample(), answered: 200, total: 120 }))).toEqual({ ok: false, error: 'corrupt' })
   })
 
   it('detects truncation and corruption', () => {
@@ -230,8 +239,27 @@ describe('matching', () => {
     expect(deriveResults(payloadFor(-60, -58), cat, CALIBRATION).hero.kind).toBe('constant')
   })
 
-  it('careless flag suppresses the hero', () => {
-    expect(deriveResults(payloadFor(-60, 60, true), cat, CALIBRATION).hero.kind).toBe('unreliable')
+  it('careless flag suppresses the hero and every closeness or gap claim', () => {
+    const r = deriveResults({ ...payloadFor(-60, 60, true), notable: AXIS_IDS.map(() => true) }, cat, CALIBRATION)
+    expect(r.hero.kind).toBe('unreliable')
+    expect([r.matchesIdeal, r.matchesNow, r.joint]).toEqual([[], [], []])
+    expect(r.rows.some(x => x.notable)).toBe(false)
+    expect(r.strongestGap).toBeNull()
+  })
+
+  it('the displayed match carries its own stability, not the modal winner\'s', () => {
+    // Extreme scores clamp the bootstrap, so a rival can win most draws; the label must describe what is shown.
+    const two = [mk('a', 100), mk('b', 93)]
+    const r = deriveResults(payloadFor(100, 100), two, CALIBRATION)
+    if (r.hero.kind === 'constant') {
+      const st = r.hero.ideal.stability
+      expect(st.share).toBeCloseTo(st.wins.get(r.hero.ideal.match.arch.slug) ?? 0)
+    }
+  })
+
+  it('a missing here-and-now frame never claims a split', () => {
+    const p = { ...payloadFor(-60, 0), N: AXIS_IDS.map(() => null), seN: AXIS_IDS.map(() => null), G: AXIS_IDS.map(() => null) }
+    expect(deriveResults(p, cat, CALIBRATION).hero).toMatchObject({ kind: 'constant', nowMissing: true })
   })
 
   it('sensitive archetypes need very close + stable to lead', () => {
