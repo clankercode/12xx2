@@ -1,0 +1,22 @@
+BEGIN fascism
+Q104 3 3
+Q106 3 3
+Q109 1 1
+Q110 3 3
+Q113 3 3
+Q115 2 2
+Q116 3 3
+Q117 3 3
+END fascism
+BEGIN kemalism
+Q007 3 2
+Q011 2 2
+Q059 -2 -2
+Q098 -2 -2
+END kemalism
+BEGIN peronism
+Q007 2 1
+Q011 -1 0
+Q059 0 0
+Q098 -1 -1
+END peronism

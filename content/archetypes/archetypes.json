@@ -1,266 +1,4142 @@
 {
- "version": 0,
- "placeholder": true,
+ "version": 1,
+ "meta": {
+  "version": 1,
+  "coders": {
+   "opus": "Anthropic Claude Opus",
+   "sol": "OpenAI GPT-6.1-sol",
+   "grok": "xAI Grok (llmp-grok-4-7)"
+  },
+  "sheetsPerCoder": {
+   "opus": 47,
+   "sol": 47,
+   "grok": 47
+  },
+  "leaveOneOut": {
+   "checked": 141,
+   "top3Rate": 1,
+   "misses": []
+  },
+  "meanItemDisagreement": {
+   "marxism-leninism": 0.59,
+   "trotskyism": 0.52,
+   "democratic-socialism": 0.4,
+   "market-socialism": 0.46,
+   "eco-socialism": 0.39,
+   "african-socialism": 0.64,
+   "social-democracy": 0.59,
+   "progressive-liberalism": 0.49,
+   "green-politics": 0.44,
+   "left-populism": 0.53,
+   "social-liberalism": 0.51,
+   "centrism": 0.54,
+   "third-way": 0.58,
+   "neoliberalism": 0.48,
+   "liberal-conservatism": 0.52,
+   "traditional-conservatism": 0.69,
+   "paleoconservatism": 0.47,
+   "communitarianism": 0.61,
+   "christian-democracy": 0.57,
+   "catholic-integralism": 0.65,
+   "islamic-democracy": 0.6,
+   "theocratic-absolutism": 0.56,
+   "distributism": 0.72,
+   "gandhian-sarvodaya": 0.56,
+   "national-conservatism": 0.55,
+   "right-populism": 0.51,
+   "civic-nationalism": 0.66,
+   "fascism": 0.27,
+   "kemalism": 0.47,
+   "peronism": 0.59,
+   "classical-liberalism": 0.57,
+   "minarchism": 0.39,
+   "georgism": 0.51,
+   "paleolibertarianism": 0.42,
+   "anarcho-communism": 0.35,
+   "anarcho-syndicalism": 0.39,
+   "mutualism": 0.37,
+   "libertarian-municipalism": 0.54,
+   "anarcho-capitalism": 0.54,
+   "anarcho-primitivism": 0.88,
+   "absolute-monarchism": 0.53,
+   "constitutional-monarchism": 0.66,
+   "technocracy": 0.53,
+   "confucian-meritocracy": 0.66,
+   "developmental-authoritarianism": 0.64,
+   "neoreaction": 0.66,
+   "transhumanism": 0.39
+  },
+  "problems": []
+ },
  "archetypes": [
   {
-   "slug": "placeholder-left",
-   "name": "Placeholder Left",
+   "slug": "marxism-leninism",
+   "name": "Marxism–Leninism",
+   "family": "socialist",
+   "sensitive": true,
+   "summary": "Prioritises building socialism through a disciplined vanguard party, state ownership and central planning over liberal pluralism and market allocation. In its Stalinist form it treats the one-party state, forced collectivisation and coercive security as necessary to defend the revolution, a record that included mass repression, famine and the labour-camp system.",
+   "signature": "ideal: one-party socialist state with a planned economy (classless communism a distant horizon); now: opposition party pressing nationalisation, union power and anti-imperialism",
+   "ideal": [
+    90,
+    0,
+    70,
+    -100,
+    -100,
+    90,
+    33.3,
+    -23.3,
+    0,
+    -86.7,
+    -23.3,
+    -43.3
+   ],
+   "now": [
+    43.3,
+    -76.7,
+    -23.3,
+    -100,
+    -100,
+    70,
+    33.3,
+    73.3,
+    -36.7,
+    -96.7,
+    -36.7,
+    -36.7
+   ],
+   "weight": [
+    1.44,
+    0.48,
+    1.44,
+    1.44,
+    1.44,
+    1.44,
+    0.48,
+    0.96,
+    0.48,
+    1.44,
+    0.48,
+    0.48
+   ],
+   "spread": [
+    26.7,
+    23.3,
+    13.3,
+    3.3,
+    3.3,
+    16.7,
+    66.7,
+    26.7,
+    66.7,
+    10,
+    46.7,
+    46.7
+   ],
+   "sources": [
+    {
+     "title": "The State and Revolution",
+     "author": "V. I. Lenin",
+     "year": "1917",
+     "by_adherent": true,
+     "url": "https://www.marxists.org/archive/lenin/works/1917/staterev/"
+    },
+    {
+     "title": "The Foundations of Leninism",
+     "author": "J. V. Stalin",
+     "year": "1924",
+     "by_adherent": true
+    },
+    {
+     "title": "Stalin: History and Critique of a Black Legend",
+     "author": "Domenico Losurdo",
+     "year": "2008",
+     "by_adherent": true
+    },
+    {
+     "title": "Stalin, Vol. 1: Paradoxes of Power, 1878–1928",
+     "author": "Stephen Kotkin",
+     "year": "2014",
+     "by_adherent": false
+    }
+   ]
+  },
+  {
+   "slug": "trotskyism",
+   "name": "Trotskyism",
    "family": "socialist",
    "sensitive": false,
-   "summary": "Placeholder archetype for UI development.",
-   "signature": "constant",
+   "summary": "Prioritises international workers' revolution and soviet (council) democracy over 'socialism in one country' and bureaucratic rule. It wants a planned, collectively owned economy run by democratically elected workers' councils, not by a party apparatus.",
+   "signature": "ideal: democratic workers' councils, planned economy, world federation; now: transitional demands, united fronts and revolutionary-party building",
    "ideal": [
-    -40,
-    -60,
-    -30,
-    -80,
-    -60,
+    53.3,
+    -90,
+    -26.7,
+    -100,
+    -100,
+    30,
+    -63.3,
+    20,
+    -90,
+    -100,
+    -93.3,
+    -50
+   ],
+   "now": [
+    20,
+    -96.7,
+    -53.3,
+    -100,
+    -100,
+    23.3,
+    -16.7,
+    73.3,
+    -96.7,
+    -100,
+    -93.3,
+    -36.7
+   ],
+   "weight": [
+    0.8,
+    1.2,
+    0.8,
+    1.2,
+    1.2,
+    0.8,
+    1.2,
+    0.8,
+    1.2,
+    1.2,
+    1.2,
+    0.4
+   ],
+   "spread": [
+    33.3,
     10,
-    -50,
+    16.7,
+    0,
+    0,
+    33.3,
+    16.7,
+    16.7,
+    13.3,
+    0,
+    6.7,
+    46.7
+   ],
+   "sources": [
+    {
+     "title": "The Permanent Revolution",
+     "author": "Leon Trotsky",
+     "year": "1930",
+     "by_adherent": true
+    },
+    {
+     "title": "The Revolution Betrayed",
+     "author": "Leon Trotsky",
+     "year": "1936",
+     "by_adherent": true
+    },
+    {
+     "title": "The Death Agony of Capitalism and the Tasks of the Fourth International (The Transitional Program)",
+     "author": "Leon Trotsky",
+     "year": "1938",
+     "by_adherent": true
+    },
+    {
+     "title": "The Prophet Armed: Trotsky 1879–1921",
+     "author": "Isaac Deutscher",
+     "year": "1954",
+     "by_adherent": false
+    }
+   ]
+  },
+  {
+   "slug": "democratic-socialism",
+   "name": "Democratic socialism",
+   "family": "socialist",
+   "sensitive": false,
+   "summary": "Prioritises social ownership and democratic control of the economy over private capital and profit, and pursues this through elections and civil liberties, not revolution or one-party rule.",
+   "signature": "ideal: democratically run socialist economy with public and cooperative ownership; now: expanding public services, decommodification and union power within parliamentary democracy",
+   "ideal": [
+    23.3,
+    -93.3,
+    -20,
+    -96.7,
+    -76.7,
     40,
-    -60,
-    -80,
-    -80,
+    -53.3,
+    53.3,
+    -66.7,
+    -86.7,
+    -86.7,
+    -13.3
+   ],
+   "now": [
+    23.3,
+    -93.3,
+    -20,
+    -83.3,
+    -70,
+    40,
+    -30,
+    46.7,
+    -66.7,
+    -86.7,
+    -86.7,
+    0
+   ],
+   "weight": [
+    0.8276,
+    1.2414,
+    0.8276,
+    1.2414,
+    1.2414,
+    0.8276,
+    0.8276,
+    0.8276,
+    1.2414,
+    1.2414,
+    1.2414,
+    0.4138
+   ],
+   "spread": [
+    30,
+    6.7,
+    13.3,
+    10,
+    10,
+    13.3,
+    16.7,
+    3.3,
+    13.3,
+    20,
+    6.7,
+    26.7
+   ],
+   "sources": [
+    {
+     "title": "Socialism: Past and Future",
+     "author": "Michael Harrington",
+     "year": "1989",
+     "by_adherent": true
+    },
+    {
+     "title": "Equality",
+     "author": "R. H. Tawney",
+     "year": "1931",
+     "by_adherent": true
+    },
+    {
+     "title": "The Socialist Manifesto",
+     "author": "Bhaskar Sunkara",
+     "year": "2019",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "market-socialism",
+   "name": "Market socialism",
+   "family": "socialist",
+   "sensitive": false,
+   "summary": "Prioritises social or worker ownership of firms over private capital ownership, while keeping markets and prices rather than central planning to coordinate production.",
+   "signature": "ideal: worker-self-managed or socially owned firms competing in markets; now: cooperative expansion, employee ownership and public investment banks",
+   "ideal": [
+    -6.7,
+    -93.3,
+    -26.7,
+    -90,
+    10,
+    -6.7,
+    -40,
+    43.3,
+    -63.3,
+    -90,
+    -86.7,
     -20
    ],
    "now": [
-    10,
-    -40,
     0,
-    -50,
-    -40,
-    20,
-    -20,
-    20,
-    -40,
-    -80,
+    -93.3,
+    -26.7,
     -70,
+    0,
+    -13.3,
+    -26.7,
+    43.3,
+    -46.7,
+    -86.7,
+    -86.7,
     -10
    ],
    "weight": [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    0.4615,
+    1.3846,
+    0.9231,
+    1.3846,
+    0.4615,
+    0.4615,
+    0.9231,
+    0.9231,
+    1.3846,
+    1.3846,
+    1.3846,
+    0.9231
    ],
    "spread": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+    10,
+    10,
+    20,
+    16.7,
+    16.7,
+    23.3,
+    26.7,
+    16.7,
+    13.3,
+    20,
+    6.7,
+    30
    ],
-   "sources": []
+   "sources": [
+    {
+     "title": "A Future for Socialism",
+     "author": "John E. Roemer",
+     "year": "1994",
+     "by_adherent": true
+    },
+    {
+     "title": "After Capitalism",
+     "author": "David Schweickart",
+     "year": "2002",
+     "by_adherent": true
+    },
+    {
+     "title": "On the Economic Theory of Socialism",
+     "author": "Oskar Lange",
+     "year": "1936",
+     "by_adherent": true
+    }
+   ]
   },
   {
-   "slug": "placeholder-centre",
-   "name": "Placeholder Centre",
+   "slug": "eco-socialism",
+   "name": "Eco-socialism",
+   "family": "socialist",
+   "sensitive": false,
+   "summary": "Prioritises ecological limits and collective, democratically planned use of nature over capitalist growth and private accumulation. It holds that capitalism itself is driving environmental breakdown.",
+   "signature": "ideal: democratically planned, post-growth commons economy; now: Green New Deal, public ownership of energy, degrowth-leaning regulation",
+   "ideal": [
+    0,
+    -93.3,
+    -40,
+    -100,
+    -93.3,
+    66.7,
+    -63.3,
+    83.3,
+    -76.7,
+    -100,
+    -93.3,
+    36.7
+   ],
+   "now": [
+    16.7,
+    -90,
+    -43.3,
+    -93.3,
+    -83.3,
+    63.3,
+    -43.3,
+    80,
+    -73.3,
+    -100,
+    -93.3,
+    40
+   ],
+   "weight": [
+    0.375,
+    1.125,
+    0.75,
+    1.125,
+    1.125,
+    1.125,
+    1.125,
+    1.125,
+    1.125,
+    1.125,
+    1.125,
+    0.75
+   ],
+   "spread": [
+    43.3,
+    13.3,
+    6.7,
+    3.3,
+    10,
+    30,
+    16.7,
+    16.7,
+    13.3,
+    10,
+    10,
+    20
+   ],
+   "sources": [
+    {
+     "title": "An Ecosocialist Manifesto",
+     "author": "Joel Kovel and Michael Löwy",
+     "year": "2001",
+     "by_adherent": true
+    },
+    {
+     "title": "The Enemy of Nature: The End of Capitalism or the End of the World?",
+     "author": "Joel Kovel",
+     "year": "2002",
+     "by_adherent": true
+    },
+    {
+     "title": "Marx in the Anthropocene: Towards the Idea of Degrowth Communism",
+     "author": "Kohei Saito",
+     "year": "2023",
+     "by_adherent": true
+    },
+    {
+     "title": "Marx's Ecology: Materialism and Nature",
+     "author": "John Bellamy Foster",
+     "year": "2000",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "african-socialism",
+   "name": "African socialism (Ujamaa)",
+   "family": "socialist",
+   "sensitive": false,
+   "summary": "Prioritises communal 'familyhood', self-reliance and national unity, rooted in African village traditions, over class struggle, individual accumulation and dependence on foreign capital.",
+   "signature": "ideal: self-reliant communal villages under a unifying national party; now: cooperatives, public services and economic sovereignty",
+   "ideal": [
+    56.7,
+    -63.3,
+    6.7,
+    -96.7,
+    -86.7,
+    90,
+    3.3,
+    43.3,
+    -20,
+    -63.3,
+    13.3,
+    16.7
+   ],
+   "now": [
+    33.3,
+    -76.7,
+    -13.3,
+    -83.3,
+    -76.7,
+    53.3,
+    -10,
+    50,
+    -46.7,
+    -66.7,
+    -10,
+    16.7
+   ],
+   "weight": [
+    0.96,
+    1.44,
+    0.48,
+    1.44,
+    1.44,
+    1.44,
+    0.48,
+    0.96,
+    0.96,
+    1.44,
+    0.48,
+    0.48
+   ],
+   "spread": [
+    26.7,
+    20,
+    23.3,
+    6.7,
+    16.7,
+    23.3,
+    56.7,
+    16.7,
+    26.7,
+    23.3,
+    10,
+    26.7
+   ],
+   "sources": [
+    {
+     "title": "Ujamaa: The Basis of African Socialism",
+     "author": "Julius K. Nyerere",
+     "year": "1962",
+     "by_adherent": true
+    },
+    {
+     "title": "The Arusha Declaration",
+     "author": "Julius K. Nyerere / TANU",
+     "year": "1967",
+     "by_adherent": true
+    },
+    {
+     "title": "Consciencism",
+     "author": "Kwame Nkrumah",
+     "year": "1964",
+     "by_adherent": true
+    },
+    {
+     "title": "African Socialism in Postcolonial Tanzania: Between the Village and the World",
+     "author": "Priya Lal",
+     "year": "2015",
+     "by_adherent": false
+    }
+   ]
+  },
+  {
+   "slug": "social-democracy",
+   "name": "Social democracy",
+   "family": "left-liberal",
+   "sensitive": false,
+   "summary": "Prioritises a universal welfare state, strong unions and regulated markets over both unregulated capitalism and wholesale socialisation. It humanises capitalism through democratic politics rather than abolishing it.",
+   "signature": "ideal: regulated market economy with a universal welfare state and social partnership; now: broadly the same, defending and extending it",
+   "ideal": [
+    43.3,
+    -86.7,
+    0,
+    -43.3,
+    -33.3,
+    -10,
+    -40,
+    20,
+    -13.3,
+    -90,
+    -80,
+    3.3
+   ],
+   "now": [
+    43.3,
+    -86.7,
+    3.3,
+    -43.3,
+    -23.3,
+    -6.7,
+    -26.7,
+    16.7,
+    3.3,
+    -80,
+    -76.7,
+    6.7
+   ],
+   "weight": [
+    1.0435,
+    1.5652,
+    0.5217,
+    1.0435,
+    1.0435,
+    0.5217,
+    1.0435,
+    1.0435,
+    0.5217,
+    1.5652,
+    1.5652,
+    0.5217
+   ],
+   "spread": [
+    16.7,
+    3.3,
+    16.7,
+    6.7,
+    13.3,
+    43.3,
+    30,
+    10,
+    26.7,
+    26.7,
+    13.3,
+    13.3
+   ],
+   "sources": [
+    {
+     "title": "Evolutionary Socialism",
+     "author": "Eduard Bernstein",
+     "year": "1899",
+     "by_adherent": true
+    },
+    {
+     "title": "Ill Fares the Land",
+     "author": "Tony Judt",
+     "year": "2010",
+     "by_adherent": true
+    },
+    {
+     "title": "The Primacy of Politics: Social Democracy and the Making of Europe's Twentieth Century",
+     "author": "Sheri Berman",
+     "year": "2006",
+     "by_adherent": true
+    },
+    {
+     "title": "The Three Worlds of Welfare Capitalism",
+     "author": "Gøsta Esping-Andersen",
+     "year": "1990",
+     "by_adherent": false
+    }
+   ]
+  },
+  {
+   "slug": "progressive-liberalism",
+   "name": "Progressive liberalism",
+   "family": "left-liberal",
+   "sensitive": false,
+   "summary": "Prioritises expanding equal rights, inclusion and social justice for disadvantaged groups over tradition and laissez-faire. It uses an active, regulatory state within a market economy and liberal democracy.",
+   "signature": "constant",
+   "ideal": [
+    50,
+    -83.3,
+    -16.7,
+    -10,
+    -13.3,
+    -26.7,
+    -50,
+    13.3,
+    -53.3,
+    -96.7,
+    -90,
+    -10
+   ],
+   "now": [
+    50,
+    -80,
+    -13.3,
+    -13.3,
+    -16.7,
+    -6.7,
+    -40,
+    13.3,
+    -43.3,
+    -90,
+    -90,
+    -6.7
+   ],
+   "weight": [
+    1.0909,
+    1.6364,
+    0.5455,
+    0.5455,
+    0.5455,
+    1.0909,
+    1.0909,
+    0.5455,
+    1.0909,
+    1.6364,
+    1.6364,
+    0.5455
+   ],
+   "spread": [
+    20,
+    10,
+    16.7,
+    3.3,
+    13.3,
+    20,
+    13.3,
+    16.7,
+    13.3,
+    16.7,
+    6.7,
+    16.7
+   ],
+   "sources": [
+    {
+     "title": "The Promise of American Life",
+     "author": "Herbert Croly",
+     "year": "1909",
+     "by_adherent": true
+    },
+    {
+     "title": "Liberalism and Social Action",
+     "author": "John Dewey",
+     "year": "1935",
+     "by_adherent": true
+    },
+    {
+     "title": "Creating Capabilities: The Human Development Approach",
+     "author": "Martha C. Nussbaum",
+     "year": "2011",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "green-politics",
+   "name": "Green politics",
+   "family": "left-liberal",
+   "sensitive": false,
+   "summary": "Prioritises ecological sustainability, grassroots democracy and non-violence over economic growth, centralised power and military solutions.",
+   "signature": "ideal: decentralised, ecologically sustainable, participatory society; now: climate policy, proportional representation and coalition government",
+   "ideal": [
+    -26.7,
+    -90,
+    -36.7,
+    -73.3,
+    -56.7,
+    33.3,
+    -66.7,
+    76.7,
+    -76.7,
+    -90,
+    -93.3,
+    46.7
+   ],
+   "now": [
+    -3.3,
+    -83.3,
+    -36.7,
+    -63.3,
+    -50,
+    30,
+    -66.7,
+    66.7,
+    -66.7,
+    -90,
+    -93.3,
+    50
+   ],
+   "weight": [
+    0.8,
+    1.2,
+    0.8,
+    1.2,
+    0.8,
+    0.8,
+    1.2,
+    1.2,
+    1.2,
+    1.2,
+    1.2,
+    0.4
+   ],
+   "spread": [
+    13.3,
+    13.3,
+    6.7,
+    23.3,
+    26.7,
+    16.7,
+    10,
+    20,
+    16.7,
+    16.7,
+    13.3,
+    36.7
+   ],
+   "sources": [
+    {
+     "title": "Global Greens Charter",
+     "author": "Global Greens",
+     "year": "2001",
+     "by_adherent": true
+    },
+    {
+     "title": "Fighting for Hope",
+     "author": "Petra K. Kelly",
+     "year": "1984",
+     "by_adherent": true
+    },
+    {
+     "title": "Green Political Thought",
+     "author": "Andrew Dobson",
+     "year": "1990",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "left-populism",
+   "name": "Left-wing populism",
+   "family": "left-liberal",
+   "sensitive": false,
+   "summary": "Prioritises the common people against an economic and political oligarchy, and popular sovereignty over technocratic, market-led and supranational governance. It pursues redistribution through majoritarian mass mobilisation.",
+   "signature": "ideal: radical popular democracy with redistribution and public control of key sectors; now: anti-austerity, anti-oligarchy electoral movement",
+   "ideal": [
+    30,
+    -96.7,
+    -33.3,
+    -80,
+    -76.7,
+    70,
+    43.3,
+    66.7,
+    -33.3,
+    -86.7,
+    -80,
+    6.7
+   ],
+   "now": [
+    30,
+    -93.3,
+    -36.7,
+    -73.3,
+    -70,
+    70,
+    50,
+    63.3,
+    -30,
+    -83.3,
+    -80,
+    10
+   ],
+   "weight": [
+    0.8276,
+    1.2414,
+    0.8276,
+    1.2414,
+    1.2414,
+    1.2414,
+    0.4138,
+    1.2414,
+    0.8276,
+    1.2414,
+    1.2414,
+    0.4138
+   ],
+   "spread": [
+    26.7,
+    6.7,
+    6.7,
+    13.3,
+    20,
+    3.3,
+    53.3,
+    20,
+    16.7,
+    20,
+    23.3,
+    13.3
+   ],
+   "sources": [
+    {
+     "title": "For a Left Populism",
+     "author": "Chantal Mouffe",
+     "year": "2018",
+     "by_adherent": true
+    },
+    {
+     "title": "On Populist Reason",
+     "author": "Ernesto Laclau",
+     "year": "2005",
+     "by_adherent": true
+    },
+    {
+     "title": "Populism: A Very Short Introduction",
+     "author": "Cas Mudde and Cristóbal Rovira Kaltwasser",
+     "year": "2017",
+     "by_adherent": false
+    }
+   ]
+  },
+  {
+   "slug": "social-liberalism",
+   "name": "Social liberalism",
    "family": "liberal-centrist",
    "sensitive": false,
-   "summary": "Placeholder archetype for UI development.",
+   "summary": "Prioritises individual liberty secured by fair equality of opportunity over both laissez-faire and collectivism. The state guarantees the social conditions of freedom within a market economy.",
    "signature": "constant",
    "ideal": [
+    26.7,
+    -86.7,
+    -23.3,
     0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+    16.7,
+    -50,
+    -40,
+    3.3,
+    -50,
+    -86.7,
+    -83.3,
+    -36.7
    ],
    "now": [
+    30,
+    -86.7,
+    -26.7,
     0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+    13.3,
+    -43.3,
+    -30,
+    6.7,
+    -36.7,
+    -86.7,
+    -83.3,
+    -13.3
    ],
    "weight": [
     1,
+    1.5,
+    1,
+    0.5,
+    0.5,
     1,
     1,
+    0.5,
     1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
+    1.5,
+    1.5,
     1
    ],
    "spread": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+    23.3,
+    6.7,
+    20,
+    10,
+    20,
+    13.3,
+    33.3,
+    13.3,
+    26.7,
+    16.7,
+    10,
+    16.7
    ],
-   "sources": []
+   "sources": [
+    {
+     "title": "Liberalism",
+     "author": "L. T. Hobhouse",
+     "year": "1911",
+     "by_adherent": true
+    },
+    {
+     "title": "A Theory of Justice",
+     "author": "John Rawls",
+     "year": "1971",
+     "by_adherent": true
+    },
+    {
+     "title": "Social Insurance and Allied Services (The Beveridge Report)",
+     "author": "William Beveridge",
+     "year": "1942",
+     "by_adherent": true
+    }
+   ]
   },
   {
-   "slug": "placeholder-right",
-   "name": "Placeholder Right",
+   "slug": "centrism",
+   "name": "Centrism",
+   "family": "liberal-centrist",
+   "sensitive": false,
+   "summary": "Prioritises moderation, pragmatism and evidence over ideological consistency. It balances markets with a safety net, liberty with order, and change with continuity through incremental compromise.",
+   "signature": "constant",
+   "ideal": [
+    36.7,
+    -73.3,
+    10,
+    20,
+    20,
+    -23.3,
+    10,
+    -10,
+    10,
+    -53.3,
+    -43.3,
+    3.3
+   ],
+   "now": [
+    36.7,
+    -73.3,
+    13.3,
+    20,
+    16.7,
+    -13.3,
+    13.3,
+    -13.3,
+    10,
+    -53.3,
+    -40,
+    6.7
+   ],
+   "weight": [
+    1.2,
+    1.8,
+    0.6,
+    1.2,
+    1.2,
+    1.2,
+    0.6,
+    0.6,
+    0.6,
+    1.2,
+    1.2,
+    0.6
+   ],
+   "spread": [
+    6.7,
+    13.3,
+    10,
+    20,
+    10,
+    16.7,
+    36.7,
+    20,
+    30,
+    23.3,
+    6.7,
+    20
+   ],
+   "sources": [
+    {
+     "title": "The Vital Center: The Politics of Freedom",
+     "author": "Arthur M. Schlesinger Jr.",
+     "year": "1949",
+     "by_adherent": true
+    },
+    {
+     "title": "Faces of Moderation: The Art of Balance in an Age of Extremes",
+     "author": "Aurelian Craiutu",
+     "year": "2017",
+     "by_adherent": true
+    },
+    {
+     "title": "Left and Right: The Significance of a Political Distinction",
+     "author": "Norberto Bobbio",
+     "year": "1994",
+     "by_adherent": false
+    }
+   ]
+  },
+  {
+   "slug": "third-way",
+   "name": "Third Way",
+   "family": "liberal-centrist",
+   "sensitive": false,
+   "summary": "Prioritises a modernised centre-left that embraces markets and globalisation over old-style state socialism and laissez-faire neoliberalism. It invests in people's skills and opportunity and pairs rights with responsibilities.",
+   "signature": "constant",
+   "ideal": [
+    33.3,
+    -80,
+    43.3,
+    20,
+    30,
+    -56.7,
+    -36.7,
+    -30,
+    0,
+    -36.7,
+    -53.3,
+    -26.7
+   ],
+   "now": [
+    40,
+    -80,
+    43.3,
+    26.7,
+    23.3,
+    -56.7,
+    -33.3,
+    -23.3,
+    6.7,
+    -36.7,
+    -50,
+    -26.7
+   ],
+   "weight": [
+    1.0435,
+    1.5652,
+    1.0435,
+    0.5217,
+    1.0435,
+    1.0435,
+    1.0435,
+    1.0435,
+    0.5217,
+    1.0435,
+    1.0435,
+    1.0435
+   ],
+   "spread": [
+    20,
+    6.7,
+    13.3,
+    50,
+    23.3,
+    13.3,
+    26.7,
+    16.7,
+    40,
+    26.7,
+    10,
+    13.3
+   ],
+   "sources": [
+    {
+     "title": "The Third Way: The Renewal of Social Democracy",
+     "author": "Anthony Giddens",
+     "year": "1998",
+     "by_adherent": true
+    },
+    {
+     "title": "The Third Way: New Politics for the New Century",
+     "author": "Tony Blair (Fabian Society pamphlet)",
+     "year": "1998",
+     "by_adherent": true
+    },
+    {
+     "title": "The Global Third Way Debate",
+     "author": "Anthony Giddens (ed.)",
+     "year": "2001",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "neoliberalism",
+   "name": "Neoliberalism",
+   "family": "liberal-centrist",
+   "sensitive": false,
+   "summary": "Prioritises market competition, free trade, sound money and rule-based limits on government over state ownership, protectionism and discretionary economic management. Strong institutions exist to protect markets.",
+   "signature": "constant",
+   "ideal": [
+    -6.7,
+    -66.7,
+    -23.3,
+    83.3,
+    83.3,
+    -96.7,
+    -30,
+    -6.7,
+    -40,
+    -66.7,
+    -50,
+    -56.7
+   ],
+   "now": [
+    -3.3,
+    -66.7,
+    -20,
+    83.3,
+    83.3,
+    -96.7,
+    -30,
+    -6.7,
+    -30,
+    -66.7,
+    -50,
+    -50
+   ],
+   "weight": [
+    0.4444,
+    1.3333,
+    0.8889,
+    1.3333,
+    1.3333,
+    1.3333,
+    0.8889,
+    0.4444,
+    0.8889,
+    1.3333,
+    0.8889,
+    0.8889
+   ],
+   "spread": [
+    10,
+    13.3,
+    10,
+    13.3,
+    10,
+    3.3,
+    20,
+    16.7,
+    23.3,
+    30,
+    16.7,
+    16.7
+   ],
+   "sources": [
+    {
+     "title": "Capitalism and Freedom",
+     "author": "Milton Friedman",
+     "year": "1962",
+     "by_adherent": true
+    },
+    {
+     "title": "What Washington Means by Policy Reform",
+     "author": "John Williamson",
+     "year": "1990",
+     "by_adherent": true
+    },
+    {
+     "title": "Statement of Aims",
+     "author": "Mont Pelerin Society",
+     "year": "1947",
+     "by_adherent": true
+    },
+    {
+     "title": "Globalists: The End of Empire and the Birth of Neoliberalism",
+     "author": "Quinn Slobodian",
+     "year": "2018",
+     "by_adherent": false
+    }
+   ]
+  },
+  {
+   "slug": "liberal-conservatism",
+   "name": "Liberal conservatism",
    "family": "conservative",
    "sensitive": false,
-   "summary": "Placeholder archetype for UI development.",
+   "summary": "Prioritises free markets, limited government and constitutional democracy together with respect for inherited institutions, family and national tradition, over both radical reform and state-led economics.",
    "signature": "constant",
    "ideal": [
-    20,
+    26.7,
+    -70,
     10,
-    40,
     70,
-    60,
-    30,
-    50,
-    -30,
-    60,
-    40,
-    70,
-    50
+    66.7,
+    -56.7,
+    53.3,
+    -50,
+    43.3,
+    10,
+    3.3,
+    10
    ],
    "now": [
-    20,
-    10,
-    40,
-    70,
-    60,
     30,
-    50,
-    -30,
-    60,
-    40,
+    -70,
+    20,
     70,
-    50
+    50,
+    -50,
+    50,
+    -36.7,
+    46.7,
+    6.7,
+    -3.3,
+    10
    ],
    "weight": [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    1.0435,
+    1.5652,
+    0.5217,
+    1.5652,
+    1.5652,
+    1.0435,
+    1.0435,
+    1.0435,
+    1.0435,
+    0.5217,
+    0.5217,
+    0.5217
    ],
    "spread": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+    23.3,
+    13.3,
+    23.3,
+    10,
+    26.7,
+    16.7,
+    33.3,
+    13.3,
+    23.3,
+    10,
+    26.7,
+    43.3
    ],
-   "sources": []
+   "sources": [
+    {
+     "title": "Rationalism in Politics and Other Essays (incl. 'On Being Conservative')",
+     "author": "Michael Oakeshott",
+     "year": "1962",
+     "by_adherent": true
+    },
+    {
+     "title": "In Defense of Freedom: A Conservative Credo",
+     "author": "Frank S. Meyer",
+     "year": "1962",
+     "by_adherent": true
+    },
+    {
+     "title": "How to Be a Conservative",
+     "author": "Roger Scruton",
+     "year": "2014",
+     "by_adherent": true
+    }
+   ]
   },
   {
-   "slug": "placeholder-lib",
-   "name": "Placeholder Libertarian",
-   "family": "libertarian-market",
+   "slug": "traditional-conservatism",
+   "name": "Traditional (Burkean) conservatism",
+   "family": "conservative",
    "sensitive": false,
-   "summary": "Placeholder archetype for UI development.",
+   "summary": "Prioritises inherited institutions, organic community, religion and prudent gradual change over abstract rationalist schemes and individual autonomy.",
    "signature": "constant",
    "ideal": [
-    -60,
+    3.3,
+    -36.7,
+    30,
+    43.3,
+    10,
+    30,
+    76.7,
+    -26.7,
+    70,
+    76.7,
+    66.7,
+    66.7
+   ],
+   "now": [
+    6.7,
     -50,
+    30,
+    43.3,
+    13.3,
+    30,
+    76.7,
+    -26.7,
+    66.7,
+    53.3,
+    46.7,
+    63.3
+   ],
+   "weight": [
+    0.4444,
+    0.8889,
+    0.8889,
+    0.8889,
+    0.4444,
+    0.8889,
+    1.3333,
+    0.8889,
+    1.3333,
+    1.3333,
+    1.3333,
+    1.3333
+   ],
+   "spread": [
+    60,
+    16.7,
+    13.3,
+    13.3,
+    6.7,
+    16.7,
+    23.3,
+    33.3,
+    23.3,
+    20,
+    23.3,
+    20
+   ],
+   "sources": [
+    {
+     "title": "Reflections on the Revolution in France",
+     "author": "Edmund Burke",
+     "year": "1790",
+     "by_adherent": true
+    },
+    {
+     "title": "The Conservative Mind",
+     "author": "Russell Kirk",
+     "year": "1953",
+     "by_adherent": true
+    },
+    {
+     "title": "The Meaning of Conservatism",
+     "author": "Roger Scruton",
+     "year": "1980",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "paleoconservatism",
+   "name": "Paleoconservatism",
+   "family": "conservative",
+   "sensitive": false,
+   "summary": "Prioritises national and cultural continuity, decentralised self-government, and non-intervention abroad over global free trade, mass immigration, a managerial state and foreign wars.",
+   "signature": "ideal: decentralised republic of rooted communities under a Christian heritage; now: immigration restriction, tariffs, non-interventionism",
+   "ideal": [
+    -73.3,
+    -73.3,
+    -36.7,
+    26.7,
+    3.3,
+    86.7,
+    100,
+    36.7,
+    93.3,
+    63.3,
+    86.7,
+    70
+   ],
+   "now": [
+    -63.3,
+    -76.7,
+    -50,
+    30,
+    -6.7,
+    86.7,
+    100,
+    43.3,
+    96.7,
+    60,
+    80,
+    66.7
+   ],
+   "weight": [
+    1.1613,
+    1.1613,
+    0.7742,
+    0.7742,
+    0.3871,
+    1.1613,
+    1.1613,
+    0.7742,
+    1.1613,
+    1.1613,
+    1.1613,
+    1.1613
+   ],
+   "spread": [
+    16.7,
+    26.7,
+    26.7,
+    10,
+    23.3,
+    3.3,
+    3.3,
+    16.7,
+    6.7,
+    10,
+    10,
+    6.7
+   ],
+   "sources": [
+    {
+     "title": "A Republic, Not an Empire",
+     "author": "Patrick J. Buchanan",
+     "year": "1999",
+     "by_adherent": true
+    },
+    {
+     "title": "Beautiful Losers: Essays on the Failure of American Conservatism",
+     "author": "Samuel Francis",
+     "year": "1993",
+     "by_adherent": true
+    },
+    {
+     "title": "The Conservative Movement",
+     "author": "Paul Gottfried and Thomas Fleming",
+     "year": "1988",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "communitarianism",
+   "name": "Communitarianism",
+   "family": "conservative",
+   "sensitive": false,
+   "summary": "Prioritises community, shared moral commitments and civic responsibilities over the unencumbered individual and rights-only liberalism, while keeping democratic institutions.",
+   "signature": "constant",
+   "ideal": [
+    -16.7,
     -80,
-    90,
-    90,
-    -70,
+    30,
+    -3.3,
+    -16.7,
+    30,
+    33.3,
+    16.7,
+    30,
+    -10,
+    -10,
+    40
+   ],
+   "now": [
+    -13.3,
+    -80,
+    26.7,
+    -13.3,
+    -16.7,
+    30,
+    33.3,
+    16.7,
+    30,
+    -13.3,
+    -13.3,
+    40
+   ],
+   "weight": [
+    0.6667,
+    2,
+    1.3333,
+    0.6667,
+    0.6667,
+    1.3333,
+    0.6667,
+    0.6667,
+    1.3333,
+    0.6667,
+    0.6667,
+    1.3333
+   ],
+   "spread": [
+    13.3,
+    13.3,
+    13.3,
+    16.7,
+    13.3,
+    20,
+    43.3,
+    16.7,
+    33.3,
+    33.3,
+    13.3,
+    33.3
+   ],
+   "sources": [
+    {
+     "title": "The Spirit of Community",
+     "author": "Amitai Etzioni",
+     "year": "1993",
+     "by_adherent": true
+    },
+    {
+     "title": "Liberalism and the Limits of Justice",
+     "author": "Michael J. Sandel",
+     "year": "1982",
+     "by_adherent": true
+    },
+    {
+     "title": "After Virtue",
+     "author": "Alasdair MacIntyre",
+     "year": "1981",
+     "by_adherent": false
+    },
+    {
+     "title": "The Responsive Communitarian Platform",
+     "author": "The Communitarian Network",
+     "year": "1991",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "christian-democracy",
+   "name": "Christian democracy",
+   "family": "religious",
+   "sensitive": false,
+   "summary": "Prioritises human dignity, subsidiarity and solidarity, drawn from Christian social teaching, over both individualist liberalism and collectivist socialism. It works through democratic institutions and a social market economy.",
+   "signature": "constant",
+   "ideal": [
     0,
+    -73.3,
+    20,
+    10,
+    16.7,
+    -30,
+    -40,
+    3.3,
+    10,
+    16.7,
     40,
+    46.7
+   ],
+   "now": [
+    10,
+    -70,
+    23.3,
+    10,
+    6.7,
+    -16.7,
+    -30,
+    -3.3,
+    23.3,
+    -3.3,
+    13.3,
+    40
+   ],
+   "weight": [
+    0.6316,
+    1.8947,
+    1.2632,
+    0.6316,
+    0.6316,
+    1.2632,
+    1.2632,
+    0.6316,
+    0.6316,
+    0.6316,
+    1.2632,
+    1.2632
+   ],
+   "spread": [
+    10,
+    13.3,
+    10,
+    13.3,
+    23.3,
+    20,
+    16.7,
+    16.7,
+    26.7,
+    16.7,
+    13.3,
+    26.7
+   ],
+   "sources": [
+    {
+     "title": "Rerum Novarum",
+     "author": "Pope Leo XIII",
+     "year": "1891",
+     "by_adherent": true
+    },
+    {
+     "title": "Quadragesimo Anno",
+     "author": "Pope Pius XI",
+     "year": "1931",
+     "by_adherent": true
+    },
+    {
+     "title": "Christianity and Democracy",
+     "author": "Jacques Maritain",
+     "year": "1943",
+     "by_adherent": true
+    },
+    {
+     "title": "The Rise of Christian Democracy in Europe",
+     "author": "Stathis N. Kalyvas",
+     "year": "1996",
+     "by_adherent": false
+    }
+   ]
+  },
+  {
+   "slug": "catholic-integralism",
+   "name": "Catholic integralism",
+   "family": "religious",
+   "sensitive": false,
+   "summary": "Prioritises ordering political life toward the common good and humanity's supernatural end, with temporal power subordinate to the Church's spiritual authority, over liberal neutrality and individual autonomy.",
+   "signature": "ideal: confessional Catholic polity ordered to the common good; now: postliberal 'common good' governance within existing institutions",
+   "ideal": [
+    16.7,
+    16.7,
+    30,
+    -23.3,
+    -36.7,
+    56.7,
+    23.3,
+    6.7,
+    46.7,
+    96.7,
+    86.7,
+    73.3
+   ],
+   "now": [
+    -10,
+    -30,
+    3.3,
+    -3.3,
+    -23.3,
+    40,
+    43.3,
+    6.7,
+    46.7,
+    66.7,
+    83.3,
+    73.3
+   ],
+   "weight": [
+    0.5455,
+    0.5455,
+    1.0909,
+    1.0909,
+    1.0909,
+    1.0909,
+    0.5455,
+    0.5455,
+    0.5455,
+    1.6364,
+    1.6364,
+    1.6364
+   ],
+   "spread": [
+    30,
+    26.7,
+    23.3,
+    16.7,
+    23.3,
+    26.7,
+    73.3,
+    20,
+    40,
+    33.3,
+    16.7,
+    23.3
+   ],
+   "sources": [
+    {
+     "title": "Immortale Dei",
+     "author": "Pope Leo XIII",
+     "year": "1885",
+     "by_adherent": true
+    },
+    {
+     "title": "Integralism: A Manual of Political Philosophy",
+     "author": "Thomas Crean and Alan Fimister",
+     "year": "2020",
+     "by_adherent": true
+    },
+    {
+     "title": "Common Good Constitutionalism",
+     "author": "Adrian Vermeule",
+     "year": "2022",
+     "by_adherent": true
+    },
+    {
+     "title": "In Defence of Catholic Integralism",
+     "author": "Thomas Pink",
+     "year": "2018",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "islamic-democracy",
+   "name": "Islamic democracy",
+   "family": "religious",
+   "sensitive": false,
+   "summary": "Prioritises a polity in which Islamic ethical principles and consultation (shura) guide law, combined with elections, accountable government and public freedoms, over both secular laicism and clerical autocracy.",
+   "signature": "ideal: elected, accountable government with Islamic principles as a source of law; now: Muslim-democratic participation, religious freedom and anti-discrimination",
+   "ideal": [
+    3.3,
+    -80,
+    0,
+    -10,
+    -3.3,
+    0,
+    -10,
+    23.3,
+    -26.7,
+    30,
+    50,
+    13.3
+   ],
+   "now": [
+    10,
+    -80,
+    -6.7,
+    -10,
+    -3.3,
+    -3.3,
+    -10,
+    23.3,
+    -46.7,
+    -13.3,
+    33.3,
+    13.3
+   ],
+   "weight": [
+    0.6667,
+    2,
+    0.6667,
+    0.6667,
+    0.6667,
+    0.6667,
+    0.6667,
+    1.3333,
+    1.3333,
+    1.3333,
+    1.3333,
+    0.6667
+   ],
+   "spread": [
+    13.3,
+    3.3,
+    13.3,
+    40,
+    30,
+    13.3,
+    23.3,
+    6.7,
+    30,
+    20,
+    16.7,
+    30
+   ],
+   "sources": [
+    {
+     "title": "Public Freedoms in the Islamic State (al-Hurriyat al-'Amma fi al-Dawla al-Islamiyya)",
+     "author": "Rached Ghannouchi",
+     "year": "1993",
+     "by_adherent": true
+    },
+    {
+     "title": "Islam and the Challenge of Democracy",
+     "author": "Khaled Abou El Fadl",
+     "year": "2004",
+     "by_adherent": true
+    },
+    {
+     "title": "Reason, Freedom, and Democracy in Islam",
+     "author": "Abdolkarim Soroush",
+     "year": "2000",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "theocratic-absolutism",
+   "name": "Theocratic absolutism",
+   "family": "religious",
+   "sensitive": true,
+   "summary": "Prioritises rule by divine law, administered by religious authority with unlimited power, over popular sovereignty, pluralism and individual liberty. Historically such regimes have enforced religious conformity and suppressed dissenters and minorities.",
+   "signature": "ideal: sacred law applied by a supreme religious authority; now: separatist piety and pressure for religious law, rejecting liberal secularism",
+   "ideal": [
+    83.3,
+    73.3,
+    56.7,
+    16.7,
+    -16.7,
+    33.3,
+    56.7,
+    -26.7,
+    53.3,
+    100,
+    96.7,
+    60
+   ],
+   "now": [
+    -46.7,
+    26.7,
+    -16.7,
+    3.3,
+    -6.7,
+    10,
+    33.3,
+    -3.3,
+    -23.3,
+    66.7,
+    96.7,
+    60
+   ],
+   "weight": [
+    0.5217,
+    1.5652,
+    1.0435,
+    0.5217,
+    0.5217,
+    1.0435,
+    1.0435,
+    1.0435,
+    1.0435,
+    1.5652,
+    1.5652,
+    0.5217
+   ],
+   "spread": [
+    36.7,
+    26.7,
+    26.7,
+    36.7,
+    23.3,
+    26.7,
+    20,
+    20,
+    23.3,
+    10,
+    10,
+    50
+   ],
+   "sources": [
+    {
+     "title": "Unam Sanctam",
+     "author": "Pope Boniface VIII",
+     "year": "1302",
+     "by_adherent": true
+    },
+    {
+     "title": "Islamic Government: Governance of the Jurist (Velayat-e Faqih)",
+     "author": "Ruhollah Khomeini",
+     "year": "1970",
+     "by_adherent": true
+    },
+    {
+     "title": "The Turban for the Crown: The Islamic Revolution in Iran",
+     "author": "Said Amir Arjomand",
+     "year": "1988",
+     "by_adherent": false
+    }
+   ]
+  },
+  {
+   "slug": "distributism",
+   "name": "Distributism",
+   "family": "religious",
+   "sensitive": false,
+   "summary": "Prioritises widespread ownership of productive property by families, small firms and cooperatives over both concentrated capitalist ownership and state socialism.",
+   "signature": "ideal: society of small proprietors, guilds and cooperatives; now: anti-monopoly, small-business, cooperative and localist policies",
+   "ideal": [
+    -53.3,
+    -86.7,
+    -23.3,
+    -46.7,
+    -16.7,
+    80,
+    43.3,
+    43.3,
+    30,
+    33.3,
+    56.7,
+    70
+   ],
+   "now": [
+    -33.3,
+    -83.3,
+    -20,
+    -46.7,
+    -20,
+    73.3,
+    40,
+    46.7,
+    33.3,
+    13.3,
+    43.3,
+    70
+   ],
+   "weight": [
+    1.1429,
+    0.5714,
+    1.1429,
+    1.1429,
+    0.5714,
+    1.7143,
+    0.5714,
+    1.1429,
+    0.5714,
+    0.5714,
+    1.1429,
+    1.7143
+   ],
+   "spread": [
+    16.7,
+    36.7,
+    23.3,
+    20,
+    26.7,
+    26.7,
+    50,
+    6.7,
+    43.3,
+    43.3,
+    13.3,
+    13.3
+   ],
+   "sources": [
+    {
+     "title": "The Servile State",
+     "author": "Hilaire Belloc",
+     "year": "1912",
+     "by_adherent": true
+    },
+    {
+     "title": "The Outline of Sanity",
+     "author": "G. K. Chesterton",
+     "year": "1926",
+     "by_adherent": true
+    },
+    {
+     "title": "Small Is Beautiful: A Study of Economics as if People Mattered",
+     "author": "E. F. Schumacher",
+     "year": "1973",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "gandhian-sarvodaya",
+   "name": "Gandhian Sarvodaya",
+   "family": "religious",
+   "sensitive": false,
+   "summary": "Prioritises the welfare of all, through self-governing village republics, non-violence, trusteeship and simple living, over centralised state power, industrial mass production and material accumulation.",
+   "signature": "ideal: decentralised non-violent village republics (gram swaraj); now: constructive programme, non-violent resistance and local self-reliance",
+   "ideal": [
+    -73.3,
+    -83.3,
     -40,
     -80,
+    -40,
+    86.7,
+    -26.7,
+    96.7,
+    -36.7,
     -20,
-    -60
+    10,
+    86.7
    ],
    "now": [
     -60,
-    -50,
+    -90,
+    -40,
+    -76.7,
+    -43.3,
+    73.3,
+    -30,
+    96.7,
+    -40,
+    -33.3,
+    -3.3,
+    76.7
+   ],
+   "weight": [
+    1.2857,
+    1.2857,
+    0.8571,
+    1.2857,
+    0.4286,
+    1.2857,
+    0.8571,
+    1.2857,
+    0.8571,
+    0.8571,
+    0.4286,
+    1.2857
+   ],
+   "spread": [
+    13.3,
+    16.7,
+    23.3,
+    16.7,
+    36.7,
+    20,
+    13.3,
+    23.3,
+    13.3,
+    13.3,
+    26.7,
+    16.7
+   ],
+   "sources": [
+    {
+     "title": "Hind Swaraj (Indian Home Rule)",
+     "author": "M. K. Gandhi",
+     "year": "1909",
+     "by_adherent": true
+    },
+    {
+     "title": "Constructive Programme: Its Meaning and Place",
+     "author": "M. K. Gandhi",
+     "year": "1941",
+     "by_adherent": true
+    },
+    {
+     "title": "A Plea for Reconstruction of Indian Polity",
+     "author": "Jayaprakash Narayan",
+     "year": "1959",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "national-conservatism",
+   "name": "National conservatism",
+   "family": "nationalist-populist",
+   "sensitive": false,
+   "summary": "Prioritises the independent nation-state, its cultural and religious heritage, and the family over supranational governance, global markets and liberal individualism.",
+   "signature": "constant",
+   "ideal": [
+    20,
+    -63.3,
+    20,
+    33.3,
+    -10,
+    60,
+    90,
+    -33.3,
+    76.7,
+    53.3,
+    70,
+    50
+   ],
+   "now": [
+    13.3,
+    -63.3,
+    13.3,
+    30,
+    -10,
+    66.7,
+    93.3,
+    -26.7,
+    86.7,
+    50,
+    53.3,
+    50
+   ],
+   "weight": [
+    0.4444,
+    1.3333,
+    0.8889,
+    0.8889,
+    0.4444,
+    1.3333,
+    1.3333,
+    0.8889,
+    1.3333,
+    0.8889,
+    1.3333,
+    0.8889
+   ],
+   "spread": [
+    43.3,
+    13.3,
+    20,
+    16.7,
+    3.3,
+    26.7,
+    13.3,
+    23.3,
+    13.3,
+    10,
+    13.3,
+    23.3
+   ],
+   "sources": [
+    {
+     "title": "The Virtue of Nationalism",
+     "author": "Yoram Hazony",
+     "year": "2018",
+     "by_adherent": true
+    },
+    {
+     "title": "National Conservatism: A Statement of Principles",
+     "author": "Edmund Burke Foundation (signatories)",
+     "year": "2022",
+     "by_adherent": true
+    },
+    {
+     "title": "England and the Need for Nations",
+     "author": "Roger Scruton",
+     "year": "2004",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "right-populism",
+   "name": "Right-wing populism",
+   "family": "nationalist-populist",
+   "sensitive": false,
+   "summary": "Prioritises the will of the ordinary national people over a corrupt or out-of-touch elite, and national sovereignty, border control and cultural tradition over cosmopolitan, technocratic and supranational governance.",
+   "signature": "constant",
+   "ideal": [
+    33.3,
+    -76.7,
+    6.7,
+    16.7,
+    -16.7,
+    63.3,
+    100,
+    3.3,
+    93.3,
+    26.7,
+    36.7,
+    23.3
+   ],
+   "now": [
+    30,
+    -83.3,
+    3.3,
+    3.3,
+    -23.3,
+    80,
+    100,
+    3.3,
+    96.7,
+    26.7,
+    26.7,
+    20
+   ],
+   "weight": [
+    1.0435,
+    1.5652,
+    0.5217,
+    0.5217,
+    0.5217,
+    1.5652,
+    1.5652,
+    0.5217,
+    1.5652,
+    1.0435,
+    1.0435,
+    0.5217
+   ],
+   "spread": [
+    20,
+    6.7,
+    23.3,
+    20,
+    20,
+    30,
+    3.3,
+    30,
+    6.7,
+    23.3,
+    16.7,
+    40
+   ],
+   "sources": [
+    {
+     "title": "Regime Change: Toward a Postliberal Future",
+     "author": "Patrick J. Deneen",
+     "year": "2023",
+     "by_adherent": true
+    },
+    {
+     "title": "The New Class War: Saving Democracy from the Managerial Elite",
+     "author": "Michael Lind",
+     "year": "2020",
+     "by_adherent": false
+    },
+    {
+     "title": "Populist Radical Right Parties in Europe",
+     "author": "Cas Mudde",
+     "year": "2007",
+     "by_adherent": false
+    },
+    {
+     "title": "National Populism: The Revolt Against Liberal Democracy",
+     "author": "Roger Eatwell and Matthew Goodwin",
+     "year": "2018",
+     "by_adherent": false
+    }
+   ]
+  },
+  {
+   "slug": "civic-nationalism",
+   "name": "Civic nationalism",
+   "family": "nationalist-populist",
+   "sensitive": false,
+   "summary": "Prioritises a nation defined by shared citizenship, political values and institutions over ethnic, religious or ancestral definitions of belonging, and national self-government over supranational rule.",
+   "signature": "constant",
+   "ideal": [
+    63.3,
+    -86.7,
+    13.3,
+    -6.7,
+    -16.7,
+    6.7,
+    63.3,
+    -26.7,
+    43.3,
+    -90,
+    -20,
+    -13.3
+   ],
+   "now": [
+    63.3,
+    -86.7,
+    20,
+    -3.3,
+    -16.7,
+    10,
+    66.7,
+    -26.7,
+    53.3,
+    -86.7,
+    -20,
+    -13.3
+   ],
+   "weight": [
+    1.7143,
+    1.7143,
+    0.5714,
+    0.5714,
+    0.5714,
+    0.5714,
+    0.5714,
+    1.1429,
+    1.1429,
+    1.7143,
+    1.1429,
+    0.5714
+   ],
+   "spread": [
+    23.3,
+    6.7,
+    23.3,
+    20,
+    30,
+    33.3,
+    40,
+    10,
+    30,
+    16.7,
+    23.3,
+    33.3
+   ],
+   "sources": [
+    {
+     "title": "What Is a Nation? (Qu'est-ce qu'une nation?)",
+     "author": "Ernest Renan",
+     "year": "1882",
+     "by_adherent": true
+    },
+    {
+     "title": "On Nationality",
+     "author": "David Miller",
+     "year": "1995",
+     "by_adherent": true
+    },
+    {
+     "title": "Liberal Nationalism",
+     "author": "Yael Tamir",
+     "year": "1993",
+     "by_adherent": true
+    },
+    {
+     "title": "Blood and Belonging: Journeys into the New Nationalism",
+     "author": "Michael Ignatieff",
+     "year": "1993",
+     "by_adherent": false
+    }
+   ]
+  },
+  {
+   "slug": "fascism",
+   "name": "Fascism (historical, interwar)",
+   "family": "nationalist-populist",
+   "sensitive": true,
+   "summary": "Prioritises the unity, power and rebirth of the nation under a single-party state and leader over individual rights, pluralism, class conflict and liberal democracy. Its interwar regimes violently suppressed opposition, pursued wars of conquest (including the chemical-weapons campaign in Ethiopia) and, in Italy from 1938, enacted racial laws.",
+   "signature": "ideal: totalitarian corporate state led by a single party and leader; now (interwar liberal democracies): paramilitary mass movement exploiting elections toward seizing power",
+   "ideal": [
+    96.7,
+    66.7,
+    80,
+    16.7,
+    -76.7,
+    100,
+    100,
     -80,
+    96.7,
+    66.7,
+    96.7,
+    -26.7
+   ],
+   "now": [
+    96.7,
+    60,
+    73.3,
+    20,
+    -76.7,
+    100,
+    100,
+    -80,
+    96.7,
+    70,
+    96.7,
+    -26.7
+   ],
+   "weight": [
+    1.1613,
+    1.1613,
+    1.1613,
+    0.3871,
+    1.1613,
+    1.1613,
+    1.1613,
+    1.1613,
+    1.1613,
+    0.3871,
+    1.1613,
+    0.7742
+   ],
+   "spread": [
+    10,
+    30,
+    3.3,
+    6.7,
+    6.7,
+    6.7,
+    0,
+    6.7,
+    6.7,
+    40,
+    10,
+    30
+   ],
+   "sources": [
+    {
+     "title": "The Doctrine of Fascism (La dottrina del fascismo)",
+     "author": "Benito Mussolini and Giovanni Gentile",
+     "year": "1932",
+     "by_adherent": true
+    },
+    {
+     "title": "Origins and Doctrine of Fascism",
+     "author": "Giovanni Gentile",
+     "year": "1929",
+     "by_adherent": true
+    },
+    {
+     "title": "The Anatomy of Fascism",
+     "author": "Robert O. Paxton",
+     "year": "2004",
+     "by_adherent": false
+    },
+    {
+     "title": "A History of Fascism, 1914–1945",
+     "author": "Stanley G. Payne",
+     "year": "1995",
+     "by_adherent": false
+    }
+   ]
+  },
+  {
+   "slug": "kemalism",
+   "name": "Kemalism",
+   "family": "nationalist-populist",
+   "sensitive": false,
+   "summary": "Prioritises a unitary, secular, modernising republic and civic national unity over religious authority, traditional custom, ethnic particularism and foreign tutelage.",
+   "signature": "ideal: secular, unitary, state-led modernising republic; now: assertive secularism, national sovereignty and defence of republican institutions",
+   "ideal": [
+    100,
+    -36.7,
+    46.7,
+    -40,
+    -56.7,
+    70,
+    83.3,
+    6.7,
+    60,
+    -100,
+    -33.3,
+    -30
+   ],
+   "now": [
+    100,
+    -46.7,
+    43.3,
+    -36.7,
+    -36.7,
+    56.7,
+    83.3,
+    3.3,
+    63.3,
+    -100,
+    -33.3,
+    -30
+   ],
+   "weight": [
+    1.2857,
+    0.8571,
+    0.8571,
+    0.8571,
+    0.8571,
+    1.2857,
+    1.2857,
+    0.4286,
+    1.2857,
+    1.2857,
+    0.8571,
+    0.8571
+   ],
+   "spread": [
+    3.3,
+    23.3,
+    16.7,
+    13.3,
+    10,
+    20,
+    20,
+    20,
+    23.3,
+    6.7,
+    23.3,
+    10
+   ],
+   "sources": [
+    {
+     "title": "Nutuk (The Great Speech)",
+     "author": "Mustafa Kemal Atatürk",
+     "year": "1927",
+     "by_adherent": true
+    },
+    {
+     "title": "Republican People's Party programme (the Six Arrows)",
+     "author": "Republican People's Party (CHP)",
+     "year": "1931",
+     "by_adherent": true
+    },
+    {
+     "title": "Turkey: A Modern History",
+     "author": "Erik J. Zürcher",
+     "year": "1993",
+     "by_adherent": false
+    },
+    {
+     "title": "Atatürk: The Biography of the Founder of Modern Turkey",
+     "author": "Andrew Mango",
+     "year": "1999",
+     "by_adherent": false
+    }
+   ]
+  },
+  {
+   "slug": "peronism",
+   "name": "Peronism",
+   "family": "nationalist-populist",
+   "sensitive": false,
+   "summary": "Prioritises social justice, economic independence and political sovereignty through an 'organised community' of state, organised labour and capital, over both liberal capitalism and Marxist class struggle.",
+   "signature": "constant",
+   "ideal": [
+    63.3,
+    -63.3,
+    16.7,
+    -56.7,
+    -83.3,
+    100,
     90,
-    90,
+    10,
+    10,
+    10,
+    3.3,
+    -3.3
+   ],
+   "now": [
+    60,
     -70,
+    13.3,
+    -53.3,
+    -73.3,
+    93.3,
+    86.7,
+    16.7,
+    13.3,
+    -13.3,
+    -13.3,
+    -3.3
+   ],
+   "weight": [
+    1.5652,
+    1.5652,
+    0.5217,
+    1.0435,
+    1.5652,
+    1.5652,
+    1.5652,
+    0.5217,
+    0.5217,
+    0.5217,
+    0.5217,
+    0.5217
+   ],
+   "spread": [
+    26.7,
+    13.3,
+    40,
+    26.7,
+    16.7,
+    20,
+    10,
+    23.3,
+    43.3,
+    30,
+    46.7,
+    10
+   ],
+   "sources": [
+    {
+     "title": "La comunidad organizada (The Organised Community)",
+     "author": "Juan Domingo Perón",
+     "year": "1949",
+     "by_adherent": true
+    },
+    {
+     "title": "Las veinte verdades del justicialismo peronista (The Twenty Truths)",
+     "author": "Juan Domingo Perón",
+     "year": "1950",
+     "by_adherent": true
+    },
+    {
+     "title": "Resistance and Integration: Peronism and the Argentine Working Class, 1946–1976",
+     "author": "Daniel James",
+     "year": "1988",
+     "by_adherent": false
+    }
+   ]
+  },
+  {
+   "slug": "classical-liberalism",
+   "name": "Classical liberalism",
+   "family": "libertarian-market",
+   "sensitive": false,
+   "summary": "Prioritises individual liberty, private property, free markets and constitutionally limited government over state direction of the economy and enforcement of particular moral or religious ways of life.",
+   "signature": "constant",
+   "ideal": [
+    -33.3,
+    -76.7,
+    -63.3,
+    73.3,
+    93.3,
+    -96.7,
+    30,
+    43.3,
+    -46.7,
+    -90,
+    -46.7,
+    -56.7
+   ],
+   "now": [
+    -20,
+    -76.7,
+    -66.7,
+    76.7,
+    93.3,
+    -96.7,
+    26.7,
+    43.3,
+    -33.3,
+    -90,
+    -46.7,
+    -56.7
+   ],
+   "weight": [
+    0.8276,
+    1.2414,
+    1.2414,
+    1.2414,
+    1.2414,
+    1.2414,
+    0.4138,
+    0.8276,
+    0.8276,
+    1.2414,
+    0.8276,
+    0.8276
+   ],
+   "spread": [
+    13.3,
+    16.7,
+    13.3,
+    26.7,
+    20,
+    3.3,
+    56.7,
+    6.7,
+    20,
+    10,
+    16.7,
+    10
+   ],
+   "sources": [
+    {
+     "title": "Second Treatise of Government",
+     "author": "John Locke",
+     "year": "1689",
+     "by_adherent": true
+    },
+    {
+     "title": "An Inquiry into the Nature and Causes of the Wealth of Nations",
+     "author": "Adam Smith",
+     "year": "1776",
+     "by_adherent": true
+    },
+    {
+     "title": "On Liberty",
+     "author": "John Stuart Mill",
+     "year": "1859",
+     "by_adherent": true
+    },
+    {
+     "title": "The Constitution of Liberty",
+     "author": "F. A. Hayek",
+     "year": "1960",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "minarchism",
+   "name": "Libertarian minarchism",
+   "family": "libertarian-market",
+   "sensitive": false,
+   "summary": "Prioritises individual rights and voluntary exchange over all other political goals, limiting the state to a 'night-watchman' that provides only police, courts and national defence.",
+   "signature": "ideal: night-watchman state; now: radical cuts to government, deregulation and civil liberties",
+   "ideal": [
+    -56.7,
+    -76.7,
+    -93.3,
+    96.7,
+    100,
+    -100,
+    43.3,
+    70,
+    -63.3,
+    -96.7,
+    -40,
+    -86.7
+   ],
+   "now": [
+    -53.3,
+    -80,
+    -93.3,
+    96.7,
+    100,
+    -100,
+    43.3,
+    73.3,
+    -56.7,
+    -96.7,
+    -40,
+    -86.7
+   ],
+   "weight": [
+    0.75,
+    1.125,
+    1.125,
+    1.125,
+    1.125,
+    1.125,
+    0.375,
+    1.125,
+    1.125,
+    1.125,
+    0.75,
+    1.125
+   ],
+   "spread": [
+    20,
+    13.3,
+    6.7,
+    3.3,
+    3.3,
     0,
     40,
+    20,
+    16.7,
+    3.3,
+    13.3,
+    3.3
+   ],
+   "sources": [
+    {
+     "title": "Anarchy, State, and Utopia",
+     "author": "Robert Nozick",
+     "year": "1974",
+     "by_adherent": true
+    },
+    {
+     "title": "The Law",
+     "author": "Frédéric Bastiat",
+     "year": "1850",
+     "by_adherent": true
+    },
+    {
+     "title": "The Virtue of Selfishness",
+     "author": "Ayn Rand",
+     "year": "1964",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "georgism",
+   "name": "Georgism",
+   "family": "libertarian-market",
+   "sensitive": false,
+   "summary": "Prioritises capturing land and natural-resource rents for the community through a single land-value tax over taxing labour, capital and trade. Individuals keep the full product of their work in an otherwise free market.",
+   "signature": "constant",
+   "ideal": [
+    -23.3,
+    -86.7,
     -40,
-    -80,
+    36.7,
+    66.7,
+    -86.7,
+    -23.3,
+    46.7,
+    -56.7,
+    -86.7,
+    -46.7,
+    -50
+   ],
+   "now": [
+    -10,
+    -83.3,
+    -26.7,
+    33.3,
+    60,
+    -83.3,
+    -13.3,
+    43.3,
+    -56.7,
+    -86.7,
+    -43.3,
+    -46.7
+   ],
+   "weight": [
+    0.9231,
+    1.3846,
+    0.9231,
+    0.4615,
+    1.3846,
+    1.3846,
+    0.4615,
+    0.9231,
+    0.9231,
+    1.3846,
+    0.9231,
+    0.9231
+   ],
+   "spread": [
+    23.3,
+    20,
+    16.7,
+    43.3,
+    23.3,
+    13.3,
+    46.7,
+    26.7,
+    20,
+    16.7,
+    3.3,
+    30
+   ],
+   "sources": [
+    {
+     "title": "Progress and Poverty",
+     "author": "Henry George",
+     "year": "1879",
+     "by_adherent": true
+    },
+    {
+     "title": "Protection or Free Trade",
+     "author": "Henry George",
+     "year": "1886",
+     "by_adherent": true
+    },
+    {
+     "title": "The Corruption of Economics",
+     "author": "Mason Gaffney and Fred Harrison",
+     "year": "1994",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "paleolibertarianism",
+   "name": "Paleolibertarianism",
+   "family": "libertarian-market",
+   "sensitive": false,
+   "summary": "Prioritises radical anti-statism and free markets together with cultural traditionalism, decentralisation and secession over the centralised managerial state, egalitarian social engineering and foreign wars.",
+   "signature": "ideal: private-law society of covenant communities (or radical minarchy); now: secession and devolution, ending the central bank, immigration restriction, non-intervention",
+   "ideal": [
+    -100,
+    -23.3,
+    -96.7,
+    100,
+    96.7,
+    -90,
+    93.3,
+    80,
+    80,
+    33.3,
+    73.3,
+    26.7
+   ],
+   "now": [
+    -100,
+    -46.7,
+    -93.3,
+    100,
+    96.7,
+    -66.7,
+    93.3,
+    80,
+    90,
+    30,
+    73.3,
+    26.7
+   ],
+   "weight": [
+    1.2414,
+    0.8276,
+    1.2414,
+    1.2414,
+    1.2414,
+    0.4138,
+    1.2414,
+    1.2414,
+    0.4138,
+    0.8276,
+    1.2414,
+    0.8276
+   ],
+   "spread": [
+    6.7,
+    20,
+    23.3,
+    3.3,
+    6.7,
+    43.3,
+    6.7,
+    20,
+    36.7,
+    16.7,
+    16.7,
+    26.7
+   ],
+   "sources": [
+    {
+     "title": "Democracy: The God That Failed",
+     "author": "Hans-Hermann Hoppe",
+     "year": "2001",
+     "by_adherent": true
+    },
+    {
+     "title": "Right-Wing Populism: A Strategy for the Paleo Movement",
+     "author": "Murray N. Rothbard",
+     "year": "1992",
+     "by_adherent": true
+    },
+    {
+     "title": "The Case for Paleo-Libertarianism",
+     "author": "Llewellyn H. Rockwell Jr.",
+     "year": "1990",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "anarcho-communism",
+   "name": "Anarcho-communism",
+   "family": "anarchist",
+   "sensitive": false,
+   "summary": "Prioritises abolishing the state, capital and wage labour in favour of free federations of communes that hold everything in common and distribute according to need, over all forms of hierarchical authority, including a 'workers' state'.",
+   "signature": "ideal: stateless, moneyless federation of communes; now: mutual aid, direct action and building counter-power outside the state",
+   "ideal": [
+    -93.3,
+    -90,
+    -83.3,
+    -100,
+    -73.3,
+    -26.7,
     -20,
+    86.7,
+    -100,
+    -100,
+    -96.7,
+    0
+   ],
+   "now": [
+    -63.3,
+    -83.3,
+    -83.3,
+    -100,
+    -73.3,
+    -13.3,
+    -33.3,
+    90,
+    -96.7,
+    -100,
+    -96.7,
+    20
+   ],
+   "weight": [
+    1.125,
+    1.125,
+    1.125,
+    1.125,
+    1.125,
+    0.75,
+    0.75,
+    1.125,
+    1.125,
+    1.125,
+    1.125,
+    0.375
+   ],
+   "spread": [
+    20,
+    16.7,
+    13.3,
+    0,
+    20,
+    30,
+    16.7,
+    6.7,
+    6.7,
+    3.3,
+    6.7,
+    23.3
+   ],
+   "sources": [
+    {
+     "title": "The Conquest of Bread",
+     "author": "Peter Kropotkin",
+     "year": "1892",
+     "by_adherent": true
+    },
+    {
+     "title": "Mutual Aid: A Factor of Evolution",
+     "author": "Peter Kropotkin",
+     "year": "1902",
+     "by_adherent": true
+    },
+    {
+     "title": "Anarchy (L'Anarchia)",
+     "author": "Errico Malatesta",
+     "year": "1891",
+     "by_adherent": true
+    },
+    {
+     "title": "Anarchism and Other Essays",
+     "author": "Emma Goldman",
+     "year": "1910",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "anarcho-syndicalism",
+   "name": "Anarcho-syndicalism",
+   "family": "anarchist",
+   "sensitive": false,
+   "summary": "Prioritises revolutionary industrial unions and direct action as the means and model of a stateless society over political parties, elections and state ownership. Production is run by federated workers' syndicates.",
+   "signature": "ideal: federation of self-managed industrial syndicates and communes; now: militant rank-and-file unionism and direct action",
+   "ideal": [
+    -90,
+    -83.3,
+    -80,
+    -100,
+    -96.7,
+    -23.3,
+    -20,
+    80,
+    -90,
+    -100,
+    -93.3,
+    -10
+   ],
+   "now": [
+    -60,
+    -80,
+    -76.7,
+    -100,
+    -80,
+    -3.3,
+    -30,
+    86.7,
+    -93.3,
+    -100,
+    -96.7,
+    5
+   ],
+   "weight": [
+    1.125,
+    1.125,
+    1.125,
+    1.125,
+    1.125,
+    0.75,
+    0.75,
+    1.125,
+    1.125,
+    1.125,
+    1.125,
+    0.375
+   ],
+   "spread": [
+    20,
+    16.7,
+    20,
+    0,
+    23.3,
+    33.3,
+    16.7,
+    10,
+    10,
+    3.3,
+    3.3,
+    31.7
+   ],
+   "sources": [
+    {
+     "title": "Anarcho-Syndicalism: Theory and Practice",
+     "author": "Rudolf Rocker",
+     "year": "1938",
+     "by_adherent": true
+    },
+    {
+     "title": "After the Revolution (El organismo económico de la revolución)",
+     "author": "Diego Abad de Santillán",
+     "year": "1936",
+     "by_adherent": true
+    },
+    {
+     "title": "Notes on Anarchism",
+     "author": "Noam Chomsky",
+     "year": "1970",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "mutualism",
+   "name": "Mutualism",
+   "family": "anarchist",
+   "sensitive": false,
+   "summary": "Prioritises reciprocity, possession based on occupancy and use, mutual credit and voluntary federation over both capitalist absentee ownership and state or communist collectivism. It envisions markets without capitalism.",
+   "signature": "ideal: federated market society of self-employed producers and cooperatives with mutual banks; now: cooperatives, credit unions and counter-economics",
+   "ideal": [
+    -86.7,
+    -76.7,
+    -93.3,
+    -56.7,
+    73.3,
+    -80,
+    -6.7,
+    90,
+    -90,
+    -100,
+    -83.3,
+    -30
+   ],
+   "now": [
+    -76.7,
+    -83.3,
+    -90,
+    -60,
+    63.3,
+    -73.3,
+    -3.3,
+    90,
+    -83.3,
+    -100,
+    -83.3,
+    -23.3
+   ],
+   "weight": [
+    1.125,
+    1.125,
+    1.125,
+    0.75,
+    1.125,
+    1.125,
+    0.375,
+    1.125,
+    1.125,
+    1.125,
+    1.125,
+    0.75
+   ],
+   "spread": [
+    10,
+    20,
+    6.7,
+    30,
+    30,
+    13.3,
+    10,
+    0,
+    3.3,
+    10,
+    13.3,
+    16.7
+   ],
+   "sources": [
+    {
+     "title": "What Is Property?",
+     "author": "Pierre-Joseph Proudhon",
+     "year": "1840",
+     "by_adherent": true
+    },
+    {
+     "title": "General Idea of the Revolution in the Nineteenth Century",
+     "author": "Pierre-Joseph Proudhon",
+     "year": "1851",
+     "by_adherent": true
+    },
+    {
+     "title": "Instead of a Book",
+     "author": "Benjamin R. Tucker",
+     "year": "1893",
+     "by_adherent": true
+    },
+    {
+     "title": "Studies in Mutualist Political Economy",
+     "author": "Kevin A. Carson",
+     "year": "2004",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "libertarian-municipalism",
+   "name": "Libertarian municipalism (Communalism)",
+   "family": "anarchist",
+   "sensitive": false,
+   "summary": "Prioritises direct democracy in face-to-face citizen assemblies, confederated across municipalities, and an ecological, municipalised economy over the nation-state, representative government and both private and state ownership.",
+   "signature": "ideal: confederation of democratic municipal assemblies with a municipalised economy; now: running for local office and building neighbourhood assemblies",
+   "ideal": [
+    -66.7,
+    -96.7,
+    -63.3,
+    -100,
+    -86.7,
+    16.7,
+    -26.7,
+    83.3,
+    -80,
+    -100,
+    -96.7,
+    23.3
+   ],
+   "now": [
+    -63.3,
+    -100,
+    -60,
+    -96.7,
+    -76.7,
+    33.3,
+    -20,
+    83.3,
+    -76.7,
+    -100,
+    -96.7,
+    30
+   ],
+   "weight": [
+    0.4286,
+    1.2857,
+    1.2857,
+    1.2857,
+    1.2857,
+    0.4286,
+    0.4286,
+    1.2857,
+    1.2857,
+    1.2857,
+    1.2857,
+    0.4286
+   ],
+   "spread": [
+    46.7,
+    3.3,
+    10,
+    6.7,
+    13.3,
+    36.7,
+    50,
+    10,
+    23.3,
+    0,
+    10,
+    40
+   ],
+   "sources": [
+    {
+     "title": "The Ecology of Freedom",
+     "author": "Murray Bookchin",
+     "year": "1982",
+     "by_adherent": true
+    },
+    {
+     "title": "The Next Revolution: Popular Assemblies and the Promise of Direct Democracy",
+     "author": "Murray Bookchin",
+     "year": "2015",
+     "by_adherent": true
+    },
+    {
+     "title": "The Politics of Social Ecology: Libertarian Municipalism",
+     "author": "Janet Biehl (with Murray Bookchin)",
+     "year": "1998",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "anarcho-capitalism",
+   "name": "Anarcho-capitalism",
+   "family": "anarchist",
+   "sensitive": false,
+   "summary": "Prioritises absolute self-ownership, private property and voluntary contract over any state. Even law, security and defence would be supplied by competing private firms in a free market.",
+   "signature": "ideal: stateless private-law society; now: radical deregulation, tax resistance, crypto and exit strategies",
+   "ideal": [
+    -96.7,
+    -50,
+    -100,
+    93.3,
+    100,
+    -100,
+    40,
+    76.7,
+    -13.3,
+    -83.3,
+    -40,
+    -93.3
+   ],
+   "now": [
+    -96.7,
+    -60,
+    -100,
+    96.7,
+    100,
+    -100,
+    50,
+    90,
+    -3.3,
+    -83.3,
+    -43.3,
+    -93.3
+   ],
+   "weight": [
+    1.2857,
+    0.4286,
+    1.2857,
+    1.2857,
+    1.2857,
+    1.2857,
+    0.4286,
+    1.2857,
+    0.4286,
+    1.2857,
+    0.4286,
+    1.2857
+   ],
+   "spread": [
+    20,
+    40,
+    3.3,
+    10,
+    3.3,
+    3.3,
+    36.7,
+    26.7,
+    26.7,
+    20,
+    36.7,
+    20
+   ],
+   "sources": [
+    {
+     "title": "For a New Liberty: The Libertarian Manifesto",
+     "author": "Murray N. Rothbard",
+     "year": "1973",
+     "by_adherent": true
+    },
+    {
+     "title": "The Machinery of Freedom",
+     "author": "David D. Friedman",
+     "year": "1973",
+     "by_adherent": true
+    },
+    {
+     "title": "The Ethics of Liberty",
+     "author": "Murray N. Rothbard",
+     "year": "1982",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "anarcho-primitivism",
+   "name": "Anarcho-primitivism",
+   "family": "anarchist",
+   "sensitive": false,
+   "summary": "Prioritises dismantling civilisation itself, including agriculture, industry, mass society and domestication, in favour of small, egalitarian, foraging-style communities living in wild nature, over technological progress and any form of the state.",
+   "signature": "ideal: small autonomous foraging bands in rewilded nature; now: rewilding, resistance to industrial projects, simple living",
+   "ideal": [
+    -93.3,
+    -66.7,
+    -86.7,
+    -83.3,
+    -6.7,
+    6.7,
+    6.7,
+    93.3,
+    -70,
+    -80,
+    -93.3,
+    96.7
+   ],
+   "now": [
+    -90,
+    -80,
+    -83.3,
+    -83.3,
+    -13.3,
+    10,
+    3.3,
+    90,
+    -73.3,
+    -90,
+    -93.3,
+    96.7
+   ],
+   "weight": [
+    1.3846,
+    0.4615,
+    1.3846,
+    0.4615,
+    0.4615,
+    0.4615,
+    0.4615,
+    1.3846,
+    1.3846,
+    1.3846,
+    1.3846,
+    1.3846
+   ],
+   "spread": [
+    16.7,
+    66.7,
+    20,
+    40,
+    66.7,
+    33.3,
+    13.3,
+    20,
+    23.3,
+    20,
+    6.7,
+    6.7
+   ],
+   "sources": [
+    {
+     "title": "Future Primitive and Other Essays",
+     "author": "John Zerzan",
+     "year": "1994",
+     "by_adherent": true
+    },
+    {
+     "title": "Against His-Story, Against Leviathan!",
+     "author": "Fredy Perlman",
+     "year": "1983",
+     "by_adherent": true
+    },
+    {
+     "title": "Against Civilization: Readings and Reflections",
+     "author": "John Zerzan (ed.)",
+     "year": "1999",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "absolute-monarchism",
+   "name": "Absolute monarchism",
+   "family": "hierarchical",
+   "sensitive": false,
+   "summary": "Prioritises undivided sovereign authority vested in a hereditary monarch, answerable to God and conscience rather than to parliaments or voters, over popular sovereignty, divided powers and party politics.",
+   "signature": "ideal: hereditary sovereign with undivided authority; now: support for strong executive authority, restoration movements and respect for crown institutions",
+   "ideal": [
+    90,
+    66.7,
+    73.3,
+    40,
+    -30,
+    60,
+    96.7,
+    -60,
+    43.3,
+    80,
+    86.7,
+    16.7
+   ],
+   "now": [
+    83.3,
+    60,
+    56.7,
+    40,
+    -23.3,
+    56.7,
+    93.3,
+    -46.7,
+    53.3,
+    70,
+    80,
+    16.7
+   ],
+   "weight": [
+    1.2857,
+    1.2857,
+    1.2857,
+    0.8571,
+    0.8571,
+    0.4286,
+    1.2857,
+    1.2857,
+    0.4286,
+    1.2857,
+    1.2857,
+    0.4286
+   ],
+   "spread": [
+    13.3,
+    23.3,
+    16.7,
+    13.3,
+    23.3,
+    36.7,
+    16.7,
+    20,
+    36.7,
+    20,
+    16.7,
+    26.7
+   ],
+   "sources": [
+    {
+     "title": "Six Books of the Commonwealth",
+     "author": "Jean Bodin",
+     "year": "1576",
+     "by_adherent": true
+    },
+    {
+     "title": "Patriarcha",
+     "author": "Robert Filmer",
+     "year": "1680",
+     "by_adherent": true
+    },
+    {
+     "title": "Politics Drawn from the Very Words of Holy Scripture",
+     "author": "Jacques-Bénigne Bossuet",
+     "year": "1709",
+     "by_adherent": true
+    },
+    {
+     "title": "Leviathan",
+     "author": "Thomas Hobbes",
+     "year": "1651",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "constitutional-monarchism",
+   "name": "Constitutional monarchism",
+   "family": "hierarchical",
+   "sensitive": false,
+   "summary": "Prioritises a hereditary head of state above party politics, as a symbol of continuity and national unity, over an elected presidency, while real governing power rests with an elected parliament under constitutional law.",
+   "signature": "constant",
+   "ideal": [
+    36.7,
+    -73.3,
+    6.7,
+    16.7,
+    10,
+    -20,
+    23.3,
+    -10,
+    10,
+    0,
+    -33.3,
+    -5
+   ],
+   "now": [
+    36.7,
+    -73.3,
+    13.3,
+    16.7,
+    6.7,
+    -20,
+    13.3,
+    -10,
+    10,
+    -3.3,
+    -33.3,
+    -5
+   ],
+   "weight": [
+    1.5,
+    2.25,
+    0.75,
+    0.75,
+    0.75,
+    1.5,
+    0.75,
+    0.75,
+    0.75,
+    0.75,
+    0.75,
+    0.75
+   ],
+   "spread": [
+    10,
+    10,
+    16.7,
+    13.3,
+    6.7,
+    30,
+    46.7,
+    10,
+    40,
+    10,
+    40,
+    13.3
+   ],
+   "sources": [
+    {
+     "title": "The English Constitution",
+     "author": "Walter Bagehot",
+     "year": "1867",
+     "by_adherent": true
+    },
+    {
+     "title": "Principles of Politics Applicable to All Representative Governments",
+     "author": "Benjamin Constant",
+     "year": "1815",
+     "by_adherent": true
+    },
+    {
+     "title": "The Monarchy and the Constitution",
+     "author": "Vernon Bogdanor",
+     "year": "1995",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "technocracy",
+   "name": "Technocracy",
+   "family": "hierarchical",
+   "sensitive": false,
+   "summary": "Prioritises governance by qualified experts using scientific evidence and data over electoral competition, ideology and popular opinion. Policy is treated as a problem of optimal design.",
+   "signature": "ideal: expert-run planning and administration with limited electoral input; now: independent expert agencies, evidence-based policy and epistocratic reforms",
+   "ideal": [
+    76.7,
+    23.3,
+    36.7,
+    -20,
+    -30,
+    -33.3,
+    -46.7,
+    16.7,
+    -3.3,
+    -100,
+    -73.3,
+    -83.3
+   ],
+   "now": [
+    56.7,
+    -13.3,
+    26.7,
+    -10,
+    -20,
+    -33.3,
+    -30,
+    16.7,
+    -3.3,
+    -100,
+    -70,
     -60
    ],
    "weight": [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    1.3846,
+    0.9231,
+    0.9231,
+    0.9231,
+    0.9231,
+    0.9231,
+    0.9231,
+    0.4615,
+    0.4615,
+    1.3846,
+    1.3846,
+    1.3846
+   ],
+   "spread": [
+    13.3,
+    26.7,
+    13.3,
+    10,
+    13.3,
+    20,
+    20,
+    16.7,
+    50,
+    3.3,
+    16.7,
+    16.7
+   ],
+   "sources": [
+    {
+     "title": "The Engineers and the Price System",
+     "author": "Thorstein Veblen",
+     "year": "1921",
+     "by_adherent": true
+    },
+    {
+     "title": "Technocracy Study Course",
+     "author": "Technocracy Inc. (M. King Hubbert et al.)",
+     "year": "1934",
+     "by_adherent": true
+    },
+    {
+     "title": "Against Democracy",
+     "author": "Jason Brennan",
+     "year": "2016",
+     "by_adherent": true
+    },
+    {
+     "title": "Technocracy in America",
+     "author": "Parag Khanna",
+     "year": "2017",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "confucian-meritocracy",
+   "name": "Confucian meritocracy",
+   "family": "hierarchical",
+   "sensitive": false,
+   "summary": "Prioritises rule by virtuous and capable officials selected by merit, benevolent government for the people's welfare, and social harmony over competitive electoral democracy and individualist rights.",
+   "signature": "ideal: meritocratic, benevolent government with consultative input; now: civil-service excellence, family policy and moral education",
+   "ideal": [
+    66.7,
+    26.7,
+    46.7,
+    -20,
+    -36.7,
+    6.7,
+    33.3,
+    26.7,
+    33.3,
+    -13.3,
+    36.7,
+    16.7
+   ],
+   "now": [
+    46.7,
+    -16.7,
+    23.3,
+    -10,
+    -26.7,
+    0,
+    33.3,
+    26.7,
+    33.3,
+    -36.7,
+    6.7,
+    16.7
+   ],
+   "weight": [
+    1.7143,
+    1.1429,
+    1.1429,
+    1.1429,
+    1.1429,
+    0.5714,
+    0.5714,
+    1.1429,
+    1.1429,
+    0.5714,
+    1.1429,
+    0.5714
    ],
    "spread": [
     0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+    13.3,
+    10,
+    20,
+    20,
+    20,
+    46.7,
+    10,
+    20,
+    20,
+    13.3,
+    40
    ],
-   "sources": []
+   "sources": [
+    {
+     "title": "The China Model: Political Meritocracy and the Limits of Democracy",
+     "author": "Daniel A. Bell",
+     "year": "2015",
+     "by_adherent": true
+    },
+    {
+     "title": "A Confucian Constitutional Order",
+     "author": "Jiang Qing",
+     "year": "2012",
+     "by_adherent": true
+    },
+    {
+     "title": "Confucian Perfectionism: A Political Philosophy for Modern Times",
+     "author": "Joseph Chan",
+     "year": "2014",
+     "by_adherent": true
+    },
+    {
+     "title": "Mencius",
+     "author": "Mencius (Mengzi)",
+     "year": "c. 300 BCE",
+     "by_adherent": true
+    }
+   ]
+  },
+  {
+   "slug": "developmental-authoritarianism",
+   "name": "Developmental authoritarianism",
+   "family": "hierarchical",
+   "sensitive": false,
+   "summary": "Prioritises rapid economic development, stability and national strength, delivered by a strong, meritocratic state that guides private enterprise, over political pluralism, civil liberties and unrestricted markets.",
+   "signature": "ideal: dominant-party developmental state with disciplined industrial policy; now: industrial policy, order and long-term state capacity within democracy",
+   "ideal": [
+    96.7,
+    46.7,
+    93.3,
+    20,
+    -33.3,
+    40,
+    86.7,
+    -30,
+    43.3,
+    -80,
+    16.7,
+    -70
+   ],
+   "now": [
+    76.7,
+    26.7,
+    76.7,
+    16.7,
+    -30,
+    23.3,
+    86.7,
+    -20,
+    50,
+    -73.3,
+    3.3,
+    -53.3
+   ],
+   "weight": [
+    1.3846,
+    0.9231,
+    1.3846,
+    0.9231,
+    0.9231,
+    0.9231,
+    0.4615,
+    0.9231,
+    0.9231,
+    1.3846,
+    0.4615,
+    1.3846
+   ],
+   "spread": [
+    13.3,
+    23.3,
+    20,
+    26.7,
+    16.7,
+    30,
+    36.7,
+    26.7,
+    33.3,
+    23.3,
+    20,
+    30
+   ],
+   "sources": [
+    {
+     "title": "From Third World to First: The Singapore Story 1965–2000",
+     "author": "Lee Kuan Yew",
+     "year": "2000",
+     "by_adherent": true
+    },
+    {
+     "title": "The Country, the Revolution and I",
+     "author": "Park Chung-hee",
+     "year": "1963",
+     "by_adherent": true
+    },
+    {
+     "title": "MITI and the Japanese Miracle",
+     "author": "Chalmers Johnson",
+     "year": "1982",
+     "by_adherent": false
+    },
+    {
+     "title": "Asia's Next Giant: South Korea and Late Industrialization",
+     "author": "Alice H. Amsden",
+     "year": "1989",
+     "by_adherent": false
+    }
+   ]
+  },
+  {
+   "slug": "neoreaction",
+   "name": "Neoreaction",
+   "family": "hierarchical",
+   "sensitive": false,
+   "summary": "Prioritises effective, accountable sovereign authority, modelled on a corporation run by a chief executive, and citizens' freedom to exit, over democracy, egalitarianism and a progressive establishment.",
+   "signature": "ideal: patchwork of sovereign corporate city-states run by CEO-monarchs; now: exit, institution-building, and executive power against the bureaucracy",
+   "ideal": [
+    60,
+    63.3,
+    30,
+    93.3,
+    66.7,
+    -50,
+    86.7,
+    16.7,
+    50,
+    -10,
+    23.3,
+    -50
+   ],
+   "now": [
+    -26.7,
+    46.7,
+    -6.7,
+    90,
+    76.7,
+    -36.7,
+    93.3,
+    26.7,
+    66.7,
+    6.7,
+    30,
+    -46.7
+   ],
+   "weight": [
+    1.3846,
+    1.3846,
+    0.9231,
+    1.3846,
+    1.3846,
+    0.9231,
+    1.3846,
+    0.4615,
+    0.4615,
+    0.4615,
+    0.9231,
+    0.9231
+   ],
+   "spread": [
+    23.3,
+    30,
+    33.3,
+    10,
+    26.7,
+    30,
+    26.7,
+    43.3,
+    36.7,
+    6.7,
+    20,
+    26.7
+   ],
+   "sources": [
+    {
+     "title": "Unqualified Reservations (blog essays)",
+     "author": "Mencius Moldbug (Curtis Yarvin)",
+     "year": "2007–2014",
+     "by_adherent": true
+    },
+    {
+     "title": "The Dark Enlightenment",
+     "author": "Nick Land",
+     "year": "2012",
+     "by_adherent": true
+    },
+    {
+     "title": "Democracy: The God That Failed",
+     "author": "Hans-Hermann Hoppe",
+     "year": "2001",
+     "by_adherent": false
+    }
+   ]
+  },
+  {
+   "slug": "transhumanism",
+   "name": "Techno-progressive transhumanism",
+   "family": "left-liberal",
+   "sensitive": false,
+   "summary": "Prioritises using science and technology to overcome biological limits, such as ageing, disease and cognitive constraints, with fair access guaranteed by democratic institutions, over bioconservative restraint and 'natural' limits.",
+   "signature": "constant",
+   "ideal": [
+    43.3,
+    -80,
+    -23.3,
+    -30,
+    -23.3,
+    -46.7,
+    -73.3,
+    36.7,
+    -70,
+    -100,
+    -93.3,
+    -93.3
+   ],
+   "now": [
+    36.7,
+    -80,
+    -26.7,
+    -30,
+    -23.3,
+    -40,
+    -60,
+    36.7,
+    -63.3,
+    -96.7,
+    -90,
+    -83.3
+   ],
+   "weight": [
+    0.8,
+    1.2,
+    0.8,
+    0.8,
+    0.8,
+    0.8,
+    1.2,
+    0.8,
+    1.2,
+    1.2,
+    1.2,
+    1.2
+   ],
+   "spread": [
+    26.7,
+    16.7,
+    26.7,
+    20,
+    23.3,
+    16.7,
+    26.7,
+    20,
+    13.3,
+    3.3,
+    6.7,
+    10
+   ],
+   "sources": [
+    {
+     "title": "Citizen Cyborg: Why Democratic Societies Must Respond to the Redesigned Human of the Future",
+     "author": "James Hughes",
+     "year": "2004",
+     "by_adherent": true
+    },
+    {
+     "title": "In Defense of Posthuman Dignity",
+     "author": "Nick Bostrom",
+     "year": "2005",
+     "by_adherent": true
+    },
+    {
+     "title": "The Transhumanist Declaration",
+     "author": "World Transhumanist Association (now Humanity+)",
+     "year": "1998",
+     "by_adherent": true
+    }
+   ]
   }
  ]
 }

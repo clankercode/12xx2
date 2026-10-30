@@ -1,0 +1,34 @@
+BEGIN traditional-conservatism
+Q101 -2 -2
+Q102 -3 -3
+Q103 +2 +2
+Q104 +2 +1
+Q105 -2 -2
+Q106 +1 +1
+Q107 -3 -2
+Q108 -3 -3
+Q109 +2 +2
+Q110 +2 +2
+Q111 -2 -1
+Q112 -2 -2
+Q113 +1 +1
+Q114 -2 -2
+Q115 -2 -1
+Q116 -1 -1
+Q117 +2 +2
+Q118 -3 -3
+Q119 -2 -2
+Q120 -2 -2
+END traditional-conservatism
+BEGIN paleoconservatism
+Q007 +2 +2
+Q011 -3 -3
+Q059 +3 +3
+Q098 +2 +2
+END paleoconservatism
+BEGIN communitarianism
+Q007 +1 +1
+Q011 0 0
+Q059 +1 +1
+Q098 +2 +2
+END communitarianism

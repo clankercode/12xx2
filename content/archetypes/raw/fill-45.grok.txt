@@ -1,0 +1,34 @@
+BEGIN gandhian-sarvodaya
+Q101 3 2
+Q102 3 2
+Q103 -2 -2
+Q104 -3 -3
+Q105 3 2
+Q106 2 2
+Q107 -2 -1
+Q108 1 1
+Q109 -3 -2
+Q110 -2 -2
+Q111 -2 -2
+Q112 3 2
+Q113 1 2
+Q114 2 2
+Q115 2 2
+Q116 -2 -2
+Q117 2 2
+Q118 1 1
+Q119 3 2
+Q120 1 1
+END gandhian-sarvodaya
+BEGIN national-conservatism
+Q007 3 2
+Q011 -3 -3
+Q059 2 2
+Q098 2 1
+END national-conservatism
+BEGIN right-populism
+Q007 2 2
+Q011 -3 -3
+Q059 2 2
+Q098 2 2
+END right-populism

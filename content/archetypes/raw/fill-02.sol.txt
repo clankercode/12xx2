@@ -1,0 +1,177 @@
+BEGIN marxism-leninism
+Q007 3 -2
+Q011 2 2
+Q059 -3 -2
+Q098 -3 -2
+END marxism-leninism
+
+BEGIN trotskyism
+Q007 1 -3
+Q011 3 3
+Q059 -2 -2
+Q098 -3 -2
+END trotskyism
+
+BEGIN democratic-socialism
+Q007 -1 -1
+Q011 3 3
+Q059 -2 -1
+Q098 -2 -1
+END democratic-socialism
+
+BEGIN market-socialism
+Q007 0 0
+Q011 3 3
+Q059 -2 -2
+Q098 -2 -2
+END market-socialism
+
+BEGIN eco-socialism
+Q007 -3 -3
+Q011 3 3
+Q059 1 2
+Q098 1 2
+END eco-socialism
+
+BEGIN african-socialism
+Q007 1 -1
+Q011 0 1
+Q059 0 0
+Q098 -1 0
+END african-socialism
+
+BEGIN social-democracy
+Q007 1 1
+Q011 3 3
+Q059 -2 -1
+Q098 -2 -1
+END social-democracy
+
+BEGIN progressive-liberalism
+Q007 1 1
+Q011 3 3
+Q059 -2 -1
+Q098 -2 -1
+END progressive-liberalism
+
+BEGIN green-politics
+Q007 -3 -2
+Q011 3 3
+Q059 2 2
+Q098 1 2
+END green-politics
+
+BEGIN left-populism
+Q007 -1 -2
+Q011 2 2
+Q059 -1 0
+Q098 -1 0
+END left-populism
+
+BEGIN social-liberalism
+Q007 1 1
+Q011 2 2
+Q059 -2 -2
+Q098 -2 -2
+END social-liberalism
+
+BEGIN centrism
+Q007 2 2
+Q011 1 1
+Q059 -1 -1
+Q098 -2 -1
+END centrism
+
+BEGIN third-way
+Q007 2 2
+Q011 2 2
+Q059 -2 -2
+Q098 -3 -2
+END third-way
+
+BEGIN neoliberalism
+Q007 2 2
+Q011 1 1
+Q059 -2 -2
+Q098 -3 -3
+END neoliberalism
+
+BEGIN liberal-conservatism
+Q007 3 3
+Q011 -1 -1
+Q059 0 1
+Q098 -1 -1
+END liberal-conservatism
+
+BEGIN traditional-conservatism
+Q007 2 2
+Q011 -2 -2
+Q059 2 2
+Q098 2 2
+END traditional-conservatism
+
+BEGIN paleoconservatism
+Q002 1 1
+Q003 3 3
+Q005 1 1
+Q007 2 2
+Q011 -3 -3
+Q012 3 3
+Q014 2 2
+Q015 1 1
+Q016 3 3
+Q018 -1 -1
+Q019 3 3
+Q022 3 3
+Q023 2 2
+Q025 1 1
+Q026 3 3
+Q028 3 3
+Q031 2 2
+Q032 3 3
+Q035 3 3
+Q037 3 3
+Q039 0 0
+Q044 3 3
+Q045 3 3
+Q048 3 3
+Q050 3 3
+Q051 1 2
+Q052 2 2
+Q053 1 1
+Q055 2 2
+Q059 2 2
+Q061 0 1
+Q062 2 2
+Q064 2 2
+Q066 3 3
+Q067 2 2
+Q069 3 3
+Q074 3 3
+Q076 1 1
+Q077 3 3
+Q080 2 2
+Q081 2 2
+Q082 3 3
+Q083 1 1
+Q084 2 2
+Q087 3 3
+Q088 3 3
+Q091 2 2
+Q095 2 2
+Q097 0 0
+Q098 2 2
+Q100 2 2
+Q101 3 3
+Q103 2 2
+Q106 3 3
+Q109 2 2
+Q110 3 3
+Q112 2 2
+Q113 1 1
+Q114 0 1
+Q115 -1 -1
+Q116 1 1
+Q117 3 3
+Q119 -1 -1
+END paleoconservatism

@@ -1,0 +1,22 @@
+BEGIN developmental-authoritarianism
+Q101 -3 -3
+Q102 -3 -3
+Q103 +3 +3
+Q104 +2 +2
+Q105 -3 -3
+Q106 +2 +2
+Q107 +2 +2
+Q108 -3 -3
+Q109 -2 -1
+Q110 +3 +3
+Q111 -2 -2
+Q112 -3 -3
+Q113 +3 +3
+Q114 -3 -2
+Q115 +2 +2
+Q116 -2 -1
+Q117 +3 +3
+Q118 -3 -3
+Q119 -2 -2
+Q120 -3 -3
+END developmental-authoritarianism

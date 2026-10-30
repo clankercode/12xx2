@@ -37,7 +37,7 @@ for (const f of readdirSync(`${DIR}/raw`).filter(f => f.endsWith('.txt')).sort()
   for (const [, slug, body] of blocks) {
     const sheet: Sheet = {}
     for (const line of body!.split('\n')) {
-      const m = line.trim().match(/^(Q\d{3})\s*[:|]?\s*(-?\d|x)\s*[,|\s]\s*(-?\d|x)\s*$/i)
+      const m = line.trim().match(/^(Q\d{3})\s*[:|]?\s*([+-]?\d|x)\s*[,|\s]\s*([+-]?\d|x)\s*$/i)
       if (!m) continue
       const id = qmap[m[1]!]
       if (!id) continue

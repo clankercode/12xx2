@@ -1,0 +1,28 @@
+BEGIN catholic-integralism
+Q098 1 1
+Q099 2 2
+Q100 2 2
+Q101 1 -1
+Q103 2 2
+Q105 -1 -2
+Q106 2 2
+Q109 2 2
+Q110 -2 1
+Q113 2 2
+Q115 2 2
+Q116 -2 -1
+Q117 2 2
+Q119 2 1
+END catholic-integralism
+BEGIN islamic-democracy
+Q007 2 1
+Q011 -2 -2
+Q059 1 1
+Q098 -1 -1
+END islamic-democracy
+BEGIN theocratic-absolutism
+Q007 2 -1
+Q011 -3 -3
+Q059 3 3
+Q098 0 0
+END theocratic-absolutism

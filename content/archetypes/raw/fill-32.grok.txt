@@ -1,0 +1,16 @@
+BEGIN neoliberalism
+Q101 -1 -2
+Q105 +1 -1
+Q107 +2 +2
+Q109 +3 +3
+Q111 +3 +3
+Q112 -2 -2
+Q118 +1 -2
+Q120 +2 +2
+END neoliberalism
+BEGIN liberal-conservatism
+Q007 +2 +2
+Q011 -2 -2
+Q059 +2 +2
+Q098 -2 -2
+END liberal-conservatism

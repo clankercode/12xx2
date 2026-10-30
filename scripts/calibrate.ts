@@ -141,17 +141,26 @@ report.rgNoGapP0 = (() => {
 
 // ---------- Match label cuts: distance of simulated sincere adherents to their own archetype ----------
 const labels = {} as Calibration['labels']
+// Same adherents: how often their own archetype comes back first / in the top 3 (ideal frame).
+const recovery: Record<string, { top1: number; top3: number }> = {}
 for (const mode of MODES) {
   const items = itemsForMode(mode)
   const ds: number[] = []
+  let top1 = 0
+  let top3 = 0
   for (let d = 0; d < DRAWS; d++) {
     const a = archetypes[d % archetypes.length]!
     const sheet = archetypeSheet(rng, items, sheets[a.slug]!, 'ideal')
     const ans = respond(rng, items, sheet, { p: 0.5, pass: MODEL.passRates[d % 3]! })
     const prof = computeProfile(items, ans, { tauG: tauG, careless: { 3: 99 } } as unknown as Calibration)
     const u = AXIS_IDS.map(ax => prof.I[ax].score)
-    ds.push(distance(u, a.ideal, a.weight))
+    const own = distance(u, a.ideal, a.weight)
+    ds.push(own)
+    const rank = archetypes.filter(x => x.slug !== a.slug && distance(u, x.ideal, x.weight) < own).length
+    if (rank === 0) top1++
+    if (rank < 3) top3++
   }
+  recovery[mode] = { top1: Number((top1 / DRAWS).toFixed(3)), top3: Number((top3 / DRAWS).toFixed(3)) }
   labels[mode] = {
     veryClose: Number(quantile(ds, 0.5).toFixed(4)),
     close: Number(quantile(ds, 0.8).toFixed(4)),
@@ -215,6 +224,7 @@ for (const shift of [1, 2]) {
   power[`${shift} point${shift > 1 ? 's' : ''} (${Math.round((100 / 3) * shift)} on the axis scale)`] = row
 }
 report.power = power
+report.archetypeRecovery = recovery
 
 // Random clickers: how often they still get a headline (should be rare thanks to the careless flag).
 let rndHero = 0

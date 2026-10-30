@@ -1,0 +1,42 @@
+BEGIN absolute-monarchism
+Q007 3 2
+Q011 -3 -2
+Q059 1 1
+Q098 0 0
+END absolute-monarchism
+BEGIN constitutional-monarchism
+Q007 1 1
+Q011 0 0
+Q059 0 0
+Q098 0 0
+END constitutional-monarchism
+BEGIN technocracy
+Q007 0 0
+Q011 1 1
+Q059 -3 -2
+Q098 -3 -2
+END technocracy
+BEGIN confucian-meritocracy
+Q007 0 0
+Q011 -1 -1
+Q059 1 1
+Q098 0 0
+END confucian-meritocracy
+BEGIN developmental-authoritarianism
+Q007 2 2
+Q011 -1 0
+Q059 -1 0
+Q098 -2 -2
+END developmental-authoritarianism
+BEGIN neoreaction
+Q007 1 1
+Q011 -2 -2
+Q059 -2 -2
+Q098 -1 -1
+END neoreaction
+BEGIN transhumanism
+Q007 -1 -1
+Q011 3 3
+Q059 -3 -3
+Q098 -3 -3
+END transhumanism

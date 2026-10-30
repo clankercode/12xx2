@@ -1,0 +1,13 @@
+BEGIN paleolibertarianism
+Q098 -2 -2
+Q099 +3 +3
+Q100 -2 -2
+Q101 +3 +3
+Q109 +3 +3
+Q110 +3 +3
+Q111 +3 +3
+Q112 +3 +3
+Q114 -2 0
+Q116 +2 +3
+Q117 +3 +3
+END paleolibertarianism

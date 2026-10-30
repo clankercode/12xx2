@@ -1,0 +1,28 @@
+BEGIN neoreaction
+Q101 -2 -2
+Q102 -3 -3
+Q103 -2 -1
+Q104 -2 -2
+Q105 -3 -3
+Q106 -2 -2
+Q107 0 0
+Q108 -2 -3
+Q109 3 3
+Q110 3 3
+Q111 2 2
+Q112 -3 -3
+Q113 -2 -2
+Q114 -3 -3
+Q115 -2 -2
+Q116 -1 2
+Q117 3 3
+Q118 -3 -3
+Q119 -3 -3
+Q120 -3 -3
+END neoreaction
+BEGIN transhumanism
+Q007 -2 -2
+Q011 3 3
+Q059 -3 -3
+Q098 -3 -3
+END transhumanism

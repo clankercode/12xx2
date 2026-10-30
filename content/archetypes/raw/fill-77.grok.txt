@@ -1,0 +1,34 @@
+BEGIN constitutional-monarchism
+Q101 -1 -1
+Q102 -2 -2
+Q103 0 0
+Q104 1 1
+Q105 1 -1
+Q106 -1 -1
+Q107 2 2
+Q108 -2 -2
+Q109 2 2
+Q110 1 -1
+Q111 0 0
+Q112 -2 -2
+Q113 1 2
+Q114 -2 -2
+Q115 1 2
+Q116 -2 -2
+Q117 2 1
+Q118 -2 -2
+Q119 0 1
+Q120 -1 1
+END constitutional-monarchism
+BEGIN technocracy
+Q007 1 1
+Q011 2 2
+Q059 -3 -2
+Q098 -3 -2
+END technocracy
+BEGIN confucian-meritocracy
+Q007 -1 -1
+Q011 0 0
+Q059 -1 0
+Q098 1 1
+END confucian-meritocracy

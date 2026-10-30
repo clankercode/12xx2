@@ -3,61 +3,61 @@
  "tauG": {
   "3": 59,
   "4": 43,
-  "5": 43,
-  "6": 40,
+  "5": 40,
+  "6": 34,
   "7": 34,
   "8": 30,
   "9": 30,
   "10": 28
  },
- "mu": 0.005,
+ "mu": 0.0234,
  "rgCuts": [
-  11,
+  12,
   22,
-  32
+  33
  ],
  "careless": {
-  "3": 3.286,
-  "4": 3.378,
-  "5": 3.468,
-  "6": 3.532,
-  "7": 3.737,
-  "8": 3.643,
-  "9": 3.635,
-  "10": 3.645
+  "3": 3.25,
+  "4": 3.351,
+  "5": 3.475,
+  "6": 3.54,
+  "7": 3.576,
+  "8": 3.618,
+  "9": 3.648,
+  "10": 3.672
  },
  "labels": {
   "quick": {
-   "veryClose": 0.098,
-   "close": 0.1181,
-   "loose": 0.1374
+   "veryClose": 0.1037,
+   "close": 0.126,
+   "loose": 0.1518
   },
   "standard": {
-   "veryClose": 0.0912,
-   "close": 0.1078,
-   "loose": 0.1246
+   "veryClose": 0.087,
+   "close": 0.1063,
+   "loose": 0.1271
   },
   "full": {
-   "veryClose": 0.0826,
-   "close": 0.0982,
-   "loose": 0.1134
+   "veryClose": 0.0732,
+   "close": 0.0885,
+   "loose": 0.1049
   }
  },
  "report": {
   "perAxisAlpha": 0.008741610954696721,
   "carelessDetection": {
-   "3": 0.8994614003590664,
-   "4": 0.8995880535530381,
-   "5": 0.899938612645795,
-   "6": 0.8996197718631179,
-   "7": 0.8846153846153846,
-   "8": 0.8997890295358649,
-   "9": 0.8991185112634672,
-   "10": 0.8995024875621891
+   "3": 0.8999332888592395,
+   "4": 0.8998058252427185,
+   "5": 0.8999078906969604,
+   "6": 0.899886018237082,
+   "7": 0.8921568627450981,
+   "8": 0.899815934788325,
+   "9": 0.8999264164827079,
+   "10": 0.8999502239920358
   },
   "carelessFalseFlag": {
-   "3": 0,
-   "4": 0,
+   "3": 0.0013398838767306833,
+   "4": 0.0001289490651192779,
    "5": 0,
    "6": 0,
    "7": 0,
@@ -65,23 +65,37 @@
    "9": 0,
    "10": 0
   },
-  "rgNoGapMedian": 6.9,
+  "rgNoGapMedian": 7,
   "rgNoGapP0": 14.1,
-  "splitFalseRate": 0.015,
-  "anyNotableFalseRate": 0.0355,
+  "splitFalseRate": 0.044,
+  "anyNotableFalseRate": 0.0333,
   "power": {
    "1 point (33 on the axis scale)": {
-    "quick": 0.184,
-    "standard": 0.206,
-    "full": 0.542
+    "quick": 0.208,
+    "standard": 0.326,
+    "full": 0.541
    },
    "2 points (67 on the axis scale)": {
-    "quick": 0.674,
-    "standard": 0.748,
-    "full": 0.852
+    "quick": 0.658,
+    "standard": 0.788,
+    "full": 0.881
    }
   },
-  "randomGetsHeadline": 0.087,
+  "archetypeRecovery": {
+   "quick": {
+    "top1": 0.875,
+    "top3": 0.992
+   },
+   "standard": {
+    "top1": 0.93,
+    "top3": 0.999
+   },
+   "full": {
+    "top1": 0.96,
+    "top3": 1
+   }
+  },
+  "randomGetsHeadline": 0.1,
   "model": {
    "thetaRange": 2.5,
    "itemSd": 0.6,
@@ -98,9 +112,9 @@
    ],
    "personAxisSd": 0.4
   },
-  "draws": 2000,
-  "generated": "2026-10-30",
-  "catalogueVersion": 0,
-  "note": "PROVISIONAL: placeholder catalogue; archetype-anchored respondents use synthetic sheets."
+  "draws": 8000,
+  "generated": "2026-10-31",
+  "catalogueVersion": 1,
+  "note": "Archetype-anchored respondents use the coders’ median answer sheets."
  }
 }
