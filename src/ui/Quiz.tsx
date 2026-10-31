@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { CHIPS, isRedLine, type Answer, type ChipId } from '../engine/types'
+import { CHIPS, isRedLine, type Answer, type ChipId, type ItemAnswer } from '../engine/types'
 import { sessionStatements } from '../state/session'
 import { CHIP_LABELS } from '../data/chips'
 import { IDEAL_FRAME, IDEAL_STEM, NOW_FRAME, NOW_STEM, PRACTICE_ITEM, SHARED_RULE } from '../data/frames'
@@ -8,12 +8,22 @@ import { Grid, Strip } from './Grid'
 import { go, goReplace } from './router'
 import { newRunId } from '../state/history'
 import { reportStatementUrl } from './copy'
-import { afterAnswer, applyAutoAdvance, nextFor, useAutoAdvance } from './advance'
+import { afterAnswer, applyAutoAdvance, nextFor, readAutoAdvance, useAutoAdvance } from './advance'
 import css from './Quiz.module.css'
 
 const ADVANCE_MS = 260
 /** Splits of at least this size pause for an optional reason (spec §3.1). */
 const CHIP_THRESHOLD = 3
+
+/** Per-statement view state from its stored answer: which frame is passed, and whether the reason chips show. */
+function viewOf(existing: ItemAnswer | undefined, red: boolean) {
+  return {
+    passI: existing ? existing.i === null && existing.n !== null : false,
+    passN: existing ? existing.n === null && existing.i !== null : false,
+    pendingChip:
+      !red && !!(existing && existing.i !== null && existing.n !== null && Math.abs(existing.n - existing.i) >= CHIP_THRESHOLD),
+  }
+}
 
 export function Quiz() {
   const { s, dispatch } = useStore()
@@ -32,11 +42,14 @@ export function Quiz() {
   const redCount = redStart < 0 ? 0 : order.length - redStart
   const [redIntroSeen, setRedIntroSeen] = useState(false)
   const redIntro = !intro && red && s.index === redStart && !redIntroSeen && !existing
-  const [passI, setPassI] = useState(false)
-  const [passN, setPassN] = useState(false)
-  const [pendingChip, setPendingChip] = useState(false)
+  // Initialised from the stored answer too, so a reload or route re-entry shows a saved pass or split as left.
+  const [passI, setPassI] = useState(() => viewOf(existing, red).passI)
+  const [passN, setPassN] = useState(() => viewOf(existing, red).passN)
+  const [pendingChip, setPendingChip] = useState(() => viewOf(existing, red).pendingChip)
   /** A fresh answer opened the reason chips with auto-advance on: a chip pick then moves on. */
   const [afterChip, setAfterChip] = useState(false)
+  /** Two rows with one row picked and the other not yet: Next waits rather than drop the visible pick. */
+  const [rowsDraft, setRowsDraft] = useState(false)
   /** Bumped when an answer opens the reason chips, so focus moves to Next (Enter then goes on). */
   const [chipsOpened, setChipsOpened] = useState(0)
   const auto = useAutoAdvance()
@@ -51,10 +64,12 @@ export function Quiz() {
   const [seenId, setSeenId] = useState(item?.id)
   if (seenId !== item?.id) {
     setSeenId(item?.id)
-    setPassI(existing ? existing.i === null && existing.n !== null : false)
-    setPassN(existing ? existing.n === null && existing.i !== null : false)
-    setPendingChip(!red && !!(existing && existing.i !== null && existing.n !== null && Math.abs(existing.n - existing.i) >= CHIP_THRESHOLD))
+    const v = viewOf(existing, red)
+    setPassI(v.passI)
+    setPassN(v.passN)
+    setPendingChip(v.pendingChip)
     setAfterChip(false)
+    setRowsDraft(false)
   }
 
   // Declared before the refocus effect below, so moving on to a new statement wins over this.
@@ -104,8 +119,25 @@ export function Quiz() {
 
   const advanceSoon = useCallback(() => {
     if (timer.current) clearTimeout(timer.current)
-    timer.current = window.setTimeout(() => dispatch({ type: 'goto', index: s.index + 1 }), ADVANCE_MS)
+    timer.current = window.setTimeout(() => {
+      timer.current = null
+      if (readAutoAdvance()) dispatch({ type: 'goto', index: s.index + 1 })
+    }, ADVANCE_MS)
   }, [dispatch, s.index])
+
+  /** Drops a pending automatic move (and one held for the chips): the answer as shown is changing. */
+  const cancelAuto = useCallback(() => {
+    if (timer.current) clearTimeout(timer.current)
+    timer.current = null
+    setAfterChip(false)
+  }, [])
+  const togglePass = useCallback(
+    (frame: 'I' | 'N', on?: boolean) => {
+      cancelAuto()
+      ;(frame === 'I' ? setPassI : setPassN)(v => on ?? !v)
+    },
+    [cancelAuto],
+  )
 
   const record = useCallback(
     (i: Answer, n: Answer, input: 'grid' | 'rows') => {
@@ -114,6 +146,7 @@ export function Quiz() {
       // Reason chips explain axis splits; red lines skip them.
       const big = !red && i !== null && n !== null && Math.abs(n - i) >= CHIP_THRESHOLD
       dispatch({ type: 'answer', id: item.id, answer: { i, n, input, chip: big ? existing?.chip : undefined }, advance: false })
+      setRowsDraft(false)
       if (big && !pendingChip) setChipsOpened(k => k + 1)
       setPendingChip(big)
       // Only unanswered -> answered moves on: an edit to an answered statement stays put.
@@ -149,7 +182,8 @@ export function Quiz() {
     dispatch({ type: 'goto', index: s.index - 1 })
   }, [dispatch, s.index, adding])
 
-  const nx = nextFor(existing, passI, passN)
+  const shown = nextFor(existing, passI, passN)
+  const nx = rowsDraft && !(passI || passN) ? { enabled: false } : shown
   /** Next: on to the following statement, keeping the answer as shown. Focus follows to its answer area. */
   const goNext = useCallback(() => {
     if (!item || !nx.enabled) return
@@ -158,7 +192,7 @@ export function Quiz() {
     if (nx.pass) dispatch({ type: 'answer', id: item.id, answer: { i: null, n: null, input: s.input }, advance: true })
     else if (nx.commit) dispatch({ type: 'answer', id: item.id, answer: { ...nx.commit, input: s.input }, advance: true })
     else dispatch({ type: 'goto', index: s.index + 1 })
-  }, [item, nx.enabled, nx.pass, nx.commit?.i, nx.commit?.n, dispatch, s.input, s.index])
+  }, [item, nx, dispatch, s.input, s.index])
 
   // Keyboard shortcuts outside the grid: P = pass both, I/N = pass one frame, Backspace = back,
   // Enter = Next once the statement is answered.
@@ -178,8 +212,8 @@ export function Quiz() {
       // Enter on a focused control keeps its own meaning (activate that button, link or cell).
       if (e.key === 'Enter' && t.closest?.('button, a, [role="gridcell"]')) return
       if (e.key === 'p' || e.key === 'P') passBoth()
-      else if (e.key === 'i' || e.key === 'I') setPassI(v => !v)
-      else if (e.key === 'n' || e.key === 'N') setPassN(v => !v)
+      else if (e.key === 'i' || e.key === 'I') togglePass('I')
+      else if (e.key === 'n' || e.key === 'N') togglePass('N')
       else if (e.key === 'Backspace') back()
       else if (e.key === 'Enter' && nx.enabled) goNext()
       else return
@@ -187,7 +221,7 @@ export function Quiz() {
     }
     addEventListener('keydown', on)
     return () => removeEventListener('keydown', on)
-  }, [intro, redIntro, passBoth, back, nx.enabled, goNext])
+  }, [intro, redIntro, passBoth, back, nx.enabled, goNext, togglePass])
 
   // Leaving the intro unmounts the focused Start button: move focus to the first statement instead.
   const focusStatement = useRef(false)
@@ -261,7 +295,7 @@ export function Quiz() {
             onPick={v => (passI ? record(null, v, s.input) : record(v, null, s.input))}
           />
         ) : rowsMode ? (
-          <TwoRows key={item.id} value={value} onDone={(i, n) => record(i, n, 'rows')} />
+          <TwoRows key={item.id} value={value} onDone={(i, n) => record(i, n, 'rows')} onDraft={setRowsDraft} />
         ) : (
           <Grid key={item.id} value={value} onPick={(i, n) => record(i, n, 'grid')} idPrefix={item.id} />
         )}
@@ -273,7 +307,7 @@ export function Quiz() {
           onChip={c => {
             dispatch({ type: 'chip', id: item.id, chip: c })
             // The move a fresh answer held back for the chips; editing a reason never moves on.
-            if (c && afterChip) {
+            if (c && afterChip && auto) {
               noteFocus()
               advanceSoon()
             }
@@ -302,10 +336,10 @@ export function Quiz() {
       </div>
       <div className={css.unsure} role="group" aria-label="Pass one frame only">
         <label className={css.toggle}>
-          <input type="checkbox" checked={passI} onChange={e => setPassI(e.target.checked)} /> Pass ideal only
+          <input type="checkbox" checked={passI} onChange={e => togglePass('I', e.target.checked)} /> Pass ideal only
         </label>
         <label className={css.toggle}>
-          <input type="checkbox" checked={passN} onChange={e => setPassN(e.target.checked)} /> Pass here-and-now only
+          <input type="checkbox" checked={passN} onChange={e => togglePass('N', e.target.checked)} /> Pass here-and-now only
         </label>
       </div>
       <p className={`small muted ${css.hint}`}>
@@ -325,7 +359,14 @@ export function Quiz() {
           {rowsMode ? 'Use the grid' : 'Use two rows instead of the grid'}
         </button>
         <label className={css.toggle}>
-          <input type="checkbox" checked={auto} onChange={e => applyAutoAdvance(e.target.checked)} /> Move to the next
+          <input
+            type="checkbox"
+            checked={auto}
+            onChange={e => {
+              if (!e.target.checked) cancelAuto()
+              applyAutoAdvance(e.target.checked)
+            }}
+          /> Move to the next
           statement automatically
         </label>
       </div>
@@ -382,13 +423,29 @@ function RedIntro({
   )
 }
 
-function TwoRows({ value, onDone }: { value: { i: Answer; n: Answer } | null; onDone: (i: Answer, n: Answer) => void }) {
+/**
+ * One row per frame. A pair is recorded once both rows are picked; until then the half-made pair
+ * is a draft (onDraft), so Next can't move on and drop it. Leaving the rows clears the draft.
+ */
+function TwoRows({
+  value,
+  onDone,
+  onDraft,
+}: {
+  value: { i: Answer; n: Answer } | null
+  onDone: (i: Answer, n: Answer) => void
+  onDraft: (draft: boolean) => void
+}) {
   const [i, setI] = useState<Answer>(value?.i ?? null)
   const [n, setN] = useState<Answer>(value?.n ?? null)
+  const draftRef = useRef(onDraft)
+  draftRef.current = onDraft
+  useEffect(() => () => draftRef.current(false), [])
   const pick = (ni: Answer, nn: Answer) => {
     setI(ni)
     setN(nn)
     if (ni !== null && nn !== null) onDone(ni, nn)
+    else onDraft(true)
   }
   return (
     <div>

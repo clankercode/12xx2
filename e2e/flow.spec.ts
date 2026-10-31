@@ -341,6 +341,47 @@ test('a fresh big split waits for the reason chips; a chip pick moves on, and Ne
   await expect(at(page, 1)).toBeVisible()
 })
 
+test('review fixes: a half-made two-row edit, a pass ticked mid-move, the setting turned off mid-chips, a reload', async ({ page }) => {
+  await firstStatement(page)
+  const next = page.getByRole('button', { name: 'Next statement' })
+  // A pass toggled straight after a fresh answer cancels the pending move; Next keeps what is shown.
+  await cell(page, 2, 1).click()
+  await page.keyboard.press('i')
+  await settle(page)
+  await expect(at(page, 1)).toBeVisible()
+  await expect(page.getByLabel('Pass ideal only')).toBeChecked()
+  await next.click()
+  await expect(at(page, 2)).toBeVisible()
+  // Reload on statement 1: its one-frame answer shows as left (ideal passed, Next enabled).
+  await page.getByRole('button', { name: 'Back', exact: true }).click()
+  await page.reload()
+  await expect(at(page, 1)).toBeVisible()
+  await expect(page.getByLabel('Pass ideal only')).toBeChecked()
+  await expect(page.getByRole('group', { name: 'Here and now' }).getByRole('radio', { name: 'Slightly agree' })).toBeChecked()
+  await expect(next).toBeEnabled()
+  await next.click()
+  // Passed statement, then a half-made replacement in two rows: Next waits rather than drop it.
+  await page.getByRole('button', { name: 'Pass', exact: true }).click()
+  await expect(at(page, 3)).toBeVisible()
+  await page.getByRole('button', { name: 'Back', exact: true }).click()
+  await expect(next).toBeEnabled()
+  await page.getByRole('button', { name: 'Use two rows instead of the grid' }).click()
+  await page.getByRole('group', { name: 'In your ideal system' }).getByText('Agree', { exact: true }).click()
+  await expect(next).toBeDisabled()
+  await page.getByRole('group', { name: 'Here and now' }).getByText('Agree', { exact: true }).click()
+  await expect(next).toBeEnabled()
+  await settle(page)
+  await expect(at(page, 2)).toBeVisible()
+  await next.click()
+  // A fresh big split, then the setting turned off before the chip: the chip no longer moves on.
+  await page.getByRole('button', { name: 'Use the grid' }).click()
+  await cell(page, 3, -1).click()
+  await page.getByLabel('Move to the next statement automatically').uncheck()
+  await page.getByRole('region', { name: 'Why the difference? (optional)' }).getByRole('button').first().click()
+  await settle(page)
+  await expect(at(page, 3)).toBeVisible()
+})
+
 test('grid colours: picked in the footer, used by every grid, kept after a reload', async ({ page }) => {
   await page.goto('/')
   const fill = () => page.locator('figure [role="img"] svg rect').first().getAttribute('fill')
