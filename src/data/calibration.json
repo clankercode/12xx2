@@ -8,100 +8,124 @@
   "7": 34,
   "8": 30,
   "9": 30,
-  "10": 28
+  "10": 28,
+  "11": 27,
+  "12": 26,
+  "13": 25,
+  "14": 25,
+  "15": 23,
+  "16": 22
  },
- "mu": 0.0234,
+ "mu": 0.0191,
  "rgCuts": [
   12,
   22,
   33
  ],
  "careless": {
-  "3": 3.25,
+  "3": 3.261,
   "4": 3.351,
-  "5": 3.475,
-  "6": 3.54,
-  "7": 3.576,
-  "8": 3.618,
-  "9": 3.648,
-  "10": 3.672
+  "5": 3.481,
+  "6": 3.539,
+  "7": 3.539,
+  "8": 3.646,
+  "9": 3.646,
+  "10": 3.668,
+  "11": 3.694,
+  "12": 3.727,
+  "13": 3.727,
+  "14": 3.727,
+  "15": 3.727,
+  "16": 3.727
  },
  "labels": {
   "quick": {
-   "veryClose": 0.1037,
-   "close": 0.126,
-   "loose": 0.1518
+   "veryClose": 0.1081,
+   "close": 0.1322,
+   "loose": 0.1584
   },
   "standard": {
-   "veryClose": 0.087,
-   "close": 0.1063,
-   "loose": 0.1271
+   "veryClose": 0.0931,
+   "close": 0.1129,
+   "loose": 0.1334
   },
   "full": {
-   "veryClose": 0.0732,
-   "close": 0.0885,
-   "loose": 0.1049
+   "veryClose": 0.0707,
+   "close": 0.0855,
+   "loose": 0.1008
   }
  },
  "report": {
   "perAxisAlpha": 0.008741610954696721,
   "carelessDetection": {
-   "3": 0.8999332888592395,
-   "4": 0.8998058252427185,
-   "5": 0.8999078906969604,
-   "6": 0.899886018237082,
-   "7": 0.8921568627450981,
-   "8": 0.899815934788325,
-   "9": 0.8999264164827079,
-   "10": 0.8999502239920358
+   "3": 0.8999548328816621,
+   "4": 0.8999102909137511,
+   "5": 0.9,
+   "6": 0.8996006845407872,
+   "7": 0.8996006845407872,
+   "8": 0.8995568685376661,
+   "9": 0.8995568685376661,
+   "10": 0.8997613365155132,
+   "11": 0.8998114732022623,
+   "12": 0.9,
+   "13": 0.9,
+   "14": 0.9,
+   "15": 0.9,
+   "16": 0.9
   },
   "carelessFalseFlag": {
-   "3": 0.0013398838767306833,
-   "4": 0.0001289490651192779,
+   "3": 0.0002231644722160232,
+   "4": 0,
    "5": 0,
    "6": 0,
    "7": 0,
    "8": 0,
    "9": 0,
-   "10": 0
+   "10": 0,
+   "11": 0,
+   "12": 0,
+   "13": 0,
+   "14": 0,
+   "15": 0,
+   "16": 0
   },
   "rgNoGapMedian": 7,
   "rgNoGapP0": 14.1,
-  "splitFalseRate": 0.0107,
-  "anyNotableFalseRate": 0.0333,
+  "splitFalseRate": 0.0123,
+  "anyNotableFalseRate": 0.032,
   "power": {
    "1 point (33 on the axis scale)": {
-    "quick": 0.208,
-    "standard": 0.326,
-    "full": 0.541
+    "quick": 0.19,
+    "standard": 0.344,
+    "full": 0.603
    },
    "2 points (67 on the axis scale)": {
-    "quick": 0.658,
-    "standard": 0.788,
-    "full": 0.881
+    "quick": 0.653,
+    "standard": 0.81,
+    "full": 0.888
    }
   },
   "archetypeRecovery": {
    "quick": {
-    "top1": 0.875,
-    "top3": 0.992
+    "top1": 0.87,
+    "top3": 0.989
    },
    "standard": {
-    "top1": 0.93,
+    "top1": 0.931,
     "top3": 0.999
    },
    "full": {
-    "top1": 0.96,
+    "top1": 0.967,
     "top3": 1
    }
   },
-  "randomGetsHeadline": 0.002,
-  "commitmentFalseRuleOut": 0,
+  "randomGetsHeadline": 0.01,
+  "commitmentFalseRuleOut": 0.0001,
   "commitmentFalseRuleOutDetail": {
    "byMode": {
     "quick": 0.0001,
     "standard": 0,
-    "full": 0
+    "full": 0.0001
    },
    "byArchetype": {
     "marxism-leninism": 0,
@@ -147,7 +171,7 @@
     "constitutional-monarchism": 0,
     "technocracy": 0,
     "confucian-meritocracy": 0,
-    "developmental-authoritarianism": 0,
+    "developmental-authoritarianism": 0.0025,
     "neoreaction": 0,
     "transhumanism": 0
    },
@@ -171,7 +195,7 @@
   },
   "draws": 8000,
   "generated": "2026-10-31",
-  "catalogueVersion": 1,
+  "catalogueVersion": 2,
   "note": "Archetype-anchored respondents use the coders’ median answer sheets."
  }
 }
