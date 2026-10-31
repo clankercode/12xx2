@@ -12,6 +12,15 @@ export interface Commitment {
   /** Sign of the raw answer every adherent gives: +1 agree, −1 disagree (item key NOT applied). */
   side: 1 | -1
   why: string
+  /** Provenance: how many of the three coders proposed it independently. */
+  coders?: number
+}
+
+/** A coded commitment removed because simulated sincere adherents fail it too often. */
+export interface DroppedCommitment extends Commitment {
+  slug: string
+  /** Simulated adherents of `slug` wrongly ruled out by this commitment alone (full test). */
+  falseRuleOut: number
 }
 
 export type CommitmentBook = Readonly<Record<string, readonly Commitment[]>>
@@ -20,9 +29,10 @@ export interface CommitmentsFile {
   version: 1
   method: string
   commitments: Record<string, Commitment[]>
+  dropped?: DroppedCommitment[]
 }
 
-export const MAX_COMMITMENTS = 4
+export const MAX_COMMITMENTS = 5
 
 /** ✔ non-refuted · ✘ decisive error · ? unknown (never counted as a pass). */
 export type Verdict = 'pass' | 'fail' | 'unknown'
@@ -123,8 +133,9 @@ export function validateCommitments(raw: unknown, items: readonly Item[], slugs:
       if (c.frame !== 'I' && c.frame !== 'both') fail(`${at}: frame must be "I" or "both"`)
       if (c.side !== 1 && c.side !== -1) fail(`${at}: side must be 1 or -1`)
       if (typeof c.why !== 'string' || !c.why.trim()) fail(`${at}: why is required`)
+      if (c.coders !== undefined && (!Number.isInteger(c.coders) || c.coders < 1 || c.coders > 3)) fail(`${at}: coders must be 1–3`)
     }
-    book[slug] = (list as Commitment[]).map(c => ({ item: c.item, frame: c.frame, side: c.side, why: c.why }))
+    book[slug] = (list as Commitment[]).map(c => ({ item: c.item, frame: c.frame, side: c.side, why: c.why, ...(c.coders && { coders: c.coders }) }))
   }
   return book
 }

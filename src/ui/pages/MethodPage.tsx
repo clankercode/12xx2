@@ -241,7 +241,7 @@ export function MethodPage() {
           <>
             {' '}
             In the calibration simulation, sincere adherents are wrongly ruled out of their own ideology{' '}
-            {(100 * rep.commitmentFalseRuleOut).toFixed(1)}% of the time.
+            {rep.commitmentFalseRuleOut < 0.001 ? 'under 0.1%' : `${(100 * rep.commitmentFalseRuleOut).toFixed(1)}%`} of the time.
           </>
         )}
         {!HAS_COMMITMENTS && ' Commitments are still being coded, so none are applied yet.'}

@@ -20,6 +20,10 @@ typecheck:
 calibrate:
     pnpm tsx scripts/calibrate.ts
 
+# Core commitments vs simulated sincere adherents; add --write to move any over 2% into `dropped`.
+commitments-audit *args:
+    pnpm tsx scripts/commitments-audit.ts {{args}}
+
 archetypes:
     pnpm tsx scripts/build-archetypes.ts
 

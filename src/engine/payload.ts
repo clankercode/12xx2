@@ -273,5 +273,6 @@ export function decodePayload(s: string): DecodeResult {
 
 /** Seed for stability draws: identical for the owner and every viewer of the same link. */
 export function payloadSeed(p: Payload): number {
-  return fnv1a(payloadBytes({ ...p, q: undefined, sc: undefined, country: undefined }))
+  // Rule-outs are left out too, so adding commitments never reshuffles the draws themselves.
+  return fnv1a(payloadBytes({ ...p, q: undefined, sc: undefined, country: undefined, ruledOut: undefined }))
 }

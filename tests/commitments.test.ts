@@ -9,7 +9,7 @@ import {
   type Commitment,
   type CommitmentBook,
 } from '../src/engine/commitments'
-import { decodePayload, encodePayload, formatFor, payloadBytes, profileToPayload, type Payload } from '../src/engine/payload'
+import { decodePayload, encodePayload, formatFor, payloadBytes, payloadSeed, profileToPayload, type Payload } from '../src/engine/payload'
 import { deriveResults, type Hero } from '../src/engine/results'
 import { computeProfile } from '../src/engine/score'
 import { fnv1a, mulberry32 } from '../src/engine/prng'
@@ -102,8 +102,9 @@ describe('commitments file', () => {
     expect(v(bad({ frame: 'N' }))).toThrow(/frame/)
     expect(v(bad({ why: ' ' }))).toThrow(/why/)
     expect(v({ ...ok, commitments: { [SLUGS[0]!]: [c('lib-02', 1), c('lib-02', -1)] } })).toThrow(/duplicate/)
-    const five = ['lib-01', 'lib-02', 'lib-03', 'lib-04', 'lib-05'].map(id => c(id, 1))
-    expect(v({ ...ok, commitments: { [SLUGS[0]!]: five } })).toThrow(/at most 4/)
+    const six = ['lib-01', 'lib-02', 'lib-03', 'lib-04', 'lib-05', 'lib-06'].map(id => c(id, 1))
+    expect(v({ ...ok, commitments: { [SLUGS[0]!]: six } })).toThrow(/at most 5/)
+    expect(v(bad({ coders: 4 }))).toThrow(/coders/)
   })
 })
 
@@ -228,6 +229,10 @@ describe('ruled-out field in share links', () => {
       expect(payloadBytes(p).length - payloadBytes({ ...p, ruledOut: undefined }).length).toBe(1 + (Math.floor(Math.max(...ro) / 8) + 1))
     }
     expect(sample([5, 0, 5]).ruledOut).toEqual([0, 5])
+  })
+
+  it('the stability seed ignores rule-outs', () => {
+    expect(payloadSeed(sample([3, 9]))).toBe(payloadSeed(sample()))
   })
 
   it('round-trips alongside every optional field', () => {
