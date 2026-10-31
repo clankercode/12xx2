@@ -25,8 +25,14 @@ calibrate *args:
 commitments-audit *args:
     pnpm tsx scripts/commitments-audit.ts {{args}}
 
+# Rebuilds the archetype vectors, then the ideology-map layouts that depend on them.
 archetypes:
     pnpm tsx scripts/build-archetypes.ts
+    pnpm tsx scripts/map-layout.ts
+
+# Ideology-map layouts (src/data/map.json) from the catalogue; add --check to only test for staleness.
+map-layout *args:
+    pnpm tsx scripts/map-layout.ts {{args}}
 
 overlap:
     pnpm tsx scripts/overlap.ts
