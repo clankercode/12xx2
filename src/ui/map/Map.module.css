@@ -1,0 +1,280 @@
+/* Ideology map: the results "Exact from here" panel and the #/map page. Colours are theme tokens. */
+
+.panelSection h2 {
+  margin-bottom: 8px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin: 12px 0;
+}
+
+.seg {
+  display: inline-flex;
+  flex-wrap: wrap;
+  border: 1px solid var(--rule-major);
+  border-radius: var(--radius-s);
+  overflow: hidden;
+  font-size: 0.9rem;
+}
+
+.seg button {
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 6px 12px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.seg button + button {
+  border-left: 1px solid var(--rule-major);
+}
+
+.seg button:hover:not(:disabled):not([aria-pressed='true']) {
+  color: var(--paper);
+}
+
+.seg button[aria-pressed='true'] {
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.seg button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.seg button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+
+.exactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .exactGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.chartBox {
+  position: relative;
+  min-width: 0;
+  border: 1px solid var(--rule-major);
+  border-radius: var(--radius-m);
+  background: color-mix(in srgb, var(--ink-2) 80%, transparent);
+  overflow: hidden;
+}
+
+.svg {
+  display: block;
+  max-width: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.svg a:focus-visible,
+.svg [role='button']:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.dot {
+  cursor: pointer;
+}
+
+.tick {
+  fill: var(--faint);
+  font-size: 10px;
+}
+
+.label,
+.labelCenter,
+.labelMuted {
+  font-size: 12px;
+  font-weight: 600;
+  fill: var(--paper);
+  paint-order: stroke;
+  stroke: var(--ink);
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.labelCenter {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.labelMuted {
+  font-weight: 500;
+  fill: var(--muted);
+  font-size: 11.5px;
+}
+
+.ringVeryClose,
+.ringClose,
+.ringLoose {
+  fill: none;
+  stroke: var(--now);
+  stroke-width: 1.4;
+}
+
+.ringClose {
+  stroke-dasharray: 2 3;
+  opacity: 0.8;
+}
+
+.ringLoose {
+  stroke-dasharray: 5 4;
+  opacity: 0.7;
+}
+
+.hotLine {
+  margin: 0;
+  padding: 6px 10px;
+  min-height: 2.2em;
+  color: var(--muted);
+}
+
+.ringKey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 8px 0 0;
+}
+
+.ringKey i {
+  display: inline-block;
+  width: 22px;
+  height: 0;
+  margin-right: 6px;
+  vertical-align: 0.3em;
+  border-top: 1.5px solid var(--now);
+}
+
+.ringKey .keyClose {
+  border-top-style: dotted;
+}
+
+.ringKey .keyLoose {
+  border-top-style: dashed;
+}
+
+.listTitle {
+  font-size: 1rem;
+  margin: 0 0 8px;
+}
+
+.nearList {
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.nearList li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 2px 8px;
+  align-items: center;
+  padding: 8px 10px;
+  border: 1px solid var(--rule-major);
+  border-radius: var(--radius-s);
+  background: color-mix(in srgb, var(--ink-2) 90%, transparent);
+}
+
+.nearList li > :nth-child(4) {
+  grid-column: 2 / -1;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  font-size: 0.86rem;
+}
+
+.struck {
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+}
+
+.tagFit {
+  color: var(--ok);
+}
+
+.tagOut {
+  color: var(--alert);
+}
+
+
+/* #/map page */
+.tween .dot {
+  transition: transform 0.6s cubic-bezier(0.45, 0, 0.2, 1), opacity 0.3s;
+}
+
+.rotate {
+  touch-action: none;
+  cursor: grab;
+}
+
+.halo {
+  fill: var(--alert);
+  pointer-events: none;
+}
+
+.labelIdeal,
+.labelNow {
+  font-size: 12px;
+  font-weight: 700;
+  fill: var(--ideal);
+  paint-order: stroke;
+  stroke: var(--ink);
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.labelNow {
+  fill: var(--now-text);
+}
+
+.pole {
+  fill: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.shep {
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid var(--rule-major);
+  border-radius: var(--radius-m);
+  background: color-mix(in srgb, var(--ink-2) 80%, transparent);
+}
+
+.shep svg {
+  cursor: crosshair;
+  touch-action: manipulation;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tween .dot {
+    transition: none;
+  }
+}

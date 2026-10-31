@@ -1,10 +1,10 @@
-import type { ReactNode } from 'react'
+import { lazy, Suspense, type ReactNode } from 'react'
 import { fits, sameInBothFrames, type FitSet, type Match, type Results } from '../engine/results'
 import type { StabilityLabel } from '../engine/match'
 import type { ArchetypeCheck } from '../engine/commitments'
 import { AXES } from '../data/axes'
 import { CALIBRATION } from '../data/calibration'
-import { CATALOGUE_IS_PLACEHOLDER } from '../data/archetypes'
+import { CATALOGUE, CATALOGUE_IS_PLACEHOLDER, catalogueFor } from '../data/archetypes'
 import { countryName } from '../data/countries'
 import { ALL_ITEMS } from '../data/items'
 import wgi from '../data/wgi.json'
@@ -13,6 +13,9 @@ import { CoreCommitments } from './Commitments'
 import { label as answerLabel } from './answer'
 import { CANT_TELL, GAP_TYPE, MATCH_LABEL, MODE_NAME, RG_BAND, STABILITY_LABEL, constantNote, distanceNote, fitTitle, noFitNote } from './copy'
 import css from './Results.module.css'
+
+// Its own chunk (with the map layouts), fetched when a result is shown.
+const ExactPanel = lazy(() => import('./map/ExactPanel'))
 
 const ALL_TEXT = new Map(ALL_ITEMS.map(i => [i.id, i.text]))
 const RANDOM_RG = Math.round((16 / 7 / 6) * 100)
@@ -283,7 +286,7 @@ function MatchList({ title, frame, list, checks }: { title: string; frame: 'I' |
         {list.map(m => (
           <li key={m.arch.slug} data-ruled-out={m.ruledOut || undefined}>
             <div className={css.matchHead}>
-              <a href={`#/ideologies`} className={css.matchName}>
+              <a href={`#/ideologies/${m.arch.slug}`} className={css.matchName}>
                 {m.arch.name}
               </a>
               {m.ruledOut ? (
@@ -389,6 +392,10 @@ export function ResultsView({
       </section>
       <Gaps r={r} />
       <Matches r={r} checks={checks} />
+      <Suspense fallback={null}>
+        {/* The owner's catalogue is the full one; a shared view uses the one its results were derived with. */}
+        <ExactPanel r={r} catalogue={checks ? CATALOGUE : catalogueFor(r.payload)} who={who === 'They' ? 'They' : 'You'} />
+      </Suspense>
       {checks && <CoreCommitments r={r} checks={checks} />}
       {extras}
     </div>
