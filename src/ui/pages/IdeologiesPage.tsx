@@ -53,6 +53,9 @@ export function IdeologiesPage() {
               const i = a.ideal[k]!
               const n = a.now[k]!
               const sp = a.spread[k] ?? 0
+              // The coder band, clipped to the scale so it never runs past either end of the bar.
+              const lo = Math.max(-100, i - sp / 2)
+              const hi = Math.min(100, i + sp / 2)
               return (
                 <div key={ax} style={{ display: 'contents' }}>
                   <span>
@@ -60,7 +63,7 @@ export function IdeologiesPage() {
                     {a.weight[k]! < 0.9 && <span className="muted"> (minor)</span>}
                   </span>
                   <div className={css.bar} title={`${AXES[ax].neg} ← → ${AXES[ax].pos}; ideal ${Math.round(i)}, here and now ${Math.round(n)}, coder spread ${Math.round(sp)}`}>
-                    <span className={css.spread} style={{ left: pct(Math.max(-100, i - sp / 2)), width: `${sp / 2}%`, translate: 'none' }} />
+                    <span className={css.spread} style={{ left: pct(lo), width: `${(hi - lo) / 2}%`, translate: 'none' }} />
                     <span className="glyph-ideal" style={{ left: pct(i) }} />
                     <span className="glyph-now" style={{ left: pct(n), opacity: 0.85 }} />
                   </div>

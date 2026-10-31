@@ -51,7 +51,7 @@
   --ok: #1f7a4f;
   --tint-ideal: 34%;
   --tint-now: 30%;
-  --whisker-opacity: 0.8;
+  --whisker-opacity: 0.7;
   --focus: #7a4a06;
   color-scheme: light;
 }
@@ -76,7 +76,7 @@
     --ok: #1f7a4f;
     --tint-ideal: 34%;
     --tint-now: 30%;
-    --whisker-opacity: 0.8;
+    --whisker-opacity: 0.7;
     --focus: #7a4a06;
     color-scheme: light;
   }
