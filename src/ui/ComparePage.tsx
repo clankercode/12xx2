@@ -2,12 +2,12 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { AxisId } from '../engine/types'
 import { decodeShared } from '../state/shared'
 import { deriveResults, type Results } from '../engine/results'
-import { compareResults, sameScores, type Comparison } from '../engine/compare'
+import { compareResults, sameScores, type CompareSummary, type Comparison } from '../engine/compare'
 import { catalogueFor } from '../data/archetypes'
 import { CALIBRATION } from '../data/calibration'
 import { AXES } from '../data/axes'
 import { cardBlob, ensureFonts, type CardSize } from '../share/card'
-import { NOT_COMPARABLE, SUMMARY_TEXT, clearCount, drawCompareCard } from '../share/compareCard'
+import { NOT_COMPARABLE, clearCount, drawCompareCard } from '../share/compareCard'
 import { useStore } from './App'
 import { AxisChart } from './AxisChart'
 import { DECODE_MESSAGE } from './SharedPage'
@@ -16,6 +16,14 @@ import css from './Results.module.css'
 import share from './Share.module.css'
 
 const NAME_MAX = 16
+
+/** The card speaks as "we"; the page speaks to the reader about the two people. */
+const PAGE_SUMMARY: Record<CompareSummary, string> = {
+  'ideals-differ-more': 'These two disagree more about ideals than about what to do here and now.',
+  'practice-differs-more': 'These two share more of their ideals than of their here-and-now politics.',
+  even: 'These two disagree about as much in theory as here and now.',
+  none: 'No axis clearly differs, in theory or here and now.',
+}
 
 export function ComparePage({ mine, theirs }: { mine: string; theirs: string }) {
   const { own } = useStore()
@@ -72,7 +80,7 @@ export function ComparePage({ mine, theirs }: { mine: string; theirs: string }) 
                 <span className="small muted">axes where you clearly differ</span>
               </div>
             </div>
-            {cmp.summary && <p>{SUMMARY_TEXT[cmp.summary].replace(/^We /, 'You ')}</p>}
+            {cmp.summary && <p>{PAGE_SUMMARY[cmp.summary]}</p>}
             {cmp.ideal.closest && cmp.ideal.furthest && (
               <p>
                 In your ideal systems you’re closest on <strong>{ax(cmp.ideal.closest)}</strong> and furthest apart on{' '}
@@ -144,7 +152,11 @@ function CompareShare({ a, b, cmp, link, viewerIn }: { a: Results; b: Results; c
     if (!blob) return
     const u = URL.createObjectURL(blob)
     setUrl(u)
-    return () => URL.revokeObjectURL(u)
+    return () => {
+      // Clear first so Download can't fire with a revoked URL while the next card draws.
+      setUrl(null)
+      URL.revokeObjectURL(u)
+    }
   }, [blob])
 
   const fileName = `12axes2-compare-${size}.png`

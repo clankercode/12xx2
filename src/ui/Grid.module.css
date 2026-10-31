@@ -1,6 +1,6 @@
 .wrap {
   /* Cells size to the nearest inline-size container (the landing demo card), else the viewport. */
-  --c: clamp(36px, calc((min(100vw, 100cqi) - 120px) / 7), 62px);
+  --c: clamp(32px, calc((min(100vw, 100cqi) - 120px) / 7), 62px);
   display: grid;
   grid-template-columns: auto auto auto;
   grid-template-areas:
@@ -248,7 +248,7 @@
 
 @media (max-width: 480px) {
   .wrap {
-    --c: clamp(34px, calc((min(100vw, 100cqi) - 76px) / 7), 62px);
+    --c: clamp(26px, calc((min(100vw, 100cqi) - 76px) / 7), 62px);
     column-gap: 6px;
   }
   .yTitle {

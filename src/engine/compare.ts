@@ -31,7 +31,7 @@ export interface FrameComparison {
   furthest: AxisId | null
 }
 
-export type CompareSummary = 'ideals-differ-more' | 'practice-differs-more' | 'even'
+export type CompareSummary = 'ideals-differ-more' | 'practice-differs-more' | 'even' | 'none'
 
 export interface Comparison {
   ideal: FrameComparison
@@ -58,18 +58,21 @@ function frame(a: Payload, b: Payload, f: Frame, z: number): FrameComparison {
   const present = axes.filter((d): d is AxisDiff => d !== null)
   // Stable order (axis order breaks ties) so the sentence never flickers between equal axes.
   const byDiff = [...present].sort((p, q) => p.diff - q.diff)
+  // Name a closest and furthest axis only when the gaps actually differ (identical results have neither).
+  const spread = byDiff.length >= 2 && byDiff[byDiff.length - 1]!.diff > byDiff[0]!.diff
   return {
     axes,
     compared: present.length,
     clear: present.filter(d => d.clear).length,
-    closest: byDiff[0]?.axis ?? null,
-    furthest: byDiff.length >= 2 ? byDiff[byDiff.length - 1]!.axis : null,
+    closest: spread ? byDiff[0]!.axis : null,
+    furthest: spread ? byDiff[byDiff.length - 1]!.axis : null,
   }
 }
 
 /** Which frame two people disagree on more. Claims a side only with a margin of 2 axes (scaled to 12). */
 function summarise(ideal: FrameComparison, now: FrameComparison): CompareSummary | null {
   if (ideal.compared < 6 || now.compared < 6) return null
+  if (ideal.clear === 0 && now.clear === 0) return 'none'
   const fi = (ideal.clear / ideal.compared) * 12
   const fn = (now.clear / now.compared) * 12
   if (fi - fn >= 2) return 'ideals-differ-more'

@@ -33,7 +33,10 @@ describe('comparing two results', () => {
     expect(c.ideal.clear).toBe(0)
     expect(c.now.clear).toBe(0)
     expect(c.ideal.compared).toBe(12)
-    expect(c.summary).toBe('even')
+    expect(c.summary).toBe('none')
+    // Equal gaps everywhere: no axis is "closest" or "furthest".
+    expect(c.ideal.closest).toBeNull()
+    expect(compareResults(flat(0, 0), flat(10, 10)).ideal.furthest).toBeNull()
   })
 
   it('a difference counts only beyond 1.96 combined standard errors', () => {
@@ -50,6 +53,7 @@ describe('comparing two results', () => {
     const one = flat(0, 0)
     const other = { ...flat(0, 0), I: AXIS_IDS.map((_, k) => (k === 0 ? 90 : 0)) }
     expect(compareResults(one, other).summary).toBe('even')
+    expect(compareResults(one, other).ideal.furthest).toBe('fed')
   })
 
   it('skips axes either person lacks and makes no frame claim without here-and-now', () => {

@@ -15,6 +15,7 @@ export const SUMMARY_TEXT: Record<CompareSummary, string> = {
   'ideals-differ-more': 'We disagree more about ideals than about what to do here and now.',
   'practice-differs-more': 'We share more of our ideals than of our here-and-now politics.',
   even: 'We disagree about as much in theory as here and now.',
+  none: 'We don’t clearly differ on any axis, in theory or here and now.',
 }
 
 export const NOT_COMPARABLE = 'Different countries: here-and-now answers aren’t directly comparable.'
@@ -123,7 +124,8 @@ export function drawCompareCard(canvas: HTMLCanvasElement, a: Results, b: Result
   const top = story ? 230 : pad
   const footY = H - (wide ? 28 : story ? 340 : 48)
   paper(ctx, W, H)
-  wordmark(ctx, pad, top, wide)
+  // Stories: drop the wordmark so its superscript stays below the 230px overlay zone.
+  wordmark(ctx, pad, story ? top + 12 : top, wide)
 
   const people = [a, b] as const
   let y: number
@@ -295,7 +297,8 @@ export function drawCompareCard(canvas: HTMLCanvasElement, a: Results, b: Result
   // Under ~40px a row can't hold a full-size title plus the pole names, so both step down.
   const tight = !wide && rowH < 40
   const xs = (v: number) => trackX + ((v + 100) / 200) * trackW
-  const r0 = Math.max(6, Math.min(11, rowH * 0.2))
+  // Lanes sit 0.46·rowH apart, so markers (and the +2 ring) never reach the other lane.
+  const r0 = Math.max(6, Math.min(11, rowH * 0.16))
   for (const g of Object.keys(GROUPS) as GroupId[]) {
     for (const ax of GROUPS[g]) {
       const k = AXIS_IDS.indexOf(ax)
@@ -320,8 +323,8 @@ export function drawCompareCard(canvas: HTMLCanvasElement, a: Results, b: Result
       ctx.lineTo(xs(0), cy + rowH - 4)
       ctx.stroke()
       const lanes = [
-        { f: 'I' as const, d: cmp.ideal.axes[k], y: cy + rowH * 0.3 },
-        { f: 'N' as const, d: cmp.now.axes[k], y: cy + rowH * 0.7 },
+        { f: 'I' as const, d: cmp.ideal.axes[k], y: cy + rowH * 0.27 },
+        { f: 'N' as const, d: cmp.now.axes[k], y: cy + rowH * 0.73 },
       ]
       for (const lane of lanes) {
         const d = lane.d
@@ -337,13 +340,14 @@ export function drawCompareCard(canvas: HTMLCanvasElement, a: Results, b: Result
           ctx.setLineDash([])
           ctx.lineWidth = 1
         }
-        // Filled first, then the hollow ring on top; when the two coincide the ring grows to circle the filled marker.
+        // Filled first, then the hollow marker on top; when the two coincide it becomes a ring around the filled one.
         const va = people[0].payload[lane.f][k]
         const vb = people[1].payload[lane.f][k]
         if (va !== null && va !== undefined) marker(ctx, lane.f, 0, xs(va), lane.y, r0)
         if (vb !== null && vb !== undefined) {
-          const onTop = va !== null && va !== undefined && Math.abs(xs(va) - xs(vb)) < 2 * r0
-          marker(ctx, lane.f, 1, xs(vb), lane.y, onTop ? r0 + 3 : r0, onTop)
+          // Only an exact (≤ 3px) coincidence gets the ring; partial overlaps read fine as two markers.
+          const onTop = va !== null && va !== undefined && Math.abs(xs(va) - xs(vb)) <= 3
+          marker(ctx, lane.f, 1, onTop ? xs(va!) : xs(vb), lane.y, onTop ? r0 + 2 : r0, onTop)
         }
       }
       cy += rowH

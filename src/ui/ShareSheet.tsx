@@ -102,7 +102,11 @@ export function ShareSheet({ payload }: { payload: Payload }) {
     if (!blob) return
     const u = URL.createObjectURL(blob)
     setUrl(u)
-    return () => URL.revokeObjectURL(u)
+    return () => {
+      // Clear first so Download can't fire with a revoked URL while the next card draws.
+      setUrl(null)
+      URL.revokeObjectURL(u)
+    }
   }, [blob])
 
   const file = blob ? new File([blob], `12axes2-${size}.png`, { type: 'image/png' }) : null
