@@ -13,7 +13,7 @@
    "id": "red-02",
    "humane": 1,
    "text": "People should be free to follow any religion or none without being punished by the state.",
-   "note": "This is about belief and worship: holding a faith, changing it or having none. It doesn’t ask whether a country may have an official religion, or whether religion excuses breaking laws that apply to everyone.",
+   "note": "This is about belief and worship: holding a faith, changing it or having none, so punishing heresy or leaving a faith counts. It doesn’t ask whether a country may have an official religion, or whether faith excuses ordinary crimes.",
    "rationale": "R2: freedom of religion (✘ if disagree)."
   },
   {
@@ -27,7 +27,7 @@
    "id": "red-04",
    "humane": 1,
    "text": "Anyone held by the state for more than a few days should be able to challenge it before an independent court.",
-   "note": "An independent court is a judge not controlled by whoever is holding the person, who checks there is a lawful reason to hold them. It need not order their release, and “a few days” leaves time for arrest and charges.",
+   "note": "An independent court is a judge not controlled by whoever is holding the person, who checks there is a lawful reason to hold them and can order their release if not. “A few days” leaves time for arrest and charges.",
    "rationale": "R4: habeas corpus (✘ if disagree)."
   },
   {
@@ -62,7 +62,7 @@
    "id": "red-09",
    "humane": -1,
    "text": "In war, it is acceptable to target civilians on purpose, not just military targets, if it helps win.",
-   "note": "Civilians means people not taking part in the fighting; on purpose means they are the target, for example to spread terror. Civilians harmed as a side effect of attacking a military target are a separate question.",
+   "note": "Civilians are people who are not soldiers or members of an armed group, and are not taking part in the fighting. On purpose means they are the target, for example to spread terror; harm to civilians as a side effect of attacking a military target is a separate question.",
    "rationale": "R9: deliberately targeting civilians (✘ if agree). Reworded per Max so foreseen collateral harm is not lumped in; that is the separate scored item mil-11."
   },
   {
@@ -70,7 +70,7 @@
    "humane": -1,
    "text": "Violence against peaceful political opponents is acceptable if they are seen as a threat to the nation.",
    "note": "Peaceful means they have not used or threatened violence. Stopping someone planning an attack, or resisting an armed takeover, is not what this asks.",
-   "rationale": "R10: political violence (✘ if agree). Reworded 2026-11-01 per Max from \"Using violence against political opponents is acceptable if they threaten the nation.\" That wording mixed political violence with force against a genuine threat (someone planning an attack or an armed takeover), which liberal and libertarian traditions accept as legitimate defence of rights. A respondent who read it that way and agreed was falsely ruled out of all 25 ideologies with a must-disagree commitment. \"Peaceful\" puts the line at violence for someone's politics; \"seen as a threat\" keeps the labelling move that is being tested. Same id, so saved links keep their meaning."
+   "rationale": "R10: political violence (✘ if agree). Reworded 2026-11-01 per Max from \"Using violence against political opponents is acceptable if they threaten the nation.\" That wording mixed political violence with force against a genuine threat (someone planning an attack or an armed takeover), which liberal and libertarian traditions accept as legitimate defence of rights. A respondent who read it that way and agreed was falsely ruled out of all 25 ideologies with a must-disagree commitment. \"Peaceful\" puts the line at violence for someone's politics; \"seen as a threat\" keeps the labelling move that is being tested. Same id and position, so saved links still decode; a red-10 answer saved before the change now shows beside the new wording."
   }
  ]
 }
