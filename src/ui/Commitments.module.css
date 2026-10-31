@@ -1,6 +1,8 @@
 .scroll {
   overflow-x: auto;
   margin: 14px 0;
+  /* Contain the visually-hidden (absolute) labels in far-right cells; else they widen the page on phones. */
+  position: relative;
 }
 
 .matrix {
@@ -149,7 +151,7 @@
 .redList {
   display: grid;
   gap: 14px;
-  padding-left: 1.4em;
+  padding-left: 2em;
   max-width: 80ch;
 }
 

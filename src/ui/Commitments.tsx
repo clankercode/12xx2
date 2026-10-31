@@ -218,7 +218,8 @@ export function YourRedLines({ lines }: { lines: Own['redLines'] }) {
       <h2 id="your-red-lines">Your red lines</h2>
       <p className="muted small">
         Your answers to the red-line statements. They never move your axis scores; an answer firmly against an ideology’s
-        listed side rules that ideology out. Only you can see this unless you choose to include it when sharing. {CODED_BY}
+        listed side rules that ideology out{HAS_RED_COMMITMENTS ? ', and is marked ✘ with the ideologies it rules out' : ''}. Only
+        you can see this unless you choose to include it when sharing. {CODED_BY}
       </p>
       <ol className={css.redList}>
         {lines.map(({ line, answer, contradicts }) => (
@@ -234,12 +235,10 @@ export function YourRedLines({ lines }: { lines: Own['redLines'] }) {
                 <span className="muted">Not answered in this run</span>
               )}
             </p>
-            {contradicts.length > 0 ? (
+            {contradicts.length > 0 && (
               <p className={`small ${css.redRuled}`}>
                 <span aria-hidden>✘ </span>Rules out <Names slugs={contradicts} />
               </p>
-            ) : (
-              answer && HAS_RED_COMMITMENTS && <p className="small muted">Rules out no listed ideology.</p>
             )}
           </li>
         ))}

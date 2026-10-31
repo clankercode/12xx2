@@ -63,6 +63,11 @@ compare-shots out="shots":
 commitments-shots out="shots":
     pnpm tsx scripts/commitments-shots.ts http://localhost:21313/ {{out}}
 
+# Needs a dev server with the test fixture (it lists red-line commitments): `COMMITMENTS_FIXTURE=tests/fixtures/commitments.json just dev`.
+# Red-line intro card and statement, matrix Red lines column, Your red lines, share opt-in, shared panel.
+redlines-shots out="shots":
+    pnpm tsx scripts/redlines-shots.ts http://localhost:21313/ {{out}}
+
 # Needs `just dev` running. Seeds two runs and captures the runs pages into shots/.
 history-shots out="shots":
     pnpm tsx scripts/history-shots.ts http://localhost:21313/ {{out}}
