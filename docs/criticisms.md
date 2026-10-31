@@ -172,7 +172,7 @@ The "closest match" uses squared Euclidean distance on **4 axes only**: Economy,
 - **Recovery [sim].** The same simulated adherents get their own archetype as the top Ideal match **87.5%** (Quick), **93%** (Standard) and **96%** (Full) of the time, and in the top 3 at least **99%** of the time. This is optimistic: the adherents are simulated from the very sheets the archetypes were built from.
 - **Stability.** 200 seeded bootstrap draws perturb each axis by its standard error and count how often the top match holds: ≥70% is "stable", 40–70% "fairly stable", otherwise "toss-up between A and B". The seed is a hash of the payload, so the owner and every viewer see the same label (`match.ts:87-110`).
 - **Why-lines and the top 3.** Each match lists the 3 axes that bring you closest and the 1 that pushes you furthest.
-- **Careless responding.** A within-frame keyed-dispersion index. In simulation it flags **89–90%** of uniform random clickers and at most **0.13%** of simulated honest respondents. When it fires the hero becomes "No reliable match", and random clickers receive a headline only **10%** of the time.
+- **Careless responding.** A within-frame keyed-dispersion index. In simulation it flags **89–90%** of uniform random clickers and at most **0.13%** of simulated honest respondents. When it fires the hero becomes "No reliable match". Random clickers receive a named headline only **0.2%** of the time (10% before the naming breakpoint below).
 - **Catalogue rules.** No living people, parties or countries. 47 named archetypes in 9 families, each family with at least 3. Sensitive archetypes (historical Fascism, Stalinist Marxism–Leninism, theocratic absolutism) can lead the hero only if "very close" **and** "stable" **and** the user opts in.
 
 ### 5.4 Residual limitations
@@ -226,7 +226,7 @@ The "closest match" uses squared Euclidean distance on **4 axes only**: Economy,
 
 **12 Axes².**
 
-- **The hero is gated.** It is "Ideal: A · Here and now: B" only when B beats A on the Now vector by a calibrated margin **and** is at least fairly stable. Otherwise it is "Constant: A". In simulation, no-gap respondents get a false split **4.4%** of the time (μ is set at the 95th percentile of no-gap margins). A careless flag replaces the hero with "No reliable match".
+- **The hero is gated.** It is "Ideal: A · Here and now: B" only when B beats A on the Now vector by a calibrated margin **and** is at least fairly stable. Otherwise it is "Constant: A". An ideology is named at all only when it is at least "loosely similar" and not a toss-up; otherwise the hero says "No close match" (or "No clear match") and shows the nearest as a measurement. In simulation, no-gap respondents get a false split **1.1%** of the time (4.4% before that naming breakpoint; μ is set at the 95th percentile of no-gap margins). A careless flag replaces the hero with "No reliable match".
 - **No percentages**, and no living people, parties or countries.
 - The Reality Gap is always printed with two baselines: random clicking (about 38/100) and simulated no-gap noise (median **7**, or **14.1** if a respondent never copies the Ideal cell). Its bands (12 / 22 / 33) are set so that ≥90% of no-gap respondents fall in the lowest band. Gaps are never framed as hypocrisy.
 - Archetype summaries are contrastive ("prioritizes X over Y"), not flattering.

@@ -16,11 +16,16 @@ export interface Commitment {
   coders?: number
 }
 
-/** A coded commitment removed because simulated sincere adherents fail it too often. */
+/**
+ * A coded commitment removed because simulated sincere adherents fail it too often (the audit
+ * sets `falseRuleOut`), or because a counterexample refutes it (set by hand with `reason`).
+ */
 export interface DroppedCommitment extends Commitment {
   slug: string
   /** Simulated adherents of `slug` wrongly ruled out by this commitment alone (full test). */
-  falseRuleOut: number
+  falseRuleOut?: number
+  /** Why it was dropped, when a real counterexample rather than the audit refuted it. */
+  reason?: string
 }
 
 export type CommitmentBook = Readonly<Record<string, readonly Commitment[]>>

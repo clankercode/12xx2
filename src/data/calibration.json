@@ -67,7 +67,7 @@
   },
   "rgNoGapMedian": 7,
   "rgNoGapP0": 14.1,
-  "splitFalseRate": 0.044,
+  "splitFalseRate": 0.0107,
   "anyNotableFalseRate": 0.0333,
   "power": {
    "1 point (33 on the axis scale)": {
@@ -95,13 +95,13 @@
     "top3": 1
    }
   },
-  "randomGetsHeadline": 0.1,
-  "commitmentFalseRuleOut": 0.0001,
+  "randomGetsHeadline": 0.002,
+  "commitmentFalseRuleOut": 0,
   "commitmentFalseRuleOutDetail": {
    "byMode": {
     "quick": 0.0001,
     "standard": 0,
-    "full": 0.0001
+    "full": 0
    },
    "byArchetype": {
     "marxism-leninism": 0,
@@ -119,9 +119,8 @@
     "third-way": 0,
     "neoliberalism": 0,
     "liberal-conservatism": 0,
-    "traditional-conservatism": 0.0025,
+    "traditional-conservatism": 0,
     "paleoconservatism": 0,
-    "communitarianism": 0,
     "christian-democracy": 0,
     "catholic-integralism": 0,
     "islamic-democracy": 0,
@@ -147,7 +146,7 @@
     "absolute-monarchism": 0,
     "constitutional-monarchism": 0,
     "technocracy": 0,
-    "confucian-meritocracy": 0.0025,
+    "confucian-meritocracy": 0,
     "developmental-authoritarianism": 0,
     "neoreaction": 0,
     "transhumanism": 0
