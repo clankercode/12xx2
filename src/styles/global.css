@@ -113,29 +113,57 @@ body {
 
 /* Dot paper: one dot every 28px, on a fixed layer so scrolling stays composited. */
 body::before,
-.lamp {
+.lamp i {
   content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
   pointer-events: none;
   background-size: 28px 28px;
 }
 
 body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
   background-image: radial-gradient(circle at 13.5px 13.5px, var(--dot) 1.1px, transparent 1.7px);
 }
 
-/* The same dots, lit where the pointer is (src/ui/Lamp.tsx); hidden until the pointer moves. */
+/* Sharper screens draw the full dot; a little smaller keeps it as quiet as on a 1x screen. */
+@media (min-resolution: 2dppx) {
+  body::before {
+    background-image: radial-gradient(circle at 13.5px 13.5px, var(--dot) 0.85px, transparent 1.35px);
+  }
+}
+
+/*
+ * The same dots, lit under the pointer (src/ui/Lamp.tsx). A 400px disc moved by transform, with the dots inside
+ * shifted back onto the page lattice: moving it only re-composites, nothing repaints. Hidden until the pointer moves.
+ */
 .lamp {
-  background-image: radial-gradient(circle at 13.5px 13.5px, var(--dot-lit) 1.1px, transparent 1.7px);
-  mask-image: radial-gradient(circle 200px at var(--mx, -400px) var(--my, -400px), #000, rgb(0 0 0 / 0.4) 45%, transparent);
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 400px;
+  height: 400px;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: radial-gradient(closest-side, #000 10%, rgb(0 0 0 / 0.5) 50%, transparent);
   opacity: 0;
   transition: opacity 0.5s ease;
+  will-change: transform, opacity;
+}
+
+.lamp i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(100% + 28px);
+  height: calc(100% + 28px);
+  background-image: radial-gradient(circle at 13.5px 13.5px, var(--dot-lit) 1.1px, transparent 1.7px);
+  will-change: transform;
 }
 
 .lamp[data-on] {
-  opacity: 0.9;
+  opacity: 1;
 }
 
 /* Answering: the lamp dims so the grid keeps the attention. */

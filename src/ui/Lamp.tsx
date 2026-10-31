@@ -3,15 +3,20 @@ import { useEffect, useRef } from 'react'
 /** Fine pointers only, and not for reduced motion; the dots stay static otherwise (global.css hides the layer too). */
 const ACTIVE = '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)'
 
+/** Lamp size and dot pitch; keep in step with `.lamp` in global.css. */
+const SIZE = 400
+const PITCH = 28
+
 /**
- * Lights the background dots near the pointer. One passive pointermove listener, at most one write per frame,
- * and nothing runs while the pointer is still: the CSS mask follows `--mx`/`--my`, set on this element only.
+ * Lights the background dots near the pointer. One passive pointermove listener and at most two transform
+ * writes per frame (no layout, no paint); nothing runs while the pointer is still.
  */
 export function Lamp({ calm }: { calm: boolean }) {
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const el = ref.current
-    if (!el) return
+    const dots = el?.firstElementChild as HTMLElement | null
+    if (!el || !dots) return
     const mq = matchMedia(ACTIVE)
     let x = 0
     let y = 0
@@ -19,8 +24,12 @@ export function Lamp({ calm }: { calm: boolean }) {
     let on = false
     const paint = () => {
       frame = 0
-      el.style.setProperty('--mx', `${x}px`)
-      el.style.setProperty('--my', `${y}px`)
+      const left = Math.round(x) - SIZE / 2
+      const top = Math.round(y) - SIZE / 2
+      el.style.transform = `translate(${left}px, ${top}px)`
+      // Shift the dots back so they sit exactly on the page's lattice.
+      const mod = (n: number) => ((n % PITCH) + PITCH) % PITCH
+      dots.style.transform = `translate(${-mod(left)}px, ${-mod(top)}px)`
       if (!on) {
         on = true
         el.setAttribute('data-on', '')
@@ -62,5 +71,9 @@ export function Lamp({ calm }: { calm: boolean }) {
       detach()
     }
   }, [])
-  return <div ref={ref} className="lamp" data-calm={calm ? '' : undefined} aria-hidden="true" />
+  return (
+    <div ref={ref} className="lamp" data-calm={calm ? '' : undefined} aria-hidden="true">
+      <i />
+    </div>
+  )
 }
