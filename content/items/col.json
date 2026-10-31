@@ -32,6 +32,12 @@
      "rationale": "Exact mirror of col-04; rescoped from 'most businesses' (near-consensus small firms)."},
     {"id": "col-10", "axis": "col", "key": 1, "facet": "distribution", "form": "conditional", "level": 2, "tier": "full",
      "text": "If people grow rich by selling things others freely choose to buy, they should keep almost all of that wealth.",
-     "rationale": "Voluntary-exchange condition favours Private; 'almost all' lifts draft col-13 off consensus."}
+     "rationale": "Voluntary-exchange condition favours Private; 'almost all' lifts draft col-13 off consensus."},
+    {"id": "col-11", "key": 1, "facet": "provision", "form": "rule", "level": 3, "tier": "full",
+     "text": "Schooling, health care and help for the poor should be left to markets, charity and voluntary groups rather than paid for from taxes.",
+     "rationale": "Separator for scope of the state (review C2/C3): minarchists and anarcho-capitalists agree; classical and social liberals do not. Private provision is the Private pole. Content v2 separator (CF review 2026-10-31 §5 draft, reworded); original."},
+    {"id": "col-12", "key": -1, "facet": "provision", "form": "rule", "level": 2, "tier": "full",
+     "text": "Benefits such as pensions and child payments should go to everyone, rich or poor, not only to those in need.",
+     "rationale": "Universal vs targeted welfare (review C3): splits social democracy from the targeting third way and liberal centre. Universal provision is the Collective pole. Content v2 separator (CF review 2026-10-31 §5 draft, reworded); original."}
   ]
 }

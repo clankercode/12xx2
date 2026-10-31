@@ -45,6 +45,9 @@ const MODE_RANK: Record<Mode, number> = { quick: 0, standard: 1, full: 2 }
 
 export const itemsForMode = (mode: Mode) => ALL_ITEMS.filter(it => TIER_RANK[it.tier] <= MODE_RANK[mode])
 
+/** Ids of every statement a run of `mode` asks: its axis items plus any off-axis statements. */
+export const askedIdsForMode = (mode: Mode): string[] => itemsForMode(mode).map(it => it.id)
+
 /** Modes that contain every statement of `mode` and more (modes are nested: quick ⊂ standard ⊂ full). */
 export const longerModes = (mode: Mode): Mode[] => (Object.keys(MODE_RANK) as Mode[]).filter(m => MODE_RANK[m] > MODE_RANK[mode])
 

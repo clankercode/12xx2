@@ -35,6 +35,12 @@
     {"id": "tec-10", "key": 1, "facet": "biotech", "form": "conditional", "level": 2, "tier": "full",
      "text": "If parents can avoid passing on a disease by choosing among unedited embryos, it is wrong to edit embryos' genes instead.",
      "note": "Choosing among embryos means testing several embryos made by IVF and using one that does not carry the disease.",
-     "rationale": "Available-alternative condition favours B; replaces the always-true 'cannot be ruled out' draft. Mirrors tec-09."}
+     "rationale": "Available-alternative condition favours B; replaces the always-true 'cannot be ruled out' draft. Mirrors tec-09."},
+    {"id": "tec-11", "key": 1, "facet": "nature", "form": "conditional", "level": 2, "tier": "full",
+     "text": "If economic growth would use up land, water or clean air faster than nature renews them, growth should be limited.",
+     "rationale": "Ecological limits (review C6): restraint in the name of nature, the Bioconservative pole. Mirrors tec-12. Content v2 separator (CF review 2026-10-31 §5 draft, reworded); original."},
+    {"id": "tec-12", "key": -1, "facet": "nature", "form": "conditional", "level": 2, "tier": "full",
+     "text": "If protecting nature and economic growth conflict, growth should usually win.",
+     "rationale": "Growth over limits (ecomodernist / techno-optimist), the Transhumanist pole. Mirrors tec-11. Content v2 separator (CF review 2026-10-31 §5 draft, reworded); original."}
   ]
 }
