@@ -8,6 +8,7 @@ import { useStore } from './App'
 import { ResultsView } from './ResultsView'
 import { ShareSheet } from './ShareSheet'
 import { downloadExport } from './HistoryPage'
+import { extendOptions } from '../state/session'
 import { Confirm, useClearData } from './Chrome'
 import { label } from './answer'
 import { go, resultFromLink } from './router'
@@ -17,6 +18,8 @@ export function ResultsPage({ own }: { own: Own }) {
   const { s, dispatch, runs } = useStore()
   const [showShare, setShowShare] = useState(false)
   const [confirm, setConfirm] = useState<'retake' | 'clear' | null>(null)
+  const [now] = useState(() => Date.now())
+  const more = extendOptions(s, now)
   const clear = useClearData()
   const r = own.results
   const mine = encodePayload(forSharing(own.payload, { q: false, sc: false, country: false }))
@@ -137,6 +140,29 @@ export function ResultsPage({ own }: { own: Own }) {
         <div id="share-sheet" style={showShare ? { marginTop: 20 } : undefined}>
           {showShare && <ShareSheet payload={own.payload} />}
         </div>
+        {more.length > 0 && (
+          <div style={{ marginTop: 20, display: 'grid', gap: 8, maxWidth: 560 }}>
+            <h3 style={{ margin: 0, fontSize: 'inherit' }}>Add more detail</h3>
+            <p className="small muted" style={{ margin: 0 }}>
+              Answer {more.map(m => m.added).join(' or ')} more statements to tighten your error bars; your answers so far are kept.
+            </p>
+            <div className={css.actions}>
+              {more.map(m => (
+                <button
+                  key={m.mode}
+                  type="button"
+                  className="btn"
+                  onClick={() => {
+                    dispatch({ type: 'extend', mode: m.mode })
+                    go('#/quiz')
+                  }}
+                >
+                  Continue to {m.mode === 'standard' ? 'Standard' : 'Full'} (+{m.added})
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
         <ComparePaste mine={mine} />
       </section>
     </>

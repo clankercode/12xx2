@@ -53,6 +53,13 @@ export function go(hash: string) {
   window.scrollTo({ top: 0 })
 }
 
+/** Like go, but replaces the current history entry, so Back doesn't return to a step that's over. */
+export function goReplace(hash: string) {
+  if (location.hash === hash) return
+  location.replace(hash)
+  window.scrollTo({ top: 0 })
+}
+
 /** Replace the fragment without adding a history entry (used when sharing). */
 export function replaceHash(hash: string) {
   history.replaceState(null, '', location.pathname + location.search + hash)

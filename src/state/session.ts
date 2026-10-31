@@ -1,10 +1,11 @@
 import type { Answer, Answers, AxisId, ChipId, ItemAnswer, Mode } from '../engine/types'
+import { itemsForMode, longerModes } from '../data/items'
 
 export interface Session {
   v: 1
   mode: Mode | null
   answers: Answers
-  /** Index into the ordered item list for the current mode. */
+  /** Index into the statements being asked (see quizItems): the whole mode, or only the added ones when extending. */
   index: number
   input: 'grid' | 'rows'
   sc: Record<string, Answer>
@@ -18,6 +19,11 @@ export interface Session {
   /** Identifies this run in the on-device history; set when the run first reaches its results. */
   runId: string | null
   finishedAt: string | null
+  /**
+   * Set when a finished run is continued into a longer mode: the mode it had before. Only the
+   * statements that mode lacked are asked, and the context steps are skipped. Kept after finishing.
+   */
+  extendFrom: Mode | null
 }
 
 export const EMPTY: Session = {
@@ -34,6 +40,7 @@ export const EMPTY: Session = {
   incoming: null,
   runId: null,
   finishedAt: null,
+  extendFrom: null,
 }
 
 export type Action =
@@ -49,6 +56,8 @@ export type Action =
   | { type: 'save'; save: boolean }
   | { type: 'incoming'; payload: string | null }
   | { type: 'finish'; at: string; runId: string }
+  | { type: 'extend'; mode: Mode }
+  | { type: 'cancelExtend' }
   | { type: 'reset' }
 
 export function reduce(s: Session, a: Action): Session {
@@ -81,9 +90,30 @@ export function reduce(s: Session, a: Action): Session {
     case 'finish':
       // Finishing again after editing answers updates the same run rather than adding one.
       return { ...s, stage: 'done', finishedAt: a.at, runId: s.runId ?? a.runId }
+    case 'extend':
+      // Same run, same answers: only the statements the longer mode adds are asked.
+      if (s.stage !== 'done' || !s.mode || !longerModes(s.mode).includes(a.mode)) return s
+      return { ...s, mode: a.mode, extendFrom: s.mode, stage: 'quiz', index: 0 }
+    case 'cancelExtend':
+      // Back to the results as they were. Answers to added statements stay in the session (they are
+      // offered again if the person continues later) but don't count towards the shorter mode.
+      if (s.stage !== 'quiz' || !s.extendFrom) return s
+      return { ...s, mode: s.extendFrom, extendFrom: null, stage: 'done', index: itemsForMode(s.extendFrom).length }
     case 'reset':
       return { ...EMPTY, input: s.input }
   }
+}
+
+/** How long after finishing a run can still be continued; later, views may have moved and a fresh run is better. */
+export const EXTEND_WINDOW_MS = 24 * 60 * 60 * 1000
+
+/** The longer modes a finished run can be continued into right now, with how many statements each adds. */
+export function extendOptions(s: Session, now: number): { mode: Mode; added: number }[] {
+  if (s.stage !== 'done' || !s.mode || !s.finishedAt) return []
+  const age = now - Date.parse(s.finishedAt)
+  if (!(age >= 0 && age <= EXTEND_WINDOW_MS)) return []
+  const base = itemsForMode(s.mode).length
+  return longerModes(s.mode).map(mode => ({ mode, added: itemsForMode(mode).length - base }))
 }
 
 const KEY = '12xx2.session.v1'

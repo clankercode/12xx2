@@ -129,7 +129,11 @@ export function Landing() {
               ? s.save
                 ? 'Start a new run? Your current result stays in your runs on this device.'
                 : 'Saving is off, so starting again erases your current result. Share it first if you want to keep it.'
-              : 'Starting again erases the answers you’ve given so far.'}
+              : s.extendFrom
+                ? s.save
+                  ? 'Start a new run? Your earlier result stays in your runs on this device; the statements you’ve added since aren’t kept.'
+                  : 'Saving is off, so starting again erases your earlier result and the statements you’ve added since.'
+                : 'Starting again erases the answers you’ve given so far.'}
           </Confirm>
         )}
         <p className="small muted">

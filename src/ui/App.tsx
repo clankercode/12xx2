@@ -4,7 +4,7 @@ import { deriveOwn, type Own } from '../state/derive'
 import { buildRun, loadRuns, storeRuns, upsertRun, type Run } from '../state/history'
 import { heroName } from './copy'
 import { HistoryPage, RunPage, RunsComparePage } from './HistoryPage'
-import { useRoute, go, type Route } from './router'
+import { useRoute, go, parseHash, type Route } from './router'
 import { Landing } from './Landing'
 import { Quiz } from './Quiz'
 import { Context } from './Context'
@@ -109,9 +109,11 @@ export function App() {
     }
   }, [route])
 
-  // Guard routes that need state.
+  // Guard routes that need state. Checks the live hash: a navigation dispatched with the state change
+  // (e.g. results → quiz when continuing a run) hasn't reached `route` yet.
   useEffect(() => {
-    if ((route.page === 'quiz' && !s.mode) || (route.page === 'results' && s.stage !== 'done')) go('#/')
+    const page = parseHash(location.hash).page
+    if ((page === 'quiz' && !s.mode) || (page === 'results' && s.stage !== 'done')) go('#/')
   }, [route.page, s.mode, s.stage])
 
   const store = useMemo(() => ({ s, dispatch, own, runs, setRuns }), [s, own, runs, setRuns])
