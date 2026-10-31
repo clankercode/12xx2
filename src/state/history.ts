@@ -23,7 +23,7 @@ export interface Run {
   country: string | null
   q: Partial<Record<AxisId, number | null>>
   /** Versions the run was first scored with; a mismatch with the current build means it is re-scored. */
-  method: { format: number; catalogue: number; calibration: number }
+  method: { format: number; catalogue: number; calibration: number; headline?: number }
   /** What the results page said when the run finished, kept verbatim for comparison after re-scoring. */
   snapshot: { headline: string }
   /** Set when the run came in through import rather than being taken here. */
@@ -45,12 +45,20 @@ export function newRunId(): string {
   return Array.from(b, x => x.toString(16).padStart(2, '0')).join('')
 }
 
+/**
+ * The headline rule's version: 1 = nearest ideology behind a margin and stability gate, 2 = fit sets
+ * (docs/method/fit-set.md). Bump it whenever the rule that names ideologies changes, so saved runs
+ * show "Before the method changed it said" rather than "When you finished it said".
+ */
+export const HEADLINE_RULE = 2
+
 /** The method versions this build scores with. */
-export const CURRENT_METHOD = () => ({ format: FORMAT, catalogue: CATALOGUE_VERSION, calibration: CALIBRATION.version })
+export const CURRENT_METHOD = () => ({ format: FORMAT, catalogue: CATALOGUE_VERSION, calibration: CALIBRATION.version, headline: HEADLINE_RULE })
 
 export const sameMethod = (m: Run['method']) => {
   const c = CURRENT_METHOD()
-  return m.format === c.format && m.catalogue === c.catalogue && m.calibration === c.calibration
+  // Runs saved before the headline rule was versioned were scored under rule 1.
+  return m.format === c.format && m.catalogue === c.catalogue && m.calibration === c.calibration && (m.headline ?? 1) === c.headline
 }
 
 /** The run record for a finished session. */
@@ -146,7 +154,7 @@ export function cleanRun(x: unknown, now: string): Run | null {
     sc: cleanSc(x.sc),
     country: cleanCountry(x.country),
     q: cleanQ(x.q),
-    method: { format: num(m.format) || FORMAT, catalogue: num(m.catalogue), calibration: num(m.calibration) },
+    method: { format: num(m.format) || FORMAT, catalogue: num(m.catalogue), calibration: num(m.calibration), headline: num(m.headline) || 1 },
     snapshot: { headline: snap },
     ...(x.imported === true ? { imported: true } : {}),
   }

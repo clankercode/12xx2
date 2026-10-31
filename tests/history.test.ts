@@ -12,6 +12,7 @@ import {
   mergeRuns,
   parseImport,
   runToSession,
+  sameMethod,
   upsertRun,
   type Run,
 } from '../src/state/history'
@@ -77,6 +78,14 @@ describe('run history', () => {
     const res = parseImport(JSON.stringify(legacy), NOW)
     expect(res.ok && res.runs[0]!.country).toBe('NZ')
     expect(res.ok && res.runs[0]!.imported).toBe(true)
+  })
+
+  it('a run saved before the headline rule was versioned counts as a different method', () => {
+    const r = run('5555555555555555', NOW)
+    expect(sameMethod(r.method)).toBe(true)
+    const { headline: _, ...old } = r.method
+    expect(sameMethod(old)).toBe(false)
+    expect(cleanRun({ ...r, method: old }, NOW)!.method.headline).toBe(1)
   })
 
   it('rejects files that are not exports and drops malformed fields', () => {

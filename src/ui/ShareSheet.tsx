@@ -8,7 +8,7 @@ import { CALIBRATION } from '../data/calibration'
 import { countryName } from '../data/countries'
 import { AXES } from '../data/axes'
 import { cardBlob, drawCard, ensureFonts, headline, type CardSize } from '../share/card'
-import { CANT_TELL, fitNames } from './copy'
+import { CANT_TELL, fitNames, heroName } from './copy'
 import css from './Share.module.css'
 
 const base = () => `${location.origin}${import.meta.env.BASE_URL}`
@@ -35,7 +35,9 @@ function heroIsSensitive(r: Results): boolean {
   const h = r.hero
   if (h.kind !== 'split' && h.kind !== 'constant' && h.kind !== 'no-fit') return false
   const named = (f: FitSet | null) => !!f && (f.fits.length ? f.fits : f.nearest ? [f.nearest] : []).some(m => m.arch.sensitive)
-  return named(h.ideal) || (h.kind === 'split' && named(h.now))
+  // Here and now is named by split cards and by the share text of any result that has it.
+  const nowFits = h.kind !== 'no-fit' && !!h.now && h.now.fits.some(m => m.arch.sensitive)
+  return named(h.ideal) || nowFits
 }
 
 /** "A" or "A and B (this test can’t tell them apart)". */
@@ -44,9 +46,10 @@ const fitPhrase = (f: FitSet) => `${fitNames(f)}${f.fits.length > 1 ? ` (${CANT_
 export function shareText(r: Results): string {
   const h = r.hero
   const rg = r.payload.rg !== null ? ` (Reality Gap ${r.payload.rg})` : ''
-  if (h.kind === 'split')
-    return `In theory I fit ${fitPhrase(h.ideal)}. Here and now, ${h.now.fits.length ? `I fit ${fitPhrase(h.now)}` : 'no listed ideology is close'}. What’s your gap?`
+  if (h.kind === 'split') return `In theory I fit ${fitPhrase(h.ideal)}. Here and now, I fit ${fitPhrase(h.now)}. What’s your gap?`
   if (h.kind === 'constant' && !h.now) return `In theory I fit ${fitPhrase(h.ideal)}. What’s your gap?`
+  if (h.kind === 'constant' && h.now?.fits.length === 0)
+    return `In theory I fit ${fitPhrase(h.ideal)}. Here and now no listed ideology is close enough to name${rg}. What’s your gap?`
   if (h.kind === 'constant' && !sameInBothFrames(h))
     return `In theory I fit ${fitPhrase(h.ideal)}. Here and now I fit ${fitPhrase(h.now!)}, which overlaps, so it isn’t a split${rg}. What’s yours?`
   if (h.kind === 'constant') return `In theory and here and now, I fit ${fitPhrase(h.ideal)}${rg}. What’s yours?`
@@ -206,6 +209,12 @@ export function ShareSheet({ payload }: { payload: Payload }) {
               <input type="checkbox" checked={allowSensitive} onChange={e => setAllowSensitive(e.target.checked)} /> Show my headline ideology
               on the card
             </label>
+          )}
+          {hasSensitive && !allowSensitive && heroName(r) !== heroName(rFull) && (
+            <p className="small muted" data-redacted-headline>
+              Without this, sensitive ideologies are left out of what you share, and the headline is worked out without them, so it
+              reads “{heroName(r)}” instead of “{heroName(rFull)}”.
+            </p>
           )}
         </fieldset>
         <fieldset className={css.fs}>

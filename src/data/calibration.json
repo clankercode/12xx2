@@ -67,7 +67,24 @@
   },
   "rgNoGapMedian": 7,
   "rgNoGapP0": 14.1,
-  "splitFalseRate": 0.0227,
+  "splitFalseRate": 0.0017,
+  "splitFalseByMode": {
+   "quick": {
+    "rate": 0.0064,
+    "nowEmptyRate": 0.0551,
+    "eligible": 472
+   },
+   "standard": {
+    "rate": 0,
+    "nowEmptyRate": 0.0207,
+    "eligible": 483
+   },
+   "full": {
+    "rate": 0.0044,
+    "nowEmptyRate": 0.0593,
+    "eligible": 455
+   }
+  },
   "anyNotableFalseRate": 0.0333,
   "power": {
    "1 point (33 on the axis scale)": {

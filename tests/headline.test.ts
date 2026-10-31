@@ -9,7 +9,7 @@ import { CALIBRATION } from '../src/data/calibration'
 import { CATALOGUE } from '../src/data/archetypes'
 import { EMPTY } from '../src/state/session'
 import { deriveOwn } from '../src/state/derive'
-import { constantNote, fitNames, heroName } from '../src/ui/copy'
+import { constantNote, distanceNote, fitNames, heroName } from '../src/ui/copy'
 import { previewPath, shareText } from '../src/ui/ShareSheet'
 import { headline } from '../src/share/card'
 
@@ -172,7 +172,9 @@ describe('fit-set headline on a synthetic catalogue', () => {
     if (r.hero.kind !== 'constant') throw new Error(r.hero.kind)
     expect(r.hero.ideal.fits).toHaveLength(4)
     expect(r.hero.ideal.stability?.label).toBe('toss-up')
-    expect(heroName(r)).toMatch(/ and 1 more$/)
+    // Exactly one past the limit: all four are named, never "and 1 more".
+    expect(heroName(r)).not.toMatch(/more/)
+    expect(heroName(r).split(/, | and /).sort()).toEqual(['P0', 'P1', 'P2', 'P3'])
   })
 
   describe('frame splits: each frame gets its own fit set', () => {
@@ -189,13 +191,14 @@ describe('fit-set headline on a synthetic catalogue', () => {
       expect(previewPath(r)).toBe('p/l/r/')
     })
 
-    it('a here-and-now frame that fits nothing is a split with "No close match" on that side', () => {
+    it('a here-and-now frame that fits nothing is not a split (noise alone puts ~1 in 20 outside the cut)', () => {
       const r = deriveResults(payloadFor(-60, 100), [mk('a', -60), mk('b', 40)], CALIBRATION)
-      if (r.hero.kind !== 'split') throw new Error(r.hero.kind)
+      if (r.hero.kind !== 'constant') throw new Error(r.hero.kind)
       expect(slugs(r.hero.now)).toEqual([])
-      expect(heroName(r)).toBe('A → No close match')
-      expect(shareText(r)).toContain('Here and now, no listed ideology is close.')
-      expect(headline(r, false).lines.map(l => l.name)).toEqual(['A', 'No close match'])
+      expect(heroName(r)).toBe('A')
+      expect(constantNote(r.hero)).toMatch(/^Here and now no listed ideology is close enough to name\. That alone isn’t a split/)
+      expect(shareText(r)).toBe('In theory I fit A. Here and now no listed ideology is close enough to name (Reality Gap 10). What’s your gap?')
+      expect(headline(r, false)).toMatchObject({ kicker: 'My politics', lines: [{ label: 'In theory I fit', name: 'A' }] })
       expect(previewPath(r)).toBeNull()
     })
 
@@ -222,6 +225,17 @@ describe('fit-set headline on a synthetic catalogue', () => {
       expect(shareText(r)).toBe('In theory I fit L. What’s your gap?')
       expect(previewPath(r)).toBeNull()
     })
+  })
+
+  it('the measured line quotes the cut that applies: "very close" for a sensitive nearest', () => {
+    const cuts = CALIBRATION.labels.standard
+    const plain = deriveResults(payloadFor(75, 75), [mk('right', 60)], CALIBRATION)
+    if (plain.hero.kind !== 'constant') throw new Error(plain.hero.kind)
+    expect(distanceNote(plain.hero.ideal, cuts)).toContain(`“fits” means ${cuts.loose.toFixed(3)} or less`)
+    const sens = deriveResults(payloadFor(75, 75), [mk('far', 95, true), mk('left', -60)], CALIBRATION)
+    if (sens.hero.kind !== 'no-fit') throw new Error(sens.hero.kind)
+    expect(sens.hero.ideal.nearest?.arch.slug).toBe('far')
+    expect(distanceNote(sens.hero.ideal, cuts)).toContain(`a sensitive ideology “fits” only at ${cuts.veryClose.toFixed(3)} or less`)
   })
 
   it('fits() is the rule: not ruled out, within "loose" ("very close" for a sensitive ideology)', () => {

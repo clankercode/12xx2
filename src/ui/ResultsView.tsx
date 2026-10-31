@@ -43,11 +43,14 @@ function stabilityText(f: FitSet) {
   )
 }
 
+/** The "fits" cuts for one test length. */
+type Cuts = { loose: number; veryClose: number }
+
 /** Distance and stability of the nearest ideology, labelled as measurements under the verdict. */
-function Measured({ f, loose }: { f: FitSet; loose: number }) {
+function Measured({ f, cuts }: { f: FitSet; cuts: Cuts }) {
   return (
     <p className="small muted" data-measure>
-      Measured: {distanceNote(f, loose)}
+      Measured: {distanceNote(f, cuts)}
       {stabilityText(f)}.
     </p>
   )
@@ -76,7 +79,7 @@ export function Hero({ r, who = 'You' }: { r: Results; who?: string }) {
   const h = r.hero
   const p = r.payload
   const noGap = noGapBaseline()
-  const loose = CALIBRATION.labels[p.mode].loose
+  const cuts = CALIBRATION.labels[p.mode]
   return (
     <section className={css.hero} aria-label="Headline result">
       <div className={css.heroMeta}>
@@ -100,7 +103,7 @@ export function Hero({ r, who = 'You' }: { r: Results; who?: string }) {
         <div data-fit-count={0}>
           <h1 className={css.heroTitle}>No close match</h1>
           <p className={css.heroSub}>{noFitNote(h.ideal, who)}</p>
-          <Measured f={h.ideal} loose={loose} />
+          <Measured f={h.ideal} cuts={cuts} />
           <LeftOut f={h.ideal} who={who} />
           {h.now && h.now.fits.length > 0 && (
             <p className="small">
@@ -119,11 +122,11 @@ export function Hero({ r, who = 'You' }: { r: Results; who?: string }) {
       )}
       {h.kind === 'split' && (
         <div className={css.pair}>
-          <HeroHalf f={h.ideal} who={who} loose={loose} />
+          <HeroHalf f={h.ideal} who={who} cuts={cuts} />
           <span className={css.pairArrow} aria-hidden>
             →
           </span>
-          <HeroHalf f={h.now} who={who} loose={loose} />
+          <HeroHalf f={h.now} who={who} cuts={cuts} />
         </div>
       )}
       {h.kind === 'constant' && (
@@ -135,7 +138,7 @@ export function Hero({ r, who = 'You' }: { r: Results; who?: string }) {
           <h1 className={`${css.heroTitle} ${h.ideal.fits.length > 1 ? css.heroTitleList : ''}`}>{fitTitle(h.ideal)}</h1>
           {h.ideal.fits.length > 1 && <p className={css.heroSub}>{fitSetSub(h.ideal)}</p>}
           <p className={css.heroSub}>{constantNote(h, who)}</p>
-          <Measured f={h.ideal} loose={loose} />
+          <Measured f={h.ideal} cuts={cuts} />
           <LeftOut f={h.ideal} who={who} />
           <GapHook r={r} />
         </div>
@@ -174,11 +177,11 @@ function GapHook({ r }: { r: Results }) {
 
 /** "This test can’t tell them apart", with the full list when the headline shortened it. */
 function fitSetSub(f: FitSet): string {
-  const more = f.fits.length > 3 ? ` All ${f.fits.length}: ${f.fits.map(m => m.arch.name).join(', ')}.` : ''
+  const more = f.fits.length > 4 ? ` All ${f.fits.length}: ${f.fits.map(m => m.arch.name).join(', ')}.` : ''
   return `${CANT_TELL.charAt(0).toUpperCase()}${CANT_TELL.slice(1)}.${more}`
 }
 
-function HeroHalf({ f, who, loose }: { f: FitSet; who: string; loose: number }) {
+function HeroHalf({ f, who, cuts }: { f: FitSet; who: string; cuts: Cuts }) {
   const frame = f.frame
   return (
     <div className={css.half} data-fit-count={f.fits.length}>
@@ -192,7 +195,7 @@ function HeroHalf({ f, who, loose }: { f: FitSet; who: string; loose: number }) 
       {frame === 'N' && f.fits.length > 0 && (
         <p className="small muted">Your here-and-now answers, compared with each ideology’s ideal.</p>
       )}
-      <Measured f={f} loose={loose} />
+      <Measured f={f} cuts={cuts} />
       <LeftOut f={f} who={who} />
     </div>
   )

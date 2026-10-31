@@ -1,4 +1,4 @@
-import { AXIS_IDS, MODES } from '../../engine/types'
+import { AXIS_IDS, MODES, type Mode } from '../../engine/types'
 import type { FitStats, FitStatsRow } from '../../engine/fitstats'
 import { AXES } from '../../data/axes'
 import { CALIBRATION } from '../../data/calibration'
@@ -33,6 +33,7 @@ type Report = Record<string, unknown> & {
   carelessDetection?: Record<string, number>
   carelessFalseFlag?: Record<string, number>
   splitFalseRate?: number
+  splitFalseByMode?: Record<Mode, { rate: number; nowEmptyRate: number; eligible: number }>
   note?: string
   fitSet?: FitStats
 }
@@ -41,6 +42,7 @@ const pct = (x: number | undefined) => (typeof x === 'number' ? `${(100 * x).toF
 /** "a / b / c" across Quick, Standard and Full. */
 const byMode = (rows: FitStats['adherents'] | undefined, f: (r: FitStatsRow) => string) =>
   rows ? MODES.map(m => f(rows[m])).join(' / ') : '—'
+const byModeOf = <T,>(rows: Record<Mode, T>, f: (r: T) => string) => MODES.map(m => f(rows[m])).join(' / ')
 
 export function MethodPage() {
   const c = CALIBRATION
@@ -221,17 +223,25 @@ export function MethodPage() {
         </li>
       </ol>
       <p>
+        Distance is worked out per frame. Core commitments are not yet: a commitment that is checked in both frames counts as
+        contradicted if either frame contradicts it, so a here-and-now answer can rule an ideology out of your ideal fit set too.
+      </p>
+      <p>
         The headline lists every ideology that fits, nearest first. One fit is named. Several are all named, because this test
-        can’t tell them apart; past three, the nearest three are shown “and N more”, with the full list underneath. If nothing
+        can’t tell them apart; past four, the nearest three are shown “and N more”, with the full list underneath. If nothing
         fits, the headline says “No close match” and shows the nearest ideology as a measurement, not as your match. Distances,
         bands and stability are printed under the verdict as labelled measurements; they never pick one winner out of the set.
         The same rule drives share cards, share text, preview links, saved runs and the compare page.
       </p>
       <p>
-        The headline shows “in theory A, here and now B” only when the two frames’ fit sets share no ideology (here and now may
-        fit none). If they share even one, it is not a split, and the page says what here and now fits. In the simulation, a
-        respondent with no real gap gets a false split {typeof rep.splitFalseRate === 'number' ? pct(rep.splitFalseRate) : '—'} of
-        the time.
+        The headline shows “in theory A, here and now B” only when both frames fit something and their fit sets share no
+        ideology. If they share even one, it is not a split, and the page says what here and now fits. If here and now fits
+        nothing, that is not a split either: the cut is the 95th percentile, so about 1 in 20 sincere here-and-now answer sets
+        lands just outside it by chance
+        {rep.splitFalseByMode ? <> ({byModeOf(rep.splitFalseByMode, x => pct(x.nowEmptyRate))} of simulated respondents with no real gap)</> : null}
+        . Counting only respondents whose ideal frame fits something (no one else can be split), a respondent with no real gap
+        gets a false split {rep.splitFalseByMode ? byModeOf(rep.splitFalseByMode, x => pct(x.rate)) : '—'} of the time (Quick /
+        Standard / Full; target at most 5%).
       </p>
       <p>
         Each frame’s nearest ideology is also re-run 200 times with your scores jittered by their error bars: “stable” means the
@@ -257,7 +267,8 @@ export function MethodPage() {
       <p>
         Ideologies with a history of mass atrocity (historical fascism, Stalinist Marxism–Leninism) and theocratic absolutism fit
         only within the stricter “very close” cut; within “loosely similar” they are listed as also close but never named. Share
-        cards need your explicit opt-in to show them.
+        cards need your explicit opt-in to show them. Without it, what you share is worked out as if they were not listed, so its
+        headline can differ from your results page; the share panel says so when it does.
       </p>
 
       <h2 id="core-commitments">Core commitments</h2>

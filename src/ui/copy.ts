@@ -74,10 +74,10 @@ export const DISTANCE_BAND: Record<MatchLabel, string> = {
 /** Said whenever a fit set holds more than one ideology. */
 export const CANT_TELL = 'this test can’t tell them apart'
 
-/** The fit set as names, nearest first: "A", "A and B", "A, B and C", or "A, B, C and 4 more". */
+/** The fit set as names, nearest first: "A", "A and B", "A, B and C", or "A, B, C and 4 more" (never "and 1 more"). */
 export function fitNames(f: FitSet, max = 3): string {
   const names = f.fits.map(m => m.arch.name)
-  if (names.length <= max) return names.length < 2 ? (names[0] ?? '') : `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`
+  if (names.length <= max + 1) return names.length < 2 ? (names[0] ?? '') : `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`
   return `${names.slice(0, max).join(', ')} and ${names.length - max} more`
 }
 
@@ -92,11 +92,17 @@ export function nearestNote(f: FitSet): string {
   return `Nearest: ${f.nearest.arch.name}, but ${f.nearest.label === 'none' ? 'not close' : 'not named (sensitive ideologies need to be very close)'}`
 }
 
-/** The nearest ideology's distance and band beside the "fits" cut: a measurement, with the breakpoint that decides. */
-export function distanceNote(f: FitSet, loose: number): string {
+/**
+ * The nearest ideology's distance and band beside the "fits" cut that applies to it: a measurement,
+ * with the breakpoint that decides. A sensitive nearest is held to the stricter "very close" cut.
+ */
+export function distanceNote(f: FitSet, cuts: { loose: number; veryClose: number }): string {
   if (!f.nearest) return 'every listed ideology is ruled out by a core commitment'
   const m = f.nearest
-  return `nearest is ${m.arch.name} at distance ${m.d.toFixed(3)} (${DISTANCE_BAND[m.label]}; “fits” means ${loose.toFixed(3)} or less)`
+  const cut = m.arch.sensitive
+    ? `a sensitive ideology “fits” only at ${cuts.veryClose.toFixed(3)} or less`
+    : `“fits” means ${cuts.loose.toFixed(3)} or less`
+  return `nearest is ${m.arch.name} at distance ${m.d.toFixed(3)} (${DISTANCE_BAND[m.label]}; ${cut})`
 }
 
 /** Why an empty fit set names nobody. */
@@ -114,6 +120,8 @@ export function noFitNote(f: FitSet, who = 'You'): string {
 export function constantNote(h: Extract<Hero, { kind: 'constant' }>, who = 'You'): string {
   const you = who === 'You'
   if (!h.now) return 'Not enough here-and-now answers to place that frame.'
+  if (!h.now.fits.length)
+    return `Here and now no listed ideology is close enough to name. That alone isn’t a split: about 1 in 20 sincere here-and-now answer sets lands just outside the cut by chance.`
   if (!sameInBothFrames(h))
     return `Here and now ${you ? 'you fit' : 'these answers fit'} ${fitNames(h.now)}. The two frames share at least one ideology, so it isn’t a split.`
   return `${you ? 'Your' : 'Their'} ideal and here-and-now answers fit the same ${h.ideal.fits.length > 1 ? 'ideologies' : 'ideology'}.`

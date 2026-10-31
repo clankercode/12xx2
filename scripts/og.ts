@@ -142,7 +142,7 @@ let n = 0
 for (const a of open) {
   write(`${DIST}/p/${a.slug}`, page({
     title: `In theory and here and now, fits ${a.name}`,
-    description: `Someone’s 12 Axes² result: their answers fit ${a.name}, and no other listed ideology, for their ideal system and for here and now. ${desc}`,
+    description: `Someone’s 12 Axes² result: their answers fit ${a.name}, for their ideal system and for here and now. ${desc}`,
     url: `${site}p/${a.slug}/`,
     image: `${site}og/${a.slug}.png`,
   }))

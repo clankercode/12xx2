@@ -51,9 +51,14 @@ export type Hero =
   | { kind: 'insufficient' }
   /** The ideal frame fits no listed ideology: "No close match", the nearest shown as a measurement. */
   | { kind: 'no-fit'; ideal: FitSet; now: FitSet | null }
-  /** The two frames' fit sets share no ideology. `now.fits` may be empty (no close match here and now). */
+  /** Both frames fit something, and their fit sets share no ideology. */
   | { kind: 'split'; ideal: FitSet; now: FitSet }
-  /** The ideal frame fits; here and now is missing (null) or shares at least one fitting ideology. */
+  /**
+   * The ideal frame fits, and it is not a split: here and now is missing (null), shares at least one
+   * fitting ideology, or fits nothing (`now.fits` empty). An empty here-and-now set is not a split:
+   * the "fits" cut is the 95th percentile, so about 1 in 20 sincere here-and-now frames lands just
+   * outside it by noise alone (docs/method/fit-set.md, decision 3).
+   */
   | { kind: 'constant'; ideal: FitSet; now: FitSet | null }
 
 export interface AxisRow {
@@ -228,7 +233,7 @@ export function deriveResults(p: Payload, cat: readonly Archetype[], cal: Calibr
   const ideal = fitSetFor('I', rankedI, p.I, p.seI, cat, seed, cal, p.mode, out)
   const now = covN ? fitSetFor('N', rankedN, p.N, p.seN, cat, (seed ^ 0x9e3779b9) >>> 0, cal, p.mode, out) : null
   if (!ideal.fits.length) return { ...base, hero: { kind: 'no-fit', ideal, now } }
-  if (!now || overlap(ideal, now)) return { ...base, hero: { kind: 'constant', ideal, now } }
-  // Disjoint fit sets: nothing that fits the ideal fits here and now (which may fit nothing).
+  if (!now || !now.fits.length || overlap(ideal, now)) return { ...base, hero: { kind: 'constant', ideal, now } }
+  // Disjoint, non-empty fit sets: here and now fits something, and nothing that fits the ideal.
   return { ...base, hero: { kind: 'split', ideal, now } }
 }

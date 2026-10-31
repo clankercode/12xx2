@@ -194,15 +194,32 @@ const cal: Calibration = { version: 1, tauG, mu, rgCuts, careless, labels }
 let falseSplit = 0
 let anyNotable = 0
 let n = 0
+// False splits per length, counted only over respondents who could be split at all: a split needs
+// the ideal frame to fit something, and most "typical" (latent) respondents fit nothing.
+const splitBy = Object.fromEntries(MODES.map(m => [m, { split: 0, eligible: 0, nowEmpty: 0 }])) as Record<Mode, { split: number; eligible: number; nowEmpty: number }>
 for (const { mode, ans, items } of noGapProfiles) {
   const prof = computeProfile(items, ans, cal)
   const payload = profileToPayload(prof, { catalogue: cat.version, mode, input: 'grid' })
   const r = deriveResults(payload, archetypes, cal)
-  if (r.hero.kind === 'split') falseSplit++
+  const h = r.hero
+  if (h.kind === 'split') falseSplit++
+  if ((h.kind === 'split' || h.kind === 'constant') && h.now) {
+    splitBy[mode].eligible++
+    if (h.kind === 'split') splitBy[mode].split++
+    // Ideal fits, here and now fits nothing: counted as a split before 2026-10-31 (fit-set review S1).
+    if (h.kind === 'constant' && !h.now.fits.length) splitBy[mode].nowEmpty++
+  }
   if (AXIS_IDS.some(ax => prof.gaps[ax].notable)) anyNotable++
   n++
 }
 report.splitFalseRate = Number((falseSplit / n).toFixed(4))
+report.splitFalseByMode = Object.fromEntries(
+  MODES.map(m => {
+    const x = splitBy[m]
+    const r4 = (v: number) => Number((x.eligible ? v / x.eligible : 0).toFixed(4))
+    return [m, { rate: r4(x.split), nowEmptyRate: r4(x.nowEmpty), eligible: x.eligible }]
+  }),
+)
 report.anyNotableFalseRate = Number((anyNotable / n).toFixed(4))
 
 // Power: true keyed shift on one axis.
