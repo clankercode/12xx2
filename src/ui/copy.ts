@@ -1,6 +1,6 @@
 import type { GapType } from '../engine/typology'
 import type { MatchLabel, StabilityLabel } from '../engine/match'
-import type { RgBand } from '../engine/results'
+import type { Results, RgBand } from '../engine/results'
 
 export const REPO_URL = 'https://github.com/clankercode/12xx2'
 
@@ -59,3 +59,11 @@ export const GAP_TYPE: Record<GapType, { name: string; text: string }> = {
 }
 
 export const MODE_NAME = { quick: 'Quick', standard: 'Standard', full: 'Full' } as const
+
+/** The headline as one line of text, e.g. "Georgism → Social liberalism". */
+export function heroName(r: Results): string {
+  const h = r.hero
+  if (h.kind === 'split') return `${h.ideal.match.arch.name} → ${h.now.match.arch.name}`
+  if (h.kind === 'constant') return h.ideal.match.arch.name
+  return 'No reliable match'
+}

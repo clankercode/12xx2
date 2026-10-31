@@ -14,8 +14,10 @@ export function PrivacyPage() {
           check this in your browser’s developer tools.
         </li>
         <li>
-          If “Save my progress” is on, your answers are kept in this browser’s local storage so you can resume. “Clear my data”
-          (footer and results page) deletes them. Turn saving off before you start if you share this device.
+          If “Save my progress” is on, your answers are kept in this browser’s local storage so you can resume, and each finished
+          run is kept in <a href="#/history">your runs</a> (up to 200, all answers included) so you can see how your views change
+          and re-score old runs when the method improves. “Clear my data” (footer and results page) deletes all of it. Turn saving
+          off before you start if you share this device.
         </li>
       </ul>
       <h2>What a share link contains</h2>
@@ -33,8 +35,9 @@ export function PrivacyPage() {
       </ul>
       <h2>Exporting</h2>
       <p>
-        “Export my answers” downloads a JSON file to your device. It is never uploaded. If you choose to share it — for example to
-        help validate the test — that’s up to you.
+        “Export my runs” downloads a JSON file of every saved run, with all answers, to your device. It is never uploaded. You
+        can import it in another browser to move your history there. If you choose to share it — for example to help validate the
+        test — that’s up to you.
       </p>
     </article>
   )

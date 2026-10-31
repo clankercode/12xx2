@@ -1,6 +1,9 @@
-import { createContext, useContext, useEffect, useMemo, useReducer, useRef, type Dispatch } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState, type Dispatch } from 'react'
 import { loadSession, persistSession, reduce, stashIncoming, type Action, type Session } from '../state/session'
 import { deriveOwn, type Own } from '../state/derive'
+import { buildRun, loadRuns, storeRuns, upsertRun, type Run } from '../state/history'
+import { heroName } from './copy'
+import { HistoryPage, RunPage, RunsComparePage } from './HistoryPage'
 import { useRoute, go, type Route } from './router'
 import { Landing } from './Landing'
 import { Quiz } from './Quiz'
@@ -19,6 +22,10 @@ interface Store {
   s: Session
   dispatch: Dispatch<Action>
   own: Own | null
+  /** Finished runs kept on this device, newest first. */
+  runs: Run[]
+  /** Replaces the stored runs (and persists them). Returns how many old runs storage forced out. */
+  setRuns: (runs: Run[]) => number
 }
 
 const StoreCtx = createContext<Store | null>(null)
@@ -35,6 +42,9 @@ const TITLES: Record<Route['page'], string> = {
   criticisms: 'Why a new test — 12 Axes²',
   ideologies: 'Ideology catalogue — 12 Axes²',
   privacy: 'Privacy — 12 Axes²',
+  history: 'Your runs — 12 Axes²',
+  run: 'Past run — 12 Axes²',
+  runs: 'Compare runs — 12 Axes²',
 }
 
 /** On route change: set the title and move focus to the new page's main heading (not on first load). */
@@ -68,6 +78,23 @@ export function App() {
   const route = useRoute()
   useEffect(() => persistSession(s), [s])
   const own = useMemo(() => (s.stage === 'done' || s.stage === 'context' || s.stage === 'place' ? deriveOwn(s) : null), [s])
+  const [runs, setRunsState] = useState<Run[]>(loadRuns)
+  const setRuns = useCallback((next: Run[]) => {
+    const { dropped } = storeRuns(next)
+    setRunsState(dropped ? next.slice(0, next.length - dropped) : next)
+    return dropped
+  }, [])
+
+  // Record (or update) the finished run in the on-device history, unless saving is off.
+  useEffect(() => {
+    if (s.stage !== 'done' || !s.save || !own) return
+    const run = buildRun(s, heroName(own.results))
+    if (run) setRunsState(prev => {
+      const next = upsertRun(prev, run)
+      const { dropped } = storeRuns(next)
+      return dropped ? next.slice(0, next.length - dropped) : next
+    })
+  }, [s, own])
 
   useRouteFocus(route)
 
@@ -87,7 +114,7 @@ export function App() {
     if ((route.page === 'quiz' && !s.mode) || (route.page === 'results' && s.stage !== 'done')) go('#/')
   }, [route.page, s.mode, s.stage])
 
-  const store = useMemo(() => ({ s, dispatch, own }), [s, own])
+  const store = useMemo(() => ({ s, dispatch, own, runs, setRuns }), [s, own, runs, setRuns])
   const focused = route.page === 'quiz' || route.page === 'context' || route.page === 'place'
 
   return (
@@ -105,6 +132,9 @@ export function App() {
         {route.page === 'criticisms' && <CriticismsPage />}
         {route.page === 'ideologies' && <IdeologiesPage />}
         {route.page === 'privacy' && <PrivacyPage />}
+        {route.page === 'history' && <HistoryPage />}
+        {route.page === 'run' && <RunPage id={route.id} />}
+        {route.page === 'runs' && <RunsComparePage a={route.a} b={route.b} />}
       </main>
       {!focused && <Footer />}
     </StoreCtx.Provider>

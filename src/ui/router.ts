@@ -16,8 +16,11 @@ export type Route =
   | { page: 'criticisms' }
   | { page: 'ideologies' }
   | { page: 'privacy' }
+  | { page: 'history' }
+  | { page: 'run'; id: string }
+  | { page: 'runs'; a: string; b: string }
 
-const PAGES = ['quiz', 'context', 'place', 'results', 'method', 'criticisms', 'ideologies', 'privacy'] as const
+const PAGES = ['quiz', 'context', 'place', 'results', 'method', 'criticisms', 'ideologies', 'privacy', 'history'] as const
 
 export function parseHash(hash: string): Route {
   const h = hash.replace(/^#/, '')
@@ -26,6 +29,10 @@ export function parseHash(hash: string): Route {
     const [mine = '', theirs = ''] = h.slice(2).split('~')
     return { page: 'compare', mine, theirs }
   }
+  const run = h.match(/^\/run\/([0-9a-f]{8,32})$/)
+  if (run) return { page: 'run', id: run[1]! }
+  const pair = h.match(/^\/runs\/([0-9a-f]{8,32})~([0-9a-f]{8,32})$/)
+  if (pair) return { page: 'runs', a: pair[1]!, b: pair[2]! }
   const name = h.replace(/^\//, '')
   return (PAGES as readonly string[]).includes(name) ? ({ page: name } as Route) : { page: 'landing' }
 }

@@ -11,16 +11,9 @@ import { NOT_COMPARABLE, SUMMARY_TEXT, clearCount, drawCompareCard } from '../sh
 import { useStore } from './App'
 import { AxisChart } from './AxisChart'
 import { DECODE_MESSAGE } from './SharedPage'
-import { MATCH_LABEL } from './copy'
+import { MATCH_LABEL, heroName } from './copy'
 import css from './Results.module.css'
 import share from './Share.module.css'
-
-function heroName(r: Results): string {
-  const h = r.hero
-  if (h.kind === 'split') return `${h.ideal.match.arch.name} → ${h.now.match.arch.name}`
-  if (h.kind === 'constant') return h.ideal.match.arch.name
-  return 'No reliable match'
-}
 
 const NAME_MAX = 16
 

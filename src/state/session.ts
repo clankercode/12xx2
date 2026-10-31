@@ -15,6 +15,9 @@ export interface Session {
   save: boolean
   /** A shared result opened before taking the quiz, kept for the compare offer. */
   incoming: string | null
+  /** Identifies this run in the on-device history; set when the run first reaches its results. */
+  runId: string | null
+  finishedAt: string | null
 }
 
 export const EMPTY: Session = {
@@ -29,6 +32,8 @@ export const EMPTY: Session = {
   stage: 'start',
   save: true,
   incoming: null,
+  runId: null,
+  finishedAt: null,
 }
 
 export type Action =
@@ -43,6 +48,7 @@ export type Action =
   | { type: 'q'; axis: AxisId; value: number | null }
   | { type: 'save'; save: boolean }
   | { type: 'incoming'; payload: string | null }
+  | { type: 'finish'; at: string; runId: string }
   | { type: 'reset' }
 
 export function reduce(s: Session, a: Action): Session {
@@ -72,6 +78,9 @@ export function reduce(s: Session, a: Action): Session {
       return { ...s, save: a.save }
     case 'incoming':
       return { ...s, incoming: a.payload }
+    case 'finish':
+      // Finishing again after editing answers updates the same run rather than adding one.
+      return { ...s, stage: 'done', finishedAt: a.at, runId: s.runId ?? a.runId }
     case 'reset':
       return { ...EMPTY, input: s.input }
   }
@@ -106,6 +115,7 @@ export function persistSession(s: Session) {
 export function clearAllData() {
   try {
     localStorage.removeItem(KEY)
+    localStorage.removeItem('12xx2.history.v1')
     sessionStorage.removeItem(INCOMING_KEY)
   } catch {
     /* ignore */

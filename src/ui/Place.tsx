@@ -3,6 +3,7 @@ import { AXIS_IDS, type AxisId } from '../engine/types'
 import { AXES } from '../data/axes'
 import { useStore } from './App'
 import { go } from './router'
+import { newRunId } from '../state/history'
 import css from './Steps.module.css'
 
 /**
@@ -13,7 +14,7 @@ import css from './Steps.module.css'
 export function Place() {
   const { s, dispatch, own } = useStore()
   const finish = () => {
-    dispatch({ type: 'stage', stage: 'done' })
+    dispatch({ type: 'finish', at: new Date().toISOString(), runId: newRunId() })
     go('#/results')
   }
   return (

@@ -126,7 +126,9 @@ export function Landing() {
             onConfirm={() => begin(pending)}
           >
             {done
-              ? 'Starting again erases your current result from this device. Save or share it first if you want to keep it.'
+              ? s.save
+                ? 'Start a new run? Your current result stays in your runs on this device.'
+                : 'Saving is off, so starting again erases your current result. Share it first if you want to keep it.'
               : 'Starting again erases the answers you’ve given so far.'}
           </Confirm>
         )}

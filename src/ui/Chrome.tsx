@@ -76,10 +76,11 @@ export function Confirm({
 
 /** Erase everything on this device. Leaves a shared-result route first so its effect can't re-stash it. */
 export function useClearData() {
-  const { dispatch } = useStore()
+  const { dispatch, setRuns } = useStore()
   return () => {
     go('#/')
     clearAllData()
+    setRuns([])
     dispatch({ type: 'reset' })
   }
 }
@@ -108,7 +109,8 @@ export function Footer() {
   const clear = useClearData()
   const [cleared, setCleared] = useState(false)
   const [confirming, setConfirming] = useState(false)
-  const hasData = s.stage !== 'start' || Object.keys(s.answers).length > 0 || s.incoming !== null
+  const { runs } = useStore()
+  const hasData = s.stage !== 'start' || Object.keys(s.answers).length > 0 || s.incoming !== null || runs.length > 0
   return (
     <footer className={css.footer}>
       <div className={`wrap ${css.footerInner}`}>
@@ -127,6 +129,7 @@ export function Footer() {
           <a href="#/ideologies">Ideology catalogue</a>
           <a href="#/criticisms">Why a new test</a>
           <a href="#/privacy">Privacy</a>
+          <a href="#/history">Your runs</a>
           <a href={REPO_URL}>Source and issues</a>
         </div>
         <div className={css.footerCol}>
@@ -141,7 +144,7 @@ export function Footer() {
                 setCleared(true)
               }}
             >
-              {s.stage === 'done' ? 'Erase your answers and your result from this device?' : 'Erase your saved answers from this device?'} This
+              Erase your answers, results and saved runs from this device? Export your runs first if you want to keep them. This
               can’t be undone.
             </Confirm>
           ) : (

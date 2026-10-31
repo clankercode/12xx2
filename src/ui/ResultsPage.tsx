@@ -7,36 +7,19 @@ import { AXES } from '../data/axes'
 import { useStore } from './App'
 import { ResultsView } from './ResultsView'
 import { ShareSheet } from './ShareSheet'
+import { downloadExport } from './HistoryPage'
 import { Confirm, useClearData } from './Chrome'
 import { label } from './answer'
 import { go, resultFromLink } from './router'
 import css from './Results.module.css'
 
 export function ResultsPage({ own }: { own: Own }) {
-  const { s, dispatch } = useStore()
+  const { s, dispatch, runs } = useStore()
   const [showShare, setShowShare] = useState(false)
   const [confirm, setConfirm] = useState<'retake' | 'clear' | null>(null)
   const clear = useClearData()
   const r = own.results
   const mine = encodePayload(forSharing(own.payload, { q: false, sc: false, country: false }))
-
-  const exportJson = () => {
-    const data = {
-      tool: '12 Axes²',
-      exported: 'answers stay on your device unless you choose to send this file',
-      mode: s.mode,
-      answers: s.answers,
-      systemConfidence: s.sc,
-      statusQuo: s.q,
-      country: s.country,
-    }
-    const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' }))
-    const a = document.createElement('a')
-    a.href = url
-    a.download = '12axes2-answers.json'
-    a.click()
-    setTimeout(() => URL.revokeObjectURL(url), 1000)
-  }
 
   const extras = (
     <>
@@ -118,8 +101,11 @@ export function ResultsPage({ own }: { own: Own }) {
               Compare with the person who shared their link
             </a>
           )}
-          <button type="button" className="btn" onClick={exportJson}>
-            Export my answers (JSON)
+          <a className="btn" href="#/history">
+            All my runs
+          </a>
+          <button type="button" className="btn" onClick={() => downloadExport(runs)} disabled={runs.length === 0}>
+            Export my runs (JSON)
           </button>
           <button type="button" className="btn btn-ghost" onClick={() => setConfirm('retake')}>
             Retake
@@ -141,8 +127,10 @@ export function ResultsPage({ own }: { own: Own }) {
               }}
             >
               {confirm === 'retake'
-                ? 'Retaking erases this result from this device. Save or share it first if you want to keep it.'
-                : 'Erase your answers and this result from this device? This can’t be undone.'}
+                ? s.save
+                  ? 'Start a new run? This result stays in your runs on this device.'
+                  : 'Saving is off, so retaking erases this result. Share or export it first if you want to keep it.'
+                : 'Erase your answers, this result and your saved runs from this device? This can’t be undone.'}
             </Confirm>
           </div>
         )}
