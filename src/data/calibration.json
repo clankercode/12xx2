@@ -67,7 +67,7 @@
   },
   "rgNoGapMedian": 7,
   "rgNoGapP0": 14.1,
-  "splitFalseRate": 0.0107,
+  "splitFalseRate": 0.0227,
   "anyNotableFalseRate": 0.0333,
   "power": {
    "1 point (33 on the axis scale)": {
@@ -152,6 +152,90 @@
     "transhumanism": 0
    },
    "draws": 400
+  },
+  "fitSet": {
+   "adherents": {
+    "quick": {
+     "ownInFit": 0.8253,
+     "meanSize": 1.98,
+     "empty": 0.0449,
+     "one": 0.4064,
+     "overThree": 0.1277,
+     "named": 0.8481,
+     "n": 4700
+    },
+    "standard": {
+     "ownInFit": 0.9236,
+     "meanSize": 1.55,
+     "empty": 0.0583,
+     "one": 0.5683,
+     "overThree": 0.0413,
+     "named": 0.9379,
+     "n": 4700
+    },
+    "full": {
+     "ownInFit": 0.9219,
+     "meanSize": 1.24,
+     "empty": 0.0721,
+     "one": 0.6998,
+     "overThree": 0.0057,
+     "named": 0.9279,
+     "n": 4700
+    }
+   },
+   "typical": {
+    "quick": {
+     "meanSize": 0.04,
+     "empty": 0.857,
+     "one": 0.024,
+     "overThree": 0,
+     "named": 0.027,
+     "n": 1000
+    },
+    "standard": {
+     "meanSize": 0.01,
+     "empty": 0.993,
+     "one": 0.005,
+     "overThree": 0,
+     "named": 0.005,
+     "n": 1000
+    },
+    "full": {
+     "meanSize": 0,
+     "empty": 0.999,
+     "one": 0.001,
+     "overThree": 0,
+     "named": 0.001,
+     "n": 1000
+    }
+   },
+   "random": {
+    "quick": {
+     "meanSize": 0.06,
+     "empty": 0.075,
+     "one": 0.003,
+     "overThree": 0,
+     "named": 0.004,
+     "n": 1000
+    },
+    "standard": {
+     "meanSize": 0.01,
+     "empty": 0.092,
+     "one": 0.001,
+     "overThree": 0,
+     "named": 0.001,
+     "n": 1000
+    },
+    "full": {
+     "meanSize": 0,
+     "empty": 0.102,
+     "one": 0,
+     "overThree": 0,
+     "named": 0,
+     "n": 1000
+    }
+   },
+   "perArchetype": 100
   },
   "model": {
    "thetaRange": 2.5,

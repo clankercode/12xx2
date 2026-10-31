@@ -8,6 +8,7 @@ import { profileToPayload } from '../src/engine/payload'
 import { deriveResults } from '../src/engine/results'
 import type { Archetype } from '../src/engine/match'
 import type { Calibration } from '../src/engine/calibration'
+import type { FitStats, FitStatsRow } from '../src/engine/fitstats'
 
 // Simulation model constants (published on the methodology page).
 export const MODEL = { thetaRange: 2.5, itemSd: 0.6, noiseSd: 0.8, copyRates: [0.3, 0.5, 0.7], passRates: [0, 0.1, 0.2], personAxisSd: 0.4 }
@@ -112,32 +113,6 @@ export function falseRuleOuts(rng: () => number, sheets: Sheets, book: Commitmen
     byMode[mode] = Number((out / (perArchetype * slugs.length)).toFixed(4))
   }
   return { byMode, byArchetype, draws: perArchetype }
-}
-
-export interface FitStatsRow {
-  /** Share of respondents whose ideal-frame fit set contains their own ideology (adherents only). */
-  ownInFit?: number
-  /** Mean ideal-frame fit-set size, over respondents who get a fit set at all (not careless, enough answers). */
-  meanSize: number
-  /** Share with an empty ideal-frame fit set ("No close match"). */
-  empty: number
-  /** Share with exactly one ideology in the ideal-frame fit set. */
-  one: number
-  /** Share with more than 3 ("A, B, C and N more"). */
-  overThree: number
-  /** Share whose headline names at least one ideology (constant or split). */
-  named: number
-  n: number
-}
-
-export interface FitStats {
-  /** Simulated sincere adherents of every catalogue ideology (coders' sheets, both frames). */
-  adherents: Record<Mode, FitStatsRow>
-  /** Latent respondents: uniform positions on every axis, uncorrelated (overstates distance). */
-  typical: Record<Mode, FitStatsRow>
-  /** Uniform random clickers. */
-  random: Record<Mode, FitStatsRow>
-  perArchetype: number
 }
 
 /**

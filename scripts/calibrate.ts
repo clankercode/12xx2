@@ -11,7 +11,7 @@ import { profileToPayload } from '../src/engine/payload'
 import { deriveResults } from '../src/engine/results'
 import { distance, type Archetype } from '../src/engine/match'
 import { mulberry32 } from '../src/engine/prng'
-import { MODEL, archetypeSheet, falseRuleOuts, latentSheet, quantile, randomAnswers, respond, type Sheets } from './sim'
+import { MODEL, archetypeSheet, falseRuleOuts, fitSetStats, latentSheet, quantile, randomAnswers, respond, type Sheets } from './sim'
 import { validateCommitments } from '../src/engine/commitments'
 import type { Calibration } from '../src/engine/calibration'
 import { ALL_ITEMS, itemsForMode } from '../src/data/items'
@@ -250,6 +250,19 @@ const fro = falseRuleOuts(mulberry32(0xc0331), sheets, commitments, Math.max(50,
 // Headline figure: the full-length test, where every commitment is asked.
 report.commitmentFalseRuleOut = fro ? fro.byMode.full : null
 report.commitmentFalseRuleOutDetail = fro
+
+// ---------- Fit-set headline: who fits their own ideology, and how big fit sets are ----------
+// Own RNG stream, drawn after everything above, so no threshold's draws move.
+report.fitSet = fitSetStats(
+  mulberry32(0xf175e7),
+  archetypes,
+  sheets,
+  commitments,
+  cal,
+  cat.version,
+  Math.max(10, Math.round(DRAWS / 80)),
+  Math.max(100, Math.round(DRAWS / 8)),
+)
 report.model = MODEL
 report.draws = DRAWS
 report.generated = process.env.CAL_DATE ?? new Date().toISOString().slice(0, 10)

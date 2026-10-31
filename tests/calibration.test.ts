@@ -4,10 +4,11 @@ import { computeProfile } from '../src/engine/score'
 import { mulberry32 } from '../src/engine/prng'
 import { itemsForMode } from '../src/data/items'
 import { CALIBRATION } from '../src/data/calibration'
-import { MODEL, falseRuleOuts, latentSheet, randomAnswers, respond, type Sheets } from '../scripts/sim'
+import { MODEL, falseRuleOuts, fitSetStats, latentSheet, randomAnswers, respond, type Sheets } from '../scripts/sim'
 import { COMMITMENTS, HAS_COMMITMENTS } from '../src/data/commitments'
 import { ALL_ITEMS } from '../src/data/items'
 import sheetsJson from '../content/archetypes/sheets.json'
+import { CATALOGUE, CATALOGUE_VERSION } from '../src/data/archetypes'
 
 const sheets = sheetsJson as unknown as Sheets
 
@@ -74,4 +75,13 @@ describe('core commitments', () => {
     expect(falseRuleOuts(mulberry32(1), sheets, book(1), 60)!.byMode.quick).toBeLessThanOrEqual(0.02)
     expect(falseRuleOuts(mulberry32(1), sheets, book(-1), 60)!.byArchetype[slug]).toBeGreaterThan(0.8)
   })
+
+  it('fit-set headline: sincere adherents usually fit their own ideology; random clickers almost never get a named fit', () => {
+    const st = fitSetStats(mulberry32(99), CATALOGUE, sheets, COMMITMENTS, CALIBRATION, CATALOGUE_VERSION, 2, 40)
+    expect(st.adherents.standard.ownInFit).toBeGreaterThanOrEqual(0.8)
+    expect(st.adherents.full.ownInFit).toBeGreaterThanOrEqual(0.8)
+    for (const m of MODES) expect(st.random[m].named).toBeLessThanOrEqual(0.05)
+    // The committed report carries the same diagnostics, quoted on the method page.
+    expect((CALIBRATION.report as { fitSet?: unknown }).fitSet).toBeTruthy()
+  }, 120_000)
 })
