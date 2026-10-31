@@ -1,0 +1,6 @@
+BEGIN critical-rationalism
+Q151 3 3
+Q152 1 0
+Q153 0 0
+Q154 3 3
+END critical-rationalism
