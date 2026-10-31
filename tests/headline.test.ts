@@ -2,14 +2,14 @@ import { describe, expect, it } from 'vitest'
 import { AXIS_IDS, MODES, type Answer, type Mode } from '../src/engine/types'
 import type { Archetype } from '../src/engine/match'
 import type { Payload } from '../src/engine/payload'
-import { deriveResults, nameable, type Results } from '../src/engine/results'
+import { deriveResults, fits, type FitSet, type Results } from '../src/engine/results'
 import { mulberry32 } from '../src/engine/prng'
 import { itemsForMode } from '../src/data/items'
 import { CALIBRATION } from '../src/data/calibration'
 import { CATALOGUE } from '../src/data/archetypes'
 import { EMPTY } from '../src/state/session'
 import { deriveOwn } from '../src/state/derive'
-import { constantNote, heroName } from '../src/ui/copy'
+import { constantNote, fitNames, heroName } from '../src/ui/copy'
 import { previewPath, shareText } from '../src/ui/ShareSheet'
 import { headline } from '../src/share/card'
 
@@ -21,41 +21,41 @@ const straightLiner = (mode: Mode, v: Answer): Results =>
 function namedAnywhere(r: Results): string[] {
   const card = headline(r, true).lines.map(l => l.name)
   const text = shareText(r)
-  const claimed = NAMES.filter(n => heroName(r).includes(n) || card.includes(n) || text.includes(`closest to ${n}`))
+  const claimed = NAMES.filter(n => heroName(r).includes(n) || card.some(c => c.includes(n)) || text.includes(`fit ${n}`))
   return previewPath(r) ? [...claimed, previewPath(r)!] : claimed
 }
 
-describe('headline naming breakpoint', () => {
-  it('all-neutral answers never get a named headline, in any mode', () => {
+const slugs = (f: FitSet | null | undefined) => f?.fits.map(m => m.arch.slug) ?? null
+
+describe('fit-set headline on the real catalogue', () => {
+  it('all-neutral answers never get a named fit, in any mode', () => {
     for (const mode of MODES) {
       const r = straightLiner(mode, 0)
       expect(r.hero.kind, mode).not.toBe('constant')
       expect(r.hero.kind, mode).not.toBe('split')
       expect(namedAnywhere(r), mode).toEqual([])
-      expect(['No close match', 'No clear match', 'No reliable match']).toContain(heroName(r))
+      expect(['No close match', 'No reliable match']).toContain(heroName(r))
     }
   })
 
-  it('"slightly agree" and "slightly disagree" straight-liners never get a named headline', () => {
+  it('"slightly agree" and "slightly disagree" straight-liners never get a named fit', () => {
     for (const mode of MODES)
       for (const v of [1, -1] as const) expect(namedAnywhere(straightLiner(mode, v)), `${mode} ${v}`).toEqual([])
   })
 
   it('all-neutral answers show the nearest ideology as a labelled measurement', () => {
     const r = straightLiner('standard', 0)
-    expect(r.hero.kind).toBe('no-close')
-    if (r.hero.kind !== 'no-close') return
-    expect(nameable(r.hero.nearest)).toBe(false)
+    expect(r.hero.kind).toBe('no-fit')
+    if (r.hero.kind !== 'no-fit') return
+    expect(r.hero.ideal.fits).toEqual([])
     const card = headline(r, false)
     expect(card.kicker).toBe('My 12 axes, twice')
-    expect(card.lines[0]!.name).toBe(heroName(r))
-    expect(card.lines[0]!.note).toBe(
-      `Nearest: ${r.hero.nearest.match.arch.name}, but ${r.hero.nearest.match.label === 'none' ? 'not close' : 'others are about as close'}`,
-    )
-    expect(shareText(r)).not.toMatch(/closest to/)
+    expect(card.lines[0]!.name).toBe('No close match')
+    expect(card.lines[0]!.note).toBe(`Nearest: ${r.hero.ideal.nearest!.arch.name}, but not close`)
+    expect(shareText(r)).not.toMatch(/I fit/)
   })
 
-  it('a named hero always passes the breakpoint (random answer patterns, real catalogue)', () => {
+  it('every named ideology fits: not ruled out and within the loose cut (random answer patterns)', () => {
     const rng = mulberry32(7)
     let named = 0
     let unnamed = 0
@@ -68,13 +68,20 @@ describe('headline naming breakpoint', () => {
           return [it.id, { i: v, n: v }]
         }),
       )
-      const h = deriveOwn({ ...EMPTY, mode, stage: 'done', answers })!.results.hero
+      const r = deriveOwn({ ...EMPTY, mode, stage: 'done', answers })!.results
+      const h = r.hero
       if (h.kind === 'constant' || h.kind === 'split') {
-        expect(nameable(h.ideal)).toBe(true)
+        expect(h.ideal.fits.length).toBeGreaterThan(0)
+        for (const m of [...h.ideal.fits, ...(h.now?.fits ?? [])]) {
+          expect(m.ruledOut).toBe(false)
+          expect(m.d).toBeLessThanOrEqual(CALIBRATION.labels[mode][m.arch.sensitive ? 'veryClose' : 'loose'])
+        }
+        // The set is exactly the ideologies that fit, nearest first.
+        expect(h.ideal.fits.map(m => m.d)).toEqual([...h.ideal.fits.map(m => m.d)].sort((a, b) => a - b))
         named++
       }
-      if (h.kind === 'no-close') {
-        expect(nameable(h.nearest)).toBe(false)
+      if (h.kind === 'no-fit') {
+        expect(h.ideal.fits).toEqual([])
         unnamed++
       }
     }
@@ -82,11 +89,11 @@ describe('headline naming breakpoint', () => {
   })
 })
 
-describe('naming breakpoint on a synthetic catalogue', () => {
-  const mk = (slug: string, v: number | number[]): Archetype => {
+describe('fit-set headline on a synthetic catalogue', () => {
+  const mk = (slug: string, v: number | number[], sensitive = false): Archetype => {
     const ideal = Array.isArray(v) ? v : AXIS_IDS.map(() => v)
     return {
-      slug, name: slug, family: 'x', sensitive: false, summary: '', signature: '',
+      slug, name: slug.toUpperCase(), family: 'x', sensitive, summary: '', signature: '',
       ideal, now: ideal, weight: AXIS_IDS.map(() => 1), spread: AXIS_IDS.map(() => 0), sources: [],
     }
   }
@@ -95,61 +102,134 @@ describe('naming breakpoint on a synthetic catalogue', () => {
     I: AXIS_IDS.map(() => I), N: AXIS_IDS.map(() => N), seI: AXIS_IDS.map(() => se), seN: AXIS_IDS.map(() => se),
     G: AXIS_IDS.map(() => N - I), notable: AXIS_IDS.map(() => false), rg: 10,
   })
+  // Standard-length cuts: "loose" ≈ 25.4 points on uniform vectors, "very close" ≈ 17.4.
+  const spread = [mk('l', -60), mk('c', 0), mk('r', 60)]
 
-  it('beyond the "loose" cut: no close match, nearest shown', () => {
-    const r = deriveResults(payloadFor(-20, -20), [mk('a', 40), mk('b', 90)], CALIBRATION)
-    expect(r.hero).toMatchObject({ kind: 'no-close', nearest: { match: { arch: { slug: 'a' }, label: 'none' } } })
-    expect(heroName(r)).toBe('No close match')
+  it('single fit: names it, everywhere', () => {
+    const r = deriveResults(payloadFor(-60, -58), spread, CALIBRATION)
+    expect(r.hero).toMatchObject({ kind: 'constant' })
+    if (r.hero.kind !== 'constant') return
+    expect(slugs(r.hero.ideal)).toEqual(['l'])
+    expect(slugs(r.hero.now)).toEqual(['l'])
+    expect(heroName(r)).toBe('L')
+    expect(constantNote(r.hero)).toBe('Your ideal and here-and-now answers fit the same ideology.')
+    expect(shareText(r)).toBe('In theory and here and now, I fit L (Reality Gap 10). What’s yours?')
+    expect(headline(r, false)).toMatchObject({ kicker: 'In theory and here and now I fit', lines: [{ name: 'L', note: 'Very close' }] })
+    expect(previewPath(r)).toBe('p/l/')
+  })
+
+  it('several fits: names them all and says the test cannot tell them apart; no preview stub', () => {
+    const cat = [mk('a', -50), mk('b', -40), mk('c', 40)]
+    const r = deriveResults(payloadFor(-45, -45), cat, CALIBRATION)
+    if (r.hero.kind !== 'constant') throw new Error(r.hero.kind)
+    expect(slugs(r.hero.ideal)).toEqual(['a', 'b'])
+    expect(heroName(r)).toBe('A and B')
+    expect(constantNote(r.hero)).toBe('Your ideal and here-and-now answers fit the same ideologies.')
+    expect(shareText(r)).toBe('In theory and here and now, I fit A and B (this test can’t tell them apart) (Reality Gap 10). What’s yours?')
+    expect(headline(r, false).lines).toMatchObject([{ name: 'A and B', note: 'This test can’t tell them apart' }])
     expect(previewPath(r)).toBeNull()
   })
 
-  it('a toss-up between close ideologies: no clear match', () => {
+  it('more than three fits: the nearest three by distance, then "and N more"', () => {
+    const cat = [-20, -10, -5, 0, 5, 10, 60].map((v, k) => mk(`x${k}`, v))
+    const r = deriveResults(payloadFor(-4, -4), cat, CALIBRATION)
+    if (r.hero.kind !== 'constant') throw new Error(r.hero.kind)
+    // Distances from -4: x2 (1), x3 (4), x1 (6), x4 (9), x5 (14), x0 (16); x6 is out of range.
+    expect(slugs(r.hero.ideal)).toEqual(['x2', 'x3', 'x1', 'x4', 'x5', 'x0'])
+    expect(fitNames(r.hero.ideal)).toBe('X2, X3, X1 and 3 more')
+    expect(heroName(r)).toBe('X2, X3, X1 and 3 more')
+    expect(headline(r, false).lines[0]!.name).toBe('X2, X3, X1 and 3 more')
+  })
+
+  it('empty fit set: "No close match", the nearest shown only as a measurement', () => {
+    const r = deriveResults(payloadFor(-20, -20), [mk('a', 40), mk('b', 90)], CALIBRATION)
+    expect(r.hero).toMatchObject({ kind: 'no-fit', ideal: { fits: [], nearest: { arch: { slug: 'a' }, label: 'none' } } })
+    expect(heroName(r)).toBe('No close match')
+    expect(namedAnywhere(r)).toEqual([])
+    expect(shareText(r)).toBe('No listed ideology is a close match for my politics; the nearest, A, isn’t close enough to name. What’s your gap?')
+    expect(headline(r, false).lines).toMatchObject([{ name: 'No close match', note: 'Nearest: A, but not close' }])
+    expect(previewPath(r)).toBeNull()
+  })
+
+  it('a ruled-out nearest is never named; others in range still fit', () => {
+    const cat = [mk('a', -50), mk('b', -40), mk('c', 40)]
+    const r = deriveResults(payloadFor(-50, -50), cat, CALIBRATION, new Set(['a']))
+    if (r.hero.kind !== 'constant') throw new Error(r.hero.kind)
+    expect(slugs(r.hero.ideal)).toEqual(['b'])
+    expect(r.hero.ideal.ruledOutInRange.map(m => m.arch.slug)).toEqual(['a'])
+    expect(heroName(r)).toBe('B')
+    expect(namedAnywhere(r)).not.toContain('A')
+    // With nothing else in range, the set is empty and the ruled-out one is not the nearest shown.
+    const alone = deriveResults(payloadFor(-60, -60), cat, CALIBRATION, new Set(['a', 'b']))
+    expect(alone.hero).toMatchObject({ kind: 'no-fit', ideal: { fits: [], nearest: { arch: { slug: 'c' } } } })
+  })
+
+  it('a toss-up between close ideologies is a multi-fit, not a forced pick', () => {
     // Four archetypes equally close to the centre, each on a different pattern of sides.
-    const pat = (k: number) => AXIS_IDS.map((_, i) => ((i >> (k % 2)) + k) % 2 ? 20 : -20)
+    const pat = (k: number) => AXIS_IDS.map((_, i) => (((i >> (k % 2)) + k) % 2 ? 20 : -20))
     const cat = [0, 1, 2, 3].map(k => mk(`p${k}`, k < 2 ? pat(k) : pat(k - 2).map(x => -x)))
     const r = deriveResults(payloadFor(0, 0), cat, CALIBRATION)
-    expect(r.hero.kind).toBe('no-close')
-    if (r.hero.kind !== 'no-close') return
-    expect(r.hero.nearest.match.label).not.toBe('none')
-    expect(r.hero.nearest.stability.label).toBe('toss-up')
-    expect(heroName(r)).toBe('No clear match')
+    if (r.hero.kind !== 'constant') throw new Error(r.hero.kind)
+    expect(r.hero.ideal.fits).toHaveLength(4)
+    expect(r.hero.ideal.stability?.label).toBe('toss-up')
+    expect(heroName(r)).toMatch(/ and 1 more$/)
   })
 
-  it('a split whose here-and-now side is close to nothing names only the ideal', () => {
-    const r = deriveResults(payloadFor(-60, 100), [mk('a', -60), mk('b', 40)], CALIBRATION)
-    expect(r.hero.kind).toBe('split')
-    if (r.hero.kind !== 'split') return
-    expect(nameable(r.hero.ideal)).toBe(true)
-    expect(nameable(r.hero.now)).toBe(false)
-    expect(heroName(r)).toBe('a → No close match')
-    expect(shareText(r)).toContain('Here and now, no listed ideology is close.')
-    expect(headline(r, false).lines.map(l => l.name)).toEqual(['a', 'No close match'])
-    expect(previewPath(r)).toBeNull()
+  describe('frame splits: each frame gets its own fit set', () => {
+    it('disjoint fit sets split, naming each frame', () => {
+      const r = deriveResults(payloadFor(-60, 60), spread, CALIBRATION)
+      if (r.hero.kind !== 'split') throw new Error(r.hero.kind)
+      expect([slugs(r.hero.ideal), slugs(r.hero.now)]).toEqual([['l'], ['r']])
+      expect(heroName(r)).toBe('L → R')
+      expect(shareText(r)).toBe('In theory I fit L. Here and now, I fit R. What’s your gap?')
+      expect(headline(r, false).lines.map(l => [l.label, l.name])).toEqual([
+        ['In theory I fit', 'L'],
+        ['Here and now I fit', 'R'],
+      ])
+      expect(previewPath(r)).toBe('p/l/r/')
+    })
+
+    it('a here-and-now frame that fits nothing is a split with "No close match" on that side', () => {
+      const r = deriveResults(payloadFor(-60, 100), [mk('a', -60), mk('b', 40)], CALIBRATION)
+      if (r.hero.kind !== 'split') throw new Error(r.hero.kind)
+      expect(slugs(r.hero.now)).toEqual([])
+      expect(heroName(r)).toBe('A → No close match')
+      expect(shareText(r)).toContain('Here and now, no listed ideology is close.')
+      expect(headline(r, false).lines.map(l => l.name)).toEqual(['A', 'No close match'])
+      expect(previewPath(r)).toBeNull()
+    })
+
+    it('overlapping fit sets are not a split, and the copy says what here and now fits', () => {
+      const cat = [mk('a', -55), mk('b', -35), mk('c', -15)]
+      // Ideal at -50 fits a (5 away), b (15); here and now at -22 fits c (7), b (13): b is in both.
+      const r = deriveResults(payloadFor(-50, -22), cat, CALIBRATION)
+      if (r.hero.kind !== 'constant') throw new Error(r.hero.kind)
+      expect(slugs(r.hero.ideal)).toEqual(['a', 'b'])
+      expect(slugs(r.hero.now)).toEqual(['c', 'b'])
+      expect(constantNote(r.hero)).toBe('Here and now you fit C and B. The two frames share at least one ideology, so it isn’t a split.')
+      expect(constantNote(r.hero, 'They')).not.toMatch(/same/)
+      expect(headline(r, false)).toMatchObject({ kicker: 'My politics', lines: [{ label: 'In theory I fit', name: 'A and B' }] })
+      expect(shareText(r)).toMatch(/^In theory I fit A and B \(this test can’t tell them apart\)\. Here and now I fit C and B/)
+      expect(previewPath(r)).toBeNull()
+    })
+
+    it('a missing here-and-now frame names the ideal only', () => {
+      const p = { ...payloadFor(-60, 0), N: AXIS_IDS.map(() => null), seN: AXIS_IDS.map(() => null), G: AXIS_IDS.map(() => null) }
+      const r = deriveResults(p, spread, CALIBRATION)
+      if (r.hero.kind !== 'constant') throw new Error(r.hero.kind)
+      expect(r.hero.now).toBeNull()
+      expect(constantNote(r.hero)).not.toMatch(/same/)
+      expect(shareText(r)).toBe('In theory I fit L. What’s your gap?')
+      expect(previewPath(r)).toBeNull()
+    })
   })
 
-  it('"Constant" copy says "same ideology" only when both frames agree', () => {
-    const cat = [mk('a', -20), mk('b', 20)]
-    // Here and now sits a little nearer b, by less than the split margin: a lean, not a split.
-    const lean = deriveResults(payloadFor(-20, 1), cat, CALIBRATION).hero
-    expect(lean).toMatchObject({ kind: 'constant', ideal: { match: { arch: { slug: 'a' } } }, leaning: { match: { arch: { slug: 'b' } } } })
-    if (lean.kind !== 'constant') return
-    expect(constantNote(lean)).toBe('Here and now you lean toward b, but not by enough to call it a split.')
-    expect(constantNote(lean, 'They')).not.toMatch(/same ideology/)
-    // Share text, card and preview stub make no "both frames" claim either.
-    const rl = deriveResults(payloadFor(-20, 1), cat, CALIBRATION)
-    expect(shareText(rl)).toMatch(/^In theory I’m closest to a\. Here and now I lean toward b, but not by enough to call it a split/)
-    expect(headline(rl, false)).toMatchObject({ kicker: 'My politics', lines: [{ label: 'In theory', name: 'a' }] })
-    expect(previewPath(rl)).toBeNull()
-    const same = deriveResults(payloadFor(-20, -18), cat, CALIBRATION).hero
-    expect(same.kind === 'constant' && !same.leaning).toBe(true)
-    if (same.kind !== 'constant') return
-    expect(constantNote(same)).toBe('Your ideal and here-and-now answers sit closest to the same ideology.')
-    expect(constantNote({ ...same, nowMissing: true })).not.toMatch(/same ideology/)
-  })
-
-  it('a close, stable ideal is still named', () => {
-    const r = deriveResults(payloadFor(-60, -58), [mk('left', -60), mk('centre', 0), mk('right', 60)], CALIBRATION)
-    expect(r.hero).toMatchObject({ kind: 'constant', ideal: { match: { arch: { slug: 'left' } } } })
-    expect(heroName(r)).toBe('left')
+  it('fits() is the rule: not ruled out, within "loose" ("very close" for a sensitive ideology)', () => {
+    const r = deriveResults(payloadFor(75, 75), [mk('right', 60), mk('far', 95, true)], CALIBRATION)
+    const [right, far] = [r.matchesIdeal.find(m => m.arch.slug === 'right')!, r.matchesIdeal.find(m => m.arch.slug === 'far')!]
+    expect(fits(right)).toBe(true)
+    expect(['close', 'loose']).toContain(far.label)
+    expect(fits(far)).toBe(false)
+    expect(fits({ ...right, ruledOut: true })).toBe(false)
   })
 })

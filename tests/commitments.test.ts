@@ -119,12 +119,11 @@ describe('rule-outs in matching', () => {
     I: AXIS_IDS.map(() => I), N: AXIS_IDS.map(() => N), seI: AXIS_IDS.map(() => se), seN: AXIS_IDS.map(() => se),
     G: AXIS_IDS.map(() => N - I), notable: AXIS_IDS.map(() => false), rg: 10,
   })
-  const slugOf = (h: Hero, which: 'ideal' | 'now' = 'ideal') =>
-    h.kind === 'no-close'
-      ? h.nearest.match.arch.slug
-      : h.kind === 'constant' || h.kind === 'split'
-        ? (which === 'now' && h.kind === 'split' ? h.now : h.ideal).match.arch.slug
-        : null
+  /** The frame's fit set as slugs, nearest first. */
+  const fitsOf = (h: Hero, which: 'ideal' | 'now' = 'ideal') => {
+    const f = h.kind === 'unreliable' || h.kind === 'insufficient' ? null : which === 'now' ? h.now : h.ideal
+    return f ? f.fits.map(m => m.arch.slug) : null
+  }
 
   it('no rule-outs leaves results exactly as before', () => {
     for (const [i, n] of [[-60, 60], [-55, -50], [84, 84], [10, 30]] as const) {
@@ -136,18 +135,19 @@ describe('rule-outs in matching', () => {
     }
   })
 
-  it('a ruled-out nearest match never leads; the nearest one not ruled out does, with a note', () => {
+  it('a ruled-out nearest never fits; with nothing else in range the headline is "no close match", nearest shown', () => {
     const p = payloadFor(-55, -50)
-    expect(slugOf(deriveResults(p, cat, CALIBRATION).hero)).toBe('left')
+    expect(fitsOf(deriveResults(p, cat, CALIBRATION).hero)).toEqual(['left'])
     const r = deriveResults(p, cat, CALIBRATION, new Set(['left']))
     // 'centre' is far from these answers, so it is shown as the nearest, not named as a match.
-    expect(r.hero.kind).toBe('no-close')
-    if (r.hero.kind !== 'no-close') return
-    expect(r.hero.nearest.match.arch.slug).toBe('centre')
-    expect(r.hero.nearest.match.ruledOut).toBe(false)
-    expect(r.hero.nearest.nearestRuledOut?.arch.slug).toBe('left')
-    // The bootstrap never counts a ruled-out archetype as a winner.
-    expect(r.hero.nearest.stability.wins.has('left')).toBe(false)
+    expect(r.hero.kind).toBe('no-fit')
+    if (r.hero.kind !== 'no-fit') return
+    expect(r.hero.ideal.fits).toEqual([])
+    expect(r.hero.ideal.nearest?.arch.slug).toBe('centre')
+    expect(r.hero.ideal.nearest?.ruledOut).toBe(false)
+    expect(r.hero.ideal.ruledOutInRange.map(m => m.arch.slug)).toEqual(['left'])
+    // The bootstrap never counts a ruled-out archetype as nearest.
+    expect(r.hero.ideal.stability?.wins.has('left')).toBe(false)
     // Ranked list keeps it visible, marked, plus three that are not ruled out.
     expect(r.matchesIdeal.map(m => [m.arch.slug, m.ruledOut])).toEqual([
       ['left', true],
@@ -157,29 +157,43 @@ describe('rule-outs in matching', () => {
     ])
   })
 
-  it('applies to the here-and-now pick too', () => {
+  it('a ruled-out nearest leaves the others in range in the fit set', () => {
+    // Two ideologies 20 points apart, the answers 10 from each: both within the loose cut.
+    const cat2 = [...cat, mk('left2', -40)]
+    const p = payloadFor(-50, -50)
+    expect(fitsOf(deriveResults(p, cat2, CALIBRATION).hero)).toEqual(['left', 'left2'])
+    const r = deriveResults(p, cat2, CALIBRATION, new Set(['left']))
+    expect(fitsOf(r.hero)).toEqual(['left2'])
+    if (r.hero.kind !== 'constant') throw new Error(r.hero.kind)
+    expect(r.hero.ideal.ruledOutInRange.map(m => m.arch.slug)).toEqual(['left'])
+  })
+
+  it('applies to the here-and-now fit set too', () => {
     const p = payloadFor(-60, 60)
     expect(deriveResults(p, cat, CALIBRATION).hero.kind).toBe('split')
     const r = deriveResults(p, cat, CALIBRATION, new Set(['right']))
-    expect(slugOf(r.hero, 'now')).not.toBe('right')
-    if (r.hero.kind === 'constant' && r.hero.leaning) expect(r.hero.leaning.match.arch.slug).not.toBe('right')
+    expect(fitsOf(r.hero, 'now')).not.toContain('right')
     expect(r.matchesNow[0]).toMatchObject({ arch: { slug: 'right' }, ruledOut: true })
   })
 
-  it('a sensitive leader that fails its gate falls back past ruled-out archetypes', () => {
-    const p = payloadFor(84, 84, 98)
-    const before = deriveResults(p, cat, CALIBRATION).hero
-    expect(slugOf(before)).not.toBe('far')
-    const out = new Set([slugOf(before)!])
-    const r = deriveResults(p, cat, CALIBRATION, out)
-    expect(['constant', 'no-close']).toContain(r.hero.kind)
-    expect(out.has(slugOf(r.hero)!)).toBe(false)
-    expect(slugOf(r.hero)).not.toBe('far')
+  it('a sensitive ideology fits only within the stricter "very close" cut; otherwise it is held back, never named', () => {
+    // 84: far (95) is 11 points away, inside "very close"; farther and right are within "loose".
+    expect(fitsOf(deriveResults(payloadFor(84, 84, 98), cat, CALIBRATION).hero)).toEqual(['far', 'farther', 'right'])
+    // 75: far is 20 points away, inside "loose" but not "very close".
+    const r = deriveResults(payloadFor(75, 75), cat, CALIBRATION)
+    expect(fitsOf(r.hero)).toEqual(['right', 'farther'])
+    if (r.hero.kind !== 'constant') throw new Error(r.hero.kind)
+    expect(r.hero.ideal.heldBack.map(m => m.arch.slug)).toEqual(['far'])
+    // Ruling out the non-sensitive fits leaves an empty set: the sensitive one is still not named.
+    const out = deriveResults(payloadFor(75, 75), cat, CALIBRATION, new Set(['right', 'farther']))
+    expect(out.hero.kind).toBe('no-fit')
   })
 
-  it('every ideology ruled out → no ideology fits, never a ruled-out hero', () => {
+  it('every ideology ruled out → no ideology fits, and no nearest is shown as a match', () => {
     const r = deriveResults(payloadFor(0, 0), cat, CALIBRATION, new Set(cat.map(a => a.slug)))
-    expect(r.hero.kind).toBe('none-fit')
+    expect(r.hero.kind).toBe('no-fit')
+    if (r.hero.kind !== 'no-fit') return
+    expect(r.hero.ideal.nearest).toBeNull()
     expect(r.matchesIdeal.every(m => m.ruledOut)).toBe(true)
   })
 
@@ -300,7 +314,7 @@ describe('ruled-out field in share links', () => {
       const prof = computeProfile(items, a, CALIBRATION)
       const base = profileToPayload(prof, { catalogue: CATALOGUE_VERSION, mode: 'standard', input: 'grid' })
       const plain = deriveResults(base, CATALOGUE, CALIBRATION)
-      if (plain.hero.kind !== 'constant' && plain.hero.kind !== 'split' && plain.hero.kind !== 'no-close') continue
+      if (plain.hero.kind !== 'constant' && plain.hero.kind !== 'split' && plain.hero.kind !== 'no-fit') continue
       const top = CATALOGUE_SLUGS.indexOf(plain.matchesIdeal[0]!.arch.slug)
       const owner = profileToPayload(prof, { catalogue: CATALOGUE_VERSION, mode: 'standard', input: 'grid', ruledOut: [top] })
       const mine = deriveResults(owner, CATALOGUE, CALIBRATION, ruledOutSlugs(owner))
@@ -308,8 +322,8 @@ describe('ruled-out field in share links', () => {
       expect(d.ok).toBe(true)
       if (!d.ok) continue
       const theirs = deriveShared(d.payload)
-      expect(slugOf(theirs.hero)).toBe(slugOf(mine.hero))
-      expect(slugOf(mine.hero)).not.toBe(CATALOGUE_SLUGS[top])
+      expect(slugOf(theirs.hero)).toEqual(slugOf(mine.hero))
+      expect(slugOf(mine.hero)).not.toContain(CATALOGUE_SLUGS[top])
       expect(theirs.matchesIdeal[0]).toMatchObject({ arch: { slug: CATALOGUE_SLUGS[top] }, ruledOut: true })
       checked++
     }
@@ -323,7 +337,8 @@ describe('ruled-out field in share links', () => {
   })
 })
 
+/** Both frames' fit sets plus the ideal nearest, as slugs: everything the headline can name. */
 function slugOf(h: Hero) {
-  if (h.kind === 'no-close') return h.nearest.match.arch.slug
-  return h.kind === 'constant' || h.kind === 'split' ? h.ideal.match.arch.slug : null
+  if (h.kind === 'unreliable' || h.kind === 'insufficient') return []
+  return [...h.ideal.fits.map(m => m.arch.slug), '|', ...(h.now?.fits.map(m => m.arch.slug) ?? []), '|', h.ideal.nearest?.arch.slug ?? '']
 }

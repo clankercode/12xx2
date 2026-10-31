@@ -1,8 +1,8 @@
 import { AXIS_IDS, GROUPS, type AxisId, type GroupId } from '../engine/types'
-import type { Results } from '../engine/results'
+import type { FitSet, Results } from '../engine/results'
 import { AXES, GROUP_TITLES } from '../data/axes'
-import { nameable, sameInBothFrames } from '../engine/results'
-import { MATCH_LABEL, RG_BAND, nearestNote, noMatchTitle, pickTitle } from '../ui/copy'
+import { sameInBothFrames } from '../engine/results'
+import { CANT_TELL, MATCH_LABEL, RG_BAND, fitTitle, nearestNote } from '../ui/copy'
 
 export type CardSize = 'post' | 'story' | 'wide'
 export const CARD_DIMS: Record<CardSize, [number, number]> = {
@@ -50,36 +50,39 @@ export interface Headline {
   lines: { label?: string; name: string; color: string; note?: string }[]
 }
 
+/** A frame's note on the card: "can't tell them apart" for several fits, the band for one, the nearest for none. */
+function fitNote(f: FitSet): string {
+  if (f.fits.length > 1) return `${CANT_TELL.charAt(0).toUpperCase()}${CANT_TELL.slice(1)}`
+  return f.fits.length === 1 ? MATCH_LABEL[f.fits[0]!.label] : nearestNote(f)
+}
+
+/** Every ideology a card would name for this frame (its fit set, or the nearest when it fits nothing). */
+const cardNames = (f: FitSet) => (f.fits.length ? f.fits.map(m => m.arch) : f.nearest ? [f.nearest.arch] : [])
+
 export function headline(r: Results, allowSensitive: boolean): Headline {
   const h = r.hero
-  const blocked = (slug: string, sensitive: boolean) => sensitive && !allowSensitive && slug !== ''
+  const generic: Headline = { kicker: 'My 12 axes, twice', lines: [] }
+  const blocked = (...fs: (FitSet | null)[]) => !allowSensitive && fs.some(f => f && cardNames(f).some(a => a.sensitive))
+  const ideal = (f: FitSet) => ({ label: 'In theory I fit', name: fitTitle(f), color: C.ideal, note: fitNote(f) })
   if (h.kind === 'split') {
-    if (blocked(h.ideal.match.arch.slug, h.ideal.match.arch.sensitive) || blocked(h.now.match.arch.slug, h.now.match.arch.sensitive))
-      return { kicker: 'My 12 axes, twice', lines: [] }
+    if (blocked(h.ideal, h.now)) return generic
     return {
       kicker: 'My politics',
-      lines: [
-        { label: 'In theory', name: h.ideal.match.arch.name, color: C.ideal, note: MATCH_LABEL[h.ideal.match.label] },
-        { label: 'Here and now', name: pickTitle(h.now), color: C.now, note: nameable(h.now) ? MATCH_LABEL[h.now.match.label] : nearestNote(h.now) },
-      ],
+      lines: [ideal(h.ideal), { label: h.now.fits.length ? 'Here and now I fit' : 'Here and now', name: fitTitle(h.now), color: C.now, note: fitNote(h.now) }],
     }
   }
   if (h.kind === 'constant') {
-    if (blocked(h.ideal.match.arch.slug, h.ideal.match.arch.sensitive)) return { kicker: 'My 12 axes, twice', lines: [] }
-    // No here-and-now answers to compare: name the ideal only, make no constancy claim.
-    if (h.nowMissing)
-      return { kicker: 'My politics', lines: [{ label: 'In theory', name: h.ideal.match.arch.name, color: C.ideal, note: MATCH_LABEL[h.ideal.match.label] }] }
-    // Here and now leans elsewhere, short of a split: name the ideal only, make no constancy claim.
-    if (!sameInBothFrames(h))
-      return { kicker: 'My politics', lines: [{ label: 'In theory', name: h.ideal.match.arch.name, color: C.ideal, note: MATCH_LABEL[h.ideal.match.label] }] }
-    return {
-      kicker: 'Constant in theory and practice',
-      lines: [{ name: h.ideal.match.arch.name, color: C.paper, note: MATCH_LABEL[h.ideal.match.label] }],
-    }
+    if (blocked(h.ideal)) return generic
+    // Here and now missing, or fitting other ideologies too: name the ideal only, make no constancy claim.
+    if (!sameInBothFrames(h)) return { kicker: 'My politics', lines: [ideal(h.ideal)] }
+    return { kicker: 'In theory and here and now I fit', lines: [{ name: fitTitle(h.ideal), color: C.paper, note: fitNote(h.ideal) }] }
   }
-  // Fails the naming breakpoint: say so, with the nearest ideology as a measurement, not a verdict.
-  if (h.kind === 'no-close') return { kicker: 'My 12 axes, twice', lines: [{ name: noMatchTitle(h.nearest), color: C.paper, note: nearestNote(h.nearest) }] }
-  return { kicker: 'My 12 axes, twice', lines: [] }
+  // An empty fit set: say so, with the nearest ideology as a measurement, not a verdict.
+  if (h.kind === 'no-fit') {
+    if (blocked(h.ideal)) return generic
+    return { kicker: 'My 12 axes, twice', lines: [{ name: 'No close match', color: C.paper, note: nearestNote(h.ideal) }] }
+  }
+  return generic
 }
 
 export function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {

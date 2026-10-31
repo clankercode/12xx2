@@ -27,8 +27,10 @@ export const clearCount = (f: FrameComparison) => (f.compared === 0 ? '—' : `$
 function personLines(r: Results): { label: string; name: string; color: string }[] {
   const hl = headline(r, true)
   if (hl.lines.length === 0) return [{ label: '', name: 'No reliable match', color: C.muted }]
-  if (hl.lines.length === 1 && !hl.lines[0]!.label) return [{ label: 'In theory and here and now', name: hl.lines[0]!.name, color: C.paper }]
-  return hl.lines.map(l => ({ label: l.label ?? '', name: l.name, color: l.color }))
+  if (hl.lines.length === 1 && !hl.lines[0]!.label)
+    return [{ label: hl.lines[0]!.name === 'No close match' ? 'In theory' : 'In theory and here and now', name: hl.lines[0]!.name, color: C.paper }]
+  // The card speaks for two people, so drop the first-person "I fit" from the single-card labels.
+  return hl.lines.map(l => ({ label: (l.label ?? '').replace(/ I fit$/, ''), name: l.name, color: l.color }))
 }
 
 /** Cuts text to fit maxW with an ellipsis (current ctx.font). */

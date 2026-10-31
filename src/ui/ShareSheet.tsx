@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { encodePayload, forSharing, type Payload } from '../engine/payload'
-import { deriveResults, nameable, sameInBothFrames, type HeroPick, type Results } from '../engine/results'
+import { deriveResults, sameInBothFrames, type FitSet, type Results } from '../engine/results'
 import { CATALOGUE } from '../data/archetypes'
 import { ruledOutSlugs } from '../data/commitments'
 import { deriveShared } from '../state/shared'
@@ -8,39 +8,52 @@ import { CALIBRATION } from '../data/calibration'
 import { countryName } from '../data/countries'
 import { AXES } from '../data/axes'
 import { cardBlob, drawCard, ensureFonts, headline, type CardSize } from '../share/card'
+import { CANT_TELL, fitNames } from './copy'
 import css from './Share.module.css'
 
 const base = () => `${location.origin}${import.meta.env.BASE_URL}`
 
-/** "Link with preview" goes to a static stub page whose path names the headline (spec §6.6). */
+/**
+ * "Link with preview" goes to a static stub page whose path names the headline (spec §6.6). Stubs
+ * exist only for one-ideology fit sets, which keeps the stub set finite: p/<a>/ when both frames fit
+ * exactly A, p/<a>/<b>/ for a split where the ideal fits exactly A and here and now exactly B.
+ */
 export function previewPath(r: Results): string | null {
   const h = r.hero
-  const ok = (p: HeroPick) => nameable(p) && !p.match.arch.sensitive
-  if (h.kind === 'split' && ok(h.ideal) && ok(h.now)) return `p/${h.ideal.match.arch.slug}/${h.now.match.arch.slug}/`
+  const one = (f: FitSet) => (f.fits.length === 1 && !f.fits[0]!.arch.sensitive ? f.fits[0]!.arch.slug : null)
+  if (h.kind === 'split') {
+    const a = one(h.ideal)
+    const b = one(h.now)
+    return a && b ? `p/${a}/${b}/` : null
+  }
   // The one-ideology stub says "in theory and here and now", so only when both frames agree.
-  if (h.kind === 'constant' && ok(h.ideal) && sameInBothFrames(h)) return `p/${h.ideal.match.arch.slug}/`
+  if (h.kind === 'constant' && sameInBothFrames(h) && one(h.ideal)) return `p/${one(h.ideal)}/`
   return null
 }
 
 function heroIsSensitive(r: Results): boolean {
   const h = r.hero
-  if (h.kind !== 'split' && h.kind !== 'constant') return false
-  return h.ideal.match.arch.sensitive || (h.kind === 'split' && h.now.match.arch.sensitive)
+  if (h.kind !== 'split' && h.kind !== 'constant' && h.kind !== 'no-fit') return false
+  const named = (f: FitSet | null) => !!f && (f.fits.length ? f.fits : f.nearest ? [f.nearest] : []).some(m => m.arch.sensitive)
+  return named(h.ideal) || (h.kind === 'split' && named(h.now))
 }
+
+/** "A" or "A and B (this test can’t tell them apart)". */
+const fitPhrase = (f: FitSet) => `${fitNames(f)}${f.fits.length > 1 ? ` (${CANT_TELL})` : ''}`
 
 export function shareText(r: Results): string {
   const h = r.hero
+  const rg = r.payload.rg !== null ? ` (Reality Gap ${r.payload.rg})` : ''
   if (h.kind === 'split')
-    return `In theory I’m closest to ${h.ideal.match.arch.name}. Here and now, ${nameable(h.now) ? h.now.match.arch.name : 'no listed ideology is close'}. What’s your gap?`
-  if (h.kind === 'constant' && h.nowMissing) return `In theory I’m closest to ${h.ideal.match.arch.name}. What’s your gap?`
-  if (h.kind === 'constant' && h.leaning && !sameInBothFrames(h))
-    return `In theory I’m closest to ${h.ideal.match.arch.name}. Here and now I lean toward ${h.leaning.match.arch.name}, but not by enough to call it a split${r.payload.rg !== null ? ` (Reality Gap ${r.payload.rg})` : ''}. What’s yours?`
-  if (h.kind === 'constant')
-    return `In theory and here and now, I’m closest to ${h.ideal.match.arch.name}${r.payload.rg !== null ? ` (Reality Gap ${r.payload.rg})` : ''}. What’s yours?`
-  if (h.kind === 'no-close')
-    return h.nearest.match.label === 'none'
-      ? `No listed ideology is a close match for my politics; the nearest, ${h.nearest.match.arch.name}, isn’t close. What’s your gap?`
-      : `My answers can’t single out one ideology: ${h.nearest.match.arch.name} is nearest, but others are about as close. What’s your gap?`
+    return `In theory I fit ${fitPhrase(h.ideal)}. Here and now, ${h.now.fits.length ? `I fit ${fitPhrase(h.now)}` : 'no listed ideology is close'}. What’s your gap?`
+  if (h.kind === 'constant' && !h.now) return `In theory I fit ${fitPhrase(h.ideal)}. What’s your gap?`
+  if (h.kind === 'constant' && !sameInBothFrames(h))
+    return `In theory I fit ${fitPhrase(h.ideal)}. Here and now I fit ${fitPhrase(h.now!)}, which overlaps, so it isn’t a split${rg}. What’s yours?`
+  if (h.kind === 'constant') return `In theory and here and now, I fit ${fitPhrase(h.ideal)}${rg}. What’s yours?`
+  if (h.kind === 'no-fit')
+    return h.ideal.nearest
+      ? `No listed ideology is a close match for my politics; the nearest, ${h.ideal.nearest.arch.name}, isn’t close enough to name. What’s your gap?`
+      : 'My answers contradict a core commitment of every listed ideology. What’s your gap?'
   return 'I answered every political question twice: for my ideal system and for here and now. What’s your gap?'
 }
 
