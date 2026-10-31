@@ -362,10 +362,19 @@ export function MethodPage() {
         the wrong side is decisive) and are coded the same way: three independent Opus lenses (theorist, insider, sceptic), kept
         when at least two of three agree and the coded sheet agrees, and audited so that no more than 2% of respondents
         simulated from an ideology’s coded answers are ruled out of it. Like core commitments, they are AI coders’ judgements,
-        not checked with adherents. Red-line commitments don’t count towards the {MAX_CORE} core commitments. Your results
+        not checked with adherents. Nearly all of them check both frames, so a here-and-now answer can rule an ideology out
+        too: an ideology that holds a line holds it today, not just in an ideal world. Red-line commitments don’t count towards
+        the {MAX_CORE} core commitments. Your results
         show one “Red lines” column per ideology and, for you only, your answer on each red line with the ideologies it rules
         out. A shared link includes where you stand on them only if you tick that box when sharing.
         {!HAS_RED_COMMITMENTS && ' Red-line commitments are still being coded, so none are applied yet.'}
+      </p>
+      <p>
+        Because one answer can rule an ideology out, each red line is worded narrowly, and a note under it says what it asks
+        and what it does not. The political-violence line, for example, is about violence against <em>peaceful</em> opponents:
+        force against someone planning an attack or an armed takeover is not what it asks. An earlier wording left that open,
+        so someone who read it as “a genuine threat” and agreed could be wrongly ruled out of the liberal and democratic
+        ideologies that reject political violence.
       </p>
 
       <h2>How the ideology profiles were made</h2>

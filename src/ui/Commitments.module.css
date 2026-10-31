@@ -163,6 +163,10 @@
   font-weight: 600;
 }
 
+.redList li p.redNote {
+  margin: 2px 0 4px;
+}
+
 .redList li[data-contradicts]::marker,
 .redList li[data-firm]::marker {
   color: var(--alert);

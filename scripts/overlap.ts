@@ -18,8 +18,9 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { ALL_ITEMS } from '../src/data/items'
 import { RED_LINES } from '../src/data/redlines'
 
-/** Every statement shown to people: axis items and red lines. */
-const STATEMENTS: { id: string; text: string }[] = [...ALL_ITEMS, ...RED_LINES]
+/** Every statement shown to people: axis items and red lines, plus the notes shown under them. */
+const NOTES = [...ALL_ITEMS, ...RED_LINES].flatMap(s => (s.note ? [{ id: `${s.id} note`, text: s.note }] : []))
+const STATEMENTS: { id: string; text: string }[] = [...ALL_ITEMS, ...RED_LINES, ...NOTES]
 
 const OUT = 'content/provenance/upstream-shingles.json'
 const SALT = '12xx2-provenance-v1'
@@ -92,7 +93,7 @@ for (const it of probe ?? STATEMENTS) {
   const exact = runs(it.text).filter(r => runSet.has(h(r)))
   if (best >= CONTAIN_MAX || exact.length) fails.push(`${it.id}: containment ${best.toFixed(2)}${exact.length ? `, ${exact.length} exact 6-word run(s)` : ''} — "${it.text}"`)
 }
-console.log(`overlap: ${probe ? 1 : STATEMENTS.length} statements (${ALL_ITEMS.length} axis, ${RED_LINES.length} red lines) vs ${file.sentences.length} upstream sentences; worst containment ${worst.toFixed(2)}`)
+console.log(`overlap: ${probe ? 1 : STATEMENTS.length} texts (${ALL_ITEMS.length} axis, ${RED_LINES.length} red lines, ${NOTES.length} notes) vs ${file.sentences.length} upstream sentences; worst containment ${worst.toFixed(2)}`)
 if (fails.length) {
   console.error(fails.join('\n'))
   process.exit(1)

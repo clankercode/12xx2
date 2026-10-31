@@ -87,8 +87,8 @@ export interface RedLine {
   humane: Key
   text: string
   rationale: string
-  /** Never set; present so a Statement's `note` can be read without narrowing. */
-  note?: undefined
+  /** Shown under the statement: what it asks and what it does not, so a red line is read the way its commitments assume. */
+  note?: string
 }
 
 /** Anything the quiz asks: an axis item or a red line. */

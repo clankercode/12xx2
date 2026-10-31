@@ -6,61 +6,71 @@
    "id": "red-01",
    "humane": -1,
    "text": "The government should have the power to imprison people because of their race or ethnicity, even if they have done nothing wrong.",
+   "note": "This means jailing people for their ancestry alone, with no crime or evidence against them as individuals. Arresting someone suspected of a crime, whatever their background, is not what it asks.",
    "rationale": "R1: detention by ethnicity (✘ if agree). Opening reworded from Max's \"The government should be able to\" to \"The government should have the power to\" because the original phrase is an exact 6-word run in an upstream bank (licence-clean provenance gate); meaning unchanged, so the coded answers stand."
   },
   {
    "id": "red-02",
    "humane": 1,
    "text": "People should be free to follow any religion or none without being punished by the state.",
+   "note": "This is about belief and worship: holding a faith, changing it or having none. It doesn’t ask whether a country may have an official religion, or whether religion excuses breaking laws that apply to everyone.",
    "rationale": "R2: freedom of religion (✘ if disagree)."
   },
   {
    "id": "red-03",
    "humane": -1,
    "text": "If it might stop a serious attack, officials should be allowed to torture a suspect for information.",
+   "note": "Torture means deliberately causing severe pain or suffering, physical or mental, to make someone talk. Firm but lawful questioning, or holding a suspect in custody, is not what this asks.",
    "rationale": "R3: torture (✘ if agree)."
   },
   {
    "id": "red-04",
    "humane": 1,
    "text": "Anyone held by the state for more than a few days should be able to challenge it before an independent court.",
+   "note": "An independent court is a judge not controlled by whoever is holding the person, who checks there is a lawful reason to hold them. It need not order their release, and “a few days” leaves time for arrest and charges.",
    "rationale": "R4: habeas corpus (✘ if disagree)."
   },
   {
    "id": "red-05",
    "humane": -1,
    "text": "If one member of a family commits a serious crime, it is fair to punish the whole family.",
+   "note": "This means penalising relatives who took no part in the crime, for example by jailing or fining them. Relatives who helped, or who knowingly kept what the crime gained, are a separate question.",
    "rationale": "R5: collective punishment (✘ if agree)."
   },
   {
    "id": "red-06",
    "humane": 1,
    "text": "People who peacefully criticise the government should never be jailed for it.",
+   "note": "Peaceful means by speech, writing or protest, without using or threatening violence. It asks about jail for the criticism itself, not for a separate crime committed along the way.",
    "rationale": "R6: political prisoners (✘ if disagree)."
   },
   {
    "id": "red-07",
    "humane": -1,
    "text": "Elections should be cancelled if the wrong side is likely to win.",
+   "note": "This means calling off a vote because of who is likely to win. Delaying a vote because of war or disaster, or banning a party that aims to end free elections, is not what this asks.",
    "rationale": "R7: cancelling elections (✘ if agree)."
   },
   {
    "id": "red-08",
    "humane": 1,
    "text": "The law should apply to rulers in the same way as to everyone else.",
+   "note": "Rulers means whoever holds power, such as presidents, kings and ministers. It asks whether they face the courts for breaking the law like anyone else, not whether their job gives them powers others lack, such as commanding the army.",
    "rationale": "R8: rule of law over rulers (✘ if disagree)."
   },
   {
    "id": "red-09",
    "humane": -1,
    "text": "In war, it is acceptable to target civilians on purpose, not just military targets, if it helps win.",
+   "note": "Civilians means people not taking part in the fighting; on purpose means they are the target, for example to spread terror. Civilians harmed as a side effect of attacking a military target are a separate question.",
    "rationale": "R9: deliberately targeting civilians (✘ if agree). Reworded per Max so foreseen collateral harm is not lumped in; that is the separate scored item mil-11."
   },
   {
    "id": "red-10",
    "humane": -1,
-   "text": "Using violence against political opponents is acceptable if they threaten the nation.",
-   "rationale": "R10: political violence (✘ if agree)."
+   "text": "Violence against peaceful political opponents is acceptable if they are seen as a threat to the nation.",
+   "note": "Peaceful means they have not used or threatened violence. Stopping someone planning an attack, or resisting an armed takeover, is not what this asks.",
+   "rationale": "R10: political violence (✘ if agree). Reworded 2026-11-01 per Max from \"Using violence against political opponents is acceptable if they threaten the nation.\" That wording mixed political violence with force against a genuine threat (someone planning an attack or an armed takeover), which liberal and libertarian traditions accept as legitimate defence of rights. A respondent who read it that way and agreed was falsely ruled out of all 25 ideologies with a must-disagree commitment. \"Peaceful\" puts the line at violence for someone's politics; \"seen as a threat\" keeps the labelling move that is being tested. Same id, so saved links keep their meaning."
   }
  ]
 }

@@ -58,7 +58,32 @@ Red lines (wording approved by Max; R1's opening changed from "should be able to
 | red-07 | disagree | Elections should be cancelled if the wrong side is likely to win. |
 | red-08 | agree | The law should apply to rulers in the same way as to everyone else. |
 | red-09 | disagree | In war, it is acceptable to target civilians on purpose, not just military targets, if it helps win. |
-| red-10 | disagree | Using violence against political opponents is acceptable if they threaten the nation. |
+| red-10 | disagree | Violence against peaceful political opponents is acceptable if they are seen as a threat to the nation. (reworded 2026-11-01, see below) |
+
+### Red-line notes and the red-10 rewording (2026-11-01)
+
+**red-10 reworded** from "Using violence against political opponents is acceptable if they threaten the nation." to "Violence against peaceful political opponents is acceptable if they are seen as a threat to the nation." (Max's feedback). The old wording mixed two things: violence against people for their politics, and force against a genuine threat (someone planning an attack, an armed takeover). Liberal and libertarian traditions accept the second as legitimate defence of rights; classical liberalism's own commitment says "force is only for defending rights against actual aggression". So a respondent who read "threaten the nation" as a genuine threat and agreed answered decisively against 25 must-disagree red-line commitments (critical-rationalism, classical-liberalism, minarchism and most democratic ideologies) and was **falsely ruled out of all 25**. "Peaceful" puts the line at violence for someone's politics; "seen as a threat" keeps the move being tested, labelling peaceful opposition a threat to the nation.
+- All 26 red-10 commitments were re-checked against the new wording and note: the 25 must-disagree entries hold (more clearly than before); fascism's must-agree still holds (squadrismo and the Matteotti murder were violence against peaceful opponents framed as enemies of the nation). Fascism's `why` was edited to say so ("opponents who weaken it are enemies even when peaceful, and squad violence against them was our founding method"); the other `why` texts already fit. None dropped or narrowed. `commitments-raw.json` is the raw lens output and is not re-read by the merge (it reads the lens directory), so it keeps the original text as a record.
+- The coded sheet values for red-10 (and `items-for-coders.txt`, the packet the coders saw) are from the old wording and were not re-coded. The change only narrows what agreeing means, so humane-side codes can only firm up; every committed ideology is already at −3/−3 and fascism at +3/+3. Re-coding red-10 with the three coders is left for the next coding pass.
+- `just separation` is unchanged (byte-identical JSON before and after: Quick 93, Standard 68, Full 42 unseparated; 605 / 623 / 804 pairs ruled apart by a commitment), since it reads the sheets and commitments, not wording. `just commitments-audit`: 0 commitments disagree with the sheets, none over 2%. Calibration doesn't use red lines.
+- **Saved links keep working:** item ids and the red-line order are unchanged, and share links store red-line answers by position (codes 0–3), so an old link decodes as before; it now shows the new wording beside an answer given to the old one.
+
+**Every red line now has a `note`** (the same field `fed.json` uses, shown under the statement in the quiz and in "Your red lines" / "Their red lines" on results). Each says in 1–2 sentences what the statement asks and what it does not, narrowed in the direction its commitments assume, and was checked against every commitment on that line. The notes are part of the provenance gate now: `just overlap` checks notes (axis and red) as well as statements.
+
+| id | note |
+|---|---|
+| red-01 | This means jailing people for their ancestry alone, with no crime or evidence against them as individuals. Arresting someone suspected of a crime, whatever their background, is not what it asks. |
+| red-02 | This is about belief and worship: holding a faith, changing it or having none. It doesn’t ask whether a country may have an official religion, or whether religion excuses breaking laws that apply to everyone. |
+| red-03 | Torture means deliberately causing severe pain or suffering, physical or mental, to make someone talk. Firm but lawful questioning, or holding a suspect in custody, is not what this asks. |
+| red-04 | An independent court is a judge not controlled by whoever is holding the person, who checks there is a lawful reason to hold them. It need not order their release, and “a few days” leaves time for arrest and charges. |
+| red-05 | This means penalising relatives who took no part in the crime, for example by jailing or fining them. Relatives who helped, or who knowingly kept what the crime gained, are a separate question. |
+| red-06 | Peaceful means by speech, writing or protest, without using or threatening violence. It asks about jail for the criticism itself, not for a separate crime committed along the way. |
+| red-07 | This means calling off a vote because of who is likely to win. Delaying a vote because of war or disaster, or banning a party that aims to end free elections, is not what this asks. |
+| red-08 | Rulers means whoever holds power, such as presidents, kings and ministers. It asks whether they face the courts for breaking the law like anyone else, not whether their job gives them powers others lack, such as commanding the army. |
+| red-09 | Civilians means people not taking part in the fighting; on purpose means they are the target, for example to spread terror. Civilians harmed as a side effect of attacking a military target are a separate question. |
+| red-10 | Peaceful means they have not used or threatened violence. Stopping someone planning an attack, or resisting an armed takeover, is not what this asks. |
+
+The red-line intro card before the red lines, the Method page's red-lines section and the results lists now say what a red line is, that they are never scored but can rule an ideology out, why both frames count (nearly all red-line commitments check both), and that the note under each statement says exactly what is meant.
 
 ## 3. Coding
 

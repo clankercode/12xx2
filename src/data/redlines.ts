@@ -4,7 +4,7 @@ import red from '../../content/items/red.json'
 interface RawRed {
   set: string
   method: string
-  items: { id: string; humane: number; text: string; rationale: string }[]
+  items: { id: string; humane: number; text: string; note?: string; rationale: string }[]
 }
 
 /** Validates red.json at import, so a malformed entry fails tests and builds rather than the quiz. */
@@ -21,7 +21,14 @@ export function validateRedLines(raw: unknown): RedLine[] {
     seen.add(r.id)
     if (r.humane !== 1 && r.humane !== -1) fail(`${r.id}: humane must be 1 or -1`)
     if (typeof r.text !== 'string' || !r.text.trim()) fail(`${r.id}: text is required`)
-    return { id: r.id, humane: r.humane as 1 | -1, text: r.text, rationale: typeof r.rationale === 'string' ? r.rationale : '' }
+    if (r.note !== undefined && (typeof r.note !== 'string' || !r.note.trim())) fail(`${r.id}: note must be non-empty text`)
+    return {
+      id: r.id,
+      humane: r.humane as 1 | -1,
+      text: r.text,
+      ...(r.note ? { note: r.note } : {}),
+      rationale: typeof r.rationale === 'string' ? r.rationale : '',
+    }
   })
 }
 
