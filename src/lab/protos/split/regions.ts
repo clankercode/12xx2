@@ -88,12 +88,45 @@ export function inSpotlight(id: RegionId, i: V, n: V): boolean {
   return regionOf(i, n) === id
 }
 
-/** One sentence that reads any pick back in plain words, including the "torn on one side" cells. */
-export function describe(i: V, n: V): string {
+/** Headline for any cell: the region's name, or which half is torn on the 0 row / column. */
+export function headline(i: V, n: V): { emoji: string; title: string } {
   const r = regionOf(i, n)
-  if (r) return `${REGIONS[r].title}.`
-  if (n === 0) return `${i > 0 ? 'Good' : 'Bad'} ideally; torn about here and now.`
-  return `${n > 0 ? 'Good' : 'Bad'} here and now; torn about the ideal.`
+  if (r) return REGIONS[r]
+  if (n === 0) return { emoji: '🤷', title: `${i > 0 ? 'Good' : 'Bad'} ideally, torn about now` }
+  return { emoji: '🤷', title: `${n > 0 ? 'Good' : 'Bad'} now, torn about the ideal` }
+}
+
+const IDEAL_WORD: Record<V, string> = {
+  3: 'very good',
+  2: 'good',
+  1: 'slightly good',
+  0: '',
+  [-1]: 'slightly bad',
+  [-2]: 'bad',
+  [-3]: 'very bad',
+}
+
+const NOW_PHRASE: Record<V, string> = {
+  3: 'you’d strongly back it',
+  2: 'you’d back it',
+  1: 'you’d lean towards it',
+  0: 'you’re torn',
+  [-1]: 'you’d lean against it',
+  [-2]: 'you’d oppose it',
+  [-3]: 'you’d strongly oppose it',
+}
+
+/**
+ * One plain sentence for any pick (merged from prototype B's readout): the strength of
+ * both answers, joined by "and … too" when they agree in sign and "but" when they pull apart.
+ *   "Ideally it’s slightly bad, but here and now you’d back it."
+ *   "Ideally it’s very good, and here and now you’d strongly back it too."
+ */
+export function sentence(i: V, n: V): string {
+  if (i === 0 && n === 0) return 'No pull either way — or pulled both ways at once — ideally and here and now.'
+  const ideal = i === 0 ? 'You’re torn about the ideal' : `Ideally it’s ${IDEAL_WORD[i]}`
+  const agree = Math.sign(i) * Math.sign(n) > 0
+  return `${ideal}, ${agree ? 'and' : 'but'} here and now ${NOW_PHRASE[n]}${agree ? ' too' : ''}.`
 }
 
 export function cellLabel(i: V, n: V): string {

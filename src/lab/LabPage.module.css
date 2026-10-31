@@ -244,3 +244,9 @@
   border-radius: var(--radius-s);
   color: var(--alert);
 }
+
+.opts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 14px;
+}

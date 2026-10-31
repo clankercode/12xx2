@@ -1,19 +1,21 @@
 import { Component, useEffect, useMemo, useState, type ComponentType, type ReactNode } from 'react'
 import { PALETTE_IDS, PALETTES, isPaletteId, type PaletteId } from './palettes'
 import { DEFAULT_STATEMENT } from './kit'
-import type { LabMode, ProtoMeta, ProtoProps } from './types'
+import type { LabMode, ProtoMeta, ProtoOption, ProtoProps } from './types'
 import css from './LabPage.module.css'
 
 /**
  * Dev-only prototype lab ("#/lab"). Discovers every src/lab/protos/<id>/index.tsx
  * and renders the chosen one with a toolbar (mode, palette, theme, side-by-side).
  * Toolbar state lives in the hash query so a state can be shared or screenshotted:
- *   #/lab?p=<id>&mode=hero|answer&pal=gr|bo|rt|mono&theme=dark|light&side=1
+ *   #/lab?p=<id>&mode=hero|answer&pal=gr|bo|rt|mono&theme=dark|light&side=1&o=<opt>&o=-<opt>
+ * `o` holds the current prototype's toggles that differ from their defaults: `o=id` on, `o=-id` off.
  */
 
 interface ProtoModule {
   default: ComponentType<ProtoProps>
   meta: ProtoMeta
+  options?: ProtoOption[]
 }
 
 interface Proto {
@@ -21,6 +23,7 @@ interface Proto {
   letter: string
   Component: ComponentType<ProtoProps>
   meta: ProtoMeta
+  options: ProtoOption[]
 }
 
 const modules = import.meta.glob<ProtoModule>('./protos/*/index.tsx', { eager: true })
@@ -30,7 +33,20 @@ const PROTOS: Proto[] = Object.entries(modules)
   .filter(({ mod }) => typeof mod.default === 'function' && mod.meta)
   // "_"-prefixed (reference) prototypes last.
   .sort((a, b) => Number(a.id.startsWith('_')) - Number(b.id.startsWith('_')) || a.id.localeCompare(b.id))
-  .map(({ id, mod }, k) => ({ id, letter: String.fromCharCode(65 + k), Component: mod.default, meta: mod.meta }))
+  .map(({ id, mod }, k) => ({
+    id,
+    letter: String.fromCharCode(65 + k),
+    Component: mod.default,
+    meta: mod.meta,
+    options: Array.isArray(mod.options) ? mod.options : [],
+  }))
+
+/** Defaults overlaid with the hash overrides (only for options the prototype declares). */
+function resolveOptions(proto: Proto | undefined, overrides: Record<string, boolean>): Record<string, boolean> {
+  const out: Record<string, boolean> = {}
+  for (const o of proto?.options ?? []) out[o.id] = overrides[o.id] ?? o.default
+  return out
+}
 
 type Theme = 'dark' | 'light'
 
@@ -40,6 +56,8 @@ interface LabState {
   pal: PaletteId
   theme: Theme | null
   side: boolean
+  /** Toggles of prototype `p` that differ from their defaults. */
+  o: Record<string, boolean>
 }
 
 function parseQuery(query: string): LabState {
@@ -54,6 +72,12 @@ function parseQuery(query: string): LabState {
     pal: isPaletteId(pal) ? pal : 'gr',
     theme: theme === 'dark' || theme === 'light' ? theme : null,
     side: q.get('side') === '1',
+    o: Object.fromEntries(
+      q
+        .getAll('o')
+        .filter(Boolean)
+        .map(v => (v.startsWith('-') ? [v.slice(1), false] : [v, true])),
+    ),
   }
 }
 
@@ -64,6 +88,9 @@ function toQuery(s: LabState): string {
   q.set('pal', s.pal)
   if (s.theme) q.set('theme', s.theme)
   if (s.side) q.set('side', '1')
+  const proto = PROTOS.find(x => x.id === s.p)
+  for (const o of proto?.options ?? [])
+    if (o.id in s.o && s.o[o.id] !== o.default) q.append('o', s.o[o.id] ? o.id : `-${o.id}`)
   return q.toString()
 }
 
@@ -153,6 +180,7 @@ export default function LabPage({ query }: { query: string }) {
 
   const palette = PALETTES[state.pal]
   const current = useMemo(() => PROTOS.find(x => x.id === state.p), [state.p])
+  const options = resolveOptions(current, state.o)
   const effectiveTheme: Theme =
     state.theme ??
     (document.documentElement.getAttribute('data-theme') === 'light' ||
@@ -177,7 +205,7 @@ export default function LabPage({ query }: { query: string }) {
             className={css.select}
             value={state.p}
             disabled={state.side}
-            onChange={e => update({ p: e.target.value })}
+            onChange={e => update({ p: e.target.value, o: {} })}
           >
             {PROTOS.map(x => (
               <option key={x.id} value={x.id}>
@@ -228,6 +256,24 @@ export default function LabPage({ query }: { query: string }) {
           <input type="checkbox" checked={state.side} onChange={e => update({ side: e.target.checked })} />
           Side by side
         </label>
+
+        {!state.side && current && current.options.length > 0 && (
+          <div className={css.field} role="group" aria-label={`${current.meta.name} options`}>
+            <span className={css.fieldLabel}>Options</span>
+            <div className={css.opts}>
+              {current.options.map(o => (
+                <label key={o.id} className={css.check} title={o.title}>
+                  <input
+                    type="checkbox"
+                    checked={options[o.id] ?? o.default}
+                    onChange={e => update({ o: { ...state.o, [o.id]: e.target.checked } })}
+                  />
+                  {o.label}
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
       </header>
 
       <p className={css.paletteNote}>
@@ -241,14 +287,20 @@ export default function LabPage({ query }: { query: string }) {
           {PROTOS.map(x => (
             <section key={x.id} className={css.card} aria-labelledby={`lab-card-${x.id}`}>
               <h2 className={css.cardTitle} id={`lab-card-${x.id}`}>
-                <button type="button" className={css.cardPick} onClick={() => update({ p: x.id, side: false })}>
+                <button type="button" className={css.cardPick} onClick={() => update({ p: x.id, side: false, o: x.id === state.p ? state.o : {} })}>
                   {x.letter}. {x.meta.name}
                 </button>
               </h2>
               <p className={css.tagline}>{x.meta.tagline}</p>
               <div className={css.stage}>
                 <Boundary key={state.mode} name={x.meta.name}>
-                  <x.Component mode={state.mode} palette={palette} statement={DEFAULT_STATEMENT} size="small" />
+                  <x.Component
+                    mode={state.mode}
+                    palette={palette}
+                    statement={DEFAULT_STATEMENT}
+                    size="small"
+                    options={resolveOptions(x, x.id === state.p ? state.o : {})}
+                  />
                 </Boundary>
               </div>
               <Ideas proto={x} compact />
@@ -267,7 +319,7 @@ export default function LabPage({ query }: { query: string }) {
             <div className={`${css.stage} ${css.stageFull}`}>
               {/* key: remount on prototype/mode change so internal state resets. */}
               <Boundary key={`${current.id}:${state.mode}`} name={current.meta.name}>
-                <current.Component mode={state.mode} palette={palette} statement={DEFAULT_STATEMENT} size="full" />
+                <current.Component mode={state.mode} palette={palette} statement={DEFAULT_STATEMENT} size="full" options={options} />
               </Boundary>
             </div>
             <h2 className={css.ideasHead}>Ideas in this prototype</h2>

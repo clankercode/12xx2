@@ -10,11 +10,31 @@
   --lbl: color-mix(in srgb, var(--muted) 68%, var(--faint));
   /* Hairline that keeps near-page fills (mono +3 on light, −3 on dark) visible. */
   --edge: color-mix(in srgb, var(--paper) 38%, transparent);
+  /* The board is a "well" the tiles sit in; light theme deepens it (see below). */
+  --well: color-mix(in srgb, var(--ink-2) 94%, transparent);
+  --tile-edge: color-mix(in srgb, var(--paper) 14%, transparent);
+  --tile-shadow: 0 0 0 transparent;
   display: grid;
   justify-items: center;
   gap: 22px;
   width: 100%;
   max-width: 1000px;
+}
+
+/* Light theme: a tinted well plus a darker hairline and 1px drop shadow per tile, so the
+   palest fills (mono +3 #efefef, colour ±1) keep a crisp edge against the near-white page. */
+:global(:root[data-theme='light']) .root {
+  --well: #dcd8cc;
+  --tile-edge: color-mix(in srgb, var(--paper) 32%, transparent);
+  --tile-shadow: 0 1px 1.5px rgb(27 30 46 / 0.3);
+}
+
+@media (prefers-color-scheme: light) {
+  :global(:root:not([data-theme='dark'])) .root {
+    --well: #dcd8cc;
+    --tile-edge: color-mix(in srgb, var(--paper) 32%, transparent);
+    --tile-shadow: 0 1px 1.5px rgb(27 30 46 / 0.3);
+  }
 }
 
 @container (min-width: 760px) {
@@ -28,6 +48,11 @@
 
   .root:not(.small) .statement {
     grid-column: 1 / -1;
+  }
+
+  /* Side-by-side layout: a steady read-out height keeps the legend from bobbing as you hover. */
+  .root:not(.small) .answerReadout {
+    min-height: 7.4em;
   }
 }
 
@@ -77,10 +102,14 @@
   padding: var(--p);
   border: 1px solid var(--rule-major);
   border-radius: 16px;
-  background: color-mix(in srgb, var(--ink-2) 94%, transparent);
+  background: var(--well);
   box-shadow:
     inset 0 1px 0 color-mix(in srgb, var(--paper) 6%, transparent),
     0 24px 60px -28px rgb(0 0 0 / 0.55);
+}
+
+.field {
+  position: relative;
 }
 
 .cells {
@@ -99,10 +128,13 @@
   overflow: hidden;
   background: none;
   color: inherit;
-  transition:
-    transform 220ms var(--ease),
-    opacity 420ms var(--ease),
-    filter 420ms var(--ease);
+  box-shadow: var(--tile-shadow);
+  transition: transform 220ms var(--ease);
+}
+
+/* Max's centre circle: the (0, 0) tile is round, still split on its diagonal. */
+.cell[data-round] {
+  border-radius: 50%;
 }
 
 /* Hairline outline so pale tiles hold their edge on the light page and dark ones on the dark page. */
@@ -111,7 +143,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--paper) 14%, transparent);
+  box-shadow: inset 0 0 0 1px var(--tile-edge);
   pointer-events: none;
 }
 
@@ -136,9 +168,38 @@ button.cell:focus-visible {
   transform: scale(1.1);
 }
 
-.cell[data-dim] {
-  opacity: 0.34;
-  filter: saturate(0.7);
+/* Dimming fades the colour only. Numerals stay at full strength on a halo of the page
+   colour (paper on ink ≥ 13:1 in both themes), so mono tiles stay legible mid-tour. */
+.fills,
+.seam,
+.glyphs text {
+  transition:
+    opacity 420ms var(--ease),
+    filter 420ms var(--ease);
+}
+
+.cell[data-dim] .fills {
+  opacity: 0.3;
+  filter: saturate(0.6);
+}
+
+.cell[data-dim] .seam {
+  opacity: 0.3;
+}
+
+.cell[data-dim] .glyphs text {
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-width: 7px;
+  stroke-linejoin: round;
+  paint-order: stroke;
+  opacity: 0.85;
+}
+
+/* Story tour: the half not being answered yet is veiled down to the well. */
+.veil {
+  fill: var(--ink-2);
+  fill-opacity: 0.82;
 }
 
 .tileSvg {
@@ -165,8 +226,8 @@ button.cell:focus-visible {
 
 .ring {
   position: absolute;
-  top: var(--p);
-  left: var(--p);
+  top: 0;
+  left: 0;
   z-index: 6;
   width: var(--c);
   height: var(--c);
@@ -180,19 +241,92 @@ button.cell:focus-visible {
     0 10px 28px -8px rgb(0 0 0 / 0.6);
   transition:
     transform 620ms var(--ease),
-    opacity 240ms ease;
+    opacity 240ms ease,
+    border-radius 300ms ease;
 }
 
 .ring[data-shown] {
   opacity: 1;
 }
 
+.ring[data-circle] {
+  border-radius: 50%;
+}
+
+/* Story tour: persona rings carry a pin; a ghosted ring is where someone was. */
+.ring[data-ghost] {
+  box-shadow: none;
+  outline: 2px dashed color-mix(in srgb, var(--paper) 70%, transparent);
+  outline-offset: 0;
+}
+
+.ring[data-shown][data-ghost] {
+  opacity: 0.7;
+}
+
+.pin,
+.pinInline {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 800 11px/1 var(--body);
+  letter-spacing: 0;
+}
+
+.pin {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  box-shadow: 0 0 0 2px var(--ink);
+}
+
+.ring[data-who='b'] .pin,
+.pinInline[data-who='b'] {
+  border-radius: 4px;
+}
+
+/* "gap N": bracket beside the shared column, from A's row to B's. */
+.gapMark {
+  position: absolute;
+  z-index: 5;
+  left: calc((var(--col) + 1) * (var(--c) + var(--g)) + 4px);
+  top: calc(var(--row) * (var(--c) + var(--g)) + var(--c) / 2);
+  width: 9px;
+  height: calc(var(--rows) * (var(--c) + var(--g)));
+  border: 2px solid var(--paper);
+  border-left: 0;
+  border-radius: 0 6px 6px 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.gapMark[data-shown] {
+  opacity: 1;
+}
+
+.gapLabel {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 4px);
+  transform: translateY(-50%);
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 700 12px/1.2 var(--body);
+  white-space: nowrap;
+}
+
 /* ── Captions set inside the grid ── */
 
 .captions {
   position: absolute;
-  inset: var(--p);
-  /* Above the ring, so "Torn" reads as a name tag on the centre stop. */
+  inset: 0;
   z-index: 7;
   display: grid;
   grid-template-columns: repeat(7, var(--c));
@@ -245,17 +379,6 @@ button.cell:focus-visible {
   grid-area: 6 / 5 / 7 / 8;
 }
 
-/* "Torn" straddles the seam under the centre tile, clear of both rows' numerals. */
-.caption[data-region='c'] {
-  grid-area: 5 / 3 / 6 / 6;
-  align-self: start;
-  justify-self: center;
-  margin: 0;
-  padding: 0.14em 0.6em;
-  border-radius: 999px;
-  transform: translateY(calc(-50% - var(--g) / 2));
-}
-
 .caption[data-active] {
   color: var(--paper);
   border-color: color-mix(in srgb, var(--paper) 45%, transparent);
@@ -265,6 +388,130 @@ button.cell:focus-visible {
 .capEmoji {
   font-size: 1.15em;
   line-height: 1;
+}
+
+/* ── Edge labels: meanings on the board's top/bottom edge, bracketing their quadrant ── */
+
+.edge {
+  display: grid;
+  grid-template-columns: repeat(7, var(--c));
+  column-gap: var(--g);
+  align-items: end;
+  margin-bottom: 10px;
+  font-family: var(--display);
+  font-size: clamp(11.5px, calc(var(--c) * 0.24), 14.5px);
+  font-weight: 650;
+  font-variation-settings: 'wdth' 88;
+  line-height: 1.1;
+}
+
+.edge[data-side='bottom'] {
+  align-items: start;
+  margin: 10px 0 0;
+}
+
+.edgeLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
+  min-width: 0;
+  color: var(--lbl);
+  transition: color 320ms ease;
+}
+
+.edge[data-side='bottom'] .edgeLabel {
+  flex-direction: column-reverse;
+}
+
+.edgeLabel[data-region='tl'],
+.edgeLabel[data-region='bl'] {
+  grid-column: 1 / 4;
+}
+
+.edgeLabel[data-region='tr'],
+.edgeLabel[data-region='br'] {
+  grid-column: 5 / 8;
+}
+
+.edgeText {
+  padding: 0 2px;
+  text-align: center;
+}
+
+.edgeLine {
+  white-space: nowrap;
+}
+
+/* ┌───┐ above the grid, └───┘ below: spans exactly the quadrant's three columns. */
+.bracket {
+  height: 6px;
+  border: 1.5px solid var(--rule-major);
+  border-bottom: 0;
+  border-radius: 3px 3px 0 0;
+  transition: border-color 320ms ease;
+}
+
+.edge[data-side='bottom'] .bracket {
+  border-top: 0;
+  border-bottom: 1.5px solid var(--rule-major);
+  border-radius: 0 0 3px 3px;
+}
+
+.edgeLabel[data-active] {
+  color: var(--paper);
+}
+
+.edgeLabel[data-active] .bracket {
+  border-color: var(--paper);
+}
+
+/* ── "Torn": a small tag in the gap under the centre tile, clear of both rows' numerals ── */
+
+.torn {
+  position: absolute;
+  z-index: 7;
+  left: calc(3 * (var(--c) + var(--g)) + var(--c) / 2);
+  top: calc(4 * (var(--c) + var(--g)) - var(--g) / 2);
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.12em 0.5em;
+  border: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 90%, transparent);
+  color: var(--muted);
+  font: 650 clamp(10.5px, calc(var(--c) * 0.2), 12.5px) / 1.15 var(--display);
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition:
+    color 320ms ease,
+    border-color 320ms ease;
+}
+
+.torn .capEmoji {
+  font-size: 1.05em;
+}
+
+.torn[data-active] {
+  color: var(--paper);
+  border-color: color-mix(in srgb, var(--paper) 45%, transparent);
+}
+
+/* Phone-size tiles: just 🤷 at rest; the word appears while the centre is lit. */
+@container (max-width: 440px) {
+  .torn {
+    padding: 0.12em 0.3em;
+  }
+
+  .torn:not([data-active]) .tornWord {
+    display: none;
+  }
+}
+
+.small .torn:not([data-active]) .tornWord {
+  display: none;
 }
 
 .capText {
@@ -300,11 +547,32 @@ button.cell:focus-visible {
   max-width: 400px;
 }
 
-.readout {
+.readout,
+.stackItem,
+.readInner {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  min-height: 7.4em;
+}
+
+/* Hero read-outs share one grid cell: the box is exactly as tall as the longest stop. */
+.stack {
+  display: grid;
+}
+
+.stackItem {
+  grid-area: 1 / 1;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 300ms ease,
+    visibility 0s 300ms;
+}
+
+.stackItem[data-active] {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 300ms ease;
 }
 
 .readout p {
@@ -364,6 +632,44 @@ button.cell:focus-visible {
   color: var(--muted);
   font-size: 0.95em;
   line-height: 1.45;
+}
+
+/* Story tour read-outs: value chips in the grid's own colours. */
+.readings {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.reading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.86em;
+}
+
+.reading .tri {
+  margin-left: 0;
+}
+
+.readingHalf {
+  color: var(--muted);
+}
+
+.chip {
+  min-width: 2.3em;
+  padding: 1px 6px;
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 1px var(--edge);
+  font-weight: 700;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.readingWord {
+  color: var(--paper);
 }
 
 /* Legend */
@@ -553,6 +859,85 @@ button.cell:focus-visible {
   outline-offset: 2px;
 }
 
+/* Story steps: stories-style segments; the current one fills over the frame's length. */
+.segs {
+  display: flex;
+  flex: 1;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.segs li {
+  flex: 1;
+}
+
+.seg {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.seg::before,
+.segFill {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 5px;
+  margin-top: -2.5px;
+  border-radius: 3px;
+}
+
+.seg::before {
+  background: var(--rule-major);
+}
+
+.seg[data-done]::before {
+  background: color-mix(in srgb, var(--paper) 60%, transparent);
+}
+
+.seg[aria-current='step']::before {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--paper) 40%, transparent);
+}
+
+.segFill {
+  background: var(--paper);
+  transform-origin: left;
+  animation: seg-run linear forwards paused;
+}
+
+.segFill[data-run] {
+  animation-play-state: running;
+}
+
+.root[data-still] .segFill {
+  animation: none;
+}
+
+@keyframes seg-run {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.seg:focus-visible {
+  outline: 2px solid var(--ideal);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .tourNote {
   margin-left: 6px;
   color: var(--lbl);
@@ -563,18 +948,27 @@ button.cell:focus-visible {
 
 /* ── Motion ── */
 
-.root[data-still] .ring,
-.root[data-still] .cell {
-  transition: none;
+.root[data-still] *,
+.root[data-still] *::before {
+  transition: none !important;
 }
 
+/* Reduced motion: no glides, scaling or fades anywhere in the prototype. */
 @media (prefers-reduced-motion: reduce) {
-  .cell,
-  .ring,
-  .caption,
-  .captions,
-  .rampSvg,
-  .dot {
-    transition: none;
+  .root *,
+  .root *::before {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  button.cell:hover,
+  button.cell:focus-visible,
+  .cell[data-on],
+  .rampStep[data-on] .rampSvg {
+    transform: none;
+  }
+
+  .ring {
+    transform: translate(calc(var(--col, 3) * (var(--c) + var(--g))), calc(var(--row, 3) * (var(--c) + var(--g))));
   }
 }
