@@ -124,6 +124,14 @@ body::before {
   inset: 0;
   z-index: -1;
   background-image: radial-gradient(circle at 13.5px 13.5px, var(--dot) 1.1px, transparent 1.7px);
+  /* Faint away from the pointer; the lamp brings them up. Without a lamp (touch, reduced motion) a little stronger. */
+  opacity: 0.4;
+}
+
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  body::before {
+    opacity: 0.7;
+  }
 }
 
 /* Sharper screens draw the full dot; a little smaller keeps it as quiet as on a 1x screen. */
