@@ -237,7 +237,7 @@ describe('matching', () => {
     G: AXIS_IDS.map(() => N - I), notable: AXIS_IDS.map(() => false), rg: 10,
   })
 
-  it('hero splits only when Now clearly favours another archetype', () => {
+  it('hero splits only when the two frames fit no ideology in common', () => {
     expect(deriveResults(payloadFor(-60, 60), cat, CALIBRATION).hero.kind).toBe('split')
     expect(deriveResults(payloadFor(-60, -58), cat, CALIBRATION).hero.kind).toBe('constant')
   })
@@ -250,30 +250,30 @@ describe('matching', () => {
     expect(r.strongestGap).toBeNull()
   })
 
-  it('the displayed match carries its own stability, not the modal winner\'s', () => {
+  it('the nearest carries its own stability, not the modal winner\'s', () => {
     // Extreme scores clamp the bootstrap, so a rival can win most draws; the label must describe what is shown.
     const two = [mk('a', 100), mk('b', 93)]
     const r = deriveResults(payloadFor(100, 100), two, CALIBRATION)
-    if (r.hero.kind === 'constant') {
-      const st = r.hero.ideal.stability
-      expect(st.share).toBeCloseTo(st.wins.get(r.hero.ideal.match.arch.slug) ?? 0)
-    }
+    if (r.hero.kind !== 'constant') throw new Error(r.hero.kind)
+    const st = r.hero.ideal.stability!
+    expect(st.share).toBeCloseTo(st.wins.get(r.hero.ideal.nearest!.arch.slug) ?? 0)
   })
 
   it('a missing here-and-now frame never claims a split', () => {
     const p = { ...payloadFor(-60, 0), N: AXIS_IDS.map(() => null), seN: AXIS_IDS.map(() => null), G: AXIS_IDS.map(() => null) }
-    expect(deriveResults(p, cat, CALIBRATION).hero).toMatchObject({ kind: 'constant', nowMissing: true })
+    expect(deriveResults(p, cat, CALIBRATION).hero).toMatchObject({ kind: 'constant', now: null })
   })
 
-  it('sensitive archetypes need very close + stable to lead', () => {
-    // Closest to 'far' but with wide bands, so not "stable": the best non-sensitive archetype leads.
-    expect(deriveResults(payloadFor(84, 84), cat, CALIBRATION).hero).toMatchObject({ kind: 'constant', ideal: { match: { arch: { slug: 'far' } } } })
-    const r = deriveResults(payloadFor(84, 84, false, 98), cat, CALIBRATION)
-    expect(r.hero.kind).toBe('constant')
-    if (r.hero.kind === 'constant') {
-      expect(r.hero.ideal.match.arch.slug).toBe('right')
-      expect(r.hero.ideal.alsoClose?.arch.slug).toBe('far')
-    }
+  it('sensitive archetypes need to be very close to fit, whatever their stability', () => {
+    // 11 points from 'far': inside the very-close cut, so it fits even with wide error bars.
+    const wide = deriveResults(payloadFor(84, 84, false, 98), cat, CALIBRATION).hero
+    if (wide.kind !== 'constant') throw new Error(wide.kind)
+    expect(wide.ideal.fits.map(m => m.arch.slug)).toEqual(['far', 'right'])
+    // 20 points from 'far': within "loose" but not "very close", so it is held back and 'right' fits alone.
+    const r = deriveResults(payloadFor(75, 75), cat, CALIBRATION)
+    if (r.hero.kind !== 'constant') throw new Error(r.hero.kind)
+    expect(r.hero.ideal.fits.map(m => m.arch.slug)).toEqual(['right'])
+    expect(r.hero.ideal.heldBack.map(m => m.arch.slug)).toEqual(['far'])
   })
 })
 

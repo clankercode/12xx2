@@ -11,8 +11,8 @@ import { profileToPayload } from '../src/engine/payload'
 import { deriveResults } from '../src/engine/results'
 import { distance, type Archetype } from '../src/engine/match'
 import { mulberry32 } from '../src/engine/prng'
-import { MODEL, archetypeSheet, falseRuleOuts, latentSheet, quantile, randomAnswers, respond, type Sheets } from './sim'
-import { validateCommitments } from '../src/engine/commitments'
+import { MODEL, RED_SIM, archetypeSheet, falseRuleOuts, fitSetStats, latentSheet, quantile, randomAnswers, respond, type Sheets } from './sim'
+import { checkArchetype, validateCommitments } from '../src/engine/commitments'
 import type { Calibration } from '../src/engine/calibration'
 import { ALL_ITEMS, itemsForMode } from '../src/data/items'
 import { RED_LINES } from '../src/data/redlines'
@@ -42,6 +42,13 @@ else {
     }
   }
 }
+
+const commitments = validateCommitments(
+  JSON.parse(readFileSync('content/archetypes/commitments.json', 'utf8')),
+  ALL_ITEMS,
+  archetypes.map(a => a.slug),
+  RED_LINES,
+)
 
 const rng = mulberry32(0x12a2)
 const byAxisAll = groupByAxis(ALL_ITEMS)
@@ -175,14 +182,14 @@ for (const mode of MODES) {
 // ---------- μ: headline split margin ----------
 const provisional: Calibration = { version: 1, tauG, mu: 0, rgCuts, careless, labels }
 const margins: number[] = []
-const noGapProfiles: { mode: Mode; ans: Answers; items: Item[] }[] = []
+const noGapProfiles: { mode: Mode; ans: Answers; items: Item[]; slug?: string }[] = []
 for (let d = 0; d < Math.min(DRAWS, 3000); d++) {
   const mode = MODES[d % 3]!
   const items = itemsForMode(mode)
   const a = archetypes[d % archetypes.length]!
   const sheet = d % 2 ? archetypeSheet(rng, items, sheets[a.slug]!, 'ideal') : latentSheet(rng, items)
   const ans = respond(rng, items, sheet, { p: MODEL.copyRates[d % 3]!, pass: MODEL.passRates[(d >> 1) % 3]!, noGap: true })
-  noGapProfiles.push({ mode, ans, items })
+  noGapProfiles.push({ mode, ans, items, ...(d % 2 && { slug: a.slug }) })
   const prof = computeProfile(items, ans, provisional)
   const uI = AXIS_IDS.map(ax => prof.I[ax].score)
   const uN = AXIS_IDS.map(ax => prof.N[ax].score)
@@ -197,15 +204,41 @@ const cal: Calibration = { version: 1, tauG, mu, rgCuts, careless, labels }
 let falseSplit = 0
 let anyNotable = 0
 let n = 0
-for (const { mode, ans, items } of noGapProfiles) {
+// False splits per length, counted only over respondents who could be split at all: a split needs
+// the ideal frame to fit something, and most "typical" (latent) respondents fit nothing.
+const splitBy = Object.fromEntries(MODES.map(m => [m, { split: 0, eligible: 0, nowEmpty: 0 }])) as Record<Mode, { split: number; eligible: number; nowEmpty: number }>
+// Simulate off-axis answers separately so none of the threshold RNG draws change.
+const splitRedRng = mulberry32(0x5f117)
+for (const { mode, ans: axisAnswers, items, slug } of noGapProfiles) {
+  const redSheet = slug ? archetypeSheet(splitRedRng, RED_SIM, sheets[slug]!, 'ideal') : latentSheet(splitRedRng, RED_SIM)
+  const redAnswers = respond(splitRedRng, RED_SIM, redSheet, {
+    p: MODEL.copyRates[n % 3]!, pass: MODEL.passRates[(n >> 1) % 3]!, noGap: true,
+  })
+  const ans = { ...axisAnswers, ...redAnswers }
+  const asked = new Set([...items.map(it => it.id), ...RED_LINES.map(r => r.id)])
   const prof = computeProfile(items, ans, cal)
-  const payload = profileToPayload(prof, { catalogue: cat.version, mode, input: 'grid' })
-  const r = deriveResults(payload, archetypes, cal)
-  if (r.hero.kind === 'split') falseSplit++
+  const ruledOut = prof.careless ? [] : archetypes.flatMap((a, k) => checkArchetype(a.slug, commitments, ans, asked).all === 'fail' ? [k] : [])
+  const payload = profileToPayload(prof, { catalogue: cat.version, mode, input: 'grid', ruledOut })
+  const r = deriveResults(payload, archetypes, cal, new Set(ruledOut.map(k => archetypes[k]!.slug)))
+  const h = r.hero
+  if (h.kind === 'split') falseSplit++
+  if ((h.kind === 'split' || h.kind === 'constant') && h.now) {
+    splitBy[mode].eligible++
+    if (h.kind === 'split') splitBy[mode].split++
+    // Ideal fits, here and now fits nothing: counted as a split before 2026-10-31 (fit-set review S1).
+    if (h.kind === 'constant' && !h.now.fits.length) splitBy[mode].nowEmpty++
+  }
   if (AXIS_IDS.some(ax => prof.gaps[ax].notable)) anyNotable++
   n++
 }
 report.splitFalseRate = Number((falseSplit / n).toFixed(4))
+report.splitFalseByMode = Object.fromEntries(
+  MODES.map(m => {
+    const x = splitBy[m]
+    const r4 = (v: number) => Number((x.eligible ? v / x.eligible : 0).toFixed(4))
+    return [m, { rate: r4(x.split), nowEmptyRate: r4(x.nowEmpty), eligible: x.eligible }]
+  }),
+)
 report.anyNotableFalseRate = Number((anyNotable / n).toFixed(4))
 
 // Power: true keyed shift on one axis.
@@ -230,7 +263,8 @@ for (const shift of [1, 2]) {
 report.power = power
 report.archetypeRecovery = recovery
 
-// Random clickers: how often they still get a headline (should be rare thanks to the careless flag).
+// Legacy axis-only random-clicker diagnostic (no commitment rule-outs). The combined-pipeline
+// named-fit rates are report.fitSet.random, which includes the red-line answers and rule-outs.
 let rndHero = 0
 const RT = 600
 for (let d = 0; d < RT; d++) {
@@ -244,16 +278,23 @@ report.randomGetsHeadline = Number((rndHero / RT).toFixed(3))
 
 // ---------- Core commitments: adherents simulated from our coded sheets, ruled out of their own ideology (consistency with our coding only) ----------
 // Own RNG stream, drawn last, so every threshold above keeps its exact draws.
-const commitments = validateCommitments(
-  JSON.parse(readFileSync('content/archetypes/commitments.json', 'utf8')),
-  ALL_ITEMS,
-  archetypes.map(a => a.slug),
-  RED_LINES,
-)
 const fro = falseRuleOuts(mulberry32(0xc0331), sheets, commitments, Math.max(50, Math.round(DRAWS / 20)))
 // Headline figure: the full-length test, where every commitment is asked.
 report.commitmentFalseRuleOut = fro ? fro.byMode.full : null
 report.commitmentFalseRuleOutDetail = fro
+
+// ---------- Fit-set headline: who fits their own ideology, and how big fit sets are ----------
+// Own RNG stream, drawn after everything above, so no threshold's draws move.
+report.fitSet = fitSetStats(
+  mulberry32(0xf175e7),
+  archetypes,
+  sheets,
+  commitments,
+  cal,
+  cat.version,
+  Math.max(10, Math.round(DRAWS / 80)),
+  Math.max(100, Math.round(DRAWS / 8)),
+)
 report.model = MODEL
 report.draws = DRAWS
 report.generated = process.env.CAL_DATE ?? new Date().toISOString().slice(0, 10)

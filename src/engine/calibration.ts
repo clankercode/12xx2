@@ -12,7 +12,7 @@ export interface Calibration {
   version: number
   /** Minimum |G| for a notable axis gap, keyed by paired item count "3".."16" (MAX_AXIS_ITEMS). */
   tauG: Record<string, number>
-  /** Minimum Now-distance margin before the hero splits into Ideal: A · Here and now: B. */
+  /** Legacy nearest-match margin, retained as a diagnostic; the fit-set headline does not use it. */
   mu: number
   /** Reality Gap band cut-points [veryConstant | mostlyConstant | oftenSplits | splitsALot]. */
   rgCuts: [number, number, number]

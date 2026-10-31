@@ -3,6 +3,12 @@ import { AXIS_IDS, MODES, type Answer, type Answers, type AxisId, type Item, typ
 import { gaussian } from '../src/engine/prng'
 import { checkArchetype, type CommitmentBook } from '../src/engine/commitments'
 import { itemsForMode } from '../src/data/items'
+import { computeProfile } from '../src/engine/score'
+import { profileToPayload } from '../src/engine/payload'
+import { deriveResults } from '../src/engine/results'
+import type { Archetype } from '../src/engine/match'
+import type { Calibration } from '../src/engine/calibration'
+import type { FitStats, FitStatsRow } from '../src/engine/fitstats'
 import { RED_LINES } from '../src/data/redlines'
 
 /**
@@ -134,4 +140,77 @@ export function falseRuleOuts(rng: () => number, sheets: Sheets, book: Commitmen
     byMode[mode] = Number((out / (perArchetype * slugs.length)).toFixed(4))
   }
   return { byMode, byArchetype, draws: perArchetype }
+}
+
+/**
+ * The fit-set headline end to end (score → rule-outs → payload → deriveResults): how often simulated
+ * sincere adherents fit their own ideology, and how big fit sets are for adherents, typical
+ * respondents and random clickers.
+ */
+export function fitSetStats(
+  rng: () => number,
+  archetypes: readonly Archetype[],
+  sheets: Sheets,
+  book: CommitmentBook,
+  cal: Calibration,
+  catalogue: number,
+  perArchetype: number,
+  others: number,
+): FitStats {
+  const slugs = archetypes.map(a => a.slug)
+  const out = {} as FitStats
+  const blank = () => ({ own: 0, size: 0, sized: 0, empty: 0, one: 0, over: 0, named: 0, n: 0 })
+  type Acc = ReturnType<typeof blank>
+  const run = (acc: Acc, items: readonly Item[], ans: Answers, mode: Mode, own?: string) => {
+    const asked = new Set([...items.map(i => i.id), ...RED_LINES.filter(r => ans[r.id]).map(r => r.id)])
+    const prof = computeProfile(items, ans, cal)
+    const ruledOut = prof.careless ? [] : slugs.flatMap((s, k) => (checkArchetype(s, book, ans, asked).all === 'fail' ? [k] : []))
+    const payload = profileToPayload(prof, { catalogue, mode, input: 'grid', ruledOut })
+    const r = deriveResults(payload, archetypes, cal, new Set(ruledOut.map(k => slugs[k]!)))
+    acc.n++
+    const h = r.hero
+    if (h.kind === 'unreliable' || h.kind === 'insufficient') return
+    const f = h.ideal.fits
+    acc.sized++
+    acc.size += f.length
+    if (f.length === 0) acc.empty++
+    if (f.length === 1) acc.one++
+    if (f.length > 3) acc.over++
+    if (h.kind !== 'no-fit') acc.named++
+    if (own && f.some(m => m.arch.slug === own)) acc.own++
+  }
+  const row = (a: Acc, withOwn: boolean): FitStatsRow => ({
+    ...(withOwn && { ownInFit: Number((a.own / a.n).toFixed(4)) }),
+    meanSize: Number((a.size / Math.max(1, a.sized)).toFixed(2)),
+    empty: Number((a.empty / a.n).toFixed(4)),
+    one: Number((a.one / a.n).toFixed(4)),
+    overThree: Number((a.over / a.n).toFixed(4)),
+    named: Number((a.named / a.n).toFixed(4)),
+    n: a.n,
+  })
+  out.adherents = {} as Record<Mode, FitStatsRow>
+  out.typical = {} as Record<Mode, FitStatsRow>
+  out.random = {} as Record<Mode, FitStatsRow>
+  for (const mode of MODES) {
+    const items = itemsForMode(mode)
+    const simItems = simItemsForMode(mode)
+    const adh = blank()
+    for (const a of archetypes) {
+      for (let d = 0; d < perArchetype; d++) {
+        const sheet = archetypeSheet(rng, simItems, sheets[a.slug]!, 'both')
+        run(adh, items, respond(rng, simItems, sheet, { p: MODEL.copyRates[d % 3]!, pass: MODEL.passRates[(d >> 1) % 3]! }), mode, a.slug)
+      }
+    }
+    out.adherents[mode] = row(adh, true)
+    const typ = blank()
+    const rnd = blank()
+    for (let d = 0; d < others; d++) {
+      run(typ, items, respond(rng, simItems, latentSheet(rng, simItems), { p: MODEL.copyRates[d % 3]!, pass: MODEL.passRates[(d >> 1) % 3]! }), mode)
+      run(rnd, items, randomAnswers(rng, simItems), mode)
+    }
+    out.typical[mode] = row(typ, false)
+    out.random[mode] = row(rnd, false)
+  }
+  out.perArchetype = perArchetype
+  return out
 }

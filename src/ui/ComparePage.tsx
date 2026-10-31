@@ -9,7 +9,7 @@ import { NOT_COMPARABLE, clearCount, drawCompareCard } from '../share/compareCar
 import { useStore } from './App'
 import { AxisChart } from './AxisChart'
 import { DECODE_MESSAGE } from './SharedPage'
-import { MATCH_LABEL, heroName, nearestNote } from './copy'
+import { CANT_TELL, MATCH_LABEL, heroName, nearestNote } from './copy'
 import css from './Results.module.css'
 import share from './Share.module.css'
 
@@ -23,7 +23,14 @@ const PAGE_SUMMARY: Record<CompareSummary, string> = {
   none: 'No axis clearly differs, in theory or here and now.',
 }
 
-const topViable = (r: Results) => r.matchesIdeal.find(m => !m.ruledOut)
+/** The measurement under one person's headline: the nearest for an empty fit set, else what the set means. */
+function fitNoteFor(r: Results): string | null {
+  const h = r.hero
+  if (h.kind === 'no-fit') return nearestNote(h.ideal)
+  if (h.kind !== 'constant' && h.kind !== 'split') return null
+  const f = h.ideal.fits
+  return f.length > 1 ? `In theory: ${CANT_TELL}` : `In theory: ${MATCH_LABEL[f[0]!.label].toLowerCase()}`
+}
 
 export function ComparePage({ mine, theirs }: { mine: string; theirs: string }) {
   const { own } = useStore()
@@ -62,11 +69,7 @@ export function ComparePage({ mine, theirs }: { mine: string; theirs: string }) 
               <h1 className={css.heroTitle} style={{ fontSize: 'clamp(1.6rem, 4vw, 2.6rem)' }}>
                 {heroName(r)}
               </h1>
-              {r.hero.kind === 'no-close' ? (
-                <p className="small muted">{nearestNote(r.hero.nearest)}</p>
-              ) : (
-                topViable(r) && <p className="small muted">{MATCH_LABEL[topViable(r)!.label]}</p>
-              )}
+              {fitNoteFor(r) && <p className="small muted">{fitNoteFor(r)}</p>}
             </div>
           ))}
         </div>

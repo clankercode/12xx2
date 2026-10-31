@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
-import { nameable, type HeroPick, type Match, type Results } from '../engine/results'
+import { fits, sameInBothFrames, type FitSet, type Match, type Results } from '../engine/results'
+import type { StabilityLabel } from '../engine/match'
 import type { ArchetypeCheck } from '../engine/commitments'
 import { AXES } from '../data/axes'
 import { CALIBRATION } from '../data/calibration'
@@ -10,7 +11,7 @@ import wgi from '../data/wgi.json'
 import { AxisChart, type Overlay } from './AxisChart'
 import { CoreCommitments } from './Commitments'
 import { label as answerLabel } from './answer'
-import { GAP_TYPE, MATCH_LABEL, MODE_NAME, RG_BAND, STABILITY_LABEL, constantNote, nearestNote, noCloseNote, noMatchTitle, pickTitle } from './copy'
+import { CANT_TELL, GAP_TYPE, MATCH_LABEL, MODE_NAME, RG_BAND, STABILITY_LABEL, constantNote, distanceNote, fitTitle, noFitNote } from './copy'
 import css from './Results.module.css'
 
 const ALL_TEXT = new Map(ALL_ITEMS.map(i => [i.id, i.text]))
@@ -22,20 +23,54 @@ export function noGapBaseline(): number | null {
 }
 
 /** Short plain-language glosses for the stability labels (spec: matches are re-run with jittered scores). */
-const STABILITY_GLOSS: Record<HeroPick['stability']['label'], string> = {
-  stable: 'same top match in 70%+ of re-runs',
-  'fairly-stable': 'same top match in 40–70% of re-runs',
-  'toss-up': 'other ideologies are about as close',
+const STABILITY_GLOSS: Record<StabilityLabel, string> = {
+  stable: 'same nearest in 70%+ of re-runs',
+  'fairly-stable': 'same nearest in 40–70% of re-runs',
+  'toss-up': 'others are about as near',
 }
 
-function stabilityText(p: HeroPick) {
-  const l = p.stability.label
+function stabilityText(f: FitSet) {
+  if (!f.stability) return null
+  const l = f.stability.label
   return (
     <>
-      {STABILITY_LABEL[l]}{' '}
+      {' '}
+      · {STABILITY_LABEL[l]}{' '}
       <span className="muted">
         (<a href="#/method">{STABILITY_GLOSS[l]}</a>)
       </span>
+    </>
+  )
+}
+
+/** The "fits" cuts for one test length. */
+type Cuts = { loose: number; veryClose: number }
+
+/** Distance and stability of the nearest ideology, labelled as measurements under the verdict. */
+function Measured({ f, cuts }: { f: FitSet; cuts: Cuts }) {
+  return (
+    <p className="small muted" data-measure>
+      Measured: {distanceNote(f, cuts)}
+      {stabilityText(f)}.
+    </p>
+  )
+}
+
+/** Ideologies the fit-set rule left out of the headline although they are within range: listed, never named as a match. */
+function LeftOut({ f, who }: { f: FitSet; who: string }) {
+  return (
+    <>
+      {f.ruledOutInRange.length > 0 && (
+        <p className="small muted">
+          Within range but ruled out ({who === 'You' ? 'you contradict' : 'these answers contradict'} a core or red-line commitment):{' '}
+          {f.ruledOutInRange.map(m => m.arch.name).join(', ')}.
+        </p>
+      )}
+      {f.heldBack.length > 0 && (
+        <p className="small muted">
+          Also close: {f.heldBack.map(m => m.arch.name).join(', ')} (sensitive ideologies are named only when very close).
+        </p>
+      )}
     </>
   )
 }
@@ -44,6 +79,7 @@ export function Hero({ r, who = 'You' }: { r: Results; who?: string }) {
   const h = r.hero
   const p = r.payload
   const noGap = noGapBaseline()
+  const cuts = CALIBRATION.labels[p.mode]
   return (
     <section className={css.hero} aria-label="Headline result">
       <div className={css.heroMeta}>
@@ -63,22 +99,18 @@ export function Hero({ r, who = 'You' }: { r: Results; who?: string }) {
           </p>
         </div>
       )}
-      {h.kind === 'none-fit' && (
-        <div>
-          <h1 className={css.heroTitle}>No listed ideology fits</h1>
-          <p>
-            {who === 'You' ? 'You contradict' : 'These answers contradict'} a core commitment of every ideology close enough to
-            name. The chart below is shown as answered, and the closest ideologies are listed with what rules them out.
-          </p>
-        </div>
-      )}
-      {h.kind === 'no-close' && (
-        <div>
-          <h1 className={css.heroTitle}>{noMatchTitle(h.nearest)}</h1>
-          <p className={css.heroSub}>
-            {nearestNote(h.nearest)} · {stabilityText(h.nearest)}. {noCloseNote(h.nearest, who)}
-          </p>
-          <RuledOutNote pick={h.nearest} who={who} />
+      {h.kind === 'no-fit' && (
+        <div data-fit-count={0}>
+          <h1 className={css.heroTitle}>No close match</h1>
+          <p className={css.heroSub}>{noFitNote(h.ideal, who)}</p>
+          <Measured f={h.ideal} cuts={cuts} />
+          <LeftOut f={h.ideal} who={who} />
+          {h.now && h.now.fits.length > 0 && (
+            <p className="small">
+              Here and now {who === 'You' ? 'you fit' : 'these answers fit'} <strong>{fitTitle(h.now)}</strong>
+              {h.now.fits.length > 1 && <>; {CANT_TELL}</>}.
+            </p>
+          )}
           <GapHook r={r} />
         </div>
       )}
@@ -90,24 +122,24 @@ export function Hero({ r, who = 'You' }: { r: Results; who?: string }) {
       )}
       {h.kind === 'split' && (
         <div className={css.pair}>
-          <HeroHalf frame="I" pick={h.ideal} who={who} />
+          <HeroHalf f={h.ideal} who={who} cuts={cuts} />
           <span className={css.pairArrow} aria-hidden>
             →
           </span>
-          <HeroHalf frame="N" pick={h.now} who={who} />
+          <HeroHalf f={h.now} who={who} cuts={cuts} />
         </div>
       )}
       {h.kind === 'constant' && (
-        <div>
-          <p className={css.heroKicker}>Constant</p>
-          <h1 className={css.heroTitle}>{h.ideal.match.arch.name}</h1>
-          <p className={css.heroSub}>
-            {MATCH_LABEL[h.ideal.match.label]} · {stabilityText(h.ideal)}. {constantNote(h, who)}
+        <div data-fit-count={h.ideal.fits.length}>
+          <p className={css.heroKicker}>
+            {sameInBothFrames(h) ? 'In theory and here and now, ' : 'In theory, '}
+            {who === 'You' ? 'you fit' : 'these answers fit'}
           </p>
-          {h.ideal.alsoClose && (
-            <p className="small muted">Also close: {h.ideal.alsoClose.arch.name}.</p>
-          )}
-          <RuledOutNote pick={h.ideal} who={who} />
+          <h1 className={`${css.heroTitle} ${h.ideal.fits.length > 1 ? css.heroTitleList : ''}`}>{fitTitle(h.ideal)}</h1>
+          {h.ideal.fits.length > 1 && <p className={css.heroSub}>{fitSetSub(h.ideal)}</p>}
+          <p className={css.heroSub}>{constantNote(h, who)}</p>
+          <Measured f={h.ideal} cuts={cuts} />
+          <LeftOut f={h.ideal} who={who} />
           <GapHook r={r} />
         </div>
       )}
@@ -143,30 +175,29 @@ function GapHook({ r }: { r: Results }) {
   )
 }
 
-function HeroHalf({ frame, pick, who }: { frame: 'I' | 'N'; pick: HeroPick; who: string }) {
-  return (
-    <div className={css.half}>
-      <p className={`${css.heroKicker} ${frame === 'I' ? 'ideal' : 'now'}`}>
-        <span className={frame === 'I' ? 'glyph-ideal' : 'glyph-now'} aria-hidden /> {frame === 'I' ? 'Ideal' : 'Here and now'}
-      </p>
-      <h1 className={css.heroTitle}>{pickTitle(pick)}</h1>
-      <p className={css.heroSub}>
-        {nameable(pick) ? MATCH_LABEL[pick.match.label] : nearestNote(pick)} · {stabilityText(pick)}
-        {frame === 'N' && nameable(pick) && <span className="muted"> · your here-and-now answers sit closest to this ideal</span>}
-      </p>
-      {pick.alsoClose && <p className="small muted">Also close: {pick.alsoClose.arch.name}</p>}
-      <RuledOutNote pick={pick} who={who} />
-    </div>
-  )
+/** "This test can’t tell them apart", with the full list when the headline shortened it. */
+function fitSetSub(f: FitSet): string {
+  const more = f.fits.length > 4 ? ` All ${f.fits.length}: ${f.fits.map(m => m.arch.name).join(', ')}.` : ''
+  return `${CANT_TELL.charAt(0).toUpperCase()}${CANT_TELL.slice(1)}.${more}`
 }
 
-function RuledOutNote({ pick, who }: { pick: HeroPick; who: string }) {
-  if (!pick.nearestRuledOut) return null
+function HeroHalf({ f, who, cuts }: { f: FitSet; who: string; cuts: Cuts }) {
+  const frame = f.frame
   return (
-    <p className="small muted">
-      Closest by distance: {pick.nearestRuledOut.arch.name}, but {who === 'You' ? 'you contradict' : 'these answers contradict'}{' '}
-      one of its core commitments.
-    </p>
+    <div className={css.half} data-fit-count={f.fits.length}>
+      <p className={`${css.heroKicker} ${frame === 'I' ? 'ideal' : 'now'}`}>
+        <span className={frame === 'I' ? 'glyph-ideal' : 'glyph-now'} aria-hidden /> {frame === 'I' ? 'Ideal' : 'Here and now'}
+        {f.fits.length > 0 && <>: {who === 'You' ? 'you fit' : 'these answers fit'}</>}
+      </p>
+      <h1 className={`${css.heroTitle} ${f.fits.length > 1 ? css.heroTitleList : ''}`}>{fitTitle(f)}</h1>
+      {f.fits.length > 1 && <p className={css.heroSub}>{fitSetSub(f)}</p>}
+      {f.fits.length === 0 && <p className={css.heroSub}>{noFitNote(f, who)}</p>}
+      {frame === 'N' && f.fits.length > 0 && (
+        <p className="small muted">Your here-and-now answers, compared with each ideology’s ideal.</p>
+      )}
+      <Measured f={f} cuts={cuts} />
+      <LeftOut f={f} who={who} />
+    </div>
   )
 }
 
@@ -259,13 +290,17 @@ function MatchList({ title, frame, list, checks }: { title: string; frame: 'I' |
                 <span className={`${css.matchLabel} ${css.ruledOut}`}>
                   <span aria-hidden>✘</span> Ruled out
                 </span>
+              ) : fits(m) ? (
+                <span className={`${css.matchLabel} ${css.fits}`}>
+                  <span aria-hidden>✔</span> Fits · {MATCH_LABEL[m.label]}
+                </span>
               ) : (
                 <span className={css.matchLabel}>{MATCH_LABEL[m.label]}</span>
               )}
             </div>
             {m.ruledOut && (
               <p className="small">
-                Contradicts a core commitment. {contradiction(m, checks)}
+                Contradicts a core or red-line commitment. {contradiction(m, checks)}
               </p>
             )}
             <p className="small">{m.arch.summary}</p>

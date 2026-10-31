@@ -2,8 +2,9 @@
  * Link previews (spec §6.6). Runs after `vite build`:
  *
  * - writes one 1200×630 PNG per archetype plus a default to dist/og/;
- * - writes stub pages dist/p/<slug>/ ("Constant") and dist/p/<ideal>/<now>/ (split),
- *   each a 200 copy of the app shell with its own Open Graph tags;
+ * - writes stub pages dist/p/<slug>/ (both frames fit exactly that ideology) and dist/p/<ideal>/<now>/
+ *   (a split whose frames each fit exactly one), each a 200 copy of the app shell with its own Open
+ *   Graph tags. Fit sets of two or more get no stub (src/ui/ShareSheet previewPath), so the set stays finite;
  * - adds default Open Graph tags to dist/index.html.
  *
  * Sensitive archetypes never get stubs (the app never offers a preview link for them).
@@ -140,8 +141,8 @@ const open = CATALOGUE.filter(x => !x.sensitive)
 let n = 0
 for (const a of open) {
   write(`${DIST}/p/${a.slug}`, page({
-    title: `In theory and here and now: ${a.name}`,
-    description: `Someone’s 12 Axes² result: closest to ${a.name} for their ideal system and for here and now. ${desc}`,
+    title: `In theory and here and now, fits ${a.name}`,
+    description: `Someone’s 12 Axes² result: their answers fit ${a.name}, for their ideal system and for here and now. ${desc}`,
     url: `${site}p/${a.slug}/`,
     image: `${site}og/${a.slug}.png`,
   }))
@@ -149,8 +150,8 @@ for (const a of open) {
   for (const b of open) {
     if (b.slug === a.slug) continue
     write(`${DIST}/p/${a.slug}/${b.slug}`, page({
-      title: `In theory: ${a.name}. Here and now: ${b.name}.`,
-      description: `Someone’s 12 Axes² result: ${a.name} as an ideal, ${b.name} for here and now. ${desc}`,
+      title: `In theory, fits ${a.name}. Here and now, fits ${b.name}.`,
+      description: `Someone’s 12 Axes² result: their ideal-system answers fit ${a.name}, their here-and-now answers fit ${b.name}. ${desc}`,
       url: `${site}p/${a.slug}/${b.slug}/`,
       image: `${site}og/${a.slug}.png`,
     }))

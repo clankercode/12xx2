@@ -84,6 +84,11 @@ intro-shots out="shots/intro":
 card-shots out="shots/cards":
     pnpm tsx scripts/card-shots.ts http://localhost:21313/ {{out}}
 
+# Needs a dev server. Every fit-set headline case (one, several, more than 3, none, split, ruled-out
+# nearest, overlapping frames) at 1280 and 390 in dark and light, shared view, compare and cards.
+fit-shots base="http://localhost:21313/" out="shots/fit":
+    pnpm tsx scripts/fit-shots.ts {{base}} {{out}}
+
 # Needs `just dev` running. Split-tile grid: landing hero, quiz and how-to practice grids at desktop and phone width,
 # dark and light, every palette, initial/hover/focus/selected states, into shots/hero/.
 hero-shots out="shots/hero":

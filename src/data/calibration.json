@@ -91,7 +91,24 @@
   },
   "rgNoGapMedian": 7,
   "rgNoGapP0": 14.1,
-  "splitFalseRate": 0.0123,
+  "splitFalseRate": 0.0023,
+  "splitFalseByMode": {
+   "quick": {
+    "rate": 0.0107,
+    "nowEmptyRate": 0.0618,
+    "eligible": 469
+   },
+   "standard": {
+    "rate": 0,
+    "nowEmptyRate": 0.0159,
+    "eligible": 502
+   },
+   "full": {
+    "rate": 0.0044,
+    "nowEmptyRate": 0.0724,
+    "eligible": 456
+   }
+  },
   "anyNotableFalseRate": 0.032,
   "power": {
    "1 point (33 on the axis scale)": {
@@ -119,7 +136,7 @@
     "top3": 1
    }
   },
-  "randomGetsHeadline": 0.01,
+  "randomGetsHeadline": 0.012,
   "commitmentFalseRuleOut": 0.0001,
   "commitmentFalseRuleOutDetail": {
    "byMode": {
@@ -178,6 +195,90 @@
     "critical-rationalism": 0
    },
    "draws": 400
+  },
+  "fitSet": {
+   "adherents": {
+    "quick": {
+     "ownInFit": 0.8333,
+     "meanSize": 2.17,
+     "empty": 0.0421,
+     "one": 0.3517,
+     "overThree": 0.16,
+     "named": 0.8485,
+     "n": 4800
+    },
+    "standard": {
+     "ownInFit": 0.9265,
+     "meanSize": 1.64,
+     "empty": 0.0579,
+     "one": 0.5223,
+     "overThree": 0.0508,
+     "named": 0.9398,
+     "n": 4800
+    },
+    "full": {
+     "ownInFit": 0.9208,
+     "meanSize": 1.17,
+     "empty": 0.0733,
+     "one": 0.7325,
+     "overThree": 0.0006,
+     "named": 0.9267,
+     "n": 4800
+    }
+   },
+   "typical": {
+    "quick": {
+     "meanSize": 0.07,
+     "empty": 0.846,
+     "one": 0.032,
+     "overThree": 0.002,
+     "named": 0.042,
+     "n": 1000
+    },
+    "standard": {
+     "meanSize": 0.01,
+     "empty": 0.988,
+     "one": 0.008,
+     "overThree": 0,
+     "named": 0.009,
+     "n": 1000
+    },
+    "full": {
+     "meanSize": 0,
+     "empty": 0.999,
+     "one": 0.001,
+     "overThree": 0,
+     "named": 0.001,
+     "n": 1000
+    }
+   },
+   "random": {
+    "quick": {
+     "meanSize": 0,
+     "empty": 0.085,
+     "one": 0,
+     "overThree": 0,
+     "named": 0,
+     "n": 1000
+    },
+    "standard": {
+     "meanSize": 0,
+     "empty": 0.108,
+     "one": 0,
+     "overThree": 0,
+     "named": 0,
+     "n": 1000
+    },
+    "full": {
+     "meanSize": 0,
+     "empty": 0.118,
+     "one": 0,
+     "overThree": 0,
+     "named": 0,
+     "n": 1000
+    }
+   },
+   "perArchetype": 100
   },
   "model": {
    "thetaRange": 2.5,

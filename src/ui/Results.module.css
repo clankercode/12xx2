@@ -57,6 +57,11 @@
   overflow-wrap: anywhere;
 }
 
+/* Several ideologies in the fit set: smaller, so three long names still fit. */
+.heroTitleList {
+  font-size: clamp(1.6rem, 4vw, 2.7rem);
+}
+
 .heroSub {
   color: var(--paper);
   margin: 0 0 6px;
@@ -256,6 +261,11 @@
 
 .ruledOut {
   color: var(--alert);
+  font-weight: 600;
+}
+
+.fits {
+  color: var(--ok);
   font-weight: 600;
 }
 

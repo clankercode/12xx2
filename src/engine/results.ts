@@ -3,7 +3,6 @@ import type { Calibration } from './calibration'
 import { payloadSeed, type Payload } from './payload'
 import {
   coverageOk,
-  distance,
   labelFor,
   rank,
   rankJoint,
@@ -22,31 +21,49 @@ export interface Match {
   d: number
   label: MatchLabel
   why: WhyLine
-  /** The answers contradict one of its core commitments: listed, but never "your match". */
+  /** The answers contradict one of its core or red-line commitments: listed, but never "your match". */
   ruledOut: boolean
+  /** The frame has no scored position, so this measurement cannot be a fit. */
+  flat?: true
 }
 
-export interface HeroPick {
-  match: Match
-  stability: Stability
-  /** A sensitive archetype that ranked first but did not pass the stricter gate. */
-  alsoClose?: Match
-  /** The nearest archetype by distance, when a core commitment rules it out. */
-  nearestRuledOut?: Match
-  /** Every scored axis came out at exactly 0 (e.g. the same answer to every statement): no position to name. */
+/**
+ * One frame's fit set (the headline rule): every ideology the answers FIT in that frame. An
+ * ideology fits when no core or red-line commitment rules it out and its distance is within the "loose" cut
+ * (the 95th percentile of simulated sincere adherents' distance to their own ideology). A sensitive
+ * ideology has the stricter "very close" cut (spec §2.6). Distance orders the set and is shown as a
+ * measurement; it never picks a single winner out of the set.
+ */
+export interface FitSet {
+  frame: 'I' | 'N'
+  /** Every scored axis is exactly zero: no position to name, regardless of distance. */
   flat?: true
+  /** Every ideology that fits, nearest first. Empty = no close match. */
+  fits: Match[]
+  /** The nearest ideology not ruled out (a measurement, fit or not); null when all are ruled out. */
+  nearest: Match | null
+  /** How often the nearest stays nearest when the scores are jittered by their error bars (a measurement). */
+  stability: Stability | null
+  /** Within the "loose" cut but ruled out by a core or red-line commitment, nearest first. */
+  ruledOutInRange: Match[]
+  /** Sensitive ideologies within the "loose" cut but outside their stricter "very close" cut: listed, never named. */
+  heldBack: Match[]
 }
 
 export type Hero =
   | { kind: 'unreliable' }
   | { kind: 'insufficient' }
-  /** Every ideology close enough to lead is ruled out by a core commitment. */
-  | { kind: 'none-fit' }
-  /** The nearest ideology fails the site's own breakpoint (beyond "loose", or a toss-up): a measurement, never a match. */
-  | { kind: 'no-close'; nearest: HeroPick }
-  /** `now` can fail `nameable` (no close match here and now); it is then shown as a measurement only. */
-  | { kind: 'split'; ideal: HeroPick; now: HeroPick }
-  | { kind: 'constant'; ideal: HeroPick; leaning?: HeroPick; nowMissing?: boolean }
+  /** The ideal frame fits no listed ideology: "No close match", the nearest shown as a measurement. */
+  | { kind: 'no-fit'; ideal: FitSet; now: FitSet | null }
+  /** Both frames fit something, and their fit sets share no ideology. */
+  | { kind: 'split'; ideal: FitSet; now: FitSet }
+  /**
+   * The ideal frame fits, and it is not a split: here and now is missing (null), shares at least one
+   * fitting ideology, or fits nothing (`now.fits` empty). An empty here-and-now set is not a split:
+   * the "fits" cut is the 95th percentile, so about 1 in 20 sincere here-and-now frames lands just
+   * outside it by noise alone (docs/method/fit-set.md, decision 3).
+   */
+  | { kind: 'constant'; ideal: FitSet; now: FitSet | null }
 
 export interface AxisRow {
   axis: AxisId
@@ -91,7 +108,7 @@ function toMatch(
   mode: Payload['mode'],
   out: ReadonlySet<string>,
 ): Match {
-  return { arch: r.arch, d: r.d, label: labelFor(r.d, cal.labels[mode]), why: why(u, r.arch[which], r.arch.weight), ruledOut: out.has(r.arch.slug) }
+  return { arch: r.arch, d: r.d, label: labelFor(r.d, cal.labels[mode]), why: why(u, r.arch[which], r.arch.weight), ruledOut: out.has(r.arch.slug), ...(isFlat(u) && { flat: true as const }) }
 }
 
 /** The top 3 not ruled out, plus any ruled-out archetype that would have ranked in the top 3, in rank order. */
@@ -108,11 +125,6 @@ export function topWithRuledOut(ranked: readonly Ranked[], out: ReadonlySet<stri
   return list
 }
 
-/**
- * Sensitive archetypes (spec §2.6) lead only when "very close" and "stable";
- * otherwise the best non-sensitive archetype leads and the sensitive one is
- * listed as also close.
- */
 /** Stability of a specific displayed match (its own bootstrap win share), not of the modal winner. */
 function stabilityOf(stab: Stability, slug: string): Stability {
   const share = stab.wins.get(slug) ?? 0
@@ -120,28 +132,32 @@ function stabilityOf(stab: Stability, slug: string): Stability {
   return { ...stab, share, label }
 }
 
-/**
- * The breakpoint for naming an ideology in any headline: within the "loose" cut and not a
- * toss-up. Below it the nearest ideology is shown only as a labelled measurement.
- */
-export function nameable(p: HeroPick): boolean {
-  return !p.flat && p.match.label !== 'none' && p.stability.label !== 'toss-up'
+/** Does this ranked match fit? Not ruled out, and within the "loose" cut ("very close" if sensitive). */
+export function fits(m: Match): boolean {
+  return !m.flat && !m.ruledOut && (m.arch.sensitive ? m.label === 'very-close' : m.label !== 'none')
 }
 
-/**
- * All scored axes at exactly 0. Balanced keying turns any straight line (all neutral, all "slightly
- * agree", …) into this, and a real respondent essentially never lands on 0 on every axis, so the
- * answers carry no position: never name an ideology for it, however near the centre one sits.
- */
+/** All scored axes at exactly zero carry no position to name. */
 export const isFlat = (scores: readonly (number | null)[]) => scores.some(v => v !== null) && scores.every(v => v === null || v === 0)
 
-/** A "constant" hero whose two frames really share their nearest match (no lean elsewhere, no missing frame). */
-export function sameInBothFrames(h: Extract<Hero, { kind: 'constant' }>): boolean {
-  return !h.nowMissing && (!h.leaning || h.leaning.match.arch.slug === h.ideal.match.arch.slug)
+/** The two fit sets name exactly the same ideologies. */
+export function sameFits(a: FitSet, b: FitSet): boolean {
+  return a.fits.length === b.fits.length && a.fits.every(m => b.fits.some(x => x.arch.slug === m.arch.slug))
 }
 
-function pickHero(
-  ranked: Ranked[],
+/** A "constant" hero whose two frames fit exactly the same ideologies (here and now present). */
+export function sameInBothFrames(h: Extract<Hero, { kind: 'constant' }>): boolean {
+  return !!h.now && sameFits(h.ideal, h.now)
+}
+
+/** Fit sets share at least one ideology. */
+function overlap(a: FitSet, b: FitSet): boolean {
+  return a.fits.some(m => b.fits.some(x => x.arch.slug === m.arch.slug))
+}
+
+function fitSetFor(
+  frame: 'I' | 'N',
+  ranked: readonly Ranked[],
   u: (number | null)[],
   se: (number | null)[],
   cat: readonly Archetype[],
@@ -149,24 +165,25 @@ function pickHero(
   cal: Calibration,
   mode: Payload['mode'],
   out: ReadonlySet<string>,
-): HeroPick | null {
-  // Ruled-out archetypes never lead, and the stability bootstrap never counts them.
-  const ok = (a: Archetype) => !out.has(a.slug)
-  const eligible = ranked.filter(r => ok(r.arch))
-  if (!eligible.length) return null
-  const stab = stability(u, se, cat, 'ideal', seed, 200, out.size ? ok : undefined)
-  const top = toMatch(eligible[0]!, u, 'ideal', cal, mode, out)
-  const note = eligible[0] !== ranked[0] ? { nearestRuledOut: toMatch(ranked[0]!, u, 'ideal', cal, mode, out) } : {}
-  if (!top.arch.sensitive) return { match: top, stability: stabilityOf(stab, top.arch.slug), ...note }
-  if (top.label === 'very-close' && stab.top === top.arch.slug && stab.label === 'stable') return { match: top, stability: stab, ...note }
-  const alt = eligible.find(r => !r.arch.sensitive)
-  if (!alt) return null
-  const altStab = stability(u, se, cat, 'ideal', seed, 200, a => !a.sensitive && ok(a))
-  return { match: toMatch(alt, u, 'ideal', cal, mode, out), stability: stabilityOf(altStab, alt.arch.slug), alsoClose: top, ...note }
+): FitSet {
+  const all = ranked.map(r => toMatch(r, u, 'ideal', cal, mode, out))
+  const nearest = all.find(m => !m.ruledOut) ?? null
+  // The bootstrap never counts a ruled-out ideology as nearest.
+  const stab = nearest ? stability(u, se, cat, 'ideal', seed, 200, out.size ? a => !out.has(a.slug) : undefined) : null
+  const flat = isFlat(u)
+  return {
+    frame,
+    ...(flat && { flat: true as const }),
+    fits: flat ? [] : all.filter(fits),
+    nearest,
+    stability: nearest && stab ? stabilityOf(stab, nearest.arch.slug) : null,
+    ruledOutInRange: all.filter(m => m.ruledOut && m.label !== 'none'),
+    heldBack: all.filter(m => !m.ruledOut && m.arch.sensitive && m.label !== 'none' && m.label !== 'very-close'),
+  }
 }
 
 /**
- * `ruledOut` holds the slugs the payload's core-commitment field rules out (see
+ * `ruledOut` holds the slugs the payload's commitment rule-out field rules out (see
  * data/commitments `ruledOutSlugs`); empty = no rule-outs known.
  */
 export function deriveResults(p: Payload, cat: readonly Archetype[], cal: Calibration, ruledOut: ReadonlySet<string> = new Set()): Results {
@@ -205,6 +222,7 @@ export function deriveResults(p: Payload, cat: readonly Archetype[], cal: Calibr
           label: labelFor(r.d, cal.labels[p.mode]),
           why: why([...p.I], r.arch.ideal, r.arch.weight),
           ruledOut: out.has(r.arch.slug),
+          ...(isFlat(p.I) && isFlat(p.N) && { flat: true as const }),
         }))
       : []
 
@@ -222,19 +240,10 @@ export function deriveResults(p: Payload, cat: readonly Archetype[], cal: Calibr
     }
   if (!covI) return { ...base, hero: { kind: 'insufficient' } }
 
-  const picked = pickHero(rankedI, p.I, p.seI, cat, seed, cal, p.mode, out)
-  const ideal = picked && isFlat(p.I) ? { ...picked, flat: true as const } : picked
-  if (!ideal) return { ...base, hero: { kind: 'none-fit' } }
-  if (!nameable(ideal)) return { ...base, hero: { kind: 'no-close', nearest: ideal } }
-  if (!covN) return { ...base, hero: { kind: 'constant', ideal, nowMissing: true } }
-
-  const now = pickHero(rankedN, p.N, p.seN, cat, (seed ^ 0x9e3779b9) >>> 0, cal, p.mode, out)
-  if (!now) return { ...base, hero: { kind: 'constant', ideal, nowMissing: true } }
-  const A = ideal.match.arch
-  const B = now.match.arch
-  if (A.slug === B.slug) return { ...base, hero: { kind: 'constant', ideal } }
-  // Split only when Now is closer to B than to A by a calibrated margin and B is not a toss-up.
-  const margin = distance(p.N, A.ideal, A.weight) - distance(p.N, B.ideal, B.weight)
-  const split = margin >= cal.mu && now.stability.top === B.slug && now.stability.label !== 'toss-up'
-  return { ...base, hero: split ? { kind: 'split', ideal, now } : { kind: 'constant', ideal, leaning: now } }
+  const ideal = fitSetFor('I', rankedI, p.I, p.seI, cat, seed, cal, p.mode, out)
+  const now = covN ? fitSetFor('N', rankedN, p.N, p.seN, cat, (seed ^ 0x9e3779b9) >>> 0, cal, p.mode, out) : null
+  if (!ideal.fits.length) return { ...base, hero: { kind: 'no-fit', ideal, now } }
+  if (!now || !now.fits.length || overlap(ideal, now)) return { ...base, hero: { kind: 'constant', ideal, now } }
+  // Disjoint, non-empty fit sets: here and now fits something, and nothing that fits the ideal.
+  return { ...base, hero: { kind: 'split', ideal, now } }
 }

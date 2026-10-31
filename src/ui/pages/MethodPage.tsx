@@ -1,4 +1,5 @@
-import { AXIS_IDS } from '../../engine/types'
+import { AXIS_IDS, MODES, type Mode } from '../../engine/types'
+import type { FitStats, FitStatsRow } from '../../engine/fitstats'
 import { AXES } from '../../data/axes'
 import { CALIBRATION } from '../../data/calibration'
 import { CATALOGUE, CATALOGUE_IS_PLACEHOLDER } from '../../data/archetypes'
@@ -7,7 +8,7 @@ import { MAX_CORE } from '../../engine/commitments'
 import { ALL_ITEMS, itemsForMode } from '../../data/items'
 import { RED_LINES } from '../../data/redlines'
 import { IDEAL_FRAME, IDEAL_STEM, NOW_FRAME, NOW_STEM, SHARED_RULE } from '../../data/frames'
-import { REPORT_COMMITMENT_URL } from '../copy'
+import { MODE_NAME, REPORT_COMMITMENT_URL } from '../copy'
 import css from './Prose.module.css'
 
 const VERCEL: Record<string, string> = {
@@ -34,8 +35,16 @@ type Report = Record<string, unknown> & {
   carelessDetection?: Record<string, number>
   carelessFalseFlag?: Record<string, number>
   splitFalseRate?: number
+  splitFalseByMode?: Record<Mode, { rate: number; nowEmptyRate: number; eligible: number }>
   note?: string
+  fitSet?: FitStats
 }
+
+const pct = (x: number | undefined) => (typeof x === 'number' ? `${(100 * x).toFixed(x < 0.01 && x > 0 ? 1 : 0)}%` : '—')
+/** "a / b / c" across Quick, Standard and Full. */
+const byMode = (rows: FitStats['adherents'] | undefined, f: (r: FitStatsRow) => string) =>
+  rows ? MODES.map(m => f(rows[m])).join(' / ') : '—'
+const byModeOf = <T,>(rows: Record<Mode, T>, f: (r: T) => string) => MODES.map(m => f(rows[m])).join(' / ')
 
 const FULL = ALL_ITEMS.length
 const PER_AXIS = AXIS_IDS.map(a => ALL_ITEMS.filter(i => i.axis === a).length)
@@ -224,27 +233,77 @@ export function MethodPage() {
       <p>
         Labels compare your distance with simulated sincere adherents of each ideology answering with ordinary noise: “very close”
         is as close as the median adherent, “close” as the 80th percentile, “loosely similar” as the 95th. There are no compatibility
-        percentages. Each match is re-run 200 times with your scores jittered by their error bars: stable means the same winner at
-        least 70% of the time, fairly stable 40–70%.
+        percentages. These labels are measurements; the headline uses only one of them, as a breakpoint.
+      </p>
+
+      <h3 id="fit-set">The headline: which ideologies you fit</h3>
+      <p>
+        The headline is a yes/no judgement, made separately for your ideal-system answers and your here-and-now answers. An ideology{' '}
+        <em>fits</em> a frame when both hold:
+      </p>
+      <ol>
+        <li>
+          none of its <a href="#core-commitments">core commitments</a> or <a href="#red-lines">red-line commitments</a> is contradicted by your answers (a “?” neither rules it out nor
+          counts in its favour), and
+        </li>
+        <li>
+          your distance to it is within the “loosely similar” cut: {MODES.map(m => `${MODE_NAME[m]} ${c.labels[m].loose.toFixed(3)}`).join(', ')}.
+          95% of simulated sincere adherents land at least that close to their own ideology.
+        </li>
+      </ol>
+      <p>
+        A frame with every scored axis at exactly 0 fits no ideology: it carries no position to match.
+        Distance is worked out per frame. Commitments (including red lines) are not yet: a commitment that is checked in both frames counts as
+        contradicted if either frame contradicts it, so a here-and-now answer can rule an ideology out of your ideal fit set too.
       </p>
       <p>
-        The headline names an ideology only when it is at least loosely similar and not a toss-up. Otherwise it says “No close
-        match” (or “No clear match” for a toss-up) and shows the nearest ideology as a measurement, not as your match. The same
-        rule applies to share cards, share text, preview links and saved runs.
+        The headline lists every ideology that fits, nearest first. One fit is named. Several are all named, because this test
+        can’t tell them apart; past four, the nearest three are shown “and N more”, with the full list underneath. If nothing
+        fits, the headline says “No close match” and shows the nearest ideology as a measurement, not as your match. Distances,
+        bands and stability are printed under the verdict as labelled measurements; they never pick one winner out of the set.
+        The same rule drives share cards, share text, preview links, saved runs and the compare page.
       </p>
       <p>
-        The headline shows two different ideologies (“in theory A, here and now B”) only when your here-and-now scores are closer to
-        B than to A by at least {c.mu.toFixed(3)} and B is not a toss-up. That margin is set so a respondent with no real gap
-        gets a false split at most 5% of the time{typeof rep.splitFalseRate === 'number' && <> (measured: {(100 * rep.splitFalseRate).toFixed(1)}%)</>}.
+        The headline shows “in theory A, here and now B” only when both frames fit something and their fit sets share no
+        ideology. If they share even one, it is not a split, and the page says what here and now fits. If here and now fits
+        nothing, that is not a split either: the cut is the 95th percentile, so about 1 in 20 sincere here-and-now answer sets
+        lands just outside it by chance.
+        {rep.splitFalseByMode && (
+          <>
+            {' '}
+            In the simulation, among respondents with no real gap whose ideal frame fits something (no one else can be split),
+            here and now fits nothing {byModeOf(rep.splitFalseByMode, x => pct(x.nowEmptyRate))} of the time, and a false split
+            happens {byModeOf(rep.splitFalseByMode, x => pct(x.rate))} of the time (Quick / Standard / Full; the target is at most
+            5%).
+          </>
+        )}
       </p>
+      <p>
+        Each frame’s nearest ideology is also re-run 200 times with your scores jittered by their error bars: “stable” means the
+        same nearest at least 70% of the time, “fairly stable” 40–70%. This is a measurement; a near tie shows up as several fits.
+      </p>
+      {rep.fitSet && (
+        <p>
+          Simulated sincere adherents (answering from our coded profiles with ordinary noise) have their own ideology in their
+          ideal fit set {byMode(rep.fitSet.adherents, r => pct(r.ownInFit))} of the time (Quick / Standard / Full). Their fit set
+          holds {byMode(rep.fitSet.adherents, r => r.meanSize.toFixed(1))} ideologies on average, is empty{' '}
+          {byMode(rep.fitSet.adherents, r => pct(r.empty))} of the time, and holds more than three{' '}
+          {byMode(rep.fitSet.adherents, r => pct(r.overThree))}. Simulated respondents with independent, uniformly spread positions
+          on every axis fit nothing {byMode(rep.fitSet.typical, r => pct(r.empty))}{' '}
+          of the time; real views are correlated across axes, so this overstates how often a real person fits nothing. Random
+          clickers are mostly stopped by the careless check below; {byMode(rep.fitSet.random, r => pct(r.named))} get a named fit.
+        </p>
+      )}
       <p>
         If your answers agree with statements on opposite sides of the same axes too often — the signature of random or careless
         answering — the headline is withheld. That check is tuned to catch at least 80% of simulated random clickers while flagging
         at most 5% of honest simulated respondents.
       </p>
       <p>
-        Ideologies with a history of mass atrocity (historical fascism, Stalinist Marxism–Leninism) and theocratic absolutism can
-        lead your headline only when they are very close and stable; share cards need your explicit opt-in to show them.
+        Ideologies with a history of mass atrocity (historical fascism, Stalinist Marxism–Leninism) and theocratic absolutism fit
+        only within the stricter “very close” cut; within “loosely similar” they are listed as also close but never named. Share
+        cards need your explicit opt-in to show them. Without it, what you share is worked out as if they were not listed, so its
+        headline can differ from your results page; the share panel says so when it does.
       </p>
 
       <h2 id="core-commitments">Core commitments</h2>
@@ -274,9 +333,9 @@ export function MethodPage() {
       </ul>
       <p>
         Most commitments check your ideal-system answer; some also check here and now, and then fail if either frame fails. One
-        contradicted commitment rules the ideology out for you: it can never be your headline match, in either frame, and its
-        stability re-runs skip it. It stays in your ranked list, marked “ruled out” with the statement, and if it was nearest by
-        distance the headline says so. A shared link carries only which ideologies were ruled out, never the answers.
+        contradicted commitment rules the ideology out for you: it is never in your fit set, in either frame, and stability re-runs
+        skip it. It stays in your ranked list, marked “ruled out” with the statement, and if it was within range the headline says
+        so. A shared link carries only which ideologies were ruled out, never the answers.
         {typeof rep.commitmentFalseRuleOut === 'number' && (
           <>
             {' '}
