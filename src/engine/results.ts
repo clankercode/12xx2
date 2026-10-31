@@ -126,6 +126,11 @@ export function nameable(p: HeroPick): boolean {
   return p.match.label !== 'none' && p.stability.label !== 'toss-up'
 }
 
+/** A "constant" hero whose two frames really share their nearest match (no lean elsewhere, no missing frame). */
+export function sameInBothFrames(h: Extract<Hero, { kind: 'constant' }>): boolean {
+  return !h.nowMissing && (!h.leaning || h.leaning.match.arch.slug === h.ideal.match.arch.slug)
+}
+
 function pickHero(
   ranked: Ranked[],
   u: (number | null)[],

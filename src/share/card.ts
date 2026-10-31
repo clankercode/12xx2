@@ -1,7 +1,7 @@
 import { AXIS_IDS, GROUPS, type AxisId, type GroupId } from '../engine/types'
 import type { Results } from '../engine/results'
 import { AXES, GROUP_TITLES } from '../data/axes'
-import { nameable } from '../engine/results'
+import { nameable, sameInBothFrames } from '../engine/results'
 import { MATCH_LABEL, RG_BAND, nearestNote, noMatchTitle, pickTitle } from '../ui/copy'
 
 export type CardSize = 'post' | 'story' | 'wide'
@@ -66,6 +66,9 @@ export function headline(r: Results, allowSensitive: boolean): Headline {
     if (blocked(h.ideal.match.arch.slug, h.ideal.match.arch.sensitive)) return { kicker: 'My 12 axes, twice', lines: [] }
     // No here-and-now answers to compare: name the ideal only, make no constancy claim.
     if (h.nowMissing)
+      return { kicker: 'My politics', lines: [{ label: 'In theory', name: h.ideal.match.arch.name, color: C.ideal, note: MATCH_LABEL[h.ideal.match.label] }] }
+    // Here and now leans elsewhere, short of a split: name the ideal only, make no constancy claim.
+    if (!sameInBothFrames(h))
       return { kicker: 'My politics', lines: [{ label: 'In theory', name: h.ideal.match.arch.name, color: C.ideal, note: MATCH_LABEL[h.ideal.match.label] }] }
     return {
       kicker: 'Constant in theory and practice',

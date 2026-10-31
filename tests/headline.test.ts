@@ -135,6 +135,11 @@ describe('naming breakpoint on a synthetic catalogue', () => {
     if (lean.kind !== 'constant') return
     expect(constantNote(lean)).toBe('Here and now you lean toward b, but not by enough to call it a split.')
     expect(constantNote(lean, 'They')).not.toMatch(/same ideology/)
+    // Share text, card and preview stub make no "both frames" claim either.
+    const rl = deriveResults(payloadFor(-20, 1), cat, CALIBRATION)
+    expect(shareText(rl)).toMatch(/^In theory I’m closest to a\. Here and now I lean toward b, but not by enough to call it a split/)
+    expect(headline(rl, false)).toMatchObject({ kicker: 'My politics', lines: [{ label: 'In theory', name: 'a' }] })
+    expect(previewPath(rl)).toBeNull()
     const same = deriveResults(payloadFor(-20, -18), cat, CALIBRATION).hero
     expect(same.kind === 'constant' && !same.leaning).toBe(true)
     if (same.kind !== 'constant') return

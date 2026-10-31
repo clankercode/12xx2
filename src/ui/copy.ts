@@ -1,6 +1,6 @@
 import type { GapType } from '../engine/typology'
 import type { MatchLabel, StabilityLabel } from '../engine/match'
-import { nameable, type Hero, type HeroPick, type Results, type RgBand } from '../engine/results'
+import { nameable, sameInBothFrames, type Hero, type HeroPick, type Results, type RgBand } from '../engine/results'
 
 export const REPO_URL = 'https://github.com/clankercode/12xx2'
 
@@ -82,7 +82,7 @@ export function noCloseNote(p: HeroPick, who = 'You'): string {
 export function constantNote(h: Extract<Hero, { kind: 'constant' }>, who = 'You'): string {
   const you = who === 'You'
   if (h.nowMissing) return 'Not enough here-and-now answers to place that frame.'
-  if (h.leaning && h.leaning.match.arch.slug !== h.ideal.match.arch.slug)
+  if (!sameInBothFrames(h) && h.leaning)
     return `Here and now ${you ? 'you lean' : 'these answers lean'} toward ${h.leaning.match.arch.name}, but not by enough to call it a split.`
   return `${you ? 'Your' : 'Their'} ideal and here-and-now answers sit closest to the same ideology.`
 }

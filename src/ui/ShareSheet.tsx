@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { encodePayload, forSharing, type Payload } from '../engine/payload'
-import { deriveResults, nameable, type HeroPick, type Results } from '../engine/results'
+import { deriveResults, nameable, sameInBothFrames, type HeroPick, type Results } from '../engine/results'
 import { CATALOGUE } from '../data/archetypes'
 import { ruledOutSlugs } from '../data/commitments'
 import { deriveShared } from '../state/shared'
@@ -17,7 +17,8 @@ export function previewPath(r: Results): string | null {
   const h = r.hero
   const ok = (p: HeroPick) => nameable(p) && !p.match.arch.sensitive
   if (h.kind === 'split' && ok(h.ideal) && ok(h.now)) return `p/${h.ideal.match.arch.slug}/${h.now.match.arch.slug}/`
-  if (h.kind === 'constant' && ok(h.ideal)) return `p/${h.ideal.match.arch.slug}/`
+  // The one-ideology stub says "in theory and here and now", so only when both frames agree.
+  if (h.kind === 'constant' && ok(h.ideal) && sameInBothFrames(h)) return `p/${h.ideal.match.arch.slug}/`
   return null
 }
 
@@ -32,6 +33,8 @@ export function shareText(r: Results): string {
   if (h.kind === 'split')
     return `In theory I’m closest to ${h.ideal.match.arch.name}. Here and now, ${nameable(h.now) ? h.now.match.arch.name : 'no listed ideology is close'}. What’s your gap?`
   if (h.kind === 'constant' && h.nowMissing) return `In theory I’m closest to ${h.ideal.match.arch.name}. What’s your gap?`
+  if (h.kind === 'constant' && h.leaning && !sameInBothFrames(h))
+    return `In theory I’m closest to ${h.ideal.match.arch.name}. Here and now I lean toward ${h.leaning.match.arch.name}, but not by enough to call it a split${r.payload.rg !== null ? ` (Reality Gap ${r.payload.rg})` : ''}. What’s yours?`
   if (h.kind === 'constant')
     return `In theory and here and now, I’m closest to ${h.ideal.match.arch.name}${r.payload.rg !== null ? ` (Reality Gap ${r.payload.rg})` : ''}. What’s yours?`
   if (h.kind === 'no-close')
