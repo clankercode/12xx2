@@ -137,8 +137,9 @@
 
 .matchHead {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  gap: 12px;
+  gap: 2px 12px;
   align-items: baseline;
 }
 
