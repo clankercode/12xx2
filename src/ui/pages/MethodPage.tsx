@@ -6,7 +6,7 @@ import { CATALOGUE, CATALOGUE_IS_PLACEHOLDER } from '../../data/archetypes'
 import { HAS_COMMITMENTS } from '../../data/commitments'
 import { MAX_COMMITMENTS } from '../../engine/commitments'
 import { IDEAL_FRAME, IDEAL_STEM, NOW_FRAME, NOW_STEM, SHARED_RULE } from '../../data/frames'
-import { REPORT_COMMITMENT_URL } from '../copy'
+import { MODE_NAME, REPORT_COMMITMENT_URL } from '../copy'
 import css from './Prose.module.css'
 
 const VERCEL: Record<string, string> = {
@@ -216,7 +216,7 @@ export function MethodPage() {
           counts in its favour), and
         </li>
         <li>
-          your distance to it is within the “loosely similar” cut: {MODES.map(m => `${m} ${c.labels[m].loose.toFixed(3)}`).join(', ')}.
+          your distance to it is within the “loosely similar” cut: {MODES.map(m => `${MODE_NAME[m]} ${c.labels[m].loose.toFixed(3)}`).join(', ')}.
           95% of simulated sincere adherents land at least that close to their own ideology.
         </li>
       </ol>

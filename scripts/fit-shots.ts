@@ -114,6 +114,11 @@ for (const width of [1280, 390]) {
     await page.waitForTimeout(300)
     await page.locator('section[aria-label="Headline result"]').screenshot({ path: `${out}/shared-multi-dark-${width}.png` })
   }
+  await page.goto(`${base}#/method`)
+  await page.evaluate(() => document.fonts.ready)
+  await page.waitForTimeout(300)
+  const top = await page.locator('h3#fit-set').evaluate(e => e.getBoundingClientRect().top + window.scrollY)
+  await page.screenshot({ path: `${out}/method-dark-${width}.png`, fullPage: true, clip: { x: 0, y: top - 20, width, height: width > 500 ? 1100 : 1900 } })
   if (multi && split) {
     await page.goto(`${base}#c=${enc(multi)}~${enc(split)}`)
     await page.reload()
