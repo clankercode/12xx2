@@ -126,7 +126,7 @@
   height: 3px;
   translate: 0 -50%;
   border-radius: 2px;
-  opacity: 0.45;
+  opacity: var(--whisker-opacity);
 }
 
 .wI {

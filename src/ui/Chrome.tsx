@@ -3,6 +3,7 @@ import { clearAllData } from '../state/session'
 import { useStore } from './App'
 import { go } from './router'
 import { REPO_URL } from './copy'
+import { applyTheme, readTheme, type ThemeChoice } from './theme'
 import css from './Chrome.module.css'
 
 export function Wordmark({ size = 'm' }: { size?: 's' | 'm' }) {
@@ -13,25 +14,36 @@ export function Wordmark({ size = 'm' }: { size?: 's' | 'm' }) {
   )
 }
 
-function ThemeToggle() {
-  const [theme, setTheme] = useState(() => document.documentElement.getAttribute('data-theme') ?? 'auto')
-  const next = theme === 'light' ? 'dark' : 'light'
+/** System / Light / Dark. Real radios (visually hidden) so arrow keys move between them natively. */
+function ThemePicker() {
+  const [theme, setTheme] = useState<ThemeChoice>(readTheme)
+  const options: [ThemeChoice, string][] = [
+    ['system', 'System'],
+    ['light', 'Light'],
+    ['dark', 'Dark'],
+  ]
   return (
-    <button
-      className="btn btn-ghost"
-      type="button"
-      onClick={() => {
-        document.documentElement.setAttribute('data-theme', next)
-        try {
-          localStorage.setItem('12xx2.theme', next)
-        } catch {
-          /* ignore */
-        }
-        setTheme(next)
-      }}
-    >
-      {next === 'light' ? 'Light' : 'Dark'} theme
-    </button>
+    <fieldset className={css.theme}>
+      <legend className="muted small">Theme</legend>
+      <div className={css.seg} role="radiogroup" aria-label="Theme">
+        {options.map(([k, l]) => (
+          <label key={k} className={theme === k ? css.segOn : ''}>
+            <input
+              type="radio"
+              name="theme"
+              value={k}
+              checked={theme === k}
+              onChange={() => {
+                applyTheme(k)
+                setTheme(k)
+              }}
+              className="visually-hidden"
+            />
+            {l}
+          </label>
+        ))}
+      </div>
+    </fieldset>
   )
 }
 
@@ -133,7 +145,7 @@ export function Footer() {
           <a href={REPO_URL}>Source and issues</a>
         </div>
         <div className={css.footerCol}>
-          <ThemeToggle />
+          <ThemePicker />
           {confirming ? (
             <Confirm
               confirmLabel="Erase my data"

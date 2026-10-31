@@ -106,7 +106,8 @@
   position: absolute;
   top: 3px;
   bottom: 3px;
-  background: color-mix(in srgb, var(--ideal) 30%, transparent);
+  /* 30% in dark; scales with the whisker strength so the band still reads on light paper. */
+  background: color-mix(in srgb, var(--ideal) calc(var(--whisker-opacity) * 66%), transparent);
   border-radius: 2px;
 }
 
