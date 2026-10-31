@@ -1,0 +1,869 @@
+/* Story demo prototype. Cell size --c and gap --g drive every overlay position. */
+
+.root {
+  container: story / inline-size;
+  width: 100%;
+  min-width: 0;
+}
+
+.hero,
+.answer {
+  --g: 3px;
+  --c: clamp(34px, calc((100cqi - 8px) / 7 - var(--g)), 58px);
+  --grid: calc(7 * var(--c) + 6 * var(--g));
+  --ease: cubic-bezier(0.65, 0, 0.25, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.root[data-size='small'] .hero,
+.root[data-size='small'] .answer {
+  --c: clamp(26px, calc((100cqi - 8px) / 7 - var(--g)), 40px);
+  gap: 10px;
+  font-size: 0.82rem;
+}
+
+/* ----------------------------------------------------------- statement */
+
+.statement {
+  position: relative;
+  max-width: 36em;
+  margin: 0;
+  padding: 10px 14px 10px 14px;
+  border: 1px solid var(--rule-major);
+  border-radius: var(--radius-s);
+  background: var(--ink-2);
+  font-family: var(--display);
+  font-size: 1.02em;
+  line-height: 1.3;
+  text-wrap: pretty;
+}
+
+.statementTag {
+  display: block;
+  margin-bottom: 3px;
+  font-family: var(--body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.statementBig {
+  max-width: 30em;
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(1.1rem, 3.6cqi, 1.45rem);
+  font-weight: 650;
+  line-height: 1.25;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.heroBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+@container story (min-width: 720px) {
+  .hero {
+    --c: 58px;
+  }
+  .heroBody {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+  }
+  .side {
+    width: 340px;
+  }
+}
+
+/* --------------------------------------------------------------- board */
+
+.board {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    'tl tr'
+    'g g'
+    'bl br';
+  row-gap: 10px;
+  width: var(--grid);
+  max-width: 100%;
+}
+
+.hero .board {
+  row-gap: 19px;
+}
+
+.gridWrap {
+  grid-area: g;
+  position: relative;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, var(--c));
+  grid-auto-rows: var(--c);
+  gap: var(--g);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cell {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  overflow: hidden;
+  background: none;
+  outline: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
+  outline-offset: -1px;
+  transition:
+    opacity 380ms ease,
+    transform 220ms var(--ease),
+    filter 380ms ease;
+}
+
+.cell[data-dim] {
+  opacity: 0.26;
+  filter: saturate(0.6);
+}
+
+.cell[data-on] {
+  z-index: 2;
+  transform: scale(1.14);
+  opacity: 1;
+  filter: none;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.35);
+}
+
+/* Origin: a quiet hollow dot marks the neutral centre. */
+.cell[data-origin]::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 22%;
+  aspect-ratio: 1;
+  border: 1.5px solid color-mix(in srgb, var(--ink) 70%, transparent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.root[data-mono] .cell[data-origin]::after,
+.cell[data-origin][data-on]::after,
+.cell[data-origin][data-hot]::after {
+  display: none;
+}
+
+button.cell {
+  cursor: pointer;
+}
+
+button.cell:hover,
+button.cell[data-hot] {
+  z-index: 3;
+  transform: scale(1.12);
+  opacity: 1;
+  filter: none;
+}
+
+button.cell:focus-visible {
+  z-index: 4;
+  outline: 2px solid var(--now);
+  outline-offset: 2px;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.nowTri,
+.idealTri {
+  transition: opacity 380ms ease;
+}
+
+/* "Fade" one half so only the half being taught is lit. */
+.svg[data-fade='now'] .nowTri {
+  opacity: 0.14;
+}
+
+.svg[data-fade='ideal'] .idealTri {
+  opacity: 0.14;
+}
+
+/* A faded half carries no number: its ink was picked for the full fill and is unreadable on the faded one. */
+.glyph {
+  transition: opacity 380ms ease;
+}
+.svg[data-fade='now'] .nowGlyph,
+.svg[data-fade='ideal'] .idealGlyph {
+  opacity: 0;
+}
+
+.glyph {
+  font: 700 25px var(--body);
+  text-anchor: middle;
+  dominant-baseline: central;
+  font-variant-numeric: tabular-nums;
+}
+
+.root[data-mono] .cell:not([data-on]):not([data-hot]) .glyph {
+  font-size: 23px;
+}
+
+/* ----------------------------------------------------- corner crop tags */
+
+.tag {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  min-width: 0;
+  font-size: 0.74rem;
+  line-height: 1.2;
+  color: var(--muted);
+  transition: color 300ms ease;
+}
+
+.tag_tl {
+  grid-area: tl;
+}
+.tag_tr {
+  grid-area: tr;
+  flex-direction: row-reverse;
+  text-align: right;
+}
+.tag_bl {
+  grid-area: bl;
+  align-items: flex-start;
+}
+.tag_br {
+  grid-area: br;
+  align-items: flex-start;
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.tagMark {
+  flex: none;
+  width: 11px;
+  height: 11px;
+  border: 0 solid var(--faint);
+  transition: border-color 300ms ease;
+}
+.tag_tl .tagMark {
+  border-left-width: 2px;
+  border-top-width: 2px;
+  transform: translateY(6px);
+}
+.tag_tr .tagMark {
+  border-right-width: 2px;
+  border-top-width: 2px;
+  transform: translateY(6px);
+}
+.tag_bl .tagMark {
+  border-left-width: 2px;
+  border-bottom-width: 2px;
+  transform: translateY(-6px);
+}
+.tag_br .tagMark {
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  transform: translateY(-6px);
+}
+
+.tagEmoji {
+  flex: none;
+  font-size: 0.95em;
+  filter: grayscale(0.6);
+  opacity: 0.8;
+  transition:
+    filter 300ms ease,
+    opacity 300ms ease;
+}
+
+.tagText {
+  min-width: 0;
+  text-wrap: balance;
+}
+
+.tag[data-lit] {
+  color: var(--paper);
+  font-weight: 700;
+}
+.tag[data-lit] .tagMark {
+  border-color: var(--paper);
+}
+.tag[data-lit] .tagEmoji {
+  filter: none;
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------- rings */
+
+.ring {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--c);
+  height: var(--c);
+  border-radius: 5px;
+  border: 3px solid var(--paper);
+  box-shadow:
+    0 0 0 2px var(--ink),
+    inset 0 0 0 1.5px var(--ink);
+  transform: translate(calc(var(--x) * (var(--c) + var(--g))), calc(var(--y) * (var(--c) + var(--g)))) scale(1.16);
+  opacity: 0;
+  transition:
+    transform 900ms var(--ease) 180ms,
+    opacity 300ms ease;
+  z-index: 5;
+}
+
+.ring[data-shown] {
+  opacity: 1;
+}
+
+.ring[data-ghost] {
+  opacity: 0.38;
+  transform: translate(calc(var(--x) * (var(--c) + var(--g))), calc(var(--y) * (var(--c) + var(--g)))) scale(1.08);
+}
+
+.ring_b {
+  border-style: dashed;
+}
+
+.ring_you {
+  border-color: var(--now);
+  transition:
+    transform 260ms var(--ease),
+    opacity 200ms ease;
+  transform: translate(calc(var(--x) * (var(--c) + var(--g))), calc(var(--y) * (var(--c) + var(--g)))) scale(1.2);
+}
+
+.pin {
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 0 0 2px var(--ink);
+  font: 800 11px/1 var(--body);
+}
+
+.ring_b .pin {
+  border-radius: 4px;
+}
+
+.pinInline {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  font: 800 10.5px/1 var(--body);
+}
+
+.pinSquare {
+  border-radius: 4px;
+}
+
+/* ------------------------------------------------ intro axis ghosts */
+
+.axisH,
+.axisV,
+.torn {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 400ms ease;
+  z-index: 4;
+}
+
+.axisH[data-shown],
+.axisV[data-shown],
+.torn[data-shown] {
+  opacity: 1;
+}
+
+.axisH {
+  left: 4px;
+  right: 2px;
+  top: calc(3 * (var(--c) + var(--g)) + var(--c) / 2 - 1px);
+  height: 2px;
+  background: var(--paper);
+  box-shadow: 0 0 0 1.5px var(--ink);
+}
+
+.axisV {
+  top: 2px;
+  bottom: 4px;
+  left: calc(3 * (var(--c) + var(--g)) + var(--c) / 2 - 1px);
+  width: 2px;
+  background: var(--paper);
+  box-shadow: 0 0 0 1.5px var(--ink);
+}
+
+/* arrowheads */
+.axisH::after,
+.axisV::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+}
+.axisH::after {
+  right: -4px;
+  top: -5px;
+  border-left: 9px solid var(--paper);
+  border-right-width: 0;
+}
+.axisV::after {
+  top: -4px;
+  left: -5px;
+  border-bottom: 9px solid var(--paper);
+  border-top-width: 0;
+}
+
+.axisLabel,
+.torn,
+.gapLabel {
+  white-space: nowrap;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 700 0.72rem/1.3 var(--body);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.35);
+}
+
+.axisLabel {
+  position: absolute;
+}
+
+.axisH .axisLabel {
+  right: 6px;
+  bottom: 8px;
+}
+
+.axisV .axisLabel {
+  top: 10px;
+  left: 10px;
+}
+
+.torn {
+  left: calc(3 * (var(--c) + var(--g)) + var(--c) / 2);
+  top: calc(3 * (var(--c) + var(--g)) + var(--c) / 2);
+  transform: translate(-50%, 70%);
+  font-size: 0.68rem;
+}
+
+/* ------------------------------------------------------------- gap bracket */
+
+.gap {
+  position: absolute;
+  left: calc((var(--x) + 1) * (var(--c) + var(--g)) + 6px);
+  top: calc(var(--y) * (var(--c) + var(--g)) + var(--c) / 2);
+  height: calc(var(--h) * (var(--c) + var(--g)));
+  width: 10px;
+  border: 2px solid var(--paper);
+  border-left: 0;
+  border-radius: 0 4px 4px 0;
+  opacity: 0;
+  transform: scaleY(0.2);
+  transform-origin: top;
+  transition:
+    opacity 300ms ease,
+    transform 700ms var(--ease) 600ms;
+  z-index: 4;
+}
+
+.gap[data-shown] {
+  opacity: 1;
+  transform: none;
+}
+
+.gapLabel {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: 600;
+}
+
+.gapLabel b {
+  font-weight: 800;
+}
+
+/* --------------------------------------------------------------- caption */
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(100%, var(--grid) + 40px);
+}
+
+/* All captions share one grid cell: the box is as tall as the tallest, so nothing jumps. */
+.captions {
+  display: grid;
+}
+
+.caption {
+  grid-area: 1 / 1;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px 15px;
+  border: 1px solid var(--rule-major);
+  border-radius: var(--radius-m);
+  background: var(--ink-2);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition:
+    opacity 280ms ease,
+    transform 380ms var(--ease),
+    visibility 0s linear 380ms;
+}
+
+.caption[data-active] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity 380ms ease 120ms,
+    transform 480ms var(--ease) 120ms,
+    visibility 0s;
+}
+
+.caption p {
+  margin: 0;
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.capTitle {
+  font-family: var(--display);
+  font-size: 1.32em;
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.capBody {
+  font-size: 0.9em;
+  line-height: 1.45;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.readings {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.reading {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.86em;
+}
+
+.readingHalf {
+  min-width: 7.4em;
+  color: var(--muted);
+}
+
+.readingWord {
+  font-weight: 700;
+}
+
+.halfIcon {
+  flex: none;
+  width: 17px;
+  height: 17px;
+}
+
+.halfIconBox {
+  fill: none;
+  stroke: var(--faint);
+  stroke-width: 1.4;
+}
+
+.halfIconTri {
+  stroke: var(--paper);
+  stroke-width: 0.8;
+  stroke-opacity: 0.35;
+}
+
+.chip {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.2em;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-weight: 800;
+  font-size: 0.92em;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--paper) 22%, transparent);
+}
+
+.compare {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--rule-major);
+}
+
+.compareRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84em;
+}
+
+.compareWho {
+  flex: 1;
+  min-width: 0;
+  color: var(--muted);
+}
+
+.chipPair {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* -------------------------------------------------------------- story bar */
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.barBtn {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--rule-major);
+  border-radius: 50%;
+  background: var(--ink-2);
+  cursor: pointer;
+}
+
+.barBtn svg {
+  width: 13px;
+  height: 13px;
+  fill: var(--paper);
+}
+
+.barBtn:hover {
+  border-color: var(--muted);
+}
+
+.segs {
+  display: flex;
+  flex: 1;
+  min-width: 140px;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.segs li {
+  flex: 1;
+}
+
+.seg {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.seg::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 2px;
+  background: var(--rule-major);
+}
+
+.segFill {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 2px;
+  background: var(--paper);
+}
+
+.seg[aria-current] .segFill {
+  background: var(--now);
+}
+
+.tryBtn {
+  min-height: 32px;
+  padding: 4px 12px;
+  border: 1px solid var(--rule-major);
+  border-radius: var(--radius-s);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tryBtn:hover {
+  background: color-mix(in srgb, var(--paper) 85%, var(--now));
+  color: var(--ink);
+}
+
+/* ---------------------------------------------------------------- answer */
+
+.howto {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4px 14px;
+  margin: 0;
+  font-size: 0.86em;
+  color: var(--muted);
+  text-align: center;
+}
+
+.howtoKey {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  width: min(100%, var(--grid) + 60px);
+  min-height: 7.2em;
+  padding: 12px 16px;
+  border: 1px solid var(--rule-major);
+  border-radius: var(--radius-m);
+  background: var(--ink-2);
+  transition: opacity 160ms ease;
+}
+
+.readout[data-preview] {
+  border-style: dashed;
+}
+
+.readout p {
+  margin: 0;
+}
+
+.verdict {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-family: var(--display);
+  font-size: 1.1em;
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.verdictEmoji {
+  flex: none;
+}
+
+.placeholder {
+  align-self: center;
+  margin: auto 0 !important;
+  color: var(--muted);
+  font-size: 0.9em;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cell,
+  .ring,
+  .gap,
+  .caption,
+  .caption[data-active],
+  .nowTri,
+  .idealTri,
+  .glyph,
+  .axisH,
+  .axisV,
+  .torn,
+  .tag {
+    transition: none !important;
+  }
+}
+
+@container story (max-width: 440px) {
+  .reading {
+    font-size: 0.8em;
+    gap: 6px;
+  }
+  .readingHalf {
+    min-width: 6.6em;
+  }
+  .readingWord {
+    white-space: nowrap;
+  }
+}

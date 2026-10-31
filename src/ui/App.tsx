@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState, type Dispatch } from 'react'
+import { createContext, lazy, Suspense, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState, type Dispatch } from 'react'
 import { loadSession, persistSession, reduce, stashIncoming, type Action, type Session } from '../state/session'
 import { deriveOwn, type Own } from '../state/derive'
 import { buildRun, loadRuns, storeRuns, upsertRun, type Run } from '../state/history'
@@ -18,6 +18,9 @@ import { IdeologiesPage } from './pages/IdeologiesPage'
 import { PrivacyPage } from './pages/PrivacyPage'
 import { Footer, Header } from './Chrome'
 import { Lamp } from './Lamp'
+
+// Dev-only prototype lab: its own chunk, never fetched unless "#/lab" is opened.
+const LabPage = lazy(() => import('../lab/LabPage'))
 
 interface Store {
   s: Session
@@ -46,6 +49,7 @@ const TITLES: Record<Route['page'], string> = {
   history: 'Your runs — 12 Axes²',
   run: 'Past run — 12 Axes²',
   runs: 'Compare runs — 12 Axes²',
+  lab: 'Prototype lab — 12 Axes²',
 }
 
 /** On route change: set the title and move focus to the new page's main heading (not on first load). */
@@ -118,7 +122,7 @@ export function App() {
   }, [route.page, s.mode, s.stage])
 
   const store = useMemo(() => ({ s, dispatch, own, runs, setRuns }), [s, own, runs, setRuns])
-  const focused = route.page === 'quiz' || route.page === 'context' || route.page === 'place'
+  const focused = route.page === 'quiz' || route.page === 'context' || route.page === 'place' || route.page === 'lab'
 
   return (
     <StoreCtx.Provider value={store}>
@@ -139,6 +143,11 @@ export function App() {
         {route.page === 'history' && <HistoryPage />}
         {route.page === 'run' && <RunPage id={route.id} />}
         {route.page === 'runs' && <RunsComparePage a={route.a} b={route.b} />}
+        {route.page === 'lab' && (
+          <Suspense fallback={<p className="wrap muted">Loading lab…</p>}>
+            <LabPage query={route.query} />
+          </Suspense>
+        )}
       </main>
       {!focused && <Footer />}
     </StoreCtx.Provider>

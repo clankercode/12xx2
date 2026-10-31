@@ -1,0 +1,662 @@
+/* Split-tile answer grid (from prototype C v2, src/lab/protos/split). Geometry: --c cell,
+   --g gap, --p board padding. `.tiles` goes on an element inside an inline-size container;
+   consumers may override --c in their own container queries. */
+
+.tiles {
+  --g: 4px;
+  /* Room for the lit corner tile: 10% scale-up + 2px ring + halo stays inside the board. */
+  --p: 12px;
+  --c: clamp(32px, calc((100cqi - 2 * var(--p) - 2px - 6 * var(--g)) / 7), 60px);
+  --ease: cubic-bezier(0.65, 0, 0.35, 1);
+  /* --faint is only ~3.4:1 on these panels; small text uses this >= 4.6:1 mix instead. */
+  --lbl: color-mix(in srgb, var(--muted) 68%, var(--faint));
+  /* Hairline that keeps near-page fills (mono +3 on light, −3 on dark) visible. */
+  --edge: color-mix(in srgb, var(--paper) 38%, transparent);
+  /* The board is a "well" the tiles sit in; light theme deepens it (see below). */
+  --well: color-mix(in srgb, var(--ink-2) 94%, transparent);
+  --tile-edge: color-mix(in srgb, var(--paper) 14%, transparent);
+  --tile-shadow: 0 0 0 transparent;
+}
+
+/* Light theme: a tinted well plus a darker hairline and 1px drop shadow per tile, so the
+   palest fills (mono +3 #efefef, colour ±1) keep a crisp edge against the near-white page. */
+:global(:root[data-theme='light']) .tiles {
+  --well: #dcd8cc;
+  /* The muted/faint mix is only 4.2:1 on this well; plain muted clears AA (5.3:1). */
+  --lbl: var(--muted);
+  /* A brighter amber than the page's focus colour, so it can't be mistaken for the near-black pick ring. */
+  --focus-tile: #9a5c00;
+  --tile-edge: color-mix(in srgb, var(--paper) 32%, transparent);
+  --tile-shadow: 0 1px 1.5px rgb(27 30 46 / 0.3);
+}
+
+@media (prefers-color-scheme: light) {
+  :global(:root:not([data-theme='dark'])) .tiles {
+    --well: #dcd8cc;
+    --lbl: var(--muted);
+    --focus-tile: #9a5c00;
+    --tile-edge: color-mix(in srgb, var(--paper) 32%, transparent);
+    --tile-shadow: 0 1px 1.5px rgb(27 30 46 / 0.3);
+  }
+}
+
+/* ── Board ── */
+
+.board {
+  position: relative;
+  max-width: 100%;
+  padding: var(--p);
+  border: 1px solid var(--rule-major);
+  border-radius: 16px;
+  background: var(--well);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--paper) 6%, transparent),
+    0 24px 60px -28px rgb(0 0 0 / 0.55);
+}
+
+.field {
+  position: relative;
+}
+
+.cells {
+  display: grid;
+  gap: var(--g);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(7, var(--c));
+  grid-auto-rows: var(--c);
+  gap: var(--g);
+}
+
+.cell {
+  position: relative;
+  display: block;
+  width: var(--c);
+  height: var(--c);
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  overflow: hidden;
+  background: none;
+  color: inherit;
+  box-shadow: var(--tile-shadow);
+  transition: transform 220ms var(--ease);
+}
+
+/* The centre circle: the (0, 0) tile is round, still split on its diagonal. */
+.cell[data-round] {
+  border-radius: 50%;
+}
+
+/* Hairline outline so pale tiles hold their edge on the light page and dark ones on the dark page. */
+.cell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px var(--tile-edge);
+  pointer-events: none;
+}
+
+button.cell {
+  cursor: pointer;
+}
+
+button.cell:hover,
+button.cell:focus-visible,
+.cell[data-on] {
+  z-index: 4;
+  transform: scale(1.1);
+}
+
+button.cell:hover {
+  box-shadow: 0 6px 18px -6px rgb(0 0 0 / 0.5);
+}
+
+/* Focus ring: a band of page colour, then the focus colour, so it reads on any tile fill
+   and on the well in both themes. Drawn outside the pick ring, so both show at once. */
+button.cell:focus-visible {
+  z-index: 5;
+  outline: 3px solid var(--focus-tile, var(--focus));
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px var(--ink);
+}
+
+/* Dimming fades the colour only. Numerals stay at full strength on a halo of the page
+   colour (paper on ink ≥ 13:1 in both themes), so mono tiles stay legible mid-tour. */
+.fills,
+.seam,
+.glyphs text {
+  transition:
+    opacity 420ms var(--ease),
+    filter 420ms var(--ease);
+}
+
+.cell[data-dim] .fills {
+  opacity: 0.3;
+  filter: saturate(0.6);
+}
+
+.cell[data-dim] .seam {
+  opacity: 0.3;
+}
+
+.cell[data-dim] .glyphs text {
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-width: 7px;
+  stroke-linejoin: round;
+  paint-order: stroke;
+  opacity: 0.85;
+}
+
+/* Story tour: the half not being answered yet is veiled down to the well. */
+.veil {
+  fill: var(--ink-2);
+  fill-opacity: 0.82;
+}
+
+.tileSvg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.seam {
+  stroke: var(--ink);
+  stroke-opacity: 0.28;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.glyphs text {
+  font: 700 25px var(--body);
+  text-anchor: middle;
+  dominant-baseline: central;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Ring that glides to the active / picked tile ── */
+
+.ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 6;
+  width: var(--c);
+  height: var(--c);
+  border-radius: 7px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(calc(var(--col, 3) * (var(--c) + var(--g))), calc(var(--row, 3) * (var(--c) + var(--g)))) scale(1.1);
+  box-shadow:
+    0 0 0 2px var(--paper),
+    0 0 0 6px color-mix(in srgb, var(--paper) 18%, transparent),
+    0 10px 28px -8px rgb(0 0 0 / 0.6);
+  transition:
+    transform 620ms var(--ease),
+    opacity 240ms ease,
+    border-radius 300ms ease;
+}
+
+.ring[data-shown] {
+  opacity: 1;
+}
+
+.ring[data-circle] {
+  border-radius: 50%;
+}
+
+/* Story tour: persona rings carry a pin; a ghosted ring is where someone was. */
+.ring[data-ghost] {
+  box-shadow: none;
+  outline: 2px dashed color-mix(in srgb, var(--paper) 70%, transparent);
+  outline-offset: 0;
+}
+
+.ring[data-shown][data-ghost] {
+  opacity: 0.7;
+}
+
+.pin,
+.pinInline {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 800 11px/1 var(--body);
+  letter-spacing: 0;
+}
+
+.pin {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  box-shadow: 0 0 0 2px var(--ink);
+}
+
+.ring[data-who='b'] .pin,
+.pinInline[data-who='b'] {
+  border-radius: 4px;
+}
+
+/* ── Edge labels: meanings on the board's top/bottom edge, bracketing their quadrant ── */
+
+.edge {
+  display: grid;
+  grid-template-columns: repeat(7, var(--c));
+  column-gap: var(--g);
+  align-items: end;
+  margin-bottom: 10px;
+  font-family: var(--display);
+  font-size: clamp(11.5px, calc(var(--c) * 0.24), 14.5px);
+  font-weight: 650;
+  font-variation-settings: 'wdth' 88;
+  line-height: 1.1;
+}
+
+.edge[data-side='bottom'] {
+  align-items: start;
+  margin: 10px 0 0;
+}
+
+.edgeLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
+  min-width: 0;
+  color: var(--lbl);
+  transition: color 320ms ease;
+}
+
+.edge[data-side='bottom'] .edgeLabel {
+  flex-direction: column-reverse;
+}
+
+.edgeLabel[data-region='tl'],
+.edgeLabel[data-region='bl'] {
+  grid-column: 1 / 4;
+}
+
+.edgeLabel[data-region='tr'],
+.edgeLabel[data-region='br'] {
+  grid-column: 5 / 8;
+}
+
+.edgeText {
+  padding: 0 2px;
+  text-align: center;
+}
+
+.edgeLine {
+  white-space: nowrap;
+}
+
+/* ┌───┐ above the grid, └───┘ below: spans exactly the quadrant's three columns. */
+.bracket {
+  height: 6px;
+  border: 1.5px solid var(--rule-major);
+  border-bottom: 0;
+  border-radius: 3px 3px 0 0;
+  transition: border-color 320ms ease;
+}
+
+.edge[data-side='bottom'] .bracket {
+  border-top: 0;
+  border-bottom: 1.5px solid var(--rule-major);
+  border-radius: 0 0 3px 3px;
+}
+
+.edgeLabel[data-active] {
+  color: var(--paper);
+}
+
+.edgeLabel[data-active] .bracket {
+  border-color: var(--paper);
+}
+
+.emoji {
+  font-size: 1.15em;
+  line-height: 1;
+}
+
+/* Pale emoji (🩹, 🔭) vanish on the light well without a faint outline. */
+:global(:root[data-theme='light']) .emoji {
+  filter: drop-shadow(0 0 0.7px rgb(27 30 46 / 0.9)) drop-shadow(0 0 0.3px rgb(27 30 46 / 0.9));
+}
+
+@media (prefers-color-scheme: light) {
+  :global(:root:not([data-theme='dark'])) .emoji {
+    filter: drop-shadow(0 0 0.7px rgb(27 30 46 / 0.9)) drop-shadow(0 0 0.3px rgb(27 30 46 / 0.9));
+  }
+}
+
+/* ── "Torn": a small tag in the gap under the centre tile, clear of both rows' numerals ── */
+
+.torn {
+  position: absolute;
+  z-index: 7;
+  left: calc(3 * (var(--c) + var(--g)) + var(--c) / 2);
+  top: calc(4 * (var(--c) + var(--g)) - var(--g) / 2);
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.12em 0.5em;
+  border: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 90%, transparent);
+  color: var(--muted);
+  font: 650 clamp(10.5px, calc(var(--c) * 0.2), 12.5px) / 1.15 var(--display);
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition:
+    color 320ms ease,
+    border-color 320ms ease;
+}
+
+.torn[hidden] {
+  display: none;
+}
+
+.torn .emoji {
+  font-size: 1.05em;
+}
+
+.torn[data-active] {
+  color: var(--paper);
+  border-color: color-mix(in srgb, var(--paper) 45%, transparent);
+}
+
+/* Phone-size tiles: just 🤷 at rest; the word appears while the centre is lit. */
+@container (max-width: 440px) {
+  .torn {
+    padding: 0.12em 0.3em;
+  }
+
+  .torn:not([data-active]) .tornWord {
+    display: none;
+  }
+}
+
+/* ── Read-out ── */
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.readout p,
+.readout h3 {
+  margin: 0;
+}
+
+.kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-family: var(--body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lbl);
+  font-variant-numeric: tabular-nums;
+}
+
+.tri {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  margin-left: 2px;
+  overflow: visible;
+}
+
+.tri[data-half='ideal'] {
+  margin-left: 8px;
+}
+
+/* Every swatch triangle gets a hairline: the palette ends can match the page. */
+.tri polygon,
+.rampSvg polygon,
+.halfFill {
+  stroke: var(--edge);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.pickedTag {
+  margin-left: 6px;
+  padding: 1px 7px;
+  border: 1px solid var(--rule-major);
+  border-radius: 999px;
+  color: var(--paper);
+  letter-spacing: 0.06em;
+}
+
+.readTitle {
+  font-size: 1.35em;
+  font-variation-settings: 'wdth' 92;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.readBody {
+  color: var(--muted);
+  font-size: 0.95em;
+  line-height: 1.45;
+}
+
+.chip {
+  min-width: 2.3em;
+  padding: 1px 6px;
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 1px var(--edge);
+  font-weight: 700;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Legend ── */
+
+.legend {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 14px 10px;
+  border: 1px solid var(--rule-major);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--ink-2) 80%, transparent);
+}
+
+.legendRow {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.halfGlyph {
+  display: block;
+  width: 30px;
+  height: 30px;
+}
+
+.ghost {
+  fill: none;
+  stroke: var(--faint);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+  vector-effect: non-scaling-stroke;
+}
+
+.legendText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.legendWhere {
+  color: var(--lbl);
+  font-size: 0.72em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Names stay neutral: hue already means agree/disagree. */
+.legendName {
+  color: var(--paper);
+  font-family: var(--display);
+  font-size: 1.02em;
+  white-space: nowrap;
+}
+
+.ramp {
+  display: flex;
+  gap: 3px;
+}
+
+.rampStep {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 18px;
+}
+
+.rampSvg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--paper) 10%, transparent);
+  transition:
+    box-shadow 220ms ease,
+    transform 220ms var(--ease);
+}
+
+.rampNum {
+  color: var(--lbl);
+  font-size: 10.5px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  transition: color 220ms ease;
+}
+
+.rampStep[data-on] .rampSvg {
+  box-shadow:
+    0 0 0 1.5px var(--ink-2),
+    0 0 0 3px var(--paper);
+  transform: translateY(-1px);
+}
+
+.rampStep[data-on] .rampNum {
+  color: var(--paper);
+  font-weight: 700;
+}
+
+/* Narrow legend: the ramp drops under its label. */
+@container (max-width: 340px) {
+  .legendRow {
+    grid-template-columns: 30px minmax(0, 1fr);
+    grid-template-areas:
+      'glyph text'
+      'glyph ramp';
+    row-gap: 6px;
+  }
+
+  .halfGlyph {
+    grid-area: glyph;
+    align-self: start;
+  }
+
+  .legendText {
+    grid-area: text;
+  }
+
+  .ramp {
+    grid-area: ramp;
+  }
+
+  .legendRow + .legendRow {
+    padding-top: 4px;
+  }
+}
+
+.legendScale {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 2px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--rule);
+  color: var(--lbl);
+  font-size: 0.72em;
+}
+
+/* One-line key (quiz): which half is which. */
+.key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.key > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.key strong {
+  color: var(--paper);
+  font-weight: 650;
+}
+
+.key .halfGlyph {
+  width: 16px;
+  height: 16px;
+}
+
+/* ── Motion ── */
+
+.tiles[data-still] *,
+.tiles[data-still] *::before {
+  transition: none !important;
+}
+
+/* Reduced motion: no glides, scaling or fades anywhere on the board. */
+@media (prefers-reduced-motion: reduce) {
+  .tiles *,
+  .tiles *::before {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  button.cell:hover,
+  button.cell:focus-visible,
+  .cell[data-on],
+  .rampStep[data-on] .rampSvg {
+    transform: none;
+  }
+
+  .ring {
+    transform: translate(calc(var(--col, 3) * (var(--c) + var(--g))), calc(var(--row, 3) * (var(--c) + var(--g))));
+  }
+}

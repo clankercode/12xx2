@@ -1,151 +1,80 @@
+/* Answer grid layout around the split-tile board (src/ui/tiles). The host is the size
+   container the tiles measure against. */
+.host {
+  container-type: inline-size;
+  width: 100%;
+}
+
 .wrap {
-  /* Cells size to the nearest inline-size container (the landing demo card), else the viewport. */
-  --c: clamp(32px, calc((min(100vw, 100cqi) - 120px) / 7), 62px);
   display: grid;
-  grid-template-columns: auto auto auto;
-  grid-template-areas:
-    '. . x'
-    'y ye grid'
-    '. . xe'
-    'r r r';
-  justify-content: center;
-  column-gap: 10px;
-  row-gap: 6px;
+  justify-items: center;
+  gap: 16px;
 }
 
-.compact {
-  --c: clamp(26px, 5vw, 40px);
-}
-
-.xTitle {
-  grid-area: x;
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: var(--ideal);
-  text-align: center;
-}
-
-.yTitle {
-  grid-area: y;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: var(--now-text);
-  text-align: center;
-  display: flex;
-  justify-content: center;
-}
-
-.yEndInline {
-  display: none;
-  font-weight: 400;
-  font-size: 0.72rem;
-  color: var(--muted);
-}
-
-
-
-.yEnds {
-  grid-area: ye;
+.aside {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-end;
-  font-size: 0.78rem;
-  color: var(--muted);
-  padding: 6px 0;
+  gap: 12px;
+  width: 100%;
+  max-width: 420px;
 }
 
-.xEnds {
-  grid-area: xe;
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.78rem;
-  color: var(--muted);
-}
-
-.grid {
-  grid-area: grid;
-  display: grid;
-  gap: 3px;
-  padding: 3px;
-  border: 1px solid var(--rule-major);
-  border-radius: var(--radius-m);
-  background: var(--ink);
-}
-
-.row {
-  display: grid;
-  grid-template-columns: repeat(7, var(--c));
-  gap: 3px;
-}
-
-.cell {
-  width: var(--c);
-  height: var(--c);
-  border-radius: 5px;
-  border: 1px solid var(--rule-major);
-  /* Each cell tints toward Ideal (periwinkle) by column and Now (amber) by row. */
-  background:
-    linear-gradient(90deg, color-mix(in srgb, var(--ideal) calc(var(--ix) * var(--tint-ideal)), transparent), color-mix(in srgb, var(--ideal) calc(var(--ix) * var(--tint-ideal)), transparent)),
-    color-mix(in srgb, var(--now) calc(var(--nx) * var(--tint-now)), var(--ink-2));
-  cursor: pointer;
-  padding: 0;
-  position: relative;
-  transition:
-    transform 120ms ease,
-    border-color 120ms ease;
-}
-
-.cell:hover:not(:disabled) {
-  border-color: var(--paper);
-  transform: scale(1.06);
-  z-index: 1;
-}
-
-.cell:disabled {
-  cursor: default;
-}
-
-.diag {
-  border-color: color-mix(in srgb, var(--paper) 42%, var(--rule-major));
-}
-
-.selected {
-  background: var(--paper);
-  border-color: var(--paper);
-  animation: pick 260ms ease-out;
-}
-
-.mark {
-  position: absolute;
-  inset: 22%;
-  background:
-    linear-gradient(135deg, var(--ideal) 0 50%, var(--now) 50% 100%);
-  border-radius: 3px;
-}
-
-@keyframes pick {
-  0% {
-    transform: scale(0.8);
-  }
-  60% {
-    transform: scale(1.12);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
+/* Tall enough for a two-line headline and sentence, so the controls below don't bob on hover. */
 .readout {
-  grid-area: r;
-  min-height: 3.2em;
-  margin: 8px auto 0;
-  text-align: center;
-  font-size: 0.95rem;
-  max-width: 40ch;
-  text-wrap: balance;
+  min-height: 7.2em;
+}
+
+.wrap[data-legend='full'] .readout {
+  min-height: 6.2em;
+}
+
+/* Very narrow hosts (the landing card at 320px): tiles may go below the shared 32px floor so the board fits. */
+@container (max-width: 290px) {
+  .wrap {
+    --c: clamp(26px, calc((100cqi - 2 * var(--p) - 2px - 6 * var(--g)) / 7), 32px);
+  }
+}
+
+/* Quiz: a small colour switch under the key (the footer picker is hidden while answering). */
+.colours {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.colours select {
+  padding: 3px 6px;
+  border: 1px solid var(--rule-major);
+  border-radius: var(--radius-s);
+  background: var(--ink-2);
+  color: var(--paper);
+  font: inherit;
+}
+
+/* Wide enough: board left, read-out right. */
+@container (min-width: 660px) {
+  .wrap {
+    --c: clamp(40px, calc((100cqi - 250px - 28px - 2 * var(--p) - 2px - 6 * var(--g)) / 7), 58px);
+    grid-template-columns: auto minmax(220px, 250px);
+    justify-content: center;
+    align-items: center;
+    column-gap: 28px;
+  }
+
+  .wrap[data-legend='full'] {
+    --c: clamp(40px, calc((100cqi - 300px - 28px - 2 * var(--p) - 2px - 6 * var(--g)) / 7), 58px);
+    grid-template-columns: auto minmax(260px, 300px);
+  }
+
+  .readout {
+    min-height: 9.5em;
+  }
+
+  .wrap[data-legend='full'] .readout {
+    min-height: 7.6em;
+  }
 }
 
 /* Single-frame strip / two-row mode. */
@@ -243,22 +172,5 @@
   }
   .pillText {
     font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .wrap {
-    --c: clamp(26px, calc((min(100vw, 100cqi) - 76px) / 7), 62px);
-    column-gap: 6px;
-  }
-  .yTitle {
-    justify-content: space-between;
-    padding: 6px 0;
-  }
-  .yEndInline {
-    display: inline;
-  }
-  .yEnds {
-    display: none;
   }
 }

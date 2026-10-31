@@ -1,0 +1,721 @@
+/* Quadrant map — the answer grid as a map sheet with named territories. */
+
+.root {
+  --g: 4px;
+  --pad: 12px;
+  --c: clamp(34px, calc((100cqi - 6 * var(--g) - 2 * var(--pad) - 2px) / 7), 66px);
+  --quad: calc(3 * var(--c) + 2 * var(--g));
+  /* Cell intensity at rest / when its region is lit. */
+  --dim: 0.36;
+  --lit: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+
+.root[data-mode='answer'] {
+  --dim: 0.42;
+  --lit: 0.9;
+}
+
+/* Mono relies on the +/− signs, so cells are never dimmed: any blend toward the
+   page pushes white-on-grey signs below 4.5:1 (e.g. −1 on the light page: 3.4:1
+   at 0.6). The lit region is carried by the frames, labels and pin instead. */
+.root[data-mono] {
+  --dim: 1;
+}
+
+.small {
+  --pad: 8px;
+  --g: 3px;
+  --c: clamp(24px, calc((100cqi - 6 * var(--g) - 2 * var(--pad) - 2px) / 7), 40px);
+  gap: 10px;
+  font-size: 0.8rem;
+}
+
+.statement {
+  max-width: 32em;
+  margin: 0;
+  text-align: center;
+  font-family: var(--display);
+  font-size: clamp(1.05rem, 2.6vw, 1.3rem);
+  font-weight: 600;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+/* ---------- the map sheet ---------- */
+
+.sheet {
+  padding: var(--pad);
+  border: 1px solid var(--rule-major);
+  border-radius: 16px;
+  background:
+    radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--paper) 4%, transparent), transparent 60%),
+    var(--ink-2);
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--paper) 6%, transparent) inset,
+    0 18px 40px -24px rgb(0 0 0 / 0.55);
+}
+
+.grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(7, var(--c));
+  grid-template-rows: repeat(7, var(--c));
+  gap: var(--g);
+}
+
+/* Placement shared by plates and labels. */
+[data-q='tl'].plate,
+[data-q='tl'].label {
+  grid-column: 1 / 4;
+  grid-row: 1 / 4;
+}
+
+[data-q='tr'].plate,
+[data-q='tr'].label {
+  grid-column: 5 / 8;
+  grid-row: 1 / 4;
+}
+
+[data-q='bl'].plate,
+[data-q='bl'].label {
+  grid-column: 1 / 4;
+  grid-row: 5 / 8;
+}
+
+[data-q='br'].plate,
+[data-q='br'].label {
+  grid-column: 5 / 8;
+  grid-row: 5 / 8;
+}
+
+/* Region frame: split on the same diagonal as the cells — top-left = now, bottom-right = ideal. */
+.plate {
+  z-index: 0;
+  margin: -5px;
+  border: 2px solid transparent;
+  border-radius: 9px;
+  background:
+    linear-gradient(
+        to bottom right,
+        color-mix(in srgb, var(--now-c) 12%, var(--ink-2)) 50%,
+        color-mix(in srgb, var(--ideal-c) 12%, var(--ink-2)) 50%
+      )
+      padding-box,
+    linear-gradient(to bottom right, var(--now-c) 50%, var(--ideal-c) 50%) border-box;
+  opacity: 0.5;
+  transition:
+    opacity 260ms ease,
+    box-shadow 260ms ease;
+}
+
+.diag {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.diag line {
+  stroke: var(--paper);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 5;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.22;
+  transition: opacity 260ms ease;
+}
+
+/* ---------- cells ---------- */
+
+.cell {
+  position: relative;
+  z-index: 2;
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--ink);
+  outline: 1px solid color-mix(in srgb, var(--paper) 10%, transparent);
+  outline-offset: -1px;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+button.cell {
+  cursor: pointer;
+}
+
+button.cell:hover {
+  transform: scale(1.1);
+  z-index: 5;
+}
+
+button.cell:focus-visible {
+  z-index: 6;
+  outline: 2px solid var(--paper);
+  outline-offset: 2px;
+}
+
+.art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: var(--dim);
+  transition: opacity 260ms ease;
+}
+
+.root[data-lit='tr'] .cell[data-q='tr'] .art,
+.root[data-lit='tl'] .cell[data-q='tl'] .art,
+.root[data-lit='br'] .cell[data-q='br'] .art,
+.root[data-lit='bl'] .cell[data-q='bl'] .art,
+.root[data-lit='x'] .cell[data-q='x'] .art,
+.root[data-lit='diag'] .cell[data-diag] .art {
+  opacity: var(--lit);
+}
+
+.cell[data-on] .art,
+.cell[data-hot] .art {
+  opacity: 1;
+}
+
+.root[data-lit='tr'] .plate[data-q='tr'],
+.root[data-lit='tl'] .plate[data-q='tl'],
+.root[data-lit='br'] .plate[data-q='br'],
+.root[data-lit='bl'] .plate[data-q='bl'] {
+  opacity: 1;
+  box-shadow: 0 0 22px -6px color-mix(in srgb, var(--paper) 30%, transparent);
+}
+
+.root[data-lit='diag'] .diag line {
+  opacity: 0.85;
+}
+
+/* The picked cell in answer mode. */
+.root[data-mode='answer'] .cell[data-on] {
+  z-index: 6;
+  transform: scale(1.14);
+  outline: 2px solid var(--paper);
+  outline-offset: 0;
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--ink) 80%, transparent),
+    0 6px 18px rgb(0 0 0 / 0.45);
+}
+
+.root[data-mode='answer'] .cell[data-on]:focus-visible {
+  outline-offset: 3px;
+  box-shadow:
+    0 0 0 2px var(--ink),
+    0 6px 18px rgb(0 0 0 / 0.45);
+}
+
+.num text,
+.sign text {
+  font-family: var(--body);
+  font-weight: 800;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.num text {
+  font-size: 30px;
+}
+
+.sign text {
+  font-size: 30px;
+}
+
+/* Hero example pick: a ring that pops onto each stop. */
+.pin {
+  z-index: 6;
+  margin: -4px;
+  border: 2px solid var(--paper);
+  border-radius: 8px;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--ink) 75%, transparent),
+    0 0 18px color-mix(in srgb, var(--paper) 35%, transparent);
+  pointer-events: none;
+  animation: pin-pop 420ms cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+
+@keyframes pin-pop {
+  from {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* ---------- labels ---------- */
+
+.label {
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  max-width: calc(var(--quad) - 6px);
+  margin: 3px;
+  padding: 5px 9px 5px 6px;
+  border: 1px solid color-mix(in srgb, var(--paper) 16%, transparent);
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--ink) 92%, transparent);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 4px 14px -6px rgb(0 0 0 / 0.5);
+  pointer-events: none;
+  transition:
+    opacity 260ms ease,
+    transform 260ms ease,
+    border-color 260ms ease;
+}
+
+[data-q='tl'].label {
+  align-self: start;
+  justify-self: start;
+}
+
+[data-q='tr'].label {
+  align-self: start;
+  justify-self: end;
+  flex-direction: row-reverse;
+  text-align: right;
+  padding: 5px 6px 5px 9px;
+}
+
+[data-q='bl'].label {
+  align-self: end;
+  justify-self: start;
+}
+
+[data-q='br'].label {
+  align-self: end;
+  justify-self: end;
+  flex-direction: row-reverse;
+  text-align: right;
+  padding: 5px 6px 5px 9px;
+}
+
+.emoji {
+  flex: none;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.root[data-mono] .emoji,
+.root[data-mono] .readEmoji,
+.root[data-mono] .stepBtn span {
+  filter: grayscale(1);
+}
+
+.labelText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.name {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.88rem;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+}
+
+.short {
+  display: none;
+}
+
+.small .long {
+  display: none;
+}
+
+.small .short {
+  display: inline;
+}
+
+.sub {
+  margin-top: 1px;
+  font-size: 0.7rem;
+  line-height: 1.2;
+  color: var(--muted);
+}
+
+/* Hero: the lit territory's label steps forward, the rest recede. */
+/* (Dim the contents, not the box: a translucent box lets the cell signs show through.) */
+/* (Recede with colour, not opacity: faded text fails 4.5:1. Muted on ink is ≥ 6.7:1.) */
+.root[data-mode='hero'] .label .emoji,
+.root[data-mode='hero'] .torn .emoji {
+  opacity: 0.5;
+  transition: opacity 260ms ease;
+}
+
+.root[data-mode='hero'] .label .name,
+.root[data-mode='hero'] .tornText {
+  color: var(--muted);
+  transition: color 260ms ease;
+}
+
+.root[data-mode='hero'][data-lit='tr'] .label[data-q='tr'] .emoji,
+.root[data-mode='hero'][data-lit='tl'] .label[data-q='tl'] .emoji,
+.root[data-mode='hero'][data-lit='br'] .label[data-q='br'] .emoji,
+.root[data-mode='hero'][data-lit='bl'] .label[data-q='bl'] .emoji {
+  opacity: 1;
+}
+
+.root[data-mode='hero'][data-lit='tr'] .label[data-q='tr'] .name,
+.root[data-mode='hero'][data-lit='tl'] .label[data-q='tl'] .name,
+.root[data-mode='hero'][data-lit='br'] .label[data-q='br'] .name,
+.root[data-mode='hero'][data-lit='bl'] .label[data-q='bl'] .name {
+  color: var(--paper);
+}
+
+/* Hero "torn" stop: the example pin is the centre cell, which the pill covers.
+   Step it aside (the readout and stepper name the region). */
+.root[data-mode='hero'][data-lit='x'] .torn {
+  opacity: 0;
+}
+
+.root[data-lit='tr'] .label[data-q='tr'],
+.root[data-lit='tl'] .label[data-q='tl'],
+.root[data-lit='br'] .label[data-q='br'],
+.root[data-lit='bl'] .label[data-q='bl'],
+.root[data-lit='x'] .torn {
+  border-color: color-mix(in srgb, var(--paper) 55%, transparent);
+}
+
+.root[data-mode='hero'][data-lit='tr'] .label[data-q='tr'],
+.root[data-mode='hero'][data-lit='tl'] .label[data-q='tl'],
+.root[data-mode='hero'][data-lit='br'] .label[data-q='br'],
+.root[data-mode='hero'][data-lit='bl'] .label[data-q='bl'] {
+  transform: scale(1.05);
+}
+
+/* Answer: labels are compact, and step out of the way of the region you're in. */
+.root[data-mode='answer'] .sub {
+  display: none;
+}
+
+.root[data-mode='answer'] .name {
+  font-size: 0.78rem;
+}
+
+.root[data-mode='answer'][data-lit='tr'] .label[data-q='tr'],
+.root[data-mode='answer'][data-lit='tl'] .label[data-q='tl'],
+.root[data-mode='answer'][data-lit='br'] .label[data-q='br'],
+.root[data-mode='answer'][data-lit='bl'] .label[data-q='bl'],
+.root[data-mode='answer'][data-lit='x'] .torn {
+  opacity: 0;
+}
+
+.torn {
+  grid-column: 3 / 6;
+  grid-row: 4;
+  z-index: 4;
+  justify-self: center;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px 3px 7px;
+  border: 1px solid color-mix(in srgb, var(--paper) 16%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 86%, transparent);
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+  transition:
+    opacity 260ms ease,
+    border-color 260ms ease;
+}
+
+.torn .emoji {
+  font-size: 0.95rem;
+}
+
+.tornText {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.root[data-mode='answer'] .torn {
+  padding: 3px;
+}
+
+.root[data-mode='answer'] .tornText {
+  display: none;
+}
+
+.diagTag {
+  grid-column: 2 / 4;
+  grid-row: 5 / 7;
+  z-index: 4;
+  align-self: center;
+  justify-self: center;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--paper) 40%, transparent);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  transform: rotate(-45deg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 260ms ease;
+}
+
+.root[data-lit='diag'] .diagTag {
+  opacity: 1;
+}
+
+/* ---------- key, readout, stepper ---------- */
+
+.key {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 18px;
+  margin: 0;
+  max-width: none;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.keyItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.keyTri {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 2px;
+  background: var(--muted);
+}
+
+.keyTri[data-half='now'] {
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.keyTri[data-half='ideal'] {
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+.keyNow {
+  color: var(--now-text);
+  font-weight: 700;
+}
+
+.keyIdeal {
+  color: var(--ideal);
+  font-weight: 700;
+}
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: min(34em, 100%);
+  min-height: 6.2em;
+  text-align: center;
+}
+
+.readout p {
+  margin: 0;
+  max-width: none;
+}
+
+.readHead {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 1.15;
+}
+
+.readEmoji {
+  font-size: 1.15em;
+}
+
+.readBody {
+  text-wrap: balance;
+}
+
+.readMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.readMeta strong {
+  color: var(--paper);
+}
+
+.swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  outline: 1px solid color-mix(in srgb, var(--paper) 25%, transparent);
+}
+
+.state {
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--rule-major);
+  font-family: var(--body);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stepper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.stepBtn,
+.playBtn {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--rule-major);
+  border-radius: 9px;
+  background: var(--ink-2);
+  cursor: pointer;
+  font-size: 1.05rem;
+  line-height: 1;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.stepBtn[aria-pressed='true'] {
+  border-color: var(--paper);
+  background: var(--ink-3);
+}
+
+.stepBtn:hover,
+.playBtn:hover {
+  border-color: var(--muted);
+}
+
+.playBtn {
+  margin-left: 6px;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* ---------- tight layouts ---------- */
+
+@container (max-width: 440px) {
+  .sub {
+    display: none;
+  }
+
+  .name {
+    font-size: 0.74rem;
+  }
+
+  .label {
+    /* May spill half a cell into the neutral column so names stay on one line. */
+    width: max-content;
+    max-width: calc(var(--quad) + var(--c) / 2 - 4px);
+    gap: 5px;
+    margin: 2px;
+    padding: 3px 7px 3px 4px;
+  }
+
+  [data-q='tr'].label,
+  [data-q='br'].label {
+    padding: 3px 4px 3px 7px;
+  }
+
+  .emoji {
+    font-size: 0.95rem;
+  }
+
+  .readHead {
+    font-size: 1.05rem;
+  }
+
+  .long {
+    display: none;
+  }
+
+  .short {
+    display: inline;
+  }
+}
+
+.small .sub {
+  display: none;
+}
+
+.small .name {
+  font-size: 0.68rem;
+}
+
+.small .label {
+  gap: 4px;
+  margin: 1px;
+  padding: 2px 6px 2px 3px;
+}
+
+.small .emoji {
+  font-size: 0.85rem;
+}
+
+.small .readout {
+  min-height: 6.4em;
+}
+
+.small .stepBtn,
+.small .playBtn {
+  width: 30px;
+  height: 30px;
+  font-size: 0.85rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cell,
+  .art,
+  .plate,
+  .label,
+  .torn,
+  .diag line,
+  .diagTag {
+    transition: none;
+  }
+
+  .pin {
+    animation: none;
+  }
+
+  button.cell:hover {
+    transform: none;
+  }
+}

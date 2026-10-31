@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import type { Answer, Mode } from '../engine/types'
+import type { Mode } from '../engine/types'
 import { askedIdsForMode } from '../data/items'
 import { IDEAL_SHORT, NOW_SHORT } from '../data/frames'
 import { useStore } from './App'
-import { Grid } from './Grid'
+import { HeroDemo } from './HeroDemo'
 import { Confirm } from './Chrome'
 import { go } from './router'
 import css from './Landing.module.css'
@@ -14,12 +14,10 @@ const MODES: { mode: Mode; name: string; minutes: number; note: string }[] = [
   { mode: 'full', name: 'Full', minutes: 22, note: 'Tightest results' },
 ]
 
-const PRESET = { i: 1, n: 3 } as const
 const DEMO = 'If a few people come to own most of a society’s wealth, much of it should be shared out among the rest.'
 
 export function Landing() {
   const { s, dispatch } = useStore()
-  const [demo, setDemo] = useState<{ i: Answer; n: Answer } | null>(PRESET)
   const inProgress = s.stage === 'quiz' && s.mode && Object.keys(s.answers).length > 0
   const done = s.stage === 'done'
   /** A mode picked while answers or a result exist: starting over erases them, so confirm first. */
@@ -63,24 +61,8 @@ export function Landing() {
           </div>
           <p className="small muted">Free, anonymous, and private: your answers never leave your device.</p>
         </div>
-        <figure className={css.demo}>
-          <p className={css.demoStatement}>{DEMO}</p>
-          <Grid value={demo} onPick={(i, n) => setDemo({ i, n })} idPrefix="demo" />
-          <figcaption className="small muted">
-            {demo?.i === PRESET.i && demo?.n === PRESET.n ? (
-              <>
-                Someone in a country where the rich bought the courts might answer like this: in principle only slightly, but here and
-                now, strongly. Try it yourself.
-              </>
-            ) : (
-              <>
-                That’s your answer for both frames in one tap.{' '}
-                <button type="button" className={css.reset} onClick={() => setDemo(PRESET)}>
-                  Show the example again
-                </button>
-              </>
-            )}
-          </figcaption>
+        <figure className={css.demo} aria-label="How the answer grid works">
+          <HeroDemo statement={DEMO} />
         </figure>
       </section>
 
