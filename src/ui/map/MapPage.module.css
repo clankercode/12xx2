@@ -279,3 +279,11 @@
   text-underline-offset: 3px;
   cursor: pointer;
 }
+
+/* Phone width: all four tabs fit without a hidden scroll. */
+@media (max-width: 480px) {
+  .tabs button {
+    padding: 8px 7px;
+    font-size: 0.92rem;
+  }
+}

@@ -57,12 +57,17 @@ deploy:
     SITE_ORIGIN=https://12axes-squared.netlify.app BASE_PATH=/ just build
     netlify deploy --prod --no-build --dir dist --site 1c4ba7d9-e076-4624-a3f7-6d7da6803f43  # 12axes-squared
 
-e2e:
-    pnpm playwright test
+# Extra args go to Playwright, e.g. `just e2e e2e/map.spec.ts`.
+e2e *args:
+    pnpm playwright test {{args}}
 
 # Needs `just dev` running. Writes to shots/ (gitignored) unless an out dir is given.
 screenshots out="shots":
     pnpm tsx scripts/shots.ts http://localhost:21313/ {{out}}
+
+# Needs a dev server. Results "Exact from here" panel and every #/map view; fails on sideways scroll or page errors.
+map-shots base="http://localhost:21313/" out="shots/map":
+    pnpm tsx scripts/map-shots.ts {{base}} {{out}}
 
 # Needs `just dev` running. Compare page and cards for three simulated pairs, into shots/.
 compare-shots out="shots":

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type KeyboardEvent, type ReactNode } from 'react'
 import { useStore } from '../App'
 import { AXES } from '../../data/axes'
 import { CALIBRATION } from '../../data/calibration'
@@ -131,6 +131,21 @@ export default function MapPage() {
     else setSel(g)
   }
 
+  const pickTab = (t: Tab) => {
+    setTab(t)
+    setPair(null)
+  }
+  /** Arrow keys, Home and End move between tabs (and focus follows), as the ARIA tabs pattern expects. */
+  const onTabKey = (e: KeyboardEvent) => {
+    const k = TABS.findIndex(([t]) => t === tab)
+    const to = { ArrowRight: k + 1, ArrowLeft: k - 1, Home: 0, End: TABS.length - 1 }[e.key]
+    if (to === undefined) return
+    e.preventDefault()
+    const t = TABS[(to + TABS.length) % TABS.length]![0]
+    pickTab(t)
+    document.getElementById(`map-tab-${t}`)?.focus()
+  }
+
   return (
     <article className={`wrap ${page.page}`}>
       <h1>Ideology map</h1>
@@ -146,13 +161,23 @@ export default function MapPage() {
         )}
       </p>
 
-      <div className={page.tabs} role="tablist" aria-label="Map views">
+      <div className={page.tabs} role="tablist" aria-label="Map views" onKeyDown={onTabKey}>
         {TABS.map(([t, l]) => (
-          <button key={t} role="tab" type="button" aria-selected={tab === t} onClick={() => { setTab(t); setPair(null) }}>
+          <button
+            key={t}
+            id={`map-tab-${t}`}
+            role="tab"
+            type="button"
+            aria-selected={tab === t}
+            aria-controls="map-panel"
+            tabIndex={tab === t ? 0 : -1}
+            onClick={() => pickTab(t)}
+          >
             {l}
           </button>
         ))}
       </div>
+      <div role="tabpanel" id="map-panel" aria-labelledby={`map-tab-${tab}`}>
 
       <div className={css.toolbar}>
         <Seg
@@ -290,6 +315,7 @@ export default function MapPage() {
           </section>
         </>
       )}
+      </div>
     </article>
   )
 }
