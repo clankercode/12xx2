@@ -35,7 +35,7 @@ function stabilityText(f: FitSet) {
   return (
     <>
       {' '}
-      · nearest is {STABILITY_LABEL[l]}{' '}
+      · {STABILITY_LABEL[l]}{' '}
       <span className="muted">
         (<a href="#/method">{STABILITY_GLOSS[l]}</a>)
       </span>
@@ -128,7 +128,10 @@ export function Hero({ r, who = 'You' }: { r: Results; who?: string }) {
       )}
       {h.kind === 'constant' && (
         <div data-fit-count={h.ideal.fits.length}>
-          <p className={css.heroKicker}>{sameInBothFrames(h) ? 'Constant: in theory and here and now, ' + (who === 'You' ? 'you fit' : 'these answers fit') : `In theory ${who === 'You' ? 'you fit' : 'these answers fit'}`}</p>
+          <p className={css.heroKicker}>
+            {sameInBothFrames(h) ? 'In theory and here and now, ' : 'In theory, '}
+            {who === 'You' ? 'you fit' : 'these answers fit'}
+          </p>
           <h1 className={`${css.heroTitle} ${h.ideal.fits.length > 1 ? css.heroTitleList : ''}`}>{fitTitle(h.ideal)}</h1>
           {h.ideal.fits.length > 1 && <p className={css.heroSub}>{fitSetSub(h.ideal)}</p>}
           <p className={css.heroSub}>{constantNote(h, who)}</p>

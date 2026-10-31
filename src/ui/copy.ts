@@ -94,9 +94,9 @@ export function nearestNote(f: FitSet): string {
 
 /** The nearest ideology's distance and band beside the "fits" cut: a measurement, with the breakpoint that decides. */
 export function distanceNote(f: FitSet, loose: number): string {
-  if (!f.nearest) return 'Every listed ideology is ruled out by a core commitment.'
+  if (!f.nearest) return 'every listed ideology is ruled out by a core commitment'
   const m = f.nearest
-  return `Nearest: ${m.arch.name}, distance ${m.d.toFixed(3)} (${DISTANCE_BAND[m.label]}; “fits” means ${loose.toFixed(3)} or less)`
+  return `nearest is ${m.arch.name} at distance ${m.d.toFixed(3)} (${DISTANCE_BAND[m.label]}; “fits” means ${loose.toFixed(3)} or less)`
 }
 
 /** Why an empty fit set names nobody. */

@@ -74,3 +74,8 @@ intro-shots out="shots/intro":
 # Needs `just dev` running. Post, story and wide share cards plus the comparison card, into shots/cards/.
 card-shots out="shots/cards":
     pnpm tsx scripts/card-shots.ts http://localhost:21313/ {{out}}
+
+# Needs a dev server. Every fit-set headline case (one, several, more than 3, none, split, ruled-out
+# nearest, overlapping frames) at 1280 and 390 in dark and light, shared view, compare and cards.
+fit-shots base="http://localhost:21313/" out="shots/fit":
+    pnpm tsx scripts/fit-shots.ts {{base}} {{out}}

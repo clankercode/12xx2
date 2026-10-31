@@ -209,9 +209,17 @@ export function drawCard(canvas: HTMLCanvasElement, r: Results, o: CardOptions) 
       ctx.fillText(line.label, left, y)
     }
     ctx.fillStyle = C.paper
-    const size = wide ? 44 : hl.lines.length > 1 ? 70 : 92
+    // A fit set of several names shrinks to its line budget, so the chart below keeps its room.
+    const maxLines = wide || hl.lines.length === 1 ? 3 : 2
+    let size = wide ? 44 : hl.lines.length > 1 ? 70 : 92
     ctx.font = `800 ${size}px ${DISPLAY}`
-    for (const t of wrapText(ctx, line.name, colW)) {
+    let wrapped = wrapText(ctx, line.name, colW)
+    while (wrapped.length > maxLines && size > (wide ? 30 : 48)) {
+      size -= 4
+      ctx.font = `800 ${size}px ${DISPLAY}`
+      wrapped = wrapText(ctx, line.name, colW)
+    }
+    for (const t of wrapped) {
       y += size * 1.02
       ctx.fillText(t, left, y)
     }
