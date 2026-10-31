@@ -37,12 +37,12 @@ The full critique is in [`docs/criticisms.md`](docs/criticisms.md).
   - Gaps are only flagged when they beat a threshold calibrated by simulation.
   - Random clicking is detected.
 - **Defensible matching.**
-  - Ideology positions come from three AI coders from different model families (Claude Opus, GPT-6.1-sol, Grok). Each one answered the same 120 statements in both frames, blind to item ids, and the positions are the coders' median scored with the same engine that scores you.
+  - Ideology positions come from three AI coders from different model families (Claude Opus, GPT-6.1-sol, Grok). Each one answered the same 154 statements (144 axis statements and 10 red lines) in both frames, blind to item ids, and the positions are the coders' median scored with the same engine that scores you.
   - Match labels and the split headline are calibrated against simulated adherents, not hand-tuned percentages.
 - **Private by construction.**
   - It's a static site: no backend, no analytics, no cookies, no third-party requests. A strict CSP sets `connect-src 'none'`.
   - Share links carry only your scores, never your answers, in the URL fragment, so the host never receives them.
-- **Original content.** All 120 statements, the scoring and the ideology profiles are new. A provenance gate (`just overlap`) checks every item against both upstream banks using hashed shingles.
+- **Original content.** All 154 statements, the scoring and the ideology profiles are new. A provenance gate (`just overlap`) checks every item against both upstream banks using hashed shingles.
 
 ## Using it
 
@@ -68,7 +68,7 @@ Data pipelines:
 ## Layout
 
 ```
-content/items/        120 statements (12 axes × 10), keyed, faceted, tiered Quick/Standard/Full
+content/items/        144 axis statements (10–16 per axis), keyed, faceted, tiered Quick/Standard/Full; red.json: 10 off-axis red lines
 content/archetypes/   ideology catalogue, blinded coder sheets, built vectors
 src/engine/           scoring, gaps, matching, gap typology, share-link codec (pure TS, tested)
 src/ui/               React UI; src/share/card.ts draws share cards with Canvas 2D
