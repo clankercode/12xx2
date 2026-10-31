@@ -1,0 +1,246 @@
+.lab {
+  width: min(1240px, 100% - 2 * var(--gutter));
+  margin: 0 auto 64px;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 20px;
+  margin: 8px 0 6px;
+  padding: 10px 14px;
+  background: color-mix(in srgb, var(--ink-2) 92%, transparent);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--rule-major);
+  border-radius: var(--radius-m);
+  font-size: 0.86rem;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  align-self: center;
+  margin-right: auto;
+  font-family: var(--display);
+  font-size: 1.05rem;
+}
+
+.devTag {
+  font-family: var(--body);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--now-deep);
+  color: var(--now-text);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.fieldLabel {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.select {
+  font: inherit;
+  min-height: 34px;
+  padding: 4px 8px;
+  color: var(--paper);
+  background: var(--ink);
+  border: 1px solid var(--rule-major);
+  border-radius: var(--radius-s);
+}
+
+.select:disabled {
+  opacity: 0.5;
+}
+
+.seg {
+  display: flex;
+  border: 1px solid var(--rule-major);
+  border-radius: var(--radius-s);
+  overflow: hidden;
+}
+
+.segBtn {
+  min-height: 34px;
+  padding: 4px 10px;
+  border: 0;
+  border-left: 1px solid var(--rule-major);
+  background: var(--ink);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.segBtn:first-child {
+  border-left: 0;
+}
+
+.segBtn[aria-pressed='true'] {
+  background: var(--ink-3);
+  color: var(--paper);
+  box-shadow: inset 0 -2px 0 var(--ideal);
+}
+
+.swatch {
+  display: flex;
+  gap: 1px;
+}
+
+.swatch i {
+  display: block;
+  width: 7px;
+  height: 16px;
+  border-radius: 1px;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  cursor: pointer;
+}
+
+.paletteNote {
+  margin: 0 0 18px;
+  font-size: 0.82rem;
+  color: var(--muted);
+  max-width: none;
+}
+
+.head {
+  margin: 8px 0 14px;
+}
+
+.h1 {
+  font-size: clamp(1.5rem, 3.4vw, 2.1rem);
+}
+
+.tagline {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.stage {
+  container-type: inline-size;
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  border: 1px dashed var(--rule-major);
+  border-radius: var(--radius-m);
+  background: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.stageFull {
+  padding: clamp(16px, 4vw, 40px);
+  min-height: 420px;
+  align-items: center;
+}
+
+.sideGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
+  gap: 16px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--rule-major);
+  border-radius: var(--radius-m);
+  background: var(--ink-2);
+}
+
+.cardTitle {
+  font-size: 1.05rem;
+}
+
+.cardPick {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--rule-major);
+  text-underline-offset: 4px;
+}
+
+.cardPick:hover {
+  text-decoration-color: var(--ideal);
+}
+
+.ideasHead {
+  margin: 28px 0 10px;
+  font-size: 1.15rem;
+}
+
+.ideas {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.ideas li {
+  display: grid;
+  grid-template-columns: 5.5em 1fr;
+  column-gap: 12px;
+  align-items: baseline;
+}
+
+.ideaTag {
+  grid-row: span 2;
+  font-family: var(--display);
+  font-weight: 700;
+  color: var(--ideal);
+  white-space: nowrap;
+}
+
+.ideaTitle {
+  font-weight: 700;
+}
+
+.ideaDetail {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.ideasCompact {
+  gap: 2px;
+  font-size: 0.82rem;
+}
+
+.ideasCompact li {
+  grid-template-columns: 4.6em 1fr;
+}
+
+.ideasCompact .ideaTag {
+  grid-row: auto;
+}
+
+.crash {
+  padding: 12px;
+  border: 1px solid var(--alert);
+  border-radius: var(--radius-s);
+  color: var(--alert);
+}

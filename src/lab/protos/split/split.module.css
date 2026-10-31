@@ -1,0 +1,580 @@
+/* "Split tiles" prototype. Geometry: --c cell, --g gap, --p board padding. */
+
+.root {
+  --g: 4px;
+  /* Room for the lit corner tile: 5% scale-up + 2px ring + 6px halo stays inside the board. */
+  --p: 12px;
+  --c: clamp(34px, calc((100cqi - 2 * var(--p) - 2px - 6 * var(--g)) / 7), 64px);
+  --ease: cubic-bezier(0.65, 0, 0.35, 1);
+  /* --faint is only ~3.4:1 on these panels; small text uses this >= 4.6:1 mix instead. */
+  --lbl: color-mix(in srgb, var(--muted) 68%, var(--faint));
+  /* Hairline that keeps near-page fills (mono +3 on light, −3 on dark) visible. */
+  --edge: color-mix(in srgb, var(--paper) 38%, transparent);
+  display: grid;
+  justify-items: center;
+  gap: 22px;
+  width: 100%;
+  max-width: 1000px;
+}
+
+@container (min-width: 760px) {
+  .root:not(.small) {
+    --c: clamp(52px, calc((100cqi - 380px - 48px - 2 * var(--p) - 2px - 6 * var(--g)) / 7), 66px);
+    grid-template-columns: auto minmax(300px, 380px);
+    justify-content: center;
+    align-items: center;
+    column-gap: 48px;
+  }
+
+  .root:not(.small) .statement {
+    grid-column: 1 / -1;
+  }
+}
+
+.small {
+  --g: 3px;
+  --p: 10px;
+  --c: clamp(30px, calc((100cqi - 2 * var(--p) - 2px - 6 * var(--g)) / 7), 44px);
+  gap: 14px;
+  font-size: 0.84rem;
+}
+
+/* ── Statement (answer mode) ── */
+
+.statement {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  max-width: 36em;
+  margin: 0;
+  text-align: center;
+  font-family: var(--display);
+  font-size: 1.22em;
+  font-weight: 600;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.statementKicker,
+.kicker {
+  font-family: var(--body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lbl);
+}
+
+/* ── Board ── */
+
+.boardWrap {
+  max-width: 100%;
+}
+
+.board {
+  position: relative;
+  padding: var(--p);
+  border: 1px solid var(--rule-major);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--ink-2) 94%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--paper) 6%, transparent),
+    0 24px 60px -28px rgb(0 0 0 / 0.55);
+}
+
+.cells {
+  display: grid;
+  grid-template-columns: repeat(7, var(--c));
+  grid-auto-rows: var(--c);
+  gap: var(--g);
+}
+
+.cell {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  overflow: hidden;
+  background: none;
+  color: inherit;
+  transition:
+    transform 220ms var(--ease),
+    opacity 420ms var(--ease),
+    filter 420ms var(--ease);
+}
+
+/* Hairline outline so pale tiles hold their edge on the light page and dark ones on the dark page. */
+.cell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--paper) 14%, transparent);
+  pointer-events: none;
+}
+
+button.cell {
+  cursor: pointer;
+}
+
+button.cell:hover,
+button.cell:focus-visible {
+  z-index: 4;
+  transform: scale(1.1);
+  box-shadow: 0 6px 18px -6px rgb(0 0 0 / 0.5);
+}
+
+button.cell:focus-visible {
+  outline: 2px solid var(--ideal);
+  outline-offset: 2px;
+}
+
+.cell[data-on] {
+  z-index: 4;
+  transform: scale(1.1);
+}
+
+.cell[data-dim] {
+  opacity: 0.34;
+  filter: saturate(0.7);
+}
+
+.tileSvg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.seam {
+  stroke: var(--ink);
+  stroke-opacity: 0.28;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.glyphs text {
+  font: 700 25px var(--body);
+  text-anchor: middle;
+  dominant-baseline: central;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Ring that glides to the active / picked tile ── */
+
+.ring {
+  position: absolute;
+  top: var(--p);
+  left: var(--p);
+  z-index: 6;
+  width: var(--c);
+  height: var(--c);
+  border-radius: 7px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(calc(var(--col, 3) * (var(--c) + var(--g))), calc(var(--row, 3) * (var(--c) + var(--g)))) scale(1.1);
+  box-shadow:
+    0 0 0 2px var(--paper),
+    0 0 0 6px color-mix(in srgb, var(--paper) 18%, transparent),
+    0 10px 28px -8px rgb(0 0 0 / 0.6);
+  transition:
+    transform 620ms var(--ease),
+    opacity 240ms ease;
+}
+
+.ring[data-shown] {
+  opacity: 1;
+}
+
+/* ── Captions set inside the grid ── */
+
+.captions {
+  position: absolute;
+  inset: var(--p);
+  /* Above the ring, so "Torn" reads as a name tag on the centre stop. */
+  z-index: 7;
+  display: grid;
+  grid-template-columns: repeat(7, var(--c));
+  grid-template-rows: repeat(7, var(--c));
+  gap: var(--g);
+  pointer-events: none;
+  transition: opacity 260ms ease;
+}
+
+.caption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  margin: 3px 2px;
+  padding: 0.3em 0.6em;
+  border: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--ink) 88%, transparent);
+  -webkit-backdrop-filter: blur(6px) saturate(0.6);
+  backdrop-filter: blur(6px) saturate(0.6);
+  color: var(--muted);
+  font-family: var(--display);
+  font-size: clamp(10.5px, calc(var(--c) * 0.215), 14px);
+  font-weight: 650;
+  font-variation-settings: 'wdth' 84;
+  line-height: 1.06;
+  letter-spacing: -0.005em;
+  text-align: left;
+  transition:
+    color 320ms ease,
+    border-color 320ms ease,
+    background-color 320ms ease,
+    opacity 320ms ease;
+}
+
+.caption[data-region='tl'] {
+  grid-area: 2 / 1 / 3 / 4;
+}
+
+.caption[data-region='tr'] {
+  grid-area: 2 / 5 / 3 / 8;
+}
+
+.caption[data-region='bl'] {
+  grid-area: 6 / 1 / 7 / 4;
+}
+
+.caption[data-region='br'] {
+  grid-area: 6 / 5 / 7 / 8;
+}
+
+/* "Torn" straddles the seam under the centre tile, clear of both rows' numerals. */
+.caption[data-region='c'] {
+  grid-area: 5 / 3 / 6 / 6;
+  align-self: start;
+  justify-self: center;
+  margin: 0;
+  padding: 0.14em 0.6em;
+  border-radius: 999px;
+  transform: translateY(calc(-50% - var(--g) / 2));
+}
+
+.caption[data-active] {
+  color: var(--paper);
+  border-color: color-mix(in srgb, var(--paper) 45%, transparent);
+  background: color-mix(in srgb, var(--ink) 92%, transparent);
+}
+
+.capEmoji {
+  font-size: 1.15em;
+  line-height: 1;
+}
+
+.capText {
+  display: flex;
+  flex-direction: column;
+}
+
+.capLine {
+  white-space: nowrap;
+}
+
+/* Answer mode: captions guide first, then step aside while you choose. */
+.root[data-mode='answer'] .board:hover .captions,
+.root[data-mode='answer'] .board:focus-within .captions {
+  opacity: 0;
+}
+
+.root[data-mode='answer'] .board[data-picked] .captions {
+  opacity: 0;
+}
+
+.root[data-mode='answer'] .caption {
+  color: var(--paper);
+}
+
+/* ── Aside: read-out, legend, tour ── */
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 7.4em;
+}
+
+.readout p {
+  margin: 0;
+}
+
+.kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.tri {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  margin-left: 2px;
+  overflow: visible;
+}
+
+.tri[data-half='ideal'] {
+  margin-left: 8px;
+}
+
+/* Every swatch triangle gets a hairline: the palette ends can match the page. */
+.tri polygon,
+.rampSvg polygon,
+.halfFill {
+  stroke: var(--edge);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.pickedTag {
+  margin-left: 6px;
+  padding: 1px 7px;
+  border: 1px solid var(--rule-major);
+  border-radius: 999px;
+  color: var(--paper);
+  letter-spacing: 0.06em;
+}
+
+.readTitle {
+  font-size: 1.5em;
+  font-variation-settings: 'wdth' 92;
+  letter-spacing: -0.02em;
+}
+
+.small .readTitle {
+  font-size: 1.2em;
+}
+
+.readBody {
+  color: var(--muted);
+  font-size: 0.95em;
+  line-height: 1.45;
+}
+
+/* Legend */
+
+.legend {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 14px 10px;
+  border: 1px solid var(--rule-major);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--ink-2) 80%, transparent);
+}
+
+.legendRow {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.halfGlyph {
+  display: block;
+  width: 30px;
+  height: 30px;
+}
+
+.ghost {
+  fill: none;
+  stroke: var(--faint);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+  vector-effect: non-scaling-stroke;
+}
+
+.legendText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.legendWhere {
+  color: var(--lbl);
+  font-size: 0.72em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.legendName {
+  font-family: var(--display);
+  font-size: 1.02em;
+  white-space: nowrap;
+}
+
+/* Names stay neutral: hue already means agree/disagree, and an amber or blue name
+   reads as a value (e.g. amber "Here and now" looked like "disagree" in blue/orange). */
+.legendName {
+  color: var(--paper);
+}
+
+.ramp {
+  display: flex;
+  gap: 3px;
+}
+
+.rampStep {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 18px;
+}
+
+.rampSvg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--paper) 10%, transparent);
+  transition: box-shadow 220ms ease, transform 220ms var(--ease);
+}
+
+.rampNum {
+  color: var(--lbl);
+  font-size: 9.5px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  transition: color 220ms ease;
+}
+
+.rampStep[data-on] .rampSvg {
+  box-shadow:
+    0 0 0 1.5px var(--ink-2),
+    0 0 0 3px var(--paper);
+  transform: translateY(-1px);
+}
+
+.rampStep[data-on] .rampNum {
+  color: var(--paper);
+  font-weight: 700;
+}
+
+/* Narrow legend: the ramp drops under its label. */
+@container (max-width: 340px) {
+  .legendRow {
+    grid-template-columns: 30px minmax(0, 1fr);
+    grid-template-areas:
+      'glyph text'
+      'glyph ramp';
+    row-gap: 6px;
+  }
+
+  .halfGlyph {
+    grid-area: glyph;
+    align-self: start;
+  }
+
+  .legendText {
+    grid-area: text;
+  }
+
+  .ramp {
+    grid-area: ramp;
+  }
+
+  .legendRow + .legendRow {
+    padding-top: 4px;
+  }
+}
+
+.legendScale {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 2px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--rule);
+  color: var(--lbl);
+  font-size: 0.72em;
+}
+
+/* Tour dots */
+
+.tour {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--rule-major);
+  border-radius: 999px;
+  background: var(--ink-2);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  filter: grayscale(0.7);
+  opacity: 0.75;
+  transition:
+    filter 200ms ease,
+    opacity 200ms ease,
+    border-color 200ms ease;
+}
+
+.dot:hover,
+.dot[aria-pressed='true'] {
+  filter: none;
+  opacity: 1;
+}
+
+.dot[aria-pressed='true'] {
+  border-color: var(--paper);
+  background: var(--ink-3);
+}
+
+.dot:focus-visible {
+  outline: 2px solid var(--ideal);
+  outline-offset: 2px;
+}
+
+.tourNote {
+  margin-left: 6px;
+  color: var(--lbl);
+  font-size: 0.75em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── Motion ── */
+
+.root[data-still] .ring,
+.root[data-still] .cell {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cell,
+  .ring,
+  .caption,
+  .captions,
+  .rampSvg,
+  .dot {
+    transition: none;
+  }
+}

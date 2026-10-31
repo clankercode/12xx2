@@ -19,11 +19,21 @@ export type Route =
   | { page: 'history' }
   | { page: 'run'; id: string }
   | { page: 'runs'; a: string; b: string }
+  /** Dev-only prototype lab ("#/lab?p=…&mode=…"); query is the raw part after "?". */
+  | { page: 'lab'; query: string }
 
 const PAGES = ['quiz', 'context', 'place', 'results', 'method', 'criticisms', 'ideologies', 'privacy', 'history'] as const
 
+/** The prototype lab only exists in dev builds or when served from this machine. */
+export function labAllowed(): boolean {
+  if (import.meta.env?.DEV) return true
+  return typeof location !== 'undefined' && ['localhost', '127.0.0.1'].includes(location.hostname)
+}
+
 export function parseHash(hash: string): Route {
   const h = hash.replace(/^#/, '')
+  const lab = h.match(/^\/lab(?:\?(.*))?$/)
+  if (lab && labAllowed()) return { page: 'lab', query: lab[1] ?? '' }
   if (h.startsWith('r=')) return { page: 'shared', payload: h.slice(2) }
   if (h.startsWith('c=')) {
     const [mine = '', theirs = ''] = h.slice(2).split('~')
