@@ -33,6 +33,8 @@ export interface HeroPick {
   alsoClose?: Match
   /** The nearest archetype by distance, when a core commitment rules it out. */
   nearestRuledOut?: Match
+  /** Every scored axis came out at exactly 0 (e.g. the same answer to every statement): no position to name. */
+  flat?: true
 }
 
 export type Hero =
@@ -123,8 +125,15 @@ function stabilityOf(stab: Stability, slug: string): Stability {
  * toss-up. Below it the nearest ideology is shown only as a labelled measurement.
  */
 export function nameable(p: HeroPick): boolean {
-  return p.match.label !== 'none' && p.stability.label !== 'toss-up'
+  return !p.flat && p.match.label !== 'none' && p.stability.label !== 'toss-up'
 }
+
+/**
+ * All scored axes at exactly 0. Balanced keying turns any straight line (all neutral, all "slightly
+ * agree", …) into this, and a real respondent essentially never lands on 0 on every axis, so the
+ * answers carry no position: never name an ideology for it, however near the centre one sits.
+ */
+export const isFlat = (scores: readonly (number | null)[]) => scores.some(v => v !== null) && scores.every(v => v === null || v === 0)
 
 /** A "constant" hero whose two frames really share their nearest match (no lean elsewhere, no missing frame). */
 export function sameInBothFrames(h: Extract<Hero, { kind: 'constant' }>): boolean {
@@ -213,7 +222,8 @@ export function deriveResults(p: Payload, cat: readonly Archetype[], cal: Calibr
     }
   if (!covI) return { ...base, hero: { kind: 'insufficient' } }
 
-  const ideal = pickHero(rankedI, p.I, p.seI, cat, seed, cal, p.mode, out)
+  const picked = pickHero(rankedI, p.I, p.seI, cat, seed, cal, p.mode, out)
+  const ideal = picked && isFlat(p.I) ? { ...picked, flat: true as const } : picked
   if (!ideal) return { ...base, hero: { kind: 'none-fit' } }
   if (!nameable(ideal)) return { ...base, hero: { kind: 'no-close', nearest: ideal } }
   if (!covN) return { ...base, hero: { kind: 'constant', ideal, nowMissing: true } }

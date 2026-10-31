@@ -49,9 +49,8 @@ describe('headline naming breakpoint', () => {
     const card = headline(r, false)
     expect(card.kicker).toBe('My 12 axes, twice')
     expect(card.lines[0]!.name).toBe(heroName(r))
-    expect(card.lines[0]!.note).toBe(
-      `Nearest: ${r.hero.nearest.match.arch.name}, but ${r.hero.nearest.match.label === 'none' ? 'not close' : 'others are about as close'}`,
-    )
+    expect(r.hero.nearest.flat).toBe(true)
+    expect(card.lines[0]!.note).toBe(`Nearest: ${r.hero.nearest.match.arch.name}, but every axis scored exactly 0`)
     expect(shareText(r)).not.toMatch(/closest to/)
   })
 

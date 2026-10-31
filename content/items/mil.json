@@ -100,6 +100,26 @@
    "text": "If no neighbour poses a serious military threat, a country's armed forces should be small.",
    "tier": "full",
    "rationale": "Replaces 12, which the audit found unclear and which loaded on welfare spending. It is now a direct capacity claim. The condition favours doves."
+  },
+  {
+   "id": "mil-11",
+   "key": -1,
+   "facet": "use",
+   "form": "conditional",
+   "level": 2,
+   "tier": "full",
+   "text": "An attack on a military target can be justified even when it is expected to kill some civilians, if the military gain is large enough.",
+   "rationale": "Proportionality / foreseen collateral harm (split from red line R9, which is about targeting civilians on purpose). Accepting it is the Hawkish pole. Wording approved by Max Kaye (project owner) for content v2, 2026-10-31; original."
+  },
+  {
+   "id": "mil-12",
+   "key": 1,
+   "facet": "use",
+   "form": "conditional",
+   "level": 2,
+   "tier": "full",
+   "text": "If a country's ally is attacked but the country itself is not, it should stay out of the fighting.",
+   "rationale": "Alliance commitment (review C11): non-intervention even for allies, the Dovish pole. Content v2 separator (CF review 2026-10-31 §5 draft, reworded); original."
   }
  ]
 }

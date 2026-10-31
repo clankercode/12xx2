@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { CHIPS, type Answer, type ChipId } from '../engine/types'
-import { quizItems } from '../data/items'
+import { CHIPS, isRedLine, type Answer, type ChipId } from '../engine/types'
+import { sessionStatements } from '../state/session'
 import { CHIP_LABELS } from '../data/chips'
 import { IDEAL_FRAME, IDEAL_STEM, NOW_FRAME, NOW_STEM, PRACTICE_ITEM, SHARED_RULE } from '../data/frames'
 import { useStore } from './App'
@@ -16,7 +16,8 @@ const CHIP_THRESHOLD = 3
 
 export function Quiz() {
   const { s, dispatch } = useStore()
-  const order = useMemo(() => quizItems(s.mode!, s.extendFrom), [s.mode, s.extendFrom])
+  // Fixed per run (extendRed is set when an extension starts), so answering never reorders it.
+  const order = useMemo(() => sessionStatements(s), [s.mode, s.extendFrom, s.extendRed])
   /** Continuing a finished run: only the added statements are asked, then straight back to results. */
   const adding = s.extendFrom !== null
   const [intro, setIntro] = useState(() => !adding && Object.keys(s.answers).length === 0)
@@ -24,6 +25,12 @@ export function Quiz() {
   const [leaving, setLeaving] = useState(false)
   const item = order[s.index]
   const existing = item ? s.answers[item.id] : undefined
+  /** Red lines come last, after a short card saying what they are. */
+  const red = !!item && isRedLine(item)
+  const redStart = order.findIndex(isRedLine)
+  const redCount = redStart < 0 ? 0 : order.length - redStart
+  const [redIntroSeen, setRedIntroSeen] = useState(false)
+  const redIntro = !intro && red && s.index === redStart && !redIntroSeen && !existing
   const [passI, setPassI] = useState(false)
   const [passN, setPassN] = useState(false)
   const [pendingChip, setPendingChip] = useState(false)
@@ -39,7 +46,7 @@ export function Quiz() {
     setSeenId(item?.id)
     setPassI(existing ? existing.i === null && existing.n !== null : false)
     setPassN(existing ? existing.n === null && existing.i !== null : false)
-    setPendingChip(!!(existing && existing.i !== null && existing.n !== null && Math.abs(existing.n - existing.i) >= CHIP_THRESHOLD))
+    setPendingChip(!red && !!(existing && existing.i !== null && existing.n !== null && Math.abs(existing.n - existing.i) >= CHIP_THRESHOLD))
   }
 
   // Keyboard users keep their place: after answering, focus the new item's grid cursor (or strip).
@@ -56,8 +63,9 @@ export function Quiz() {
 
   // The how-to sets its own title, per step.
   useEffect(() => {
-    if (!intro) document.title = `Statement ${s.index + 1} of ${order.length}${adding ? ' more' : ''} — 12 Axes²`
-  }, [intro, s.index, order.length, adding])
+    if (intro) return
+    document.title = redIntro ? 'Red lines — 12 Axes²' : `Statement ${s.index + 1} of ${order.length}${adding ? ' more' : ''} — 12 Axes²`
+  }, [intro, redIntro, s.index, order.length, adding])
 
   /** Whether focus is in the answer area or chip row right now (i.e. a keyboard or tap answer, not Back). */
   const noteFocus = () => {
@@ -90,12 +98,13 @@ export function Quiz() {
     (i: Answer, n: Answer, input: 'grid' | 'rows') => {
       if (!item) return
       noteFocus()
-      const big = i !== null && n !== null && Math.abs(n - i) >= CHIP_THRESHOLD
+      // Reason chips explain axis splits; red lines skip them.
+      const big = !red && i !== null && n !== null && Math.abs(n - i) >= CHIP_THRESHOLD
       dispatch({ type: 'answer', id: item.id, answer: { i, n, input, chip: big ? existing?.chip : undefined }, advance: false })
       setPendingChip(big)
       if (!big) advanceSoon()
     },
-    [item, dispatch, existing?.chip, advanceSoon],
+    [item, red, dispatch, existing?.chip, advanceSoon],
   )
 
   const passBoth = useCallback(() => {
@@ -127,7 +136,7 @@ export function Quiz() {
 
   // Keyboard shortcuts outside the grid: P = pass both, I/N = pass one frame, Backspace = back.
   useEffect(() => {
-    if (intro) return
+    if (intro || redIntro) return
     const on = (e: globalThis.KeyboardEvent) => {
       const t = e.target as HTMLElement
       if (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA') return
@@ -144,7 +153,7 @@ export function Quiz() {
     }
     addEventListener('keydown', on)
     return () => removeEventListener('keydown', on)
-  }, [intro, passBoth, back, pendingChip, nextItem])
+  }, [intro, redIntro, passBoth, back, pendingChip, nextItem])
 
   // Leaving the intro unmounts the focused Start button: move focus to the first statement instead.
   const focusStatement = useRef(false)
@@ -152,14 +161,28 @@ export function Quiz() {
     focusStatement.current = true
     setIntro(false)
   }
+  const startRedLines = () => {
+    focusStatement.current = true
+    setRedIntroSeen(true)
+  }
   useLayoutEffect(() => {
-    if (intro || !focusStatement.current) return
+    if (intro || redIntro || !focusStatement.current) return
     focusStatement.current = false
     statementRef.current?.focus({ preventScroll: true })
-  }, [intro])
+  }, [intro, redIntro])
 
   if (intro) return <Intro onStart={startQuestions} />
   if (!item || leaving) return null
+  if (redIntro)
+    return (
+      <RedIntro
+        count={redCount}
+        progress={s.index / order.length}
+        position={`${s.index} of ${order.length}${adding ? ' more' : ''} answered`}
+        onStart={startRedLines}
+        onBack={back}
+      />
+    )
 
   const progress = s.index / order.length
   const value = existing ? { i: existing.i, n: existing.n } : null
@@ -178,6 +201,11 @@ export function Quiz() {
       </div>
 
       <section className={css.card} aria-live="polite" ref={statementRef} tabIndex={-1} data-route-focus>
+        {red && (
+          <p className={css.redTag}>
+            Red line {s.index - redStart + 1} of {redCount} <span className="muted">· not scored on any axis</span>
+          </p>
+        )}
         <p className={css.statement}>{item.text}</p>
         {item.note && <p className={`small muted ${css.note}`}>{item.note}</p>}
       </section>
@@ -252,6 +280,55 @@ export function Quiz() {
           {rowsMode ? 'Use the grid' : 'Use two rows instead of the grid'}
         </button>
       </div>
+    </div>
+  )
+}
+
+function RedIntro({
+  count,
+  progress,
+  position,
+  onStart,
+  onBack,
+}: {
+  count: number
+  progress: number
+  position: string
+  onStart: () => void
+  onBack: () => void
+}) {
+  const heading = useRef<HTMLHeadingElement>(null)
+  useEffect(() => heading.current?.focus({ preventScroll: true }), [])
+  return (
+    <div className={`narrow ${css.quiz}`}>
+      <div className={css.progress}>
+        <div className={css.bar} aria-hidden>
+          <div className={css.fill} style={{ width: `${progress * 100}%` }} />
+        </div>
+        <span className="small muted">{position}</span>
+      </div>
+      <section className={css.redIntro} aria-labelledby="red-intro">
+        <p className={css.redTag}>Last part</p>
+        <h2 id="red-intro" ref={heading} tabIndex={-1}>
+          Red lines
+        </h2>
+        <p>
+          {count} {count === 1 ? 'statement that tests' : 'statements that test'} red lines: positions some ideologies insist on
+          and others reject outright.
+        </p>
+        <p>
+          They don’t move your axis scores. They check which ideologies your answers rule out, the same way core commitments do.
+          Answer them on the same grid, for your ideal system and for here and now; you can pass any of them.
+        </p>
+        <div className={css.startRow}>
+          <button type="button" className="btn btn-primary" onClick={onStart}>
+            Continue to the red lines
+          </button>{' '}
+          <button type="button" className="btn btn-ghost" onClick={onBack}>
+            Back
+          </button>
+        </div>
+      </section>
     </div>
   )
 }

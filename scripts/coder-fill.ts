@@ -4,9 +4,13 @@
  * fill workflow; answers go to content/archetypes/raw/fill-NN.<coder>.txt.
  *
  *   pnpm tsx scripts/coder-fill.ts > fill-jobs.json
- *   pnpm tsx scripts/coder-fill.ts --write <dir>   # one self-contained prompt file per job + jobs.tsv
+ *   pnpm tsx scripts/coder-fill.ts --write <dir> [--prefix fill]   # one self-contained prompt file per job + jobs.tsv
+ *
+ * Statements added later (content v2: Q121–Q154) and new catalogue entries show up as owed
+ * automatically; use a new --prefix (e.g. v2fill) so job ids don't collide with earlier fill files.
  */
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
+import { parseSheetLine } from './sheet-line'
 
 const DIR = 'content/archetypes'
 /** Items whose wording changed after coding began (review of 2026-10-31). */
@@ -21,13 +25,21 @@ interface Entry {
   sources: { title: string; author: string; year?: string }[]
 }
 const catalogue = JSON.parse(readFileSync(`${DIR}/catalogue.json`, 'utf8')) as { archetypes: Entry[] }
-const all = Array.from({ length: 120 }, (_, k) => `Q${String(k + 1).padStart(3, '0')}`)
+const all = Object.keys(JSON.parse(readFileSync(`${DIR}/qmap.json`, 'utf8')) as Record<string, string>).sort()
 const have: Record<string, Set<string>> = {}
-for (const f of readdirSync(`${DIR}/raw`).filter(f => f.endsWith('.txt') && f.startsWith('g'))) {
+/** Items answered in a fill file, i.e. coded after any rewording, so RECODE no longer applies. */
+const refilled: Record<string, Set<string>> = {}
+for (const f of readdirSync(`${DIR}/raw`).filter(f => f.endsWith('.txt'))) {
   const coder = f.split('.')[1]!
   for (const [, slug, body] of readFileSync(`${DIR}/raw/${f}`, 'utf8').matchAll(/BEGIN\s+([a-z0-9-]+)\s*\n([\s\S]*?)\nEND\s+\1/g)) {
     const set = (have[`${slug}/${coder}`] ??= new Set())
-    for (const m of body!.matchAll(/^\s*(Q\d{3})\s*[:|]?\s*(-?\d|x)\s*[,|\s]\s*(-?\d|x)\s*$/gim)) set.add(m[1]!)
+    const fill = f.startsWith('g') ? null : (refilled[`${slug}/${coder}`] ??= new Set())
+    // Shared parser: accepts "+N" (the old local regex didn't, so those items were re-asked).
+    for (const a of body!.split('\n').map(parseSheetLine)) {
+      if (!a) continue
+      set.add(a.q)
+      fill?.add(a.q)
+    }
   }
 }
 const jobs: { coder: string; slugs: { slug: string; q: string[] }[] }[] = []
@@ -36,7 +48,8 @@ for (const coder of CODERS) {
   const need = catalogue.archetypes
     .map(a => {
       const h = have[`${a.slug}/${coder}`] ?? new Set<string>()
-      return { slug: a.slug, q: all.filter(q => !h.has(q) || RECODE.includes(q)) }
+      const r = refilled[`${a.slug}/${coder}`] ?? new Set<string>()
+      return { slug: a.slug, q: all.filter(q => !h.has(q) || (RECODE.includes(q) && !r.has(q))) }
     })
     .filter(x => x.q.length)
     // A sheet that needs more than one batch is split into chunks.
@@ -56,6 +69,7 @@ for (const coder of CODERS) {
   if (batch.length) jobs.push({ coder, slugs: batch })
 }
 const out = process.argv[2] === '--write' ? process.argv[3] : null
+const prefix = process.argv.includes('--prefix') ? process.argv[process.argv.indexOf('--prefix') + 1]! : 'fill'
 if (!out) {
   console.log(JSON.stringify(jobs))
   process.exit(0)
@@ -78,7 +92,7 @@ Sources: ${a.sources.map(s => `${s.author}${s.year ? ' (' + s.year + ')' : ''}, 
 mkdirSync(out, { recursive: true })
 const tsv: string[] = []
 jobs.forEach((j, n) => {
-  const id = `fill-${String(n).padStart(2, '0')}.${j.coder}`
+  const id = `${prefix}-${String(n).padStart(2, '0')}.${j.coder}`
   const parts = j.slugs.map(x => `${packet(bySlug.get(x.slug)!)}
 
 Statements to answer for ${x.slug} (answer exactly these, in this order):

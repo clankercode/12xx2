@@ -1,16 +1,24 @@
 import { expect, test, type Page } from '@playwright/test'
 
-/** Answers the quiz on the grid: a lean per item, shifted in the here-and-now frame. */
+/** Answers the quiz on the grid: a lean per item, shifted in the here-and-now frame. Red lines come last, after their own card. */
 async function answerQuick(page: Page) {
   const total = Number((await page.getByText(/^1 of \d+$/).innerText()).split(' of ')[1])
+  const redCard = page.getByRole('heading', { name: 'Red lines', exact: true })
   for (let k = 0; k < total; k++) {
+    if (await redCard.isVisible().catch(() => false)) {
+      // The 10 red lines follow the axis statements, introduced as off-axis.
+      expect(total - k).toBe(10)
+      await expect(page.getByText(/They don’t move your axis scores/)).toBeVisible()
+      await page.getByRole('button', { name: 'Continue to the red lines' }).click()
+      await expect(page.getByText('Red line 1 of 10')).toBeVisible()
+    }
     const i = [2, -1, 3, -2, 1, 0, -3][k % 7]!
     const n = Math.max(-3, Math.min(3, i + (k % 4 === 0 ? -1 : 0)))
     const grid = page.locator('[role="grid"]').first()
     await grid.locator('[role="row"]').nth(3 - n).locator('[role="gridcell"]').nth(i + 3).click()
     const next = page.getByRole('button', { name: 'Next statement' })
     if (await next.isVisible().catch(() => false)) await next.click()
-    if (k < total - 1) await expect(page.getByText(`${k + 2} of ${total}`)).toBeVisible()
+    if (k < total - 1) await expect(page.getByText(`${k + 2} of ${total}`, { exact: true }).or(redCard)).toBeVisible()
   }
 }
 
@@ -72,10 +80,17 @@ test('shared link shows the same headline and axes as the owner view', async ({ 
   await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
   await answerQuick(page)
   await finishSteps(page)
+  // The owner sees their red-line answers; they are never in a link unless opted in.
+  await expect(page.getByRole('heading', { name: 'Your red lines' })).toBeVisible()
   const hero = await page.getByRole('region', { name: 'Headline result' }).innerText()
   await page.getByRole('button', { name: 'Share my result' }).click()
   const link = await page.getByLabel('Your result link').inputValue()
   expect(link).toMatch(/#r=[A-Za-z0-9_-]+$/)
+  const optIn = page.getByLabel(/Include where I stand on the red-line statements/)
+  await expect(optIn).not.toBeChecked()
+  await optIn.check()
+  const redLink = await page.getByLabel('Your result link').inputValue()
+  expect(redLink).not.toBe(link)
 
   const other = await page.context().browser()!.newContext()
   const p2 = await other.newPage()
@@ -83,6 +98,11 @@ test('shared link shows the same headline and axes as the owner view', async ({ 
   const hero2 = await p2.getByRole('region', { name: 'Headline result' }).innerText()
   // The shared view is derived from the same quantised payload as the owner's view.
   expect(hero2.split('\n')).toEqual(expect.arrayContaining(hero.split('\n').filter(l => /\S/.test(l)).slice(0, 3)))
+  await expect(p2.getByRole('heading', { name: 'Their red lines' })).toHaveCount(0)
+  // With the opt-in: the same headline, plus a red-lines panel.
+  await p2.goto(redLink.replace(/^https?:\/\/[^/]+/, baseURL!))
+  await expect(p2.getByRole('heading', { name: 'Their red lines' })).toBeVisible()
+  expect(await p2.getByRole('region', { name: 'Headline result' }).innerText()).toBe(hero2)
   await other.close()
 })
 
@@ -111,7 +131,8 @@ test('a finished Quick run continues into Standard: only the added statements, t
   await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
   await answerQuick(page)
   await finishSteps(page)
-  await expect(page.getByText(/Answer 24 or 72 more statements/)).toBeVisible()
+  // Red lines were answered in the Quick run, so only axis statements are added (Full has 144).
+  await expect(page.getByText(/Answer 24 or 96 more statements/)).toBeVisible()
   await page.getByRole('button', { name: 'Continue to Standard (+24)' }).click()
   // No intro or practice screen again; progress counts only the added statements.
   await expect(page.getByText('1 of 24 more')).toBeVisible()
@@ -125,7 +146,7 @@ test('a finished Quick run continues into Standard: only the added statements, t
   await expect(page.getByRole('region', { name: 'Headline result' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'How well does your system work by its own rules?' })).toHaveCount(0)
   // Now a Standard run: only Full is offered, and the same run is updated in place.
-  await expect(page.getByRole('button', { name: 'Continue to Full (+48)' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Continue to Full (+72)' })).toBeVisible()
   await expect(page.getByRole('button', { name: /Continue to Standard/ })).toHaveCount(0)
   const runs = await page.evaluate(() => JSON.parse(localStorage.getItem('12xx2.history.v1')!).runs as { mode: string }[])
   expect(runs.map(r => r.mode)).toEqual(['standard'])

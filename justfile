@@ -31,6 +31,10 @@ archetypes:
 overlap:
     pnpm tsx scripts/overlap.ts
 
+# Pair separation: catalogue pairs with no statement where one ideology is at >= +2 and the other at <= -2, per length.
+separation *args:
+    pnpm tsx scripts/separation.ts {{args}}
+
 # Refetch World Bank WGI country context (network; review the diff before committing).
 wgi:
     pnpm tsx scripts/wgi.ts
@@ -62,6 +66,11 @@ compare-shots out="shots":
 # Seeds a run whose nearest match the fixture rules out; captures results, shared view, ideologies, method.
 commitments-shots out="shots":
     pnpm tsx scripts/commitments-shots.ts http://localhost:21313/ {{out}}
+
+# Needs a dev server with the test fixture (it lists red-line commitments): `COMMITMENTS_FIXTURE=tests/fixtures/commitments.json just dev`.
+# Red-line intro card and statement, matrix Red lines column, Your red lines, share opt-in, shared panel.
+redlines-shots out="shots":
+    pnpm tsx scripts/redlines-shots.ts http://localhost:21313/ {{out}}
 
 # Needs `just dev` running. Seeds two runs and captures the runs pages into shots/.
 history-shots out="shots":

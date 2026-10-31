@@ -30,6 +30,18 @@
      "rationale": "Infrastructure investment; contrasted with competition so market liberals disagree. 'One coordinated' dropped (Centralised load)."},
     {"id": "pla-10", "key": 1, "facet": "coordination", "form": "conditional", "level": 2, "tier": "full",
      "text": "If industries picked out for support keep failing, investment decisions should be left to competing investors.",
-     "rationale": "Market-favouring condition (failed industrial policy); 'officials' bets' softened to neutral tone. Pairs with pla-09."}
+     "rationale": "Market-favouring condition (failed industrial policy); 'officials' bets' softened to neutral tone. Pairs with pla-09."},
+    {"id": "pla-11", "key": -1, "facet": "labour", "form": "rule", "level": 2, "tier": "full",
+     "text": "Pay and conditions agreed between unions and employers in an industry should apply to every firm in that industry.",
+     "rationale": "Sectoral bargaining (review C3): social partnership coordinates wages outside the market, the Planned pole. Mirrors pla-12. Content v2 separator (CF review 2026-10-31 §5 draft, reworded); original."},
+    {"id": "pla-12", "key": 1, "facet": "labour", "form": "rule", "level": 2, "tier": "full",
+     "text": "Workers should be free to take a job on terms they agree individually, without any union deal applying to them.",
+     "rationale": "Individual contracting, the Market pole. Mirrors pla-11. Content v2 separator (CF review 2026-10-31 §5 draft, reworded); original."},
+    {"id": "pla-13", "key": 1, "facet": "change", "form": "rule", "level": 2, "tier": "full",
+     "text": "A society should improve through many small changes that can be undone if they fail, rather than one complete redesign.",
+     "rationale": "Piecemeal social engineering (Popper) and evolved order (Hayek) against utopian blueprints, so the Market pole; review P4. Content v2 separator (CF review 2026-10-31 §5 draft, reworded); original."},
+    {"id": "pla-14", "key": -1, "facet": "change", "form": "rule", "level": 3, "tier": "full",
+     "text": "A deeply unjust society should be rebuilt from the ground up according to a clear plan.",
+     "rationale": "Holistic redesign to a plan, the Planned pole. Mirrors pla-13. Content v2 separator (CF review 2026-10-31 §5 draft, reworded); original."}
   ]
 }

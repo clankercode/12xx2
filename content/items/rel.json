@@ -106,6 +106,26 @@
       "text": "Public schools open to all children should hold regular official prayer or worship.",
       "note": "Official prayer or worship: led or organised by the school, not pupils praying privately.",
       "rationale": "New Religious mirror of rel-09 so school content appears on both poles, per review. Replaces rel-08/rel-11 (rel-11 audit unclear, col loading)."
+    },
+    {
+      "id": "rel-11",
+      "key": -1,
+      "facet": "law",
+      "form": "rule",
+      "level": 2,
+      "tier": "full",
+      "text": "Laws should rest on reasons anyone can examine and dispute, not on religious authority.",
+      "rationale": "I2 (criticisable law): the Secular pole; adds open criticism to rel-05's secular reasons. Mirrors rel-12. Wording approved by Max Kaye (project owner) for content v2, 2026-10-31; original."
+    },
+    {
+      "id": "rel-12",
+      "key": 1,
+      "facet": "law",
+      "form": "rule",
+      "level": 3,
+      "tier": "full",
+      "text": "Some laws should rest on religious revelation and be closed to change by any vote or court.",
+      "rationale": "Revealed, unrevisable law: the Religious pole and the direct opposite of criticisable institutions. Mirrors rel-11. Content v2 separator (CF review 2026-10-31 §5 draft, reworded); original."
     }
   ]
 }

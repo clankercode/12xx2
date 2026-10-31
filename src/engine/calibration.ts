@@ -10,13 +10,13 @@ export interface LabelCuts {
 /** Thresholds produced by `just calibrate` (scripts/calibrate.ts). Never hand-tuned. */
 export interface Calibration {
   version: number
-  /** Minimum |G| for a notable axis gap, keyed by paired item count "3".."10". */
+  /** Minimum |G| for a notable axis gap, keyed by paired item count "3".."16" (MAX_AXIS_ITEMS). */
   tauG: Record<string, number>
   /** Minimum Now-distance margin before the hero splits into Ideal: A · Here and now: B. */
   mu: number
   /** Reality Gap band cut-points [veryConstant | mostlyConstant | oftenSplits | splitsALot]. */
   rgCuts: [number, number, number]
-  /** Inconsistency-index threshold for the careless flag, keyed by mean answers per axis "3".."10". */
+  /** Inconsistency-index threshold for the careless flag, keyed by mean answers per axis "3".."16". */
   careless: Record<string, number>
   labels: Record<Mode, LabelCuts>
   /** Published diagnostics (power, false-alarm rates); rendered on the methodology page. */
