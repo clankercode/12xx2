@@ -74,3 +74,8 @@ intro-shots out="shots/intro":
 # Needs `just dev` running. Post, story and wide share cards plus the comparison card, into shots/cards/.
 card-shots out="shots/cards":
     pnpm tsx scripts/card-shots.ts http://localhost:21313/ {{out}}
+
+# Needs `just dev` running. Split-tile grid: landing hero, quiz and how-to practice grids at desktop and phone width,
+# dark and light, every palette, initial/hover/focus/selected states, into shots/hero/.
+hero-shots out="shots/hero":
+    pnpm tsx scripts/hero-shots.ts http://localhost:21313/ {{out}}
