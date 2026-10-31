@@ -32,6 +32,16 @@
   --body: 'Atkinson Hyperlegible Next Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --measure: 68ch;
   --gutter: 16px;
+  /* Ideology families on the map (always paired with a shape: colour is never the only cue). */
+  --fam-socialist: #e66767;
+  --fam-left-liberal: #d55181;
+  --fam-liberal-centrist: #c98500;
+  --fam-conservative: #3987e5;
+  --fam-religious: #9085e9;
+  --fam-nationalist-populist: #d95926;
+  --fam-libertarian-market: #199e70;
+  --fam-anarchist: #2fa52f;
+  --fam-hierarchical: #a8a39a;
   color-scheme: dark;
 }
 
@@ -58,6 +68,15 @@
   --focus: #7a4a06;
   --dot: #cdc7b8;
   --dot-lit: #4a55c9;
+  --fam-socialist: #c23b3b;
+  --fam-left-liberal: #b02f66;
+  --fam-liberal-centrist: #8f5f00;
+  --fam-conservative: #2160b5;
+  --fam-religious: #6450cc;
+  --fam-nationalist-populist: #b2471a;
+  --fam-libertarian-market: #0f7556;
+  --fam-anarchist: #287a28;
+  --fam-hierarchical: #6b675d;
   color-scheme: light;
 }
 
@@ -85,6 +104,15 @@
     --focus: #7a4a06;
     --dot: #cdc7b8;
     --dot-lit: #4a55c9;
+    --fam-socialist: #c23b3b;
+    --fam-left-liberal: #b02f66;
+    --fam-liberal-centrist: #8f5f00;
+    --fam-conservative: #2160b5;
+    --fam-religious: #6450cc;
+    --fam-nationalist-populist: #b2471a;
+    --fam-libertarian-market: #0f7556;
+    --fam-anarchist: #287a28;
+    --fam-hierarchical: #6b675d;
     color-scheme: light;
   }
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AXIS_IDS } from '../../engine/types'
 import { AXES } from '../../data/axes'
 import { CATALOGUE } from '../../data/archetypes'
@@ -48,8 +48,15 @@ function CommitmentList({ title, list }: { title: string; list: readonly Commitm
   )
 }
 
-export function IdeologiesPage() {
+export function IdeologiesPage({ slug }: { slug?: string }) {
   const [fam, setFam] = useState<string | null>(null)
+  // "#/ideologies/<slug>" (from the map and the match lists): show all, then bring that entry into view.
+  useEffect(() => {
+    if (!slug) return
+    setFam(null)
+    const id = requestAnimationFrame(() => document.getElementById(slug)?.scrollIntoView({ block: 'start' }))
+    return () => cancelAnimationFrame(id)
+  }, [slug])
   const families = [...new Set(CATALOGUE.map(a => a.family))]
   const list = CATALOGUE.filter(a => !fam || a.family === fam)
   return (

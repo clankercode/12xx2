@@ -18,9 +18,12 @@ import { IdeologiesPage } from './pages/IdeologiesPage'
 import { PrivacyPage } from './pages/PrivacyPage'
 import { Footer, Header } from './Chrome'
 import { Lamp } from './Lamp'
+import { LazyFallback } from './lazyFocus'
 
 // Dev-only prototype lab: its own chunk, never fetched unless "#/lab" is opened.
 const LabPage = lazy(() => import('../lab/LabPage'))
+// The ideology map: its own chunk, fetched only when "#/map" is opened.
+const MapPage = lazy(() => import('./map/MapPage'))
 
 interface Store {
   s: Session
@@ -45,6 +48,7 @@ const TITLES: Record<Route['page'], string> = {
   method: 'How it works — 12 Axes²',
   criticisms: 'Why a new test — 12 Axes²',
   ideologies: 'Ideology catalogue — 12 Axes²',
+  map: 'Ideology map — 12 Axes²',
   privacy: 'Privacy — 12 Axes²',
   history: 'Your runs — 12 Axes²',
   run: 'Past run — 12 Axes²',
@@ -138,7 +142,12 @@ export function App() {
         {route.page === 'compare' && <ComparePage mine={route.mine} theirs={route.theirs} />}
         {route.page === 'method' && <MethodPage />}
         {route.page === 'criticisms' && <CriticismsPage />}
-        {route.page === 'ideologies' && <IdeologiesPage />}
+        {route.page === 'ideologies' && <IdeologiesPage slug={route.slug} />}
+        {route.page === 'map' && (
+          <Suspense fallback={<LazyFallback>Loading the map…</LazyFallback>}>
+            <MapPage />
+          </Suspense>
+        )}
         {route.page === 'privacy' && <PrivacyPage />}
         {route.page === 'history' && <HistoryPage />}
         {route.page === 'run' && <RunPage id={route.id} />}

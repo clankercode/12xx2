@@ -14,7 +14,9 @@ export type Route =
   | { page: 'compare'; mine: string; theirs: string }
   | { page: 'method' }
   | { page: 'criticisms' }
-  | { page: 'ideologies' }
+  /** Optional slug: "#/ideologies/<slug>" scrolls to that ideology. */
+  | { page: 'ideologies'; slug?: string }
+  | { page: 'map' }
   | { page: 'privacy' }
   | { page: 'history' }
   | { page: 'run'; id: string }
@@ -22,7 +24,7 @@ export type Route =
   /** Dev-only prototype lab ("#/lab?p=…&mode=…"); query is the raw part after "?". */
   | { page: 'lab'; query: string }
 
-const PAGES = ['quiz', 'context', 'place', 'results', 'method', 'criticisms', 'ideologies', 'privacy', 'history'] as const
+const PAGES = ['quiz', 'context', 'place', 'results', 'method', 'criticisms', 'ideologies', 'privacy', 'history', 'map'] as const
 
 /** The prototype lab only exists in dev builds or when served from this machine. */
 export function labAllowed(): boolean {
@@ -39,6 +41,8 @@ export function parseHash(hash: string): Route {
     const [mine = '', theirs = ''] = h.slice(2).split('~')
     return { page: 'compare', mine, theirs }
   }
+  const ideology = h.match(/^\/ideologies\/([a-z0-9-]{1,64})$/)
+  if (ideology) return { page: 'ideologies', slug: ideology[1]! }
   const run = h.match(/^\/run\/([0-9a-f]{8,32})$/)
   if (run) return { page: 'run', id: run[1]! }
   const pair = h.match(/^\/runs\/([0-9a-f]{8,32})~([0-9a-f]{8,32})$/)

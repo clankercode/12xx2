@@ -68,6 +68,8 @@
 }
 
 .card {
+  /* Clear the sticky header when an entry is linked to (#/ideologies/<slug>). */
+  scroll-margin-top: 80px;
   border: 1px solid var(--rule-major);
   border-radius: var(--radius-m);
   padding: 16px;
