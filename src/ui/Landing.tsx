@@ -14,11 +14,12 @@ const MODES: { mode: Mode; name: string; minutes: number; note: string }[] = [
   { mode: 'full', name: 'Full', minutes: 18, note: 'Tightest results' },
 ]
 
+const PRESET = { i: 1, n: 3 } as const
 const DEMO = 'If a few people come to own most of a society’s wealth, much of it should be shared out among the rest.'
 
 export function Landing() {
   const { s, dispatch } = useStore()
-  const [demo, setDemo] = useState<{ i: Answer; n: Answer } | null>({ i: 1, n: 3 })
+  const [demo, setDemo] = useState<{ i: Answer; n: Answer } | null>(PRESET)
   const inProgress = s.stage === 'quiz' && s.mode && Object.keys(s.answers).length > 0
   const done = s.stage === 'done'
   /** A mode picked while answers or a result exist: starting over erases them, so confirm first. */
@@ -38,7 +39,7 @@ export function Landing() {
           <h1>
             Your politics,
             <br />
-            in theory and in practice.
+            in theory and in&nbsp;practice.
           </h1>
           <p className={css.lede}>
             12 Axes² is a 12-axis political quiz where every statement is answered twice: once for{' '}
@@ -66,8 +67,19 @@ export function Landing() {
           <p className={css.demoStatement}>{DEMO}</p>
           <Grid value={demo} onPick={(i, n) => setDemo({ i, n })} idPrefix="demo" />
           <figcaption className="small muted">
-            Someone in a country where the rich bought the courts might answer like this: in principle only slightly, but here and
-            now, strongly. Try it yourself.
+            {demo?.i === PRESET.i && demo?.n === PRESET.n ? (
+              <>
+                Someone in a country where the rich bought the courts might answer like this: in principle only slightly, but here and
+                now, strongly. Try it yourself.
+              </>
+            ) : (
+              <>
+                That’s your answer for both frames in one tap.{' '}
+                <button type="button" className={css.reset} onClick={() => setDemo(PRESET)}>
+                  Show the example again
+                </button>
+              </>
+            )}
           </figcaption>
         </figure>
       </section>

@@ -8,6 +8,7 @@
 
 .copy h1 {
   margin-bottom: 20px;
+  text-wrap: balance;
 }
 
 .lede {
@@ -28,12 +29,25 @@
   background: color-mix(in srgb, var(--ink) 80%, transparent);
   border: 1px solid var(--rule-major);
   border-radius: 14px;
+  container-type: inline-size;
 }
 
 .demo figcaption {
   text-align: center;
   max-width: 44ch;
   margin: 4px auto 0;
+  text-wrap: balance;
+}
+
+.reset {
+  font: inherit;
+  color: var(--paper);
+  background: none;
+  border: 0;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
 }
 
 .demoStatement {

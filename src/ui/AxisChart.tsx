@@ -8,6 +8,8 @@ const pct = (v: number) => `${(v + 100) / 2}%`
 export interface Overlay {
   label: string
   rows: AxisRow[]
+  /** Per-axis "clearly different" flags for each frame. When set, links join the two people instead of one person's frames. */
+  clear?: { I: boolean[]; N: boolean[] }
 }
 
 /**
@@ -18,6 +20,11 @@ export interface Overlay {
 export function AxisChart({ rows, overlay, animate = true }: { rows: AxisRow[]; overlay?: Overlay; animate?: boolean }) {
   const byAxis = new Map(rows.map(r => [r.axis, r]))
   const other = overlay ? new Map(overlay.rows.map(r => [r.axis, r])) : null
+  const pair = overlay?.clear
+  const clearFor = (ax: AxisId) => {
+    const k = rows.findIndex(r => r.axis === ax)
+    return pair ? { I: pair.I[k] ?? false, N: pair.N[k] ?? false } : undefined
+  }
   return (
     <div className={`${css.chart} ${animate ? css.animate : ''}`}>
       <div className={css.legend} aria-hidden>
@@ -39,10 +46,16 @@ export function AxisChart({ rows, overlay, animate = true }: { rows: AxisRow[]; 
         )}
         <span>
           <svg className={css.legendLink} viewBox="0 0 26 10" aria-hidden>
-            <line x1="1" y1="5" x2="17" y2="5" className={css.linkNotable} />
-            <path d="M17 1 L25 5 L17 9 Z" className={css.legendArrow} />
+            {pair ? (
+              <line x1="1" y1="5" x2="25" y2="5" className={css.linkNotable} />
+            ) : (
+              <>
+                <line x1="1" y1="5" x2="17" y2="5" className={css.linkNotable} />
+                <path d="M17 1 L25 5 L17 9 Z" className={css.legendArrow} />
+              </>
+            )}
           </svg>{' '}
-          Gap bigger than noise
+          {pair ? 'Clearly different' : 'Gap bigger than noise'}
         </span>
         <span>
           <svg className={css.legendLink} viewBox="0 0 26 10" aria-hidden>
@@ -56,7 +69,7 @@ export function AxisChart({ rows, overlay, animate = true }: { rows: AxisRow[]; 
         <section key={g} className={css.group} aria-label={GROUP_TITLES[g]}>
           <h3 className={css.groupTitle}>{GROUP_TITLES[g]}</h3>
           {GROUPS[g].map(ax => (
-            <Row key={ax} axis={ax} row={byAxis.get(ax)!} other={other?.get(ax)} />
+            <Row key={ax} axis={ax} row={byAxis.get(ax)!} other={other?.get(ax)} clear={clearFor(ax)} />
           ))}
         </section>
       ))}
@@ -87,11 +100,19 @@ export function AxisChart({ rows, overlay, animate = true }: { rows: AxisRow[]; 
   )
 }
 
-function Row({ axis, row, other }: { axis: AxisId; row: AxisRow; other?: AxisRow }) {
+function Row({ axis, row, other, clear }: { axis: AxisId; row: AxisRow; other?: AxisRow; clear?: { I: boolean; N: boolean } }) {
   const meta = AXES[axis]
   const both = row.I !== null && row.N !== null
   // Direction comes from the paired gap G, which can differ in sign from N − I (they average different items).
-  const dir = both && row.notable && row.G !== null ? Math.sign(row.G) : 0
+  const dir = !clear && both && row.notable && row.G !== null ? Math.sign(row.G) : 0
+  const pairLine = (f: 'I' | 'N', y: number) => {
+    const a = row[f]
+    const b = other?.[f]
+    if (a === null || b === null || b === undefined) return null
+    return (
+      <line x1={a + 100} y1={y} x2={b + 100} y2={y} className={clear![f] ? css.linkNotable : css.linkQuiet} vectorEffect="non-scaling-stroke" />
+    )
+  }
   return (
     <div className={css.row} aria-hidden>
       <div className={css.label}>
@@ -105,7 +126,13 @@ function Row({ axis, row, other }: { axis: AxisId; row: AxisRow; other?: AxisRow
       <div className={css.track}>
         <span className={css.centre} />
         {row.q !== null && <span className={css.q} style={{ left: pct(row.q) }} />}
-        {both && (
+        {clear && (
+          <svg className={css.link} viewBox="0 0 200 40" preserveAspectRatio="none">
+            {pairLine('I', 10)}
+            {pairLine('N', 30)}
+          </svg>
+        )}
+        {!clear && both && (
           <svg className={css.link} viewBox="0 0 200 40" preserveAspectRatio="none">
             <line
               x1={row.I! + 100}

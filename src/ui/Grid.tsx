@@ -123,7 +123,7 @@ export function Grid({ value, onPick, interactive = true, compact = false, idPre
             {shown.i === shown.n && <span className="muted"> — same in both</span>}
           </>
         ) : (
-          <span className="muted">Tap the square where your two answers meet. The faint diagonal means the same answer in both.</span>
+          <span className="muted">Tap the square where your two answers meet. Outlined squares on the diagonal mean the same answer in both.</span>
         )}
       </p>
     </div>

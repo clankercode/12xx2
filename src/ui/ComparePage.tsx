@@ -99,9 +99,16 @@ export function ComparePage({ mine, theirs }: { mine: string; theirs: string }) 
       <section className={css.section}>
         <h2>Side by side</h2>
         <p className="small muted">
-          Filled markers are {labels[0].toLowerCase()}; hollow markers are {labels[1].toLowerCase()}.
+          Filled markers are {labels[0].toLowerCase()}; hollow markers are {labels[1].toLowerCase()}. A solid line joins the two where they clearly differ.
         </p>
-        <AxisChart rows={ra.rows} overlay={{ label: labels[1], rows: rb.rows }} />
+        <AxisChart
+          rows={ra.rows}
+          overlay={{
+            label: labels[1],
+            rows: rb.rows,
+            clear: { I: cmp.ideal.axes.map(d => cmp.reliable && !!d?.clear), N: cmp.now.axes.map(d => cmp.reliable && !!d?.clear) },
+          }}
+        />
       </section>
       <section className={css.section}>
         <h2>Share this comparison</h2>

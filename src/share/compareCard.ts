@@ -1,7 +1,7 @@
 import { AXIS_IDS, GROUPS, type GroupId } from '../engine/types'
 import type { Results } from '../engine/results'
 import type { Comparison, CompareSummary, FrameComparison } from '../engine/compare'
-import { AXES, GROUP_TITLES } from '../data/axes'
+import { AXES } from '../data/axes'
 import { BODY, C, CARD_DIMS, DISPLAY, diamond, headline, paper, wordmark, wrapText, type CardSize } from './card'
 
 export interface CompareCardOptions {
@@ -30,6 +30,39 @@ function personLines(r: Results): { label: string; name: string; color: string }
   return hl.lines.map(l => ({ label: l.label ?? '', name: l.name, color: l.color }))
 }
 
+/** Cuts text to fit maxW with an ellipsis (current ctx.font). */
+function ellipsize(ctx: CanvasRenderingContext2D, text: string, maxW: number): string {
+  if (ctx.measureText(text).width <= maxW) return text
+  let t = text
+  while (t.length > 1 && ctx.measureText(`${t}…`).width > maxW) t = t.slice(0, -1)
+  return `${t.trimEnd()}…`
+}
+
+/** Largest font size from max down to min that fits one line; at min, the text is ellipsized. */
+function fitLine(ctx: CanvasRenderingContext2D, text: string, maxW: number, max: number, min: number, weight: number, family: string) {
+  for (let size = max; size >= min; size -= 2) {
+    ctx.font = `${weight} ${size}px ${family}`
+    if (ctx.measureText(text).width <= maxW) return { text, size }
+  }
+  ctx.font = `${weight} ${min}px ${family}`
+  return { text: ellipsize(ctx, text, maxW), size: min }
+}
+
+/**
+ * An ideology name in at most two lines: one line shrinking from max to one, else two lines at two
+ * (the second ellipsized if it still doesn't fit). Never silently names a different ideology.
+ */
+function fitName(ctx: CanvasRenderingContext2D, name: string, maxW: number, max: number, one: number, two: number) {
+  const single = fitLine(ctx, name, maxW, max, one, 800, DISPLAY)
+  if (!single.text.endsWith('…') || single.text === name) return { lines: [single.text], size: single.size }
+  ctx.font = `800 ${two}px ${DISPLAY}`
+  const lines = wrapText(ctx, name, maxW)
+  const kept = lines.slice(0, 2)
+  if (lines.length > 2) kept[1] = ellipsize(ctx, `${kept[1]} ${lines.slice(2).join(' ')}`, maxW)
+  else kept[1] = kept[1] ? ellipsize(ctx, kept[1], maxW) : ''
+  return { lines: kept.filter(Boolean).map(l => ellipsize(ctx, l, maxW)), size: two }
+}
+
 /** Person glyph: first person filled, second hollow (same encoding as the chart markers). */
 function personGlyph(ctx: CanvasRenderingContext2D, who: 0 | 1, x: number, y: number, r: number) {
   ctx.beginPath()
@@ -45,7 +78,7 @@ function personGlyph(ctx: CanvasRenderingContext2D, who: 0 | 1, x: number, y: nu
   }
 }
 
-function marker(ctx: CanvasRenderingContext2D, frame: 'I' | 'N', who: 0 | 1, x: number, y: number, r: number) {
+function marker(ctx: CanvasRenderingContext2D, frame: 'I' | 'N', who: 0 | 1, x: number, y: number, r: number, ring = false) {
   const color = frame === 'I' ? C.ideal : C.now
   const path = () => {
     ctx.beginPath()
@@ -66,10 +99,12 @@ function marker(ctx: CanvasRenderingContext2D, frame: 'I' | 'N', who: 0 | 1, x: 
     }
     return
   }
-  // Hollow: punch the track colour through so a filled marker underneath still reads as two.
+  // Hollow: punch the track colour through (hiding the connector inside), unless it rings a filled marker.
   path()
-  ctx.fillStyle = C.ink2
-  ctx.fill()
+  if (!ring) {
+    ctx.fillStyle = C.ink2
+    ctx.fill()
+  }
   ctx.strokeStyle = color
   ctx.lineWidth = r > 8 ? 3.5 : 2.5
   ctx.stroke()
@@ -100,8 +135,7 @@ export function drawCompareCard(canvas: HTMLCanvasElement, a: Results, b: Result
     for (const who of [0, 1] as const) {
       personGlyph(ctx, who, pad + 9, y - 8, 9)
       ctx.fillStyle = C.paper
-      ctx.font = `800 26px ${DISPLAY}`
-      ctx.fillText(o.names[who], pad + 28, y)
+      ctx.fillText(fitLine(ctx, o.names[who], colW - 28, 26, 18, 800, DISPLAY).text, pad + 28, y)
       for (const l of personLines(people[who])) {
         if (l.label) {
           y += 24
@@ -110,9 +144,9 @@ export function drawCompareCard(canvas: HTMLCanvasElement, a: Results, b: Result
           ctx.fillText(l.label, pad + 28, y)
         }
         ctx.fillStyle = l.color === C.muted ? C.muted : C.paper
-        ctx.font = `800 24px ${DISPLAY}`
+        const fit = fitLine(ctx, l.name, colW - 28, 24, 16, 800, DISPLAY)
         y += 26
-        ctx.fillText(wrapText(ctx, l.name, colW - 28)[0] ?? '', pad + 28, y)
+        ctx.fillText(fit.text, pad + 28, y)
       }
       y += 40
     }
@@ -121,20 +155,33 @@ export function drawCompareCard(canvas: HTMLCanvasElement, a: Results, b: Result
     ctx.font = `700 18px ${BODY}`
     ctx.fillText('Axes where we clearly differ', pad, y)
     y += 40
+    const counts = (
+      [
+        ['in theory', cmp.ideal, C.ideal],
+        ['here and now', cmp.now, C.now],
+      ] as const
+    ).map(([label, f, color]) => {
+      const v = cmp.reliable ? clearCount(f) : '—'
+      ctx.font = `800 40px ${DISPLAY}`
+      const vw = ctx.measureText(v).width
+      ctx.font = `700 18px ${BODY}`
+      return { label, v, color, vw, w: vw + 10 + ctx.measureText(label).width }
+    })
+    // Side by side when both fit the column, else stacked, so two-digit counts never reach the chart.
+    const inline = counts[0]!.w + 36 + counts[1]!.w <= colW
     let x = pad
-    for (const [label, f, color] of [
-      ['in theory', cmp.ideal, C.ideal],
-      ['here and now', cmp.now, C.now],
-    ] as const) {
+    for (const [k, c] of counts.entries()) {
+      if (k === 1 && !inline) {
+        x = pad
+        y += 46
+      }
       ctx.fillStyle = C.paper
       ctx.font = `800 40px ${DISPLAY}`
-      const v = cmp.reliable ? clearCount(f) : '—'
-      ctx.fillText(v, x, y)
-      const vw = ctx.measureText(v).width
-      ctx.fillStyle = color
+      ctx.fillText(c.v, x, y)
+      ctx.fillStyle = c.color
       ctx.font = `700 18px ${BODY}`
-      ctx.fillText(label, x + vw + 10, y)
-      x += vw + 10 + ctx.measureText(label).width + 36
+      ctx.fillText(c.label, x + c.vw + 10, y)
+      x += c.w + 36
     }
     y += 34
     ctx.font = `400 18px ${BODY}`
@@ -171,8 +218,7 @@ export function drawCompareCard(canvas: HTMLCanvasElement, a: Results, b: Result
       let cy = start
       personGlyph(ctx, who, x + 13, cy - 13, 13)
       ctx.fillStyle = C.paper
-      ctx.font = `800 40px ${DISPLAY}`
-      ctx.fillText(wrapText(ctx, o.names[who], colW - 40)[0] ?? '', x + 40, cy)
+      ctx.fillText(fitLine(ctx, o.names[who], colW - 40, 40, 26, 800, DISPLAY).text, x + 40, cy)
       for (const l of personLines(people[who])) {
         if (l.label) {
           cy += story ? 44 : 38
@@ -180,10 +226,11 @@ export function drawCompareCard(canvas: HTMLCanvasElement, a: Results, b: Result
           ctx.font = `700 22px ${BODY}`
           ctx.fillText(l.label, x, cy)
         } else cy += 8
+        const fit = fitName(ctx, l.name, colW, story ? 44 : 38, 28, 26)
         ctx.fillStyle = l.color === C.muted ? C.muted : C.paper
-        ctx.font = `800 ${story ? 44 : 38}px ${DISPLAY}`
-        for (const t of wrapText(ctx, l.name, colW).slice(0, 2)) {
-          cy += story ? 46 : 40
+        ctx.font = `800 ${fit.size}px ${DISPLAY}`
+        for (const t of fit.lines) {
+          cy += Math.round(fit.size * 1.05)
           ctx.fillText(t, x, cy)
         }
       }
@@ -239,33 +286,30 @@ export function drawCompareCard(canvas: HTMLCanvasElement, a: Results, b: Result
   const labelW = wide ? 180 : 230
   const trackX = chartX + labelW
   const trackW = chartW - labelW
-  const groupGap = wide ? 6 : 18
-  let cy = wide ? pad + 10 : y + 30
-  const overhead = wide ? 4 * groupGap : 4 * (14 + groupGap) + 30
+  // Groups are separated by a gap only: on a two-person card the rows need the height more than group titles.
+  const groupGap = wide ? 6 : 14
+  let cy = wide ? pad + 10 : y + 26
+  const overhead = 3 * groupGap
   const bottom = footY - (wide ? 42 : 84)
-  const rowH = Math.max(28, Math.min(wide ? 40 : 64, (bottom - cy - overhead) / 12))
+  const rowH = Math.max(30, Math.min(wide ? 40 : 64, (bottom - cy - overhead) / 12))
+  // Under ~40px a row can't hold a full-size title plus the pole names, so both step down.
+  const tight = !wide && rowH < 40
   const xs = (v: number) => trackX + ((v + 100) / 200) * trackW
-  const r0 = wide ? 7 : rowH >= 48 ? 11 : 9
+  const r0 = Math.max(6, Math.min(11, rowH * 0.2))
   for (const g of Object.keys(GROUPS) as GroupId[]) {
-    if (!wide) {
-      ctx.fillStyle = C.muted
-      ctx.font = `700 20px ${BODY}`
-      ctx.fillText(GROUP_TITLES[g], chartX, cy + 4)
-      cy += 14
-    }
     for (const ax of GROUPS[g]) {
       const k = AXIS_IDS.indexOf(ax)
       const mid = cy + rowH / 2
       // Two lanes leave no room inside the track, so pole names go under the axis title.
       ctx.fillStyle = C.paper
-      ctx.font = `700 ${wide ? 14 : 21}px ${BODY}`
-      ctx.fillText(AXES[ax].title, chartX, mid - (wide ? 2 : 3))
+      ctx.font = `700 ${wide ? 14 : tight ? 18 : 21}px ${BODY}`
+      ctx.fillText(AXES[ax].title, chartX, mid - (wide ? 2 : tight ? 1 : 3))
       ctx.fillStyle = C.muted
       const poles = `${AXES[ax].neg} ↔ ${AXES[ax].pos}`
-      let fs = wide ? 11 : 15
+      let fs = wide ? 11 : tight ? 13 : 15
       ctx.font = `400 ${fs}px ${BODY}`
       while (fs > 9 && ctx.measureText(poles).width > labelW - 10) ctx.font = `400 ${--fs}px ${BODY}`
-      ctx.fillText(poles, chartX, mid + (wide ? 12 : 16))
+      ctx.fillText(poles, chartX, mid + (wide ? 12 : tight ? 13 : 16))
       ctx.fillStyle = C.ink2
       ctx.fillRect(trackX, cy + 4, trackW, rowH - 8)
       ctx.strokeStyle = C.major
@@ -293,10 +337,13 @@ export function drawCompareCard(canvas: HTMLCanvasElement, a: Results, b: Result
           ctx.setLineDash([])
           ctx.lineWidth = 1
         }
-        // Second person first, so the filled marker sits on top when they coincide.
-        for (const who of [1, 0] as const) {
-          const v = people[who].payload[lane.f][k]
-          if (v !== null && v !== undefined) marker(ctx, lane.f, who, xs(v), lane.y, r0)
+        // Filled first, then the hollow ring on top; when the two coincide the ring grows to circle the filled marker.
+        const va = people[0].payload[lane.f][k]
+        const vb = people[1].payload[lane.f][k]
+        if (va !== null && va !== undefined) marker(ctx, lane.f, 0, xs(va), lane.y, r0)
+        if (vb !== null && vb !== undefined) {
+          const onTop = va !== null && va !== undefined && Math.abs(xs(va) - xs(vb)) < 2 * r0
+          marker(ctx, lane.f, 1, xs(vb), lane.y, onTop ? r0 + 3 : r0, onTop)
         }
       }
       cy += rowH
@@ -311,9 +358,8 @@ export function drawCompareCard(canvas: HTMLCanvasElement, a: Results, b: Result
     [' ideal   ', C.muted],
     ['●', C.now],
     [' here and now   ', C.muted],
-    ['solid line = clearly different   ', C.muted],
-    [`filled = ${o.names[0]}   `, C.muted],
-    [`hollow = ${o.names[1]}`, C.muted],
+    // Filled vs hollow is keyed by the glyphs beside the names, so the legend stays one line.
+    ['solid line = clearly different', C.muted],
   ]
   let lx = chartX
   let ly = cy + (wide ? 8 : 6)

@@ -49,7 +49,7 @@ for (const [name, a, b] of pairs) {
     }
     for (const size of ['post', 'story', 'wide'] as const) {
       await page.locator(`input[name="compare-card-size"][value="${size}"]`).check({ force: true })
-      await page.waitForTimeout(150)
+      await page.waitForTimeout(400)
       const img = page.locator('img[alt^="Comparison card"]')
       await img.waitFor()
       const data = await img.evaluate(async el => {
@@ -60,6 +60,36 @@ for (const [name, a, b] of pairs) {
     }
     await ctx.close()
   }
+}
+// Stress cases: longest ideology names on both sides, 16-character names, far-apart scores (two-digit counts).
+{
+  const ctx = await browser.newContext({ colorScheme: 'dark' })
+  const page = await ctx.newPage()
+  page.on('pageerror', e => console.error('pageerror', e.message))
+  await page.goto(base)
+  for (const size of ['post', 'story', 'wide'] as const) {
+    // Passed as a string: tsx's injected __name helper doesn't exist in the page.
+    const data = (await page.evaluate(`(async (size) => {
+      const card = await import('/src/share/compareCard.ts')
+      const { compareResults } = await import('/src/engine/compare.ts')
+      const { ensureFonts, cardBlob } = await import('/src/share/card.ts')
+      await ensureFonts()
+      const v = f => Array.from({ length: 12 }, (_, k) => f(k))
+      const payload = (I, N) => ({ format: 1, catalogue: 1, mode: 'full', input: 'grid', careless: false, answered: 120, total: 120,
+        I, N, seI: v(() => 7), seN: v(() => 7), G: v(k => N[k] - I[k]), notable: v(() => false), rg: 10 })
+      const pick = name => ({ match: { arch: { name, slug: 'x', sensitive: false }, label: 'close' }, stability: { label: 'stable' } })
+      const res = (p, a, b) => ({ payload: p, hero: { kind: 'split', ideal: pick(a), now: pick(b) } })
+      const pa = payload(v(k => (k % 2 ? 90 : -90)), v(k => (k % 3 ? 80 : -100)))
+      const pb = payload(v(k => (k % 2 ? -85 : 95)), v(k => (k === 4 ? 80 : 100 - k * 15)))
+      const c = document.createElement('canvas')
+      card.drawCompareCard(c, res(pa, 'Libertarian municipalism (Communalism)', 'Traditional (Burkean) conservatism'),
+        res(pb, 'Techno-progressive transhumanism', 'Developmental authoritarianism'), compareResults(pa, pb),
+        { size, names: ['WWWWWWWWWWWWWWWW', 'Alexandra Louise'], host: '12axes-squared.netlify.app' })
+      return Array.from(new Uint8Array(await (await cardBlob(c)).arrayBuffer()))
+    })(${JSON.stringify(size)})`)) as number[]
+    writeFileSync(`${out}/compare-card-stress-${size}.png`, Buffer.from(data))
+  }
+  await ctx.close()
 }
 await browser.close()
 console.log(`compare shots written to ${out}/`)

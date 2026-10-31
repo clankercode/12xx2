@@ -1,5 +1,6 @@
 .wrap {
-  --c: clamp(36px, calc((100vw - 120px) / 7), 62px);
+  /* Cells size to the nearest inline-size container (the landing demo card), else the viewport. */
+  --c: clamp(36px, calc((min(100vw, 100cqi) - 120px) / 7), 62px);
   display: grid;
   grid-template-columns: auto auto auto;
   grid-template-areas:
@@ -72,16 +73,6 @@
   border: 1px solid var(--rule-major);
   border-radius: var(--radius-m);
   background: var(--ink);
-  position: relative;
-}
-
-/* The diagonal hairline: "same answer in both". */
-.grid::before {
-  content: '';
-  position: absolute;
-  inset: 3px;
-  background: linear-gradient(to top right, transparent calc(50% - 0.75px), color-mix(in srgb, var(--paper) 35%, transparent) 50%, transparent calc(50% + 0.75px));
-  pointer-events: none;
 }
 
 .row {
@@ -118,7 +109,7 @@
 }
 
 .diag {
-  border-color: color-mix(in srgb, var(--paper) 30%, var(--rule-major));
+  border-color: color-mix(in srgb, var(--paper) 42%, var(--rule-major));
 }
 
 .selected {
@@ -153,7 +144,8 @@
   margin: 8px auto 0;
   text-align: center;
   font-size: 0.95rem;
-  max-width: 34ch;
+  max-width: 40ch;
+  text-wrap: balance;
 }
 
 /* Single-frame strip / two-row mode. */
@@ -256,7 +248,7 @@
 
 @media (max-width: 480px) {
   .wrap {
-    --c: clamp(34px, calc((100vw - 76px) / 7), 62px);
+    --c: clamp(34px, calc((min(100vw, 100cqi) - 76px) / 7), 62px);
     column-gap: 6px;
   }
   .yTitle {
