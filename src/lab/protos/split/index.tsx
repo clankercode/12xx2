@@ -46,18 +46,18 @@ export const meta: ProtoMeta = {
     },
     {
       id: 'centre-circle',
-      title: 'Centre square as a circle (toggle “Centre circle”, o=-centreCircle to turn off)',
-      detail: 'Max’s idea: the (0, 0) tile is a split circle, so the eye finds the middle — and so the four corners — at a glance; the ring turns round when it lands there.',
+      title: 'Centre square as a circle',
+      detail: 'Toggle “Centre circle” (on; &o=-centreCircle turns it off). Max’s idea: the (0, 0) tile is a split circle, so the eye finds the middle — and so the four corners — at a glance; the ring turns round when it lands there.',
     },
     {
       id: 'edge-labels',
-      title: 'Corner meanings bracketed on the edge (toggle “Labels on the edge”)',
-      detail: 'Each meaning sits above or below its quadrant with a bracket spanning its three columns, so no tile is covered; the one for the active region lights up.',
+      title: 'Corner meanings bracketed on the board’s edge',
+      detail: 'Toggle “Labels on the edge” (on; &o=-edgeLabels for in-grid plates). Each meaning sits above or below its quadrant with a bracket spanning its three columns, so no tile is covered; the one for the active region lights up.',
     },
     {
       id: 'quadrant-captions',
-      title: 'Or: corner captions inside the grid (o=-edgeLabels)',
-      detail: 'The earlier layout: frosted plates on the second row of each quadrant. More “in the grid”, but they cover tiles, so in answer mode they fade on hover, focus and pick.',
+      title: 'Or: corner captions inside the grid',
+      detail: 'Shown when “Labels on the edge” is off. The earlier layout: frosted plates on the second row of each quadrant. More “in the grid”, but they cover tiles, so in answer mode they fade on hover, focus and pick.',
     },
     {
       id: 'torn-tag',
@@ -86,13 +86,13 @@ export const meta: ProtoMeta = {
     },
     {
       id: 'spotlight-tour',
-      title: 'Spotlight tour in the hero (default)',
-      detail: 'A ring glides corner to corner, dimming tiles outside the region while the read-out explains it; pauses on hover or focus, has step dots, and stays still under reduced motion.',
+      title: 'Spotlight tour in the hero',
+      detail: 'The default hero (“Story tour” off). A ring glides corner to corner, dimming tiles outside the region while the read-out explains it; pauses on hover or focus, has step dots, and stays still under reduced motion.',
     },
     {
       id: 'story-tour',
-      title: 'Story tour in the hero (toggle “Story tour”, o=storyTour)',
-      detail: 'From prototype D: persona A and B pick the same ideal column, then rows four apart; the unanswered half is veiled each step, ending on a bracketed “gap 4”.',
+      title: 'Story tour in the hero',
+      detail: 'Toggle “Story tour” (off; &o=storyTour turns it on). From prototype D: persona A and B pick the same ideal column, then rows four apart; the unanswered half is veiled each step, ending on a bracketed “gap 4”.',
     },
     {
       id: 'region-emoji',
@@ -209,7 +209,8 @@ function Ramp({ half, palette, value }: { half: Half; palette: Palette; value: V
   )
 }
 
-function Legend({ palette, cell }: { palette: Palette; cell: { i: V; n: V } | null }) {
+/** `cell` marks each half's ramp; a half left out (story tour, not answered yet) stays unmarked. */
+function Legend({ palette, cell }: { palette: Palette; cell: Partial<Record<Half, V>> | null }) {
   return (
     <div className={css.legend}>
       {(['now', 'ideal'] as const).map(half => (
@@ -219,7 +220,7 @@ function Legend({ palette, cell }: { palette: Palette; cell: { i: V; n: V } | nu
             <span className={css.legendWhere}>{half === 'now' ? 'Top-left half' : 'Bottom-right half'}</span>
             <strong className={css.legendName}>{HALF_NAME[half]}</strong>
           </div>
-          <Ramp half={half} palette={palette} value={cell ? (half === 'now' ? cell.n : cell.i) : null} />
+          <Ramp half={half} palette={palette} value={cell?.[half] ?? null} />
         </div>
       ))}
       <p className={css.legendScale}>
@@ -263,14 +264,16 @@ function EdgeLabels({ side, active }: { side: 'top' | 'bottom'; active: RegionId
         return (
           <span key={id} className={css.edgeLabel} data-region={id} data-active={active === id || undefined}>
             <span className={css.edgeText}>
-              <span className={css.capEmoji}>{r.emoji}</span>{' '}
-              {/* Wraps only between the two authored lines ("Needed now," / "never ideal"). */}
-              {r.lines.map((l, k) => (
-                <span key={k} className={css.edgeLine}>
-                  {k > 0 && ' '}
-                  {l}
-                </span>
-              ))}
+              {/* Wraps only between the two authored lines ("🩹 Needed now," / "never ideal"). */}
+              <span className={css.edgeLine}>
+                <span className={css.capEmoji}>{r.emoji}</span> {r.lines[0]}
+              </span>
+              {r.lines[1] && (
+                <>
+                  {' '}
+                  <span className={css.edgeLine}>{r.lines[1]}</span>
+                </>
+              )}
             </span>
             <span className={css.bracket} />
           </span>
@@ -333,7 +336,7 @@ function StoryCopy({ f, palette }: { f: Frame; palette: Palette }) {
             {f.persona.pin}
           </span>
         )}
-        {f.persona ? f.persona.who : f.kicker}
+        <span className={css.kickerText}>{f.persona ? f.persona.who : f.kicker}</span>
       </p>
       <h3 className={css.readTitle}>{f.title}</h3>
       <p className={css.readBody}>{f.body}</p>
@@ -569,7 +572,7 @@ function SplitBoard({
               )}
             </div>
             {!edgeLabels && <Captions active={activeRegion} />}
-            <span className={css.torn} data-active={centreLit || undefined} aria-hidden>
+            <span className={css.torn} data-active={centreLit || undefined} hidden={story} aria-hidden>
               <span className={css.capEmoji}>🤷</span>
               <span className={css.tornWord}>Torn</span>
             </span>
@@ -646,7 +649,13 @@ function SplitBoard({
 
         <Legend
           palette={palette}
-          cell={story ? (frame.b && !frame.b.ghost ? frame.b : frame.a && !frame.a.ghost ? frame.a : null) : lit}
+          cell={
+            story
+              ? frame.reading
+                ? Object.fromEntries(frame.reading.map(r => [r.half, r.v]))
+                : null
+              : lit && { now: lit.n, ideal: lit.i }
+          }
         />
 
         {hero && story && (
