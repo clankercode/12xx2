@@ -1,15 +1,19 @@
-import { useMemo } from 'react'
-import { AXIS_IDS } from '../engine/types'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import type { AxisId } from '../engine/types'
 import { decodeShared } from '../state/shared'
 import { deriveResults, type Results } from '../engine/results'
-import { distance } from '../engine/match'
+import { compareResults, sameScores, type Comparison } from '../engine/compare'
 import { catalogueFor } from '../data/archetypes'
 import { CALIBRATION } from '../data/calibration'
 import { AXES } from '../data/axes'
+import { cardBlob, ensureFonts, type CardSize } from '../share/card'
+import { NOT_COMPARABLE, SUMMARY_TEXT, clearCount, drawCompareCard } from '../share/compareCard'
+import { useStore } from './App'
 import { AxisChart } from './AxisChart'
 import { DECODE_MESSAGE } from './SharedPage'
 import { MATCH_LABEL } from './copy'
 import css from './Results.module.css'
+import share from './Share.module.css'
 
 function heroName(r: Results): string {
   const h = r.hero
@@ -18,84 +22,220 @@ function heroName(r: Results): string {
   return 'No reliable match'
 }
 
+const NAME_MAX = 16
+
 export function ComparePage({ mine, theirs }: { mine: string; theirs: string }) {
-  const a = useMemo(() => decodeShared(mine), [mine])
-  const b = useMemo(() => decodeShared(theirs), [theirs])
-  if (!a.ok || !b.ok) {
+  const { own } = useStore()
+  const da = useMemo(() => decodeShared(mine), [mine])
+  const db = useMemo(() => decodeShared(theirs), [theirs])
+  if (!da.ok || !db.ok) {
     return (
       <div className="narrow" style={{ padding: '48px 0' }}>
         <h1>Can’t compare these results</h1>
-        <p>{DECODE_MESSAGE[!a.ok ? a.error : (b as { ok: false; error: keyof typeof DECODE_MESSAGE }).error]}</p>
+        <p>{DECODE_MESSAGE[!da.ok ? da.error : (db as { ok: false; error: keyof typeof DECODE_MESSAGE }).error]}</p>
       </div>
     )
   }
-  const ra = deriveResults(a.payload, catalogueFor(a.payload), CALIBRATION)
-  const rb = deriveResults(b.payload, catalogueFor(b.payload), CALIBRATION)
-  const ones = AXIS_IDS.map(() => 1)
-  // Compare only axes both people have scores on.
-  const both = (x: (number | null)[], y: (number | null)[]) => distance(x.map((v, k) => (y[k] === null ? null : v)), y.map(v => v ?? 0), ones)
-  const dI = both(a.payload.I, b.payload.I)
-  const dN = both(a.payload.N, b.payload.N)
-  const diffs = AXIS_IDS.map((ax, k) => {
-    const x = a.payload.I[k]
-    const y = b.payload.I[k]
-    return { ax, d: x === null || y === null || x === undefined || y === undefined ? null : Math.abs(x - y) }
-  }).filter((x): x is { ax: (typeof AXIS_IDS)[number]; d: number } => x.d !== null)
-  diffs.sort((p, q) => p.d - q.d)
-  const pct = (d: number) => Math.round(100 * (1 - d))
+  // A compare link can be forwarded, so work out who "you" is from the scores, and put you first.
+  const swap = !!own && !sameScores(own.payload, da.payload) && sameScores(own.payload, db.payload)
+  const viewerIn = !!own && (swap || sameScores(own.payload, da.payload))
+  const [pa, pb] = swap ? [db.payload, da.payload] : [da.payload, db.payload]
+  const [ea, eb] = swap ? [theirs, mine] : [mine, theirs]
+  const labels: [string, string] = viewerIn ? ['You', 'Them'] : ['First person', 'Second person']
+  const ra = deriveResults(pa, catalogueFor(pa), CALIBRATION)
+  const rb = deriveResults(pb, catalogueFor(pb), CALIBRATION)
+  const cmp = compareResults(pa, pb)
+  const ax = (id: AxisId | null) => (id ? AXES[id].title.toLowerCase() : '')
 
   return (
     <div className={`wrap ${css.results}`}>
       <section className={css.hero}>
         <p className="small muted">Comparing two results. Each link contains scores only, never answers.</p>
         <div className={css.pair}>
-          <div className={css.half}>
-            <p className={css.heroKicker}>You</p>
-            <h1 className={css.heroTitle} style={{ fontSize: 'clamp(1.6rem, 4vw, 2.6rem)' }}>
-              {heroName(ra)}
-            </h1>
-            {ra.matchesIdeal[0] && <p className="small muted">{MATCH_LABEL[ra.matchesIdeal[0].label]}</p>}
-          </div>
-          <span className={css.pairArrow} aria-hidden>
-            ⇄
-          </span>
-          <div className={css.half}>
-            <p className={css.heroKicker}>Them</p>
-            <h1 className={css.heroTitle} style={{ fontSize: 'clamp(1.6rem, 4vw, 2.6rem)' }}>
-              {heroName(rb)}
-            </h1>
-            {rb.matchesIdeal[0] && <p className="small muted">{MATCH_LABEL[rb.matchesIdeal[0].label]}</p>}
-          </div>
+          {([
+            [labels[0], ra],
+            [labels[1], rb],
+          ] as const).map(([label, r], k) => (
+            <div key={k} className={css.half}>
+              <p className={css.heroKicker}>{label}</p>
+              <h1 className={css.heroTitle} style={{ fontSize: 'clamp(1.6rem, 4vw, 2.6rem)' }}>
+                {heroName(r)}
+              </h1>
+              {r.matchesIdeal[0] && <p className="small muted">{MATCH_LABEL[r.matchesIdeal[0].label]}</p>}
+            </div>
+          ))}
         </div>
-        <div className={css.stats}>
-          <div className={css.stat}>
-            <span className={css.statLabel}>Ideal systems</span>
-            <span className={css.statValue}>{pct(dI)}%</span>
-            <span className="small muted">overlap (100% = identical scores on every axis)</span>
-          </div>
-          <div className={css.stat}>
-            <span className={css.statLabel}>Here and now</span>
-            <span className={css.statValue}>{pct(dN)}%</span>
-            <span className="small muted">overlap</span>
-          </div>
-        </div>
-        {diffs.length >= 2 && (
-          <p>
-            You agree most on <strong>{AXES[diffs[0]!.ax].title.toLowerCase()}</strong> and differ most on{' '}
-            <strong>{AXES[diffs[diffs.length - 1]!.ax].title.toLowerCase()}</strong> (ideal system).
-          </p>
+        {cmp.reliable ? (
+          <>
+            <div className={css.stats}>
+              <div className={css.stat}>
+                <span className={css.statLabel}>Ideal systems</span>
+                <span className={css.statValue}>{clearCount(cmp.ideal)}</span>
+                <span className="small muted">axes where you clearly differ</span>
+              </div>
+              <div className={css.stat}>
+                <span className={css.statLabel}>Here and now</span>
+                <span className={css.statValue}>{clearCount(cmp.now)}</span>
+                <span className="small muted">axes where you clearly differ</span>
+              </div>
+            </div>
+            {cmp.summary && <p>{SUMMARY_TEXT[cmp.summary].replace(/^We /, 'You ')}</p>}
+            {cmp.ideal.closest && cmp.ideal.furthest && (
+              <p>
+                In your ideal systems you’re closest on <strong>{ax(cmp.ideal.closest)}</strong> and furthest apart on{' '}
+                <strong>{ax(cmp.ideal.furthest)}</strong>.
+              </p>
+            )}
+            <p className="small muted">
+              “Clearly differ” means the two scores are further apart than their combined measurement error allows (a 95% test per
+              axis). Smaller differences may be real but can’t be told apart from noise.
+            </p>
+          </>
+        ) : (
+          <p>One of these results was flagged as careless answering, so no differences are claimed.</p>
         )}
+        {cmp.sameCountry === false && <p className="small muted">{NOT_COMPARABLE}</p>}
       </section>
       <section className={css.section}>
         <h2>Side by side</h2>
-        <p className="small muted">Filled markers are you; hollow markers are them.</p>
-        <AxisChart rows={ra.rows} overlay={{ label: 'Them', rows: rb.rows }} />
+        <p className="small muted">
+          Filled markers are {labels[0].toLowerCase()}; hollow markers are {labels[1].toLowerCase()}.
+        </p>
+        <AxisChart rows={ra.rows} overlay={{ label: labels[1], rows: rb.rows }} />
+      </section>
+      <section className={css.section}>
+        <h2>Share this comparison</h2>
+        <CompareShare a={ra} b={rb} cmp={cmp} link={`${location.origin}${import.meta.env.BASE_URL}#c=${ea}~${eb}`} viewerIn={viewerIn} />
       </section>
       <section className={css.section}>
         <a className="btn btn-primary" href="#/">
-          Take the test
+          {own ? 'Back to the start' : 'Take the test'}
         </a>
       </section>
+    </div>
+  )
+}
+
+function CompareShare({ a, b, cmp, link, viewerIn }: { a: Results; b: Results; cmp: Comparison; link: string; viewerIn: boolean }) {
+  const [names, setNames] = useState<[string, string]>(viewerIn ? ['Me', 'Them'] : ['A', 'B'])
+  const [size, setSize] = useState<CardSize>('post')
+  const [blob, setBlob] = useState<Blob | null>(null)
+  const [url, setUrl] = useState<string | null>(null)
+  const [status, setStatus] = useState('')
+  const canvas = useRef<HTMLCanvasElement | null>(null)
+  const shown: [string, string] = [names[0].trim() || 'A', names[1].trim() || 'B']
+
+  useEffect(() => {
+    let alive = true
+    setBlob(null)
+    ;(async () => {
+      await ensureFonts()
+      if (!canvas.current) canvas.current = document.createElement('canvas')
+      drawCompareCard(canvas.current, a, b, cmp, { size, names: shown, host: location.host || '12 Axes²' })
+      const out = await cardBlob(canvas.current)
+      if (alive) setBlob(out)
+    })().catch(() => setStatus('Could not draw the card in this browser.'))
+    return () => {
+      alive = false
+    }
+  }, [a, b, cmp, size, names])
+
+  useEffect(() => {
+    if (!blob) return
+    const u = URL.createObjectURL(blob)
+    setUrl(u)
+    return () => URL.revokeObjectURL(u)
+  }, [blob])
+
+  const fileName = `12axes2-compare-${size}.png`
+  const file = blob ? new File([blob], fileName, { type: 'image/png' }) : null
+  const canShareFile = !!file && typeof navigator.canShare === 'function' && navigator.canShare({ files: [file] })
+  const text = 'We each answered every political question twice: for our ideal system and for here and now. How do you two compare?'
+
+  const download = () => {
+    if (!url) return
+    const el = document.createElement('a')
+    el.href = url
+    el.download = fileName
+    el.click()
+  }
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(link)
+      setStatus('Link copied.')
+    } catch {
+      setStatus('Copy failed — select the link above and copy it manually.')
+    }
+  }
+  const doShare = () => {
+    if (file && canShareFile) navigator.share({ files: [file], text: `${text} ${link}` }).catch(() => {})
+    else if (typeof navigator.share === 'function') navigator.share({ text, url: link }).catch(() => {})
+    else download()
+  }
+  const alt =
+    `Comparison card. ${shown[0]}: ${heroName(a)}. ${shown[1]}: ${heroName(b)}. ` +
+    (cmp.reliable ? `Clearly different on ${clearCount(cmp.ideal)} axes in theory and ${clearCount(cmp.now)} here and now.` : '')
+
+  return (
+    <div className={share.sheet} aria-label="Share this comparison">
+      <div className={share.preview}>
+        {url ? <img src={url} alt={alt} /> : <div className={share.placeholder}>Drawing card…</div>}
+      </div>
+      <div className={share.controls}>
+        <fieldset className={share.fs}>
+          <legend>Names on the card</legend>
+          <div className={share.names}>
+            {([0, 1] as const).map(k => (
+              <label key={k}>
+                <span className="small muted">{k === 0 ? 'Filled markers' : 'Hollow markers'}</span>
+                <input
+                  className={share.link}
+                  value={names[k]}
+                  maxLength={NAME_MAX}
+                  onChange={e => setNames(k === 0 ? [e.target.value, names[1]] : [names[0], e.target.value])}
+                />
+              </label>
+            ))}
+          </div>
+          <p className="small muted">Names are drawn on the image only. They are never put in a link.</p>
+        </fieldset>
+        <fieldset className={share.fs}>
+          <legend>Card</legend>
+          <div className={share.seg} role="radiogroup" aria-label="Card size">
+            {(
+              [
+                ['post', 'Post 4:5'],
+                ['story', 'Story 9:16'],
+                ['wide', 'Wide'],
+              ] as const
+            ).map(([k, l]) => (
+              <label key={k} className={size === k ? share.segOn : ''}>
+                <input type="radio" name="compare-card-size" value={k} checked={size === k} onChange={() => setSize(k)} className="visually-hidden" />
+                {l}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <fieldset className={share.fs}>
+          <legend>Link</legend>
+          <input className={share.link} readOnly value={link} onFocus={e => e.target.select()} aria-label="Comparison link" />
+          <p className="small muted">This link holds both people’s scores (not answers). Share it only where you’re both happy for them to appear.</p>
+        </fieldset>
+        <div className={share.buttons}>
+          <button type="button" className="btn btn-primary" onClick={doShare} disabled={!blob}>
+            Share image
+          </button>
+          <button type="button" className="btn" onClick={download} disabled={!url}>
+            Download PNG
+          </button>
+          <button type="button" className="btn" onClick={copy}>
+            Copy link
+          </button>
+        </div>
+        <p className="small" role="status">
+          {status}
+        </p>
+      </div>
     </div>
   )
 }

@@ -208,16 +208,17 @@ tracking, nothing to promote. <link> — Max (I made it; method is public, criti
 1. A shares a result link (`#r=…`). The link holds scores only, and stays in the fragment.
 2. B opens it and sees A's result plus **"Take it yourself and compare"**. If B already has a saved result, B sees **"Compare with my result"** instead.
 3. B finishes the quiz. Their results page offers **"Compare with the person who shared their link"** → `#c=<B>~<A>`.
-4. The compare page shows both headlines, a **% overlap** for ideal systems and for here-and-now, the axis where they agree most and the axis where they differ most, and a side-by-side chart.
+   Anyone with a result can also paste a friend's result link into **"Compare with a friend"** on their results page.
+4. The compare page shows both headlines, **how many axes the two clearly differ on** in each frame (a 95% test against both scores' measurement error, not an inflated % overlap), which frame they disagree on more, the closest and furthest axes, and a side-by-side chart.
+5. **"Share this comparison"** draws a compare card (post, story, wide) with editable names (drawn on the image only, never in the link), plus Share image, Download PNG and Copy link. Whoever opens a forwarded compare link and is one of the two people is shown first, as "You".
 
-The quotable outputs are "we overlap 81% in theory and 54% here and now" and "agree most on trade, differ most on religion & state". Seed copy:
+The quotable outputs are "we clearly differ on 5 of 12 axes in theory but only 2 here and now" and "we disagree more about ideals than about what to do now". Seed copy:
 ```
 We agree in theory and disagree in practice. Apparently. <compare link>
 ```
 ```
 Take this and send me your link — I want to see if we agree in theory, in practice, or neither. <link>
 ```
-Gap: B currently gets the compare URL only from the address bar. There's no compare card and no compare share button (see §10).
 
 ---
 
@@ -294,7 +295,7 @@ Ordered by expected impact on spread:
 
 1. **OG stub pipeline** (`scripts/og.ts` + `SITE_ORIGIN`). Required for "Link with preview" to work at all (§2.1).
 2. **Story-card safe zones.** Move the wordmark and URL footer out of the top ~250 px and bottom ~340 px in the 9:16 layout.
-3. **Compare sharing.** Add a "Copy compare link" button and a compare card (Minimal by default and labeled "Them", per spec §6.3) on the compare page. Today the compare URL lives only in the address bar.
+3. ~~**Compare sharing.**~~ Done 2026-10-31: compare card, share/download/copy on the compare page, and paste-a-link compare on results (§5).
 4. **"Challenge a friend" button** on results, with invite text ("Take it and send me your link").
 5. **Copy-text share** (no image) plus a compact text/emoji result for Discord, SMS and comments (R05 §3.5). Today, text goes only into intents and the native share.
 6. **Alt text for cards.** A generated description plus a "Copy alt text" button. The preview `<img>` alt is currently generic.

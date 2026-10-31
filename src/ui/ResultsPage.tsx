@@ -9,7 +9,7 @@ import { ResultsView } from './ResultsView'
 import { ShareSheet } from './ShareSheet'
 import { Confirm, useClearData } from './Chrome'
 import { label } from './answer'
-import { go } from './router'
+import { go, resultFromLink } from './router'
 import css from './Results.module.css'
 
 export function ResultsPage({ own }: { own: Own }) {
@@ -149,11 +149,53 @@ export function ResultsPage({ own }: { own: Own }) {
         <div id="share-sheet" style={showShare ? { marginTop: 20 } : undefined}>
           {showShare && <ShareSheet payload={own.payload} />}
         </div>
+        <ComparePaste mine={mine} />
       </section>
     </>
   )
 
   return <ResultsView r={r} extras={extras} />
+}
+
+function ComparePaste({ mine }: { mine: string }) {
+  const [text, setText] = useState('')
+  const [error, setError] = useState('')
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const theirs = resultFromLink(text)
+    if (!theirs) return setError('That doesn’t look like a 12 Axes² result link. It should contain “#r=”.')
+    go(`#c=${mine}~${theirs}`)
+  }
+  return (
+    <form onSubmit={submit} style={{ marginTop: 20, display: 'grid', gap: 8, maxWidth: 560 }}>
+      <label htmlFor="compare-paste" style={{ fontWeight: 700 }}>
+        Compare with a friend
+      </label>
+      <p className="small muted" style={{ margin: 0 }}>
+        Paste the result link they shared. It stays in this tab; nothing is sent anywhere.
+      </p>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        <input
+          id="compare-paste"
+          value={text}
+          onChange={e => {
+            setText(e.target.value)
+            setError('')
+          }}
+          placeholder="https://…#r=…"
+          style={{ flex: '1 1 240px', font: 'inherit', padding: '8px 10px', background: 'var(--ink)', color: 'var(--paper)', border: '1px solid var(--rule-major)', borderRadius: 'var(--radius-s)' }}
+        />
+        <button type="submit" className="btn">
+          Compare
+        </button>
+      </div>
+      {error && (
+        <p className="small" role="alert" style={{ margin: 0, color: 'var(--now-text)' }}>
+          {error}
+        </p>
+      )}
+    </form>
+  )
 }
 
 /** System confidence × Reality Gap: a descriptive map with positional labels (spec §4.6). */

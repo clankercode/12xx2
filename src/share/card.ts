@@ -1,4 +1,4 @@
-import { AXIS_IDS, GROUPS, type GroupId } from '../engine/types'
+import { AXIS_IDS, GROUPS, type AxisId, type GroupId } from '../engine/types'
 import type { Results } from '../engine/results'
 import { AXES, GROUP_TITLES } from '../data/axes'
 import { MATCH_LABEL, RG_BAND } from '../ui/copy'
@@ -21,7 +21,7 @@ export interface CardOptions {
   countryLabel?: string
 }
 
-const C = {
+export const C = {
   ink: '#141726',
   ink2: '#1a1e31',
   rule: '#23283f',
@@ -31,8 +31,8 @@ const C = {
   ideal: '#a3acff',
   now: '#f2b45a',
 }
-const DISPLAY = '"Bricolage Grotesque Variable", "Arial Narrow", sans-serif'
-const BODY = '"Atkinson Hyperlegible Next Variable", system-ui, sans-serif'
+export const DISPLAY = '"Bricolage Grotesque Variable", "Arial Narrow", sans-serif'
+export const BODY = '"Atkinson Hyperlegible Next Variable", system-ui, sans-serif'
 
 export async function ensureFonts() {
   try {
@@ -74,7 +74,7 @@ export function headline(r: Results, allowSensitive: boolean): Headline {
   return { kicker: 'My 12 axes, twice', lines: [] }
 }
 
-function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
+export function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
   const words = text.split(' ')
   const lines: string[] = []
   let cur = ''
@@ -89,7 +89,7 @@ function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number)
   return lines
 }
 
-function diamond(ctx: CanvasRenderingContext2D, x: number, y: number, r: number) {
+export function diamond(ctx: CanvasRenderingContext2D, x: number, y: number, r: number) {
   ctx.beginPath()
   ctx.moveTo(x, y - r)
   ctx.lineTo(x + r, y)
@@ -99,20 +99,8 @@ function diamond(ctx: CanvasRenderingContext2D, x: number, y: number, r: number)
   ctx.fill()
 }
 
-/** Draws a share card. Pure Canvas 2D: no DOM snapshotting, no external requests. */
-export function drawCard(canvas: HTMLCanvasElement, r: Results, o: CardOptions) {
-  const [W, H] = CARD_DIMS[o.size]
-  canvas.width = W
-  canvas.height = H
-  const ctx = canvas.getContext('2d')!
-  const wide = o.size === 'wide'
-  const pad = wide ? 48 : 72
-  // Stories: keep text out of the app overlays (profile bar on top, reply bar at the bottom).
-  const story = o.size === 'story'
-  const top = story ? 230 : pad
-  const footY = H - (wide ? 28 : story ? 340 : 48)
-
-  // Squared paper.
+/** Dark squared-paper background shared by every card. */
+export function paper(ctx: CanvasRenderingContext2D, W: number, H: number) {
   ctx.fillStyle = C.ink
   ctx.fillRect(0, 0, W, H)
   ctx.lineWidth = 1
@@ -130,16 +118,66 @@ export function drawCard(canvas: HTMLCanvasElement, r: Results, o: CardOptions) 
     ctx.lineTo(W, y + 0.5)
     ctx.stroke()
   }
+}
 
-  // Wordmark.
+export function wordmark(ctx: CanvasRenderingContext2D, x: number, top: number, wide: boolean) {
   ctx.textBaseline = 'alphabetic'
   ctx.fillStyle = C.paper
   ctx.font = `800 ${wide ? 34 : 44}px ${DISPLAY}`
-  ctx.fillText('12 Axes', pad, top + (wide ? 22 : 30))
+  ctx.fillText('12 Axes', x, top + (wide ? 22 : 30))
   const wmW = ctx.measureText('12 Axes').width
   ctx.fillStyle = C.now
   ctx.font = `800 ${wide ? 20 : 26}px ${DISPLAY}`
-  ctx.fillText('2', pad + wmW + 4, top + (wide ? 4 : 6))
+  ctx.fillText('2', x + wmW + 4, top + (wide ? 4 : 6))
+}
+
+/**
+ * Pole names sit inside the track ends; a marker covering one pushes it inward past the marker,
+ * and it is dropped if that would cross the centre line.
+ */
+export function poleNames(
+  ctx: CanvasRenderingContext2D,
+  ax: AxisId,
+  trackX: number,
+  trackW: number,
+  mid: number,
+  marks: number[],
+  r0: number,
+  wide: boolean,
+) {
+  const centre = trackX + trackW / 2
+  ctx.fillStyle = C.muted
+  ctx.globalAlpha = 0.75
+  ctx.font = `400 ${wide ? 11 : 15}px ${BODY}`
+  ctx.textAlign = 'left'
+  const wNeg = ctx.measureText(AXES[ax].neg).width
+  let negX = trackX + 8
+  for (const m of [...marks].sort((a, b) => a - b)) if (m - r0 < negX + wNeg && m + r0 > negX - 4) negX = m + r0 + 6
+  if (negX + wNeg < centre - 4) ctx.fillText(AXES[ax].neg, negX, mid + (wide ? 4 : 5))
+  ctx.textAlign = 'right'
+  const wPos = ctx.measureText(AXES[ax].pos).width
+  let posX = trackX + trackW - 8
+  for (const m of [...marks].sort((a, b) => b - a)) if (m + r0 > posX - wPos && m - r0 < posX + 4) posX = m - r0 - 6
+  if (posX - wPos > centre + 4) ctx.fillText(AXES[ax].pos, posX, mid + (wide ? 4 : 5))
+  ctx.textAlign = 'left'
+  ctx.globalAlpha = 1
+}
+
+/** Draws a share card. Pure Canvas 2D: no DOM snapshotting, no external requests. */
+export function drawCard(canvas: HTMLCanvasElement, r: Results, o: CardOptions) {
+  const [W, H] = CARD_DIMS[o.size]
+  canvas.width = W
+  canvas.height = H
+  const ctx = canvas.getContext('2d')!
+  const wide = o.size === 'wide'
+  const pad = wide ? 48 : 72
+  // Stories: keep text out of the app overlays (profile bar on top, reply bar at the bottom).
+  const story = o.size === 'story'
+  const top = story ? 230 : pad
+  const footY = H - (wide ? 28 : story ? 340 : 48)
+
+  paper(ctx, W, H)
+  wordmark(ctx, pad, top, wide)
 
   // Headline.
   const hl = headline(r, o.allowSensitive)
@@ -231,22 +269,7 @@ export function drawCard(canvas: HTMLCanvasElement, r: Results, o: CardOptions) 
       // Pole names sit inside the track ends; a marker covering one pushes it inward past the marker,
       // and it is dropped if that would cross the centre line.
       const r0 = wide ? 7 : 11
-      const marks = [row.I, row.N].filter((v): v is number => v !== null).map(xs)
-      ctx.fillStyle = C.muted
-      ctx.globalAlpha = 0.75
-      ctx.font = `400 ${wide ? 11 : 15}px ${BODY}`
-      ctx.textAlign = 'left'
-      const wNeg = ctx.measureText(AXES[ax].neg).width
-      let negX = trackX + 8
-      for (const m of [...marks].sort((a, b) => a - b)) if (m - r0 < negX + wNeg && m + r0 > negX - 4) negX = m + r0 + 6
-      if (negX + wNeg < xs(0) - 4) ctx.fillText(AXES[ax].neg, negX, mid + (wide ? 4 : 5))
-      ctx.textAlign = 'right'
-      const wPos = ctx.measureText(AXES[ax].pos).width
-      let posX = trackX + trackW - 8
-      for (const m of [...marks].sort((a, b) => b - a)) if (m + r0 > posX - wPos && m - r0 < posX + 4) posX = m - r0 - 6
-      if (posX - wPos > xs(0) + 4) ctx.fillText(AXES[ax].pos, posX, mid + (wide ? 4 : 5))
-      ctx.textAlign = 'left'
-      ctx.globalAlpha = 1
+      poleNames(ctx, ax, trackX, trackW, mid, [row.I, row.N].filter((v): v is number => v !== null).map(xs), r0, wide)
       const yI = cy + rowH * 0.33
       const yN = cy + rowH * 0.67
       if (row.I !== null && row.N !== null) {

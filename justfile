@@ -48,3 +48,7 @@ e2e:
 # Needs `just dev` running. Writes to shots/ (gitignored) unless an out dir is given.
 screenshots out="shots":
     pnpm tsx scripts/shots.ts http://localhost:21313/ {{out}}
+
+# Needs `just dev` running. Compare page and cards for three simulated pairs, into shots/.
+compare-shots out="shots":
+    pnpm tsx scripts/compare-shots.ts http://localhost:21313/ {{out}}

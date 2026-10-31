@@ -62,6 +62,25 @@ test('shared link shows the same headline and axes as the owner view', async ({ 
   await other.close()
 })
 
+test('pasting a result link opens the comparison and draws its card', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /Quick/ }).click()
+  await page.getByRole('button', { name: 'Start the questions' }).click()
+  await answerQuick(page)
+  await finishSteps(page)
+  await page.getByRole('button', { name: 'Share my result' }).click()
+  const link = await page.getByLabel('Your result link').inputValue()
+  await page.getByLabel('Compare with a friend').fill(`see mine: ${link}`)
+  await page.getByRole('button', { name: 'Compare', exact: true }).click()
+  // Comparing with yourself: you come first, and nothing clearly differs (this patterned answer set may
+  // also be flagged as careless, in which case no difference is claimed at all).
+  await expect(page.getByText('You', { exact: true })).toBeVisible()
+  await expect(page.getByText(/^0 of \d+$/).first().or(page.getByText(/flagged as careless answering/))).toBeVisible()
+  await expect(page.locator('img[alt^="Comparison card"]')).toBeVisible()
+  await page.getByLabel('Card size').getByText('Wide').click()
+  await expect(page.locator('img[alt^="Comparison card"]')).toBeVisible()
+})
+
 test('a damaged link is rejected with a clear message', async ({ page }) => {
   await page.goto('/#r=AQAAMDAqOhmelkNbroken')
   await expect(page.getByRole('heading', { name: 'Can’t open this result' })).toBeVisible()

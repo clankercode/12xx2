@@ -126,3 +126,20 @@
     max-width: 320px;
   }
 }
+
+.names {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.names label {
+  display: grid;
+  gap: 4px;
+}
+
+@media (max-width: 420px) {
+  .names {
+    grid-template-columns: 1fr;
+  }
+}

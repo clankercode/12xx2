@@ -50,3 +50,10 @@ export function go(hash: string) {
 export function replaceHash(hash: string) {
   history.replaceState(null, '', location.pathname + location.search + hash)
 }
+
+/** Takes the result part of a pasted 12 Axes² link: "#r=…" (or a bare code). */
+export function resultFromLink(text: string): string | null {
+  const t = text.trim()
+  const m = t.match(/#r=([A-Za-z0-9_-]+Z)/) ?? t.match(/^([A-Za-z0-9_-]+Z)$/)
+  return m ? m[1]! : null
+}

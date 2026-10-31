@@ -222,6 +222,17 @@ export function MethodPage() {
         {CATALOGUE_IS_PLACEHOLDER && <strong> (This build is using a development placeholder catalogue.)</strong>}
       </p>
 
+      <h2>Comparing two people</h2>
+      <p>
+        The compare page counts the axes on which two people <em>clearly differ</em>, separately for ideal systems and for here and
+        now. Two scores clearly differ when they are further apart than 1.96 times their combined standard error, written{' '}
+        <code>√(SE₁² + SE₂²)</code>: a 95% test per axis. In the simulation below, the same person taking the test twice is
+        flagged on about 0.3% of axes, and two random people on about 45% (their median gap is about 50 points). We don’t show a
+        percentage “overlap”: any two people would already score about 59% on one, which makes every pair look alike. If the two
+        people live in different countries, their here-and-now answers respond to different situations and aren’t directly
+        comparable; the page says so when both shared a country.
+      </p>
+
       <h2>Calibration</h2>
       <p>
         All thresholds come from one seeded simulation committed with the source (<code>scripts/calibrate.ts</code>). Simulated
