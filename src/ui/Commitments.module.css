@@ -144,3 +144,32 @@
     max-width: 7.5em;
   }
 }
+
+/* Red lines: the owner's answers (and a shared view's opt-in codes), one statement per item. */
+.redList {
+  display: grid;
+  gap: 14px;
+  padding-left: 1.4em;
+  max-width: 80ch;
+}
+
+.redList li p {
+  margin: 0;
+}
+
+.redText {
+  font-weight: 600;
+}
+
+.redList li[data-contradicts]::marker,
+.redList li[data-firm]::marker {
+  color: var(--alert);
+}
+
+.redRuled {
+  color: var(--alert);
+}
+
+.more summary {
+  cursor: pointer;
+}

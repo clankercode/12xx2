@@ -1,5 +1,5 @@
 /**
- * Audits core commitments against simulated sincere adherents (the calibration respondent model,
+ * Audits commitments (core and red-line) against simulated sincere adherents (the calibration respondent model,
  * coders' sheets in both frames) at every test length. Prints each length's false rule-out rate
  * and every commitment whose own false rule-out rate exceeds the limit on any length, then the
  * effect on typical respondents and random clickers. Writes nothing unless --write, which moves
@@ -11,7 +11,8 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { mulberry32 } from '../src/engine/prng'
 import { checkCommitment, validateCommitments, type CommitmentsFile, type DroppedCommitment } from '../src/engine/commitments'
 import { ALL_ITEMS, itemsForMode } from '../src/data/items'
-import { MODEL, archetypeSheet, falseRuleOuts, latentSheet, randomAnswers, respond, type Sheets } from './sim'
+import { RED_LINES } from '../src/data/redlines'
+import { MODEL, archetypeSheet, falseRuleOuts, latentSheet, randomAnswers, respond, simItemsForMode, type Sheets } from './sim'
 import { checkArchetype } from '../src/engine/commitments'
 import { computeProfile } from '../src/engine/score'
 import { rank } from '../src/engine/match'
@@ -30,7 +31,10 @@ const PATH = 'content/archetypes/commitments.json'
 
 const file = JSON.parse(readFileSync(PATH, 'utf8')) as CommitmentsFile
 const slugs = (JSON.parse(readFileSync('content/archetypes/archetypes.json', 'utf8')) as { archetypes: { slug: string }[] }).archetypes.map(a => a.slug)
-const book = validateCommitments(file, ALL_ITEMS, slugs)
+const book = validateCommitments(file, ALL_ITEMS, slugs, RED_LINES)
+const missingRed = RED_LINES.filter(r => !Object.values(JSON.parse(readFileSync('content/archetypes/sheets.json', 'utf8')) as Sheets).some(s => s[r.id]))
+if (missingRed.length && Object.values(book).some(l => l.some(c => c.kind === 'red-line')))
+  console.warn(`WARNING: sheets.json has no coded answers for ${missingRed.map(r => r.id).join(', ')}; red-line audits assume neutral adherents there (rerun just archetypes)`)
 const sheets = JSON.parse(readFileSync('content/archetypes/sheets.json', 'utf8')) as Sheets
 
 // Own seeded stream: independent of scripts/calibrate.ts.
@@ -41,7 +45,7 @@ const perArch = {} as Record<Mode, Record<string, number>>
 /** Per commitment: worst false rule-out rate over the three lengths, and where. */
 const worstC = new Map<string, { rate: number; mode: Mode }>()
 for (const mode of MODES) {
-  const items = itemsForMode(mode)
+  const items = simItemsForMode(mode)
   const asked = new Set(items.map(i => i.id))
   perArch[mode] = {}
   for (const slug of slugs) {
@@ -100,9 +104,10 @@ for (const o of over) console.log(`  ${o.slug} ${o.item} ${o.frame} side ${o.sid
   let n = 0
   for (const mode of MODES) {
     const its = itemsForMode(mode)
-    const ask = new Set(its.map(i => i.id))
+    const sims = simItemsForMode(mode)
+    const ask = new Set(sims.map(i => i.id))
     for (let d = 0; d < 300; d++) {
-      const ans = respond(r2, its, latentSheet(r2, its), { p: 0.5, pass: 0.1 })
+      const ans = respond(r2, sims, latentSheet(r2, sims), { p: 0.5, pass: 0.1 })
       const out = new Set(slugs.filter(s => checkArchetype(s, book, ans, ask).all === 'fail'))
       const prof = computeProfile(its, ans, CALIBRATION)
       const top = rank(AXIS_IDS.map(a => prof.I[a].score), CATALOGUE, 'ideal')[0]!.arch.slug
@@ -111,7 +116,7 @@ for (const o of over) console.log(`  ${o.slug} ${o.item} ${o.frame} side ${o.sid
       n++
     }
   }
-  console.log(`latent respondents (${n}, all lengths): nearest ideal match ruled out ${(100 * topOut / n).toFixed(1)}%; mean ideologies ruled out ${(outSum / n).toFixed(1)} of ${slugs.length}`)
+  console.log(`latent respondents (${n}, all lengths; red lines on the humane side at "agree" strength, an assumption): nearest ideal match ruled out ${(100 * topOut / n).toFixed(1)}%; mean ideologies ruled out ${(outSum / n).toFixed(1)} of ${slugs.length}`)
 }
 
 // Random clickers: how often every ideology with commitments is ruled out (before and after the careless gate).
@@ -125,9 +130,10 @@ for (const o of over) console.log(`  ${o.slug} ${o.item} ${o.frame} side ${o.sid
   let n = 0
   for (const mode of MODES) {
     const its = itemsForMode(mode)
-    const ask = new Set(its.map(i => i.id))
+    const sims = simItemsForMode(mode)
+    const ask = new Set(sims.map(i => i.id))
     for (let d = 0; d < 300; d++) {
-      const ans = randomAnswers(r3, its)
+      const ans = randomAnswers(r3, sims)
       const out = listed.filter(s => checkArchetype(s, book, ans, ask).all === 'fail').length
       outSum += out
       maxOut = Math.max(maxOut, out)

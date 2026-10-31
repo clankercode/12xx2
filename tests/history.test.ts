@@ -79,6 +79,14 @@ describe('run history', () => {
     expect(res.ok && res.runs[0]!.imported).toBe(true)
   })
 
+  it('keeps red-line answers through export and import', () => {
+    const r = buildRun(done({ answers: { ...done().answers, 'red-04': { i: -3, n: 1 } } }), 'X')!
+    expect(r.answers['red-04']).toEqual({ i: -3, n: 1 })
+    const back = parseImport(JSON.stringify(exportFile([r], NOW)), NOW)
+    expect(back.ok && back.runs[0]!.answers['red-04']).toEqual({ i: -3, n: 1 })
+    expect(cleanRun({ ...r, answers: { 'red-99': { i: 1, n: 1 } } }, NOW)).toBeNull()
+  })
+
   it('rejects files that are not exports and drops malformed fields', () => {
     expect(parseImport('not json', NOW).ok).toBe(false)
     expect(parseImport('{"kind":"other"}', NOW).ok).toBe(false)

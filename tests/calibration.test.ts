@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { AXIS_IDS, MODES } from '../src/engine/types'
-import { computeProfile } from '../src/engine/score'
+import { MAX_AXIS_ITEMS, MIN_ITEMS, computeProfile } from '../src/engine/score'
 import { mulberry32 } from '../src/engine/prng'
 import { itemsForMode } from '../src/data/items'
 import { CALIBRATION } from '../src/data/calibration'
@@ -17,9 +17,10 @@ const sheets = sheetsJson as unknown as Sheets
  */
 describe('committed calibration still meets its criteria', () => {
   it('has every table entry', () => {
-    for (let n = 3; n <= 10; n++) {
-      expect(CALIBRATION.tauG[String(n)]).toBeGreaterThan(0)
-      expect(CALIBRATION.careless[String(n)]).toBeGreaterThan(0)
+    // Up to the largest axis (Full: 16 items), so no paired count falls back to a smaller table entry.
+    for (let n = MIN_ITEMS; n <= MAX_AXIS_ITEMS; n++) {
+      expect(CALIBRATION.tauG[String(n)], `tauG ${n}`).toBeGreaterThan(0)
+      expect(CALIBRATION.careless[String(n)], `careless ${n}`).toBeGreaterThan(0)
     }
     for (const m of MODES) {
       const l = CALIBRATION.labels[m]

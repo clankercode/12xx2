@@ -1,4 +1,4 @@
-import type { Answer, Answers, Item } from './types'
+import type { Answer, Answers, Item, RedLine } from './types'
 
 /**
  * Core commitments (an IGC-style binary check): statements on which the coded profiles of an
@@ -6,7 +6,13 @@ import type { Answer, Answers, Item } from './types'
  * the distance match is. Ideologies are the ideas, commitments the goals, answers the context.
  */
 export interface Commitment {
+  /** An axis item id for a core commitment, a red-line id (red-NN) for a red-line one. */
   item: string
+  /**
+   * Absent = a core commitment on an axis item. 'red-line' = the ideology's required side on an
+   * off-axis red-line statement; it rules out exactly like a core commitment but is listed apart.
+   */
+  kind?: 'red-line'
   /** 'I' checks the ideal-system answer; 'both' checks the ideal and here-and-now answers. */
   frame: 'I' | 'both'
   /** Required sign of the raw answer: +1 agree, −1 disagree (item key NOT applied). */
@@ -37,7 +43,12 @@ export interface CommitmentsFile {
   dropped?: DroppedCommitment[]
 }
 
-export const MAX_COMMITMENTS = 5
+/** Core commitments per ideology (red-line commitments don't count towards it). */
+export const MAX_CORE = 6
+/** Red-line commitments per ideology (at most one per red line). */
+export const MAX_RED = 10
+
+export const isRedCommitment = (c: Commitment) => c.kind === 'red-line'
 
 /** ✔ non-refuted · ✘ decisive error · ? unknown (never counted as a pass). */
 export type Verdict = 'pass' | 'fail' | 'unknown'
@@ -112,8 +123,16 @@ export function ruledOutIndices(
   return out
 }
 
-/** Validates a commitments file against the item bank and catalogue; throws on any bad entry. */
-export function validateCommitments(raw: unknown, items: readonly Item[], slugs: readonly string[]): CommitmentBook {
+/**
+ * Validates a commitments file against the item bank, the red lines and the catalogue; throws on
+ * any bad entry. Core commitments must name an axis item, red-line ones a red-line id.
+ */
+export function validateCommitments(
+  raw: unknown,
+  items: readonly Item[],
+  slugs: readonly string[],
+  redLines: readonly Pick<RedLine, 'id'>[],
+): CommitmentBook {
   const fail = (msg: string): never => {
     throw new Error(`commitments.json: ${msg}`)
   }
@@ -123,16 +142,25 @@ export function validateCommitments(raw: unknown, items: readonly Item[], slugs:
   if (typeof f.method !== 'string') fail('method must be a string')
   if (!f.commitments || typeof f.commitments !== 'object' || Array.isArray(f.commitments)) return fail('commitments must be an object')
   const itemIds = new Set(items.map(i => i.id))
+  const redIds = new Set(redLines.map(r => r.id))
   const known = new Set(slugs)
   const book: Record<string, readonly Commitment[]> = {}
   for (const [slug, list] of Object.entries(f.commitments)) {
     if (!known.has(slug)) fail(`unknown archetype "${slug}"`)
     if (!Array.isArray(list)) return fail(`${slug}: commitments must be an array`)
-    if (list.length > MAX_COMMITMENTS) fail(`${slug}: at most ${MAX_COMMITMENTS} commitments`)
     const seen = new Set<string>()
+    let core = 0
+    let red = 0
     for (const c of list as Partial<Commitment>[]) {
       const at = `${slug}/${String(c?.item)}`
-      if (typeof c?.item !== 'string' || !itemIds.has(c.item)) fail(`${at}: unknown item`)
+      if (c?.kind !== undefined && c.kind !== 'red-line') fail(`${at}: kind must be "red-line" or absent`)
+      if (c?.kind === 'red-line') {
+        red++
+        if (typeof c.item !== 'string' || !redIds.has(c.item)) fail(`${at}: red-line commitments must name a red-line statement`)
+      } else {
+        core++
+        if (typeof c?.item !== 'string' || !itemIds.has(c.item)) fail(`${at}: unknown item${redIds.has(String(c?.item)) ? ' (a red line needs kind "red-line")' : ''}`)
+      }
       if (seen.has(c.item!)) fail(`${at}: duplicate item`)
       seen.add(c.item!)
       if (c.frame !== 'I' && c.frame !== 'both') fail(`${at}: frame must be "I" or "both"`)
@@ -140,7 +168,16 @@ export function validateCommitments(raw: unknown, items: readonly Item[], slugs:
       if (typeof c.why !== 'string' || !c.why.trim()) fail(`${at}: why is required`)
       if (c.coders !== undefined && (!Number.isInteger(c.coders) || c.coders < 1 || c.coders > 3)) fail(`${at}: coders must be 1–3`)
     }
-    book[slug] = (list as Commitment[]).map(c => ({ item: c.item, frame: c.frame, side: c.side, why: c.why, ...(c.coders && { coders: c.coders }) }))
+    if (core > MAX_CORE) fail(`${slug}: at most ${MAX_CORE} core commitments`)
+    if (red > MAX_RED) fail(`${slug}: at most ${MAX_RED} red-line commitments`)
+    book[slug] = (list as Commitment[]).map(c => ({
+      item: c.item,
+      ...(c.kind && { kind: c.kind }),
+      frame: c.frame,
+      side: c.side,
+      why: c.why,
+      ...(c.coders && { coders: c.coders }),
+    }))
   }
   return book
 }

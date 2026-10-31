@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest'
 import { AXIS_IDS, type Answer, type Answers, type Item } from '../src/engine/types'
-import { computeProfile, gapAxis, realityGap, scoreAxis } from '../src/engine/score'
+import { MAX_AXIS_ITEMS, carelessThreshold, computeProfile, gapAxis, realityGap, scoreAxis, tableAt, tauFor } from '../src/engine/score'
 import { decodePayload, encodePayload, payloadSeed, profileToPayload, type Payload } from '../src/engine/payload'
 import { classify, typeGap } from '../src/engine/typology'
 import { coverageOk, distance, stability, type Archetype } from '../src/engine/match'
 import { deriveResults } from '../src/engine/results'
 import { mulberry32 } from '../src/engine/prng'
-import { ALL_ITEMS, itemsForMode, orderedItems } from '../src/data/items'
+import { ALL_ITEMS, askedIdsForMode, itemsForMode, orderedItems, quizItems } from '../src/data/items'
+import { RED_IDS, RED_LINES, validateRedLines } from '../src/data/redlines'
+import { isRedLine, redCode, type Mode } from '../src/engine/types'
+import type { Calibration } from '../src/engine/calibration'
 import { CALIBRATION } from '../src/data/calibration'
 
 const items = ALL_ITEMS
@@ -171,7 +174,7 @@ describe('payload codec', () => {
     const k = p.G.findIndex(g => g !== null)
     const bad: Payload = { ...sample(), G: p.G.map((g, i) => (i === k ? null : g)), notable: p.notable.map((n, i) => n || i === k) }
     expect(decodePayload(encodePayload(bad))).toEqual({ ok: false, error: 'corrupt' })
-    expect(decodePayload(encodePayload({ ...sample(), answered: 200, total: 120 }))).toEqual({ ok: false, error: 'corrupt' })
+    expect(decodePayload(encodePayload({ ...sample(), answered: 200, total: 144 }))).toEqual({ ok: false, error: 'corrupt' })
   })
 
   it('detects truncation and corruption', () => {
@@ -275,25 +278,33 @@ describe('matching', () => {
 })
 
 describe('item bank invariants', () => {
-  it('has 120 unique items, 10 per axis, 5:5 keyed', () => {
-    expect(items.length).toBe(120)
-    expect(new Set(items.map(i => i.id)).size).toBe(120)
+  const FULL: Record<(typeof AXIS_IDS)[number], number> = { fed: 12, dem: 16, lib: 12, col: 12, pla: 14, glo: 10, int: 10, mil: 12, mul: 12, rel: 12, pro: 10, tec: 12 }
+
+  it('has 144 unique axis items with the published per-axis counts, 1:1 keyed', () => {
+    expect(items.length).toBe(144)
+    expect(new Set(items.map(i => i.id)).size).toBe(144)
     for (const ax of AXIS_IDS) {
       const a = items.filter(i => i.axis === ax)
-      expect(a.length).toBe(10)
-      expect(a.filter(i => i.key === 1).length).toBe(5)
+      expect(a.length, ax).toBe(FULL[ax])
+      expect(a.filter(i => i.key === 1).length, ax).toBe(FULL[ax] / 2)
     }
+    expect(Math.max(...Object.values(FULL))).toBe(MAX_AXIS_ITEMS)
   })
 
-  it('tiers are nested and balanced per axis: 4 / 6 / 10', () => {
-    for (const [mode, per] of [['quick', 4], ['standard', 6], ['full', 10]] as const) {
+  it('tiers are nested and balanced 1:1 per axis: Quick 4 / Standard 6 / Full all', () => {
+    const per = (mode: Mode, ax: (typeof AXIS_IDS)[number]) => (mode === 'quick' ? 4 : mode === 'standard' ? 6 : FULL[ax])
+    for (const mode of ['quick', 'standard', 'full'] as const) {
       const pool = itemsForMode(mode)
       for (const ax of AXIS_IDS) {
         const a = pool.filter(i => i.axis === ax)
-        expect(a.length).toBe(per)
-        expect(a.filter(i => i.key === 1).length).toBe(per / 2)
+        expect(a.length, `${mode} ${ax}`).toBe(per(mode, ax))
+        expect(a.filter(i => i.key === 1).length, `${mode} ${ax}`).toBe(per(mode, ax) / 2)
       }
     }
+    const quick = new Set(itemsForMode('quick').map(i => i.id))
+    const standard = new Set(itemsForMode('standard').map(i => i.id))
+    for (const id of quick) expect(standard.has(id)).toBe(true)
+    expect(itemsForMode('full')).toHaveLength(144)
   })
 
   it('conditional-form items are balanced across keys on every axis', () => {
@@ -313,7 +324,71 @@ describe('item bank invariants', () => {
       const order = orderedItems(mode)
       expect(order.length).toBe(itemsForMode(mode).length)
       expect(new Set(order.map(i => i.id)).size).toBe(order.length)
-      for (let k = 1; k < order.length; k++) expect(order[k]!.axis).not.toBe(order[k - 1]!.axis)
+      for (let k = 1; k < order.length; k++) expect(order[k]!.axis, `${mode} #${k}`).not.toBe(order[k - 1]!.axis)
     }
+  })
+
+  it('Quick and Standard keep their round-robin order; Full starts with the Standard rounds\' structure', () => {
+    // Equal counts per axis: every round has all 12 axes, so the order is 4 or 6 full rounds.
+    for (const mode of ['quick', 'standard'] as const) {
+      const order = orderedItems(mode)
+      for (let r = 0; r < order.length / 12; r++) expect(new Set(order.slice(12 * r, 12 * r + 12).map(i => i.axis)).size).toBe(12)
+    }
+  })
+})
+
+describe('red lines', () => {
+  it('ten valid off-axis statements, never in the axis bank', () => {
+    expect(RED_LINES).toHaveLength(10)
+    expect(RED_IDS).toEqual(Array.from({ length: 10 }, (_, k) => `red-${String(k + 1).padStart(2, '0')}`))
+    const axisIds = new Set(items.map(i => i.id))
+    for (const r of RED_LINES) {
+      expect(axisIds.has(r.id)).toBe(false)
+      expect([1, -1]).toContain(r.humane)
+      expect(isRedLine(r)).toBe(true)
+    }
+    expect(isRedLine(items[0]!)).toBe(false)
+    expect(() => validateRedLines({ set: 'red', items: [{ id: 'red-01', humane: 0, text: 'x' }] })).toThrow(/humane/)
+    expect(() => validateRedLines({ set: 'red', items: [{ id: 'red-01', humane: 1, text: 'x' }, { id: 'red-01', humane: 1, text: 'y' }] })).toThrow(/duplicate/)
+  })
+
+  it('are asked at every length, after the axis items, and listed in askedIdsForMode', () => {
+    for (const mode of ['quick', 'standard', 'full'] as const) {
+      const q = quizItems(mode, null)
+      expect(q.slice(-10).map(s => s.id)).toEqual(RED_IDS)
+      expect(q.slice(0, -10)).toEqual(orderedItems(mode))
+      expect(askedIdsForMode(mode)).toEqual([...itemsForMode(mode).map(i => i.id), ...RED_IDS])
+    }
+  })
+
+  it('are never scored: red answers change no score, gap, RG, careless index or count', () => {
+    const rng = mulberry32(41)
+    for (const mode of ['quick', 'standard', 'full'] as const) {
+      const its = itemsForMode(mode)
+      const base: Answers = Object.fromEntries(its.map(it => [it.id, { i: (Math.floor(rng() * 7) - 3) as Answer, n: (Math.floor(rng() * 7) - 3) as Answer }]))
+      const withRed: Answers = { ...base, ...Object.fromEntries(RED_IDS.map((id, k) => [id, { i: (k % 7) - 3 as Answer, n: 3 as Answer }])) }
+      expect(computeProfile(its, withRed, CALIBRATION)).toEqual(computeProfile(its, base, CALIBRATION))
+      expect(computeProfile(its, withRed, CALIBRATION).total).toBe(its.length)
+    }
+  })
+
+  it('codes an answer by side, strength and the humane direction', () => {
+    expect([null, undefined, 1, 3, 0, -1, -2, -3].map(a => redCode(a as Answer | undefined, 1))).toEqual([0, 0, 1, 1, 2, 2, 3, 3])
+    expect([-1, -3, 0, 1, 2, 3].map(a => redCode(a as Answer, -1))).toEqual([1, 1, 2, 2, 3, 3])
+  })
+})
+
+describe('calibration tables', () => {
+  const cal = { tauG: { 3: 90, 4: 80, 10: 40 }, careless: { 3: 5, 12: 3 } } as unknown as Calibration
+  it('cover counts up to MAX_AXIS_ITEMS, falling back to the largest smaller entry', () => {
+    expect(tableAt(cal.tauG, 4)).toBe(80)
+    expect(tableAt(cal.tauG, 9)).toBe(80)
+    expect(tableAt(cal.tauG, 16)).toBe(40)
+    expect(tableAt(cal.tauG, 40)).toBe(40)
+    expect(tableAt(cal.tauG, 1)).toBe(90)
+    expect(tableAt({}, 5)).toBe(Infinity)
+    expect(tauFor(cal, 14)).toBe(40)
+    expect(carelessThreshold(cal, 12.4)).toBe(3)
+    expect(carelessThreshold(cal, 11)).toBe(5)
   })
 })

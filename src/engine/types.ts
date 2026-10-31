@@ -76,3 +76,35 @@ export interface AxisGap {
   agree: number
   notable: boolean
 }
+
+/**
+ * A red-line statement: off-axis, asked at every length in both frames, never scored. It only
+ * feeds commitments of kind 'red-line' (an ideology's answer on it), so it can rule ideologies out.
+ */
+export interface RedLine {
+  id: string
+  /** Sign of the raw answer on the humane side: +1 agree, −1 disagree. */
+  humane: Key
+  text: string
+  rationale: string
+  /** Never set; present so a Statement's `note` can be read without narrowing. */
+  note?: undefined
+}
+
+/** Anything the quiz asks: an axis item or a red line. */
+export type Statement = Item | RedLine
+
+export const isRedLine = (s: Statement): s is RedLine => 'humane' in s
+
+/**
+ * Where an answer sits on a red line, as stored in share links:
+ * 0 not answered / passed / not asked · 1 humane side (any strength) ·
+ * 2 neutral or only slightly against · 3 firmly against (|answer| ≥ 2 on the other side).
+ */
+export type RedCode = 0 | 1 | 2 | 3
+
+export function redCode(a: Answer | undefined, humane: Key): RedCode {
+  if (a === null || a === undefined) return 0
+  if (Math.sign(a) === humane) return 1
+  return Math.abs(a) >= 2 ? 3 : 2
+}

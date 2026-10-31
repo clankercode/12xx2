@@ -5,6 +5,7 @@ import { CATALOGUE_VERSION } from '../data/archetypes'
 import { useStore } from './App'
 import { ResultsView } from './ResultsView'
 import { previewPath } from './ShareSheet'
+import { SharedRedLines } from './Commitments'
 import css from './Results.module.css'
 
 export const DECODE_MESSAGE: Record<DecodeError, string> = {
@@ -37,6 +38,8 @@ export function SharedPage({ encoded }: { encoded: string }) {
   const mine = s.stage === 'done' && own ? encodePayload(forSharing(own.payload, { q: false, sc: false, country: false })) : null
 
   const banner = (
+    <>
+      <SharedRedLines p={p} />
     <section className={css.section} style={{ display: 'grid', gap: 10 }}>
       <p className="small muted">
         You’re looking at someone else’s result. It contains their scores only, not their answers.
@@ -55,6 +58,7 @@ export function SharedPage({ encoded }: { encoded: string }) {
         )}
       </div>
     </section>
+    </>
   )
   return <ResultsView r={r} extras={banner} who="They" />
 }

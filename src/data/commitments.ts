@@ -1,6 +1,7 @@
 import raw from '../../content/archetypes/commitments.json'
-import { validateCommitments, type CommitmentBook } from '../engine/commitments'
+import { isRedCommitment, validateCommitments, type CommitmentBook } from '../engine/commitments'
 import { ALL_ITEMS } from './items'
+import { RED_LINES } from './redlines'
 import { CATALOGUE, CATALOGUE_VERSION } from './archetypes'
 
 /** Validated at import: a bad item id or slug throws in tests and at build-time checks. */
@@ -8,9 +9,12 @@ export const COMMITMENTS: CommitmentBook = validateCommitments(
   raw,
   ALL_ITEMS,
   CATALOGUE.map(a => a.slug),
+  RED_LINES,
 )
 
 export const HAS_COMMITMENTS = Object.values(COMMITMENTS).some(l => l.length > 0)
+/** Whether any ideology lists a red-line commitment (the matrix shows its Red lines column only then). */
+export const HAS_RED_COMMITMENTS = Object.values(COMMITMENTS).some(l => l.some(isRedCommitment))
 
 export const CATALOGUE_SLUGS: readonly string[] = CATALOGUE.map(a => a.slug)
 

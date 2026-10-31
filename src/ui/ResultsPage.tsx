@@ -7,6 +7,7 @@ import { AXES } from '../data/axes'
 import { useStore } from './App'
 import { ResultsView } from './ResultsView'
 import { ShareSheet } from './ShareSheet'
+import { YourRedLines } from './Commitments'
 import { downloadExport } from './HistoryPage'
 import { extendOptions } from '../state/session'
 import { Confirm, useClearData } from './Chrome'
@@ -26,6 +27,7 @@ export function ResultsPage({ own }: { own: Own }) {
 
   const extras = (
     <>
+      <YourRedLines lines={own.redLines} />
       {own.reasons.length > 0 && (
         <section className={css.section}>
           <h2>Your reasons</h2>

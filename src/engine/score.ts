@@ -6,6 +6,21 @@ export const K = 100 / 3
 /** Prior floor (one scale point) so a perfectly consistent respondent never gets a zero band. */
 export const S0 = 1
 export const MIN_ITEMS = 3
+/** Most items on any axis (Full: dem has 16). Calibration tables run MIN_ITEMS…MAX_AXIS_ITEMS. */
+export const MAX_AXIS_ITEMS = 16
+
+/**
+ * A calibration table entry for n (clamped to MIN_ITEMS…MAX_AXIS_ITEMS). A table made before an
+ * axis grew may stop short; then the entry for the largest n below is used, which is the more
+ * conservative threshold. Infinity (never fires) only when nothing at or below n exists.
+ */
+export function tableAt(table: Record<string, number>, n: number): number {
+  for (let k = Math.max(MIN_ITEMS, Math.min(MAX_AXIS_ITEMS, n)); k >= MIN_ITEMS; k--) {
+    const v = table[String(k)]
+    if (v !== undefined) return v
+  }
+  return Infinity
+}
 
 const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length
 /** Sample variance (n − 1); 0 for fewer than two values. */
@@ -52,8 +67,7 @@ export function pairedDeltas(axisItems: readonly Item[], answers: Answers) {
 }
 
 export function tauFor(cal: Calibration, nPaired: number): number {
-  const n = Math.max(MIN_ITEMS, Math.min(10, nPaired))
-  return cal.tauG[String(n)] ?? Infinity
+  return tableAt(cal.tauG, nPaired)
 }
 
 /** Paired-item axis gap with the notable gate (spec §4.5). */
@@ -147,8 +161,7 @@ function meanAnsweredPerAxis(items: readonly Item[], answers: Answers) {
 }
 
 export function carelessThreshold(cal: Calibration, nPerAxis: number) {
-  const n = Math.max(MIN_ITEMS, Math.min(10, Math.round(nPerAxis)))
-  return cal.careless[String(n)] ?? Infinity
+  return tableAt(cal.careless, Math.round(nPerAxis))
 }
 
 export function computeProfile(items: readonly Item[], answers: Answers, cal: Calibration): Profile {
