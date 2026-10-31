@@ -4,7 +4,7 @@
 
 **Take it: https://12axes-squared.netlify.app**
 
-One click on a 7×7 grid gives both answers. Your results show where your ideals and your practical politics agree, where they part ways, and which ideologies you're closest to in theory and in practice.
+One click on a 7×7 grid gives both answers. Your results show where your ideals and your practical politics agree, where they part ways, and which ideologies you fit in theory and in practice.
 
 ![Landing page](docs/screenshots/desktop-01-landing.png)
 
