@@ -1,10 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { AxisId } from '../engine/types'
-import { decodeShared } from '../state/shared'
-import { deriveResults, type Results } from '../engine/results'
+import { decodeShared, deriveShared } from '../state/shared'
+import type { Results } from '../engine/results'
 import { compareResults, sameScores, type Comparison } from '../engine/compare'
-import { catalogueFor } from '../data/archetypes'
-import { CALIBRATION } from '../data/calibration'
 import { AXES } from '../data/axes'
 import { cardBlob, ensureFonts, type CardSize } from '../share/card'
 import { NOT_COMPARABLE, SUMMARY_TEXT, clearCount, drawCompareCard } from '../share/compareCard'
@@ -16,6 +14,8 @@ import css from './Results.module.css'
 import share from './Share.module.css'
 
 const NAME_MAX = 16
+
+const topViable = (r: Results) => r.matchesIdeal.find(m => !m.ruledOut)
 
 export function ComparePage({ mine, theirs }: { mine: string; theirs: string }) {
   const { own } = useStore()
@@ -35,8 +35,8 @@ export function ComparePage({ mine, theirs }: { mine: string; theirs: string }) 
   const [pa, pb] = swap ? [db.payload, da.payload] : [da.payload, db.payload]
   const [ea, eb] = swap ? [theirs, mine] : [mine, theirs]
   const labels: [string, string] = viewerIn ? ['You', 'Them'] : ['First person', 'Second person']
-  const ra = deriveResults(pa, catalogueFor(pa), CALIBRATION)
-  const rb = deriveResults(pb, catalogueFor(pb), CALIBRATION)
+  const ra = deriveShared(pa)
+  const rb = deriveShared(pb)
   const cmp = compareResults(pa, pb)
   const ax = (id: AxisId | null) => (id ? AXES[id].title.toLowerCase() : '')
 
@@ -54,7 +54,7 @@ export function ComparePage({ mine, theirs }: { mine: string; theirs: string }) 
               <h1 className={css.heroTitle} style={{ fontSize: 'clamp(1.6rem, 4vw, 2.6rem)' }}>
                 {heroName(r)}
               </h1>
-              {r.matchesIdeal[0] && <p className="small muted">{MATCH_LABEL[r.matchesIdeal[0].label]}</p>}
+              {topViable(r) && <p className="small muted">{MATCH_LABEL[topViable(r)!.label]}</p>}
             </div>
           ))}
         </div>

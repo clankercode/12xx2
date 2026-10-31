@@ -32,9 +32,18 @@ export interface Payload {
   country?: string
   /** The owner opted in to naming a sensitive ideology when sharing (spec §2.6). */
   sensitiveOk?: boolean
+  /**
+   * Catalogue-order indices (ascending, for this payload's catalogue version) of ideologies the
+   * owner's answers rule out via a core commitment. Absent = no rule-outs known.
+   */
+  ruledOut?: number[]
 }
 
-export const FORMAT = 1
+/**
+ * Newest format this build reads. Format 2 = format 1 plus a ruled-out bitmask; it is written
+ * only when there is something to rule out, so every other link stays byte-identical to format 1.
+ */
+export const FORMAT = 2
 export const SE_STEP = 7
 const NULL = 255
 const TERMINATOR = 'Z'
@@ -43,14 +52,27 @@ const clampInt = (x: number, lo: number, hi: number) => Math.max(lo, Math.min(hi
 const qScore = (x: number | null) => (x === null ? null : clampInt(x, -100, 100))
 const qSe = (x: number | null) => (x === null ? null : clampInt(x / SE_STEP, 0, 15) * SE_STEP)
 const qGap = (x: number | null) => (x === null ? null : clampInt(x / 2, -100, 100) * 2)
+const MAX_RULED_OUT_BYTES = 32
+
+/** The lowest format that can carry this payload. */
+export const formatFor = (p: Pick<Payload, 'ruledOut'>) => (p.ruledOut?.length ? 2 : 1)
 
 export function profileToPayload(
   p: Profile,
-  opts: { catalogue: number; mode: Mode; input: 'grid' | 'rows'; q?: (number | null)[]; sc?: { score: number; se: number }; country?: string },
+  opts: {
+    catalogue: number
+    mode: Mode
+    input: 'grid' | 'rows'
+    q?: (number | null)[]
+    sc?: { score: number; se: number }
+    country?: string
+    ruledOut?: readonly number[]
+  },
 ): Payload {
   const pick = <T>(f: (ax: AxisId) => T) => AXIS_IDS.map(f)
+  const ruledOut = opts.ruledOut?.length ? [...new Set(opts.ruledOut)].sort((a, b) => a - b) : undefined
   return {
-    format: FORMAT,
+    format: formatFor({ ruledOut }),
     catalogue: opts.catalogue,
     mode: opts.mode,
     input: opts.input,
@@ -67,6 +89,7 @@ export function profileToPayload(
     q: opts.q?.map(qScore),
     sc: opts.sc && { score: clampInt(opts.sc.score, 0, 100), se: clampInt(opts.sc.se, 0, 100) },
     country: opts.country,
+    ...(ruledOut && { ruledOut }),
   }
 }
 
@@ -82,7 +105,7 @@ export function forSharing(p: Payload, include: { q: boolean; sc: boolean; count
 }
 
 export function payloadBytes(p: Payload): Uint8Array {
-  const b: number[] = [p.format, p.catalogue]
+  const b: number[] = [formatFor(p), p.catalogue]
   let flags = MODES.indexOf(p.mode) & 0b11
   if (p.input === 'rows') flags |= 1 << 2
   if (p.careless) flags |= 1 << 3
@@ -109,6 +132,12 @@ export function payloadBytes(p: Payload): Uint8Array {
   if (p.q) for (const v of p.q) b.push(v === null ? NULL : v + 100)
   if (p.sc) b.push(p.sc.score, p.sc.se)
   if (p.country) b.push(p.country.charCodeAt(0), p.country.charCodeAt(1))
+  if (p.ruledOut?.length) {
+    // Format 2: [length L][L-byte bitmask], bit k = catalogue index k; minimal length.
+    const mask = new Array<number>(Math.floor(Math.max(...p.ruledOut) / 8) + 1).fill(0)
+    for (const k of p.ruledOut) mask[k >> 3]! |= 1 << (k & 7)
+    b.push(mask.length, ...mask)
+  }
   const bytes = new Uint8Array(b)
   const out = new Uint8Array(bytes.length + 1)
   out.set(bytes)
@@ -218,6 +247,18 @@ export function decodePayload(s: string): DecodeResult {
       p.country = c
     }
     if (flags & (1 << 7)) p.sensitiveOk = true
+    if (format === 2) {
+      const len = next()
+      if (len === 0 || len > MAX_RULED_OUT_BYTES) throw new Error('range')
+      const ruledOut: number[] = []
+      for (let j = 0; j < len; j++) {
+        const v = next()
+        // Canonical: the encoder never writes a trailing empty byte.
+        if (j === len - 1 && v === 0) throw new Error('range')
+        for (let bit = 0; bit < 8; bit++) if (v & (1 << bit)) ruledOut.push(j * 8 + bit)
+      }
+      p.ruledOut = ruledOut
+    }
     if (o !== body.length) return { ok: false, error: 'corrupt' }
     // Semantic invariants: a structurally valid but impossible result is treated as damaged.
     if (answered > total || total === 0) return { ok: false, error: 'corrupt' }

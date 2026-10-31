@@ -1,0 +1,28 @@
+{
+ "version": 1,
+ "method": "TEST FIXTURE ONLY: hand-made commitments for tests and screenshots. Not coded data; never ship.",
+ "commitments": {
+  "social-democracy": [
+   { "item": "pla-02", "frame": "I", "side": -1, "why": "Social democrats want markets steered and corrected, not left to decide everything." },
+   { "item": "pla-06", "frame": "I", "side": -1, "why": "Fixture: treats keeping necessities affordable as more basic than clearing prices." },
+   { "item": "dem-03", "frame": "both", "side": 1, "why": "Social democracy wins power through open, competitive elections." },
+   { "item": "col-04", "frame": "I", "side": -1, "why": "Social democrats keep most firms in private hands rather than socialising them." }
+  ],
+  "progressive-liberalism": [
+   { "item": "pro-01", "frame": "both", "side": 1, "why": "Equal marriage is a settled progressive-liberal position." },
+   { "item": "rel-01", "frame": "I", "side": 1, "why": "Progressive liberals keep religion out of public authority." },
+   { "item": "lib-07", "frame": "I", "side": 1, "why": "Fixture: an arbitrary commitment that this respondent only slightly contradicts." }
+  ],
+  "social-liberalism": [
+   { "item": "dem-03", "frame": "I", "side": 1, "why": "Liberals require open party competition." },
+   { "item": "pro-03", "frame": "I", "side": 1, "why": "Liberals let either spouse leave a marriage." }
+  ],
+  "democratic-socialism": [
+   { "item": "col-01", "frame": "I", "side": 1, "why": "Democratic socialists want productive assets owned in common." }
+  ],
+  "anarcho-capitalism": [
+   { "item": "col-06", "frame": "I", "side": 1, "why": "Anarcho-capitalists want nearly all assets privately owned." },
+   { "item": "dem-01", "frame": "both", "side": -1, "why": "Fixture: frame both, with a passed here-and-now answer." }
+  ]
+ }
+}

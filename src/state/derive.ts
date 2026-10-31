@@ -6,6 +6,8 @@ import { deriveResults, type Results } from '../engine/results'
 import { itemsForMode } from '../data/items'
 import { CALIBRATION } from '../data/calibration'
 import { CATALOGUE, CATALOGUE_VERSION } from '../data/archetypes'
+import { CATALOGUE_SLUGS, COMMITMENTS, ruledOutSlugs } from '../data/commitments'
+import { checkArchetype, type ArchetypeCheck } from '../engine/commitments'
 import { SC_ITEMS } from '../data/sc'
 import type { Session } from './session'
 
@@ -16,6 +18,8 @@ export interface Own {
   /** Full payload (incl. optional fields); results are always derived from this quantised form. */
   payload: Payload
   results: Results
+  /** Core-commitment checks for every archetype, by slug (owner only: they need the answers). */
+  commitments: ReadonlyMap<string, ArchetypeCheck>
   splits: { item: Item; i: number; n: number; delta: number }[]
   reasons: { chip: ChipId; count: number }[]
   diagnostics: { paired: number; diagonal: number; extreme: number; midpoint: number; passed: number; frames: number }
@@ -29,6 +33,10 @@ export function deriveOwn(s: Session): Own | null {
   const qVec = AXIS_IDS.map(a => s.q[a] ?? null)
   const inputs = Object.values(s.answers).map(a => a.input ?? 'grid')
   const rows = inputs.filter(x => x === 'rows').length
+  const asked = new Set(items.map(it => it.id))
+  const commitments = new Map(CATALOGUE_SLUGS.map(slug => [slug, checkArchetype(slug, COMMITMENTS, s.answers, asked)]))
+  // Careless answering makes no claims, rule-outs included.
+  const ruledOut = profile.careless ? [] : CATALOGUE_SLUGS.flatMap((slug, k) => (commitments.get(slug)!.all === 'fail' ? [k] : []))
   const payload = profileToPayload(profile, {
     catalogue: CATALOGUE_VERSION,
     mode: s.mode,
@@ -36,8 +44,9 @@ export function deriveOwn(s: Session): Own | null {
     q: qVec.some(v => v !== null) ? qVec : undefined,
     sc: sc ? { score: sc.score, se: sc.se } : undefined,
     country: s.country ?? undefined,
+    ruledOut,
   })
-  const results = deriveResults(payload, CATALOGUE, CALIBRATION)
+  const results = deriveResults(payload, CATALOGUE, CALIBRATION, ruledOutSlugs(payload))
 
   const splits = items
     .flatMap(item => {
@@ -76,5 +85,5 @@ export function deriveOwn(s: Session): Own | null {
       if (a.i === a.n) diagonal++
     }
   }
-  return { items, profile, sc, payload, results, splits, reasons, diagnostics: { paired, diagonal, extreme, midpoint, passed, frames } }
+  return { items, profile, sc, payload, results, commitments, splits, reasons, diagnostics: { paired, diagonal, extreme, midpoint, passed, frames } }
 }

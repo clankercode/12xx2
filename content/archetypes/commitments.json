@@ -1,0 +1,5 @@
+{
+ "version": 1,
+ "method": "Core commitments: statements on which every sincere adherent of an ideology must be on one side. side is the sign of the raw answer (+1 agree, -1 disagree) to the statement as worded; the item key is not applied. frame I checks the ideal-system answer; both also checks here and now. A decisive contradiction (|answer| >= 2 on the wrong side) rules the ideology out. Not yet coded: this list is empty until the coding workflow lands.",
+ "commitments": {}
+}

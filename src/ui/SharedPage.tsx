@@ -1,9 +1,7 @@
 import { useMemo } from 'react'
 import { encodePayload, forSharing, type DecodeError } from '../engine/payload'
-import { decodeShared } from '../state/shared'
-import { deriveResults } from '../engine/results'
-import { CATALOGUE_VERSION, catalogueFor } from '../data/archetypes'
-import { CALIBRATION } from '../data/calibration'
+import { decodeShared, deriveShared } from '../state/shared'
+import { CATALOGUE_VERSION } from '../data/archetypes'
 import { useStore } from './App'
 import { ResultsView } from './ResultsView'
 import { previewPath } from './ShareSheet'
@@ -31,7 +29,7 @@ export function SharedPage({ encoded }: { encoded: string }) {
     )
   }
   const p = decoded.payload
-  const r = deriveResults(p, catalogueFor(p), CALIBRATION)
+  const r = deriveShared(p)
   // Preview stubs name the headline in the path; if it no longer matches, drop the misleading path.
   const stub = location.pathname.match(/\/(p\/.+)$/)?.[1]
   const mismatch = !!stub && stub !== previewPath(r)
