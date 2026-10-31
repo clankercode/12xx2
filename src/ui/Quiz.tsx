@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { CHIPS, type Answer, type ChipId } from '../engine/types'
-import { orderedItems } from '../data/items'
+import { quizItems } from '../data/items'
 import { CHIP_LABELS } from '../data/chips'
 import { IDEAL_FRAME, IDEAL_STEM, NOW_FRAME, NOW_STEM, PRACTICE_ITEM, SHARED_RULE } from '../data/frames'
 import { useStore } from './App'
 import { Grid, Strip } from './Grid'
-import { go } from './router'
+import { go, goReplace } from './router'
+import { newRunId } from '../state/history'
 import { reportStatementUrl } from './copy'
 import css from './Quiz.module.css'
 
@@ -15,8 +16,12 @@ const CHIP_THRESHOLD = 3
 
 export function Quiz() {
   const { s, dispatch } = useStore()
-  const order = useMemo(() => orderedItems(s.mode!), [s.mode])
-  const [intro, setIntro] = useState(() => Object.keys(s.answers).length === 0)
+  const order = useMemo(() => quizItems(s.mode!, s.extendFrom), [s.mode, s.extendFrom])
+  /** Continuing a finished run: only the added statements are asked, then straight back to results. */
+  const adding = s.extendFrom !== null
+  const [intro, setIntro] = useState(() => !adding && Object.keys(s.answers).length === 0)
+  /** Set when leaving for the results, so the changed state isn't mistaken for the end of the questions. */
+  const [leaving, setLeaving] = useState(false)
   const item = order[s.index]
   const existing = item ? s.answers[item.id] : undefined
   const [passI, setPassI] = useState(false)
@@ -50,8 +55,8 @@ export function Quiz() {
   }, [item?.id])
 
   useEffect(() => {
-    document.title = intro ? 'How to answer — 12 Axes²' : `Statement ${s.index + 1} of ${order.length} — 12 Axes²`
-  }, [intro, s.index, order.length])
+    document.title = intro ? 'How to answer — 12 Axes²' : `Statement ${s.index + 1} of ${order.length}${adding ? ' more' : ''} — 12 Axes²`
+  }, [intro, s.index, order.length, adding])
 
   /** Whether focus is in the answer area or chip row right now (i.e. a keyboard or tap answer, not Back). */
   const noteFocus = () => {
@@ -60,11 +65,16 @@ export function Quiz() {
   }
 
   useEffect(() => {
-    if (s.index >= order.length) {
+    if (leaving || s.index < order.length) return
+    if (adding) {
+      // The context steps were answered when the run first finished.
+      if (s.stage === 'quiz') dispatch({ type: 'finish', at: new Date().toISOString(), runId: newRunId() })
+      goReplace('#/results')
+    } else {
       dispatch({ type: 'stage', stage: 'context' })
       go('#/context')
     }
-  }, [s.index, order.length, dispatch])
+  }, [leaving, s.index, order.length, adding, s.stage, dispatch])
 
   useEffect(() => () => {
     if (timer.current) clearTimeout(timer.current)
@@ -95,12 +105,19 @@ export function Quiz() {
 
   const back = useCallback(() => {
     if (timer.current) clearTimeout(timer.current)
+    if (s.index === 0 && adding) {
+      // Back from the first added statement returns to the results, unchanged.
+      setLeaving(true)
+      dispatch({ type: 'cancelExtend' })
+      goReplace('#/results')
+      return
+    }
     if (s.index === 0) {
       setIntro(true)
       return
     }
     dispatch({ type: 'goto', index: s.index - 1 })
-  }, [dispatch, s.index])
+  }, [dispatch, s.index, adding])
 
   const nextItem = useCallback(() => {
     noteFocus()
@@ -141,7 +158,7 @@ export function Quiz() {
   }, [intro])
 
   if (intro) return <Intro onStart={startQuestions} />
-  if (!item) return null
+  if (!item || leaving) return null
 
   const progress = s.index / order.length
   const value = existing ? { i: existing.i, n: existing.n } : null
@@ -155,6 +172,7 @@ export function Quiz() {
         </div>
         <span className="small muted">
           {s.index + 1} of {order.length}
+          {adding && ' more'}
         </span>
       </div>
 
@@ -202,7 +220,7 @@ export function Quiz() {
 
       <div className={css.controls}>
         <button type="button" className="btn btn-ghost" onClick={back}>
-          Back
+          {adding && s.index === 0 ? 'Back to my results' : 'Back'}
         </button>
         <div className={css.unsure} role="group" aria-label="Pass one frame only">
           <label className={css.toggle}>

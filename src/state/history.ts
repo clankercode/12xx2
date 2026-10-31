@@ -1,7 +1,7 @@
 import { CHIPS, MODES, type Answer, type Answers, type AxisId, type ChipId, type Mode } from '../engine/types'
 import { AXIS_IDS } from '../engine/types'
 import { FORMAT } from '../engine/payload'
-import { ALL_ITEMS } from '../data/items'
+import { ALL_ITEMS, itemsForMode } from '../data/items'
 import { SC_ITEMS } from '../data/sc'
 import { COUNTRY_CODES } from '../data/countries'
 import { CATALOGUE_VERSION } from '../data/archetypes'
@@ -56,12 +56,15 @@ export const sameMethod = (m: Run['method']) => {
 /** The run record for a finished session. */
 export function buildRun(s: Session, headline: string): Run | null {
   if (s.stage !== 'done' || !s.runId || !s.mode) return null
+  // Only the mode's statements: a cancelled extension leaves extra answers in the session.
+  const answers: Answers = {}
+  for (const it of itemsForMode(s.mode)) if (s.answers[it.id]) answers[it.id] = s.answers[it.id]!
   return {
     id: s.runId,
     finishedAt: s.finishedAt ?? new Date().toISOString(),
     mode: s.mode,
     input: s.input,
-    answers: s.answers,
+    answers,
     sc: s.sc,
     country: s.country,
     q: s.q,

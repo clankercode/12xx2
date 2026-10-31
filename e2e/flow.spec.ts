@@ -81,6 +81,32 @@ test('pasting a result link opens the comparison and draws its card', async ({ p
   await expect(page.locator('img[alt^="Comparison card"]')).toBeVisible()
 })
 
+test('a finished Quick run continues into Standard: only the added statements, then straight to results', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /Quick/ }).click()
+  await page.getByRole('button', { name: 'Start the questions' }).click()
+  await answerQuick(page)
+  await finishSteps(page)
+  await expect(page.getByText(/Answer 24 or 72 more statements/)).toBeVisible()
+  await page.getByRole('button', { name: 'Continue to Standard (+24)' }).click()
+  // No intro or practice screen again; progress counts only the added statements.
+  await expect(page.getByText('1 of 24 more')).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Back to my results' })).toBeVisible()
+  for (let k = 0; k < 24; k++) {
+    const grid = page.locator('[role="grid"]').first()
+    await grid.locator('[role="row"]').nth(3 - (k % 3)).locator('[role="gridcell"]').nth(3 + (k % 3)).click()
+    if (k < 23) await expect(page.getByText(`${k + 2} of 24 more`)).toBeVisible()
+  }
+  // The context steps were answered the first time, so they are skipped.
+  await expect(page.getByRole('region', { name: 'Headline result' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'How well does your system work by its own rules?' })).toHaveCount(0)
+  // Now a Standard run: only Full is offered, and the same run is updated in place.
+  await expect(page.getByRole('button', { name: 'Continue to Full (+48)' })).toBeVisible()
+  await expect(page.getByRole('button', { name: /Continue to Standard/ })).toHaveCount(0)
+  const runs = await page.evaluate(() => JSON.parse(localStorage.getItem('12xx2.history.v1')!).runs as { mode: string }[])
+  expect(runs.map(r => r.mode)).toEqual(['standard'])
+})
+
 test('a damaged link is rejected with a clear message', async ({ page }) => {
   await page.goto('/#r=AQAAMDAqOhmelkNbroken')
   await expect(page.getByRole('heading', { name: 'Can’t open this result' })).toBeVisible()

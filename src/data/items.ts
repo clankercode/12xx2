@@ -45,6 +45,18 @@ const MODE_RANK: Record<Mode, number> = { quick: 0, standard: 1, full: 2 }
 
 export const itemsForMode = (mode: Mode) => ALL_ITEMS.filter(it => TIER_RANK[it.tier] <= MODE_RANK[mode])
 
+/** Modes that contain every statement of `mode` and more (modes are nested: quick ⊂ standard ⊂ full). */
+export const longerModes = (mode: Mode): Mode[] => (Object.keys(MODE_RANK) as Mode[]).filter(m => MODE_RANK[m] > MODE_RANK[mode])
+
+/**
+ * The statements a run asks, in order: the whole mode, or, when a finished run is being
+ * extended from a shorter mode, only the statements that mode didn't have.
+ */
+export function quizItems(mode: Mode, extendFrom: Mode | null): Item[] {
+  const order = orderedItems(mode)
+  return extendFrom ? order.filter(it => TIER_RANK[it.tier] > MODE_RANK[extendFrom]) : order
+}
+
 /**
  * Fixed, deterministic presentation order (spec §2.3): axes round-robin with
  * keys alternating, so no two consecutive items share an axis. Every respondent
