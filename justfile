@@ -52,3 +52,7 @@ screenshots out="shots":
 # Needs `just dev` running. Compare page and cards for three simulated pairs, into shots/.
 compare-shots out="shots":
     pnpm tsx scripts/compare-shots.ts http://localhost:21313/ {{out}}
+
+# Needs `just dev` running. Seeds two runs and captures the runs pages into shots/.
+history-shots out="shots":
+    pnpm tsx scripts/history-shots.ts http://localhost:21313/ {{out}}
