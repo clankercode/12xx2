@@ -9,7 +9,7 @@ import { CALIBRATION } from '../src/data/calibration'
 import { CATALOGUE } from '../src/data/archetypes'
 import { EMPTY } from '../src/state/session'
 import { deriveOwn } from '../src/state/derive'
-import { heroName } from '../src/ui/copy'
+import { constantNote, heroName } from '../src/ui/copy'
 import { previewPath, shareText } from '../src/ui/ShareSheet'
 import { headline } from '../src/share/card'
 
@@ -125,6 +125,21 @@ describe('naming breakpoint on a synthetic catalogue', () => {
     expect(shareText(r)).toContain('Here and now, no listed ideology is close.')
     expect(headline(r, false).lines.map(l => l.name)).toEqual(['a', 'No close match'])
     expect(previewPath(r)).toBeNull()
+  })
+
+  it('"Constant" copy says "same ideology" only when both frames agree', () => {
+    const cat = [mk('a', -20), mk('b', 20)]
+    // Here and now sits a little nearer b, by less than the split margin: a lean, not a split.
+    const lean = deriveResults(payloadFor(-20, 1), cat, CALIBRATION).hero
+    expect(lean).toMatchObject({ kind: 'constant', ideal: { match: { arch: { slug: 'a' } } }, leaning: { match: { arch: { slug: 'b' } } } })
+    if (lean.kind !== 'constant') return
+    expect(constantNote(lean)).toBe('Here and now you lean toward b, but not by enough to call it a split.')
+    expect(constantNote(lean, 'They')).not.toMatch(/same ideology/)
+    const same = deriveResults(payloadFor(-20, -18), cat, CALIBRATION).hero
+    expect(same.kind === 'constant' && !same.leaning).toBe(true)
+    if (same.kind !== 'constant') return
+    expect(constantNote(same)).toBe('Your ideal and here-and-now answers sit closest to the same ideology.')
+    expect(constantNote({ ...same, nowMissing: true })).not.toMatch(/same ideology/)
   })
 
   it('a close, stable ideal is still named', () => {
