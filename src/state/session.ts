@@ -1,5 +1,5 @@
 import type { Answer, Answers, AxisId, ChipId, ItemAnswer, Mode, Statement } from '../engine/types'
-import { longerModes, quizItems, unansweredRedLines } from '../data/items'
+import { askedIdsForMode, longerModes, quizItems, unansweredRedLines } from '../data/items'
 
 export interface Session {
   v: 1
@@ -11,7 +11,8 @@ export interface Session {
   sc: Record<string, Answer>
   country: string | null
   q: Partial<Record<AxisId, number | null>>
-  stage: 'start' | 'quiz' | 'context' | 'place' | 'done'
+  /** 'review': a finished run's answers are being looked over and changed (see `review`). */
+  stage: 'start' | 'quiz' | 'context' | 'place' | 'done' | 'review'
   /** Persist progress to localStorage on this device. */
   save: boolean
   /** A shared result opened before taking the quiz, kept for the compare offer. */
@@ -29,6 +30,13 @@ export interface Session {
    * answered, e.g. a run from before red lines existed), so answering them never shifts `index`.
    */
   extendRed: string[] | null
+  /**
+   * While reviewing a finished run (stage 'review'): its answers and run id when the review began,
+   * so finishing can tell whether anything changed and which run the edit came from.
+   */
+  review: { base: Answers; from: string | null } | null
+  /** Set on a run that came from changing another run's answers after its results: that run's id. */
+  editedFrom: string | null
 }
 
 export const EMPTY: Session = {
@@ -47,6 +55,8 @@ export const EMPTY: Session = {
   finishedAt: null,
   extendFrom: null,
   extendRed: null,
+  review: null,
+  editedFrom: null,
 }
 
 export type Action =
@@ -64,6 +74,8 @@ export type Action =
   | { type: 'finish'; at: string; runId: string }
   | { type: 'extend'; mode: Mode }
   | { type: 'cancelExtend' }
+  | { type: 'review' }
+  | { type: 'finishReview'; at: string; runId: string }
   | { type: 'reset' }
 
 export function reduce(s: Session, a: Action): Session {
@@ -105,14 +117,39 @@ export function reduce(s: Session, a: Action): Session {
       // offered again if the person continues later) but don't count towards the shorter mode.
       if (s.stage !== 'quiz' || !s.extendFrom) return s
       return { ...s, mode: s.extendFrom, extendFrom: null, extendRed: null, stage: 'done', index: quizItems(s.extendFrom, null).length }
+    case 'review':
+      // Look over (and change) a finished run's answers; results and history wait until it's finished.
+      if (s.stage !== 'done' || !s.mode) return s
+      return { ...s, stage: 'review', review: { base: s.answers, from: s.runId }, index: 0 }
+    case 'finishReview': {
+      if (s.stage !== 'review' || !s.mode || !s.review) return s
+      const end = { stage: 'done' as const, review: null, index: quizItems(s.mode, null).length }
+      // Nothing changed: the same run as before, untouched (answers as they were, input styles included).
+      if (sameAnswers(s.mode, s.review.base, s.answers)) return { ...s, ...end, answers: s.review.base }
+      // Changed: a new run, linked to the one it came from, which stays in the history as it was.
+      return { ...s, ...end, runId: a.runId, finishedAt: a.at, editedFrom: s.review.from }
+    }
     case 'reset':
       return { ...EMPTY, input: s.input }
   }
 }
 
+/** Whether two answer sets give a run of `mode` the same answers (both frames and the reason; not how they were entered). */
+export function sameAnswers(mode: Mode, a: Answers, b: Answers): boolean {
+  return askedIdsForMode(mode).every(id => sameAnswer(a[id], b[id]))
+}
+
+/** One statement's answers are the same: both frames and the reason, however they were entered. */
+export function sameAnswer(x: ItemAnswer | undefined, y: ItemAnswer | undefined): boolean {
+  if (!x || !y) return !x === !y
+  return x.i === y.i && x.n === y.n && (x.chip ?? null) === (y.chip ?? null)
+}
+
 /** The statements this session's quiz asks, in order (see quizItems); `index` points into it. */
 export function sessionStatements(s: Session): Statement[] {
   if (!s.mode) return []
+  // Reviewing goes over every statement the run asked, even one that was extended (extendFrom is kept).
+  if (s.stage === 'review') return quizItems(s.mode, null)
   return quizItems(s.mode, s.extendFrom, s.extendFrom ? (s.extendRed ?? unansweredRedLines(s.answers)) : undefined)
 }
 
@@ -141,6 +178,8 @@ export function loadSession(): Session {
         const out: Session = { ...EMPTY, ...s, incoming: readIncoming() ?? s.incoming }
         // An extension saved before red lines existed: fix the red lines it asks now, once.
         if (out.extendFrom && out.stage === 'quiz' && !Array.isArray(s.extendRed)) out.extendRed = unansweredRedLines(out.answers)
+        // A review with nothing to compare against can't be finished: back to the results as they are.
+        if (out.stage === 'review' && !out.review?.base) out.stage = 'done'
         return out
       }
     }

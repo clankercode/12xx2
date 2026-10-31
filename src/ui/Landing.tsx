@@ -19,7 +19,8 @@ const DEMO = 'If a few people come to own most of a society’s wealth, much of 
 export function Landing() {
   const { s, dispatch } = useStore()
   const inProgress = s.stage === 'quiz' && s.mode && Object.keys(s.answers).length > 0
-  const done = s.stage === 'done'
+  // Reviewing answers counts as finished: the result (and any changes) would be erased too.
+  const done = s.stage === 'done' || s.stage === 'review'
   /** A mode picked while answers or a result exist: starting over erases them, so confirm first. */
   const [pending, setPending] = useState<Mode | null>(null)
 

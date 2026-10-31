@@ -1,15 +1,16 @@
 import { createContext, lazy, Suspense, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState, type Dispatch } from 'react'
 import { loadSession, persistSession, reduce, stashIncoming, type Action, type Session } from '../state/session'
 import { deriveOwn, type Own } from '../state/derive'
-import { buildRun, loadRuns, storeRuns, upsertRun, type Run } from '../state/history'
+import { buildRun, loadRuns, newRunId, recordRun, storeRuns, type Run } from '../state/history'
 import { heroName } from './copy'
 import { HistoryPage, RunPage, RunsComparePage } from './HistoryPage'
-import { useRoute, go, parseHash, type Route } from './router'
+import { useRoute, go, goReplace, parseHash, type Route } from './router'
 import { Landing } from './Landing'
 import { Quiz } from './Quiz'
 import { Context } from './Context'
 import { Place } from './Place'
 import { ResultsPage } from './ResultsPage'
+import { ReviewPage } from './Review'
 import { SharedPage } from './SharedPage'
 import { ComparePage } from './ComparePage'
 import { MethodPage } from './pages/MethodPage'
@@ -43,6 +44,7 @@ const TITLES: Record<Route['page'], string> = {
   context: 'Your system — 12 Axes²',
   place: 'Your country now — 12 Axes²',
   results: 'Your results — 12 Axes²',
+  review: 'Review your answers — 12 Axes²',
   shared: 'Shared result — 12 Axes²',
   compare: 'Compare results — 12 Axes²',
   method: 'How it works — 12 Axes²',
@@ -94,12 +96,14 @@ export function App() {
     return dropped
   }, [])
 
-  // Record (or update) the finished run in the on-device history, unless saving is off.
+  // Record (or update) the finished run in the on-device history, unless saving is off. A run already
+  // stored as it is stays untouched, saved headline included.
   useEffect(() => {
     if (s.stage !== 'done' || !s.save || !own) return
     const run = buildRun(s, heroName(own.results))
     if (run) setRunsState(prev => {
-      const next = upsertRun(prev, run)
+      const next = recordRun(prev, run)
+      if (!next) return prev
       const { dropped } = storeRuns(next)
       return dropped ? next.slice(0, next.length - dropped) : next
     })
@@ -122,7 +126,10 @@ export function App() {
   // (e.g. results → quiz when continuing a run) hasn't reached `route` yet.
   useEffect(() => {
     const page = parseHash(location.hash).page
-    if ((page === 'quiz' && !s.mode) || (page === 'results' && s.stage !== 'done')) go('#/')
+    // Browser Back from reviewing answers to the results: finish the review, as "Done" does.
+    if (page === 'results' && s.stage === 'review') dispatch({ type: 'finishReview', at: new Date().toISOString(), runId: newRunId() })
+    else if ((page === 'review' || page === 'quiz') && s.stage === 'done') goReplace('#/results')
+    else if ((page === 'quiz' && !s.mode) || (page === 'results' && s.stage !== 'done') || (page === 'review' && s.stage !== 'review')) go('#/')
   }, [route.page, s.mode, s.stage])
 
   const store = useMemo(() => ({ s, dispatch, own, runs, setRuns }), [s, own, runs, setRuns])
@@ -134,10 +141,11 @@ export function App() {
       <Header compact={focused} />
       <main id="main">
         {route.page === 'landing' && <Landing />}
-        {route.page === 'quiz' && s.mode && <Quiz />}
+        {route.page === 'quiz' && s.mode && s.stage !== 'done' && <Quiz />}
         {route.page === 'context' && <Context />}
         {route.page === 'place' && <Place />}
         {route.page === 'results' && own && <ResultsPage own={own} />}
+        {route.page === 'review' && s.stage === 'review' && <ReviewPage />}
         {route.page === 'shared' && <SharedPage encoded={route.payload} />}
         {route.page === 'compare' && <ComparePage mine={route.mine} theirs={route.theirs} />}
         {route.page === 'method' && <MethodPage />}

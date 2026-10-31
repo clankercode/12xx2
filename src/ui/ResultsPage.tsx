@@ -10,6 +10,7 @@ import { ReportDetails } from './ReportDetails'
 import { ShareSheet } from './ShareSheet'
 import { YourRedLines } from './Commitments'
 import { downloadExport } from './HistoryPage'
+import { EditedNote, ReviewButton } from './Review'
 import { extendOptions } from '../state/session'
 import { Confirm, useClearData } from './Chrome'
 import { label } from './answer'
@@ -113,6 +114,7 @@ export function ResultsPage({ own }: { own: Own }) {
           <button type="button" className="btn" onClick={() => downloadExport(runs)} disabled={runs.length === 0}>
             Export my runs (JSON)
           </button>
+          <ReviewButton />
           <button type="button" className="btn btn-ghost" onClick={() => setConfirm('retake')}>
             Retake
           </button>
@@ -172,7 +174,12 @@ export function ResultsPage({ own }: { own: Own }) {
     </>
   )
 
-  return <ResultsView r={r} extras={extras} checks={own.commitments} />
+  return (
+    <>
+      <EditedNote />
+      <ResultsView r={r} extras={extras} checks={own.commitments} />
+    </>
+  )
 }
 
 function ComparePaste({ mine }: { mine: string }) {

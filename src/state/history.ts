@@ -29,6 +29,11 @@ export interface Run {
   snapshot: { headline: string }
   /** Set when the run came in through import rather than being taken here. */
   imported?: boolean
+  /**
+   * Set when this run came from changing another run's answers after seeing its results: that run's
+   * id. The run it came from is kept as it was.
+   */
+  editedFrom?: string
 }
 
 export const HISTORY_KEY = '12xx2.history.v1'
@@ -80,12 +85,45 @@ export function buildRun(s: Session, headline: string): Run | null {
     q: s.q,
     method: CURRENT_METHOD(),
     snapshot: { headline },
+    ...(s.editedFrom ? { editedFrom: s.editedFrom } : {}),
   }
 }
 
 /** Newest first, one entry per id, capped. */
 export function upsertRun(runs: readonly Run[], run: Run): Run[] {
   return [run, ...runs.filter(r => r.id !== run.id)].sort(byNewest).slice(0, MAX_RUNS)
+}
+
+/**
+ * Records the session's run: adds it, or updates the stored copy when its answers or context differ.
+ * Returns null when the stored copy already holds the same run, so a finished run is never rewritten
+ * just because the page re-rendered: its saved headline and method versions stay as they were when
+ * it finished (see HEADLINE_RULE), and going back to results without changing anything adds nothing.
+ */
+export function recordRun(runs: readonly Run[], run: Run): Run[] | null {
+  const have = runs.find(r => r.id === run.id)
+  if (have && sameRunContent(have, run)) return null
+  return upsertRun(runs, run)
+}
+
+/**
+ * Everything a run was scored from (not the method or headline it was saved with, and not the grid/rows
+ * preference at the time: switching layout while reviewing, then changing nothing, must not rewrite it).
+ */
+const content = (r: Run) => ({ finishedAt: r.finishedAt, mode: r.mode, answers: r.answers, sc: r.sc, country: r.country, q: r.q, editedFrom: r.editedFrom })
+
+export const sameRunContent = (a: Run, b: Run) => JSON.stringify(canon(content(a))) === JSON.stringify(canon(content(b)))
+
+/** Key-sorted, with undefined fields dropped, so equal content always stringifies the same. */
+function canon(x: unknown): unknown {
+  if (Array.isArray(x)) return x.map(canon)
+  if (!isObj(x)) return x
+  return Object.fromEntries(
+    Object.keys(x)
+      .sort()
+      .filter(k => x[k] !== undefined)
+      .map(k => [k, canon(x[k])]),
+  )
 }
 
 const byNewest = (a: Run, b: Run) => b.finishedAt.localeCompare(a.finishedAt) || a.id.localeCompare(b.id)
@@ -159,6 +197,7 @@ export function cleanRun(x: unknown, now: string): Run | null {
     method: { format: num(m.format) || FORMAT, catalogue: num(m.catalogue), calibration: num(m.calibration), headline: num(m.headline) || 1 },
     snapshot: { headline: snap },
     ...(x.imported === true ? { imported: true } : {}),
+    ...(typeof x.editedFrom === 'string' && /^[0-9a-f]{8,32}$/.test(x.editedFrom) ? { editedFrom: x.editedFrom } : {}),
   }
 }
 

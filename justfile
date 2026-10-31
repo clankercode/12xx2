@@ -117,3 +117,8 @@ hero-shots out="shots/hero":
 # reason chips, at 1280 dark and 390 light, into shots/next/; fails on any sideways scroll.
 next-shots base="http://localhost:21313/" out="shots/next":
     pnpm tsx scripts/next-shots.ts {{base}} {{out}}
+
+# Needs a dev server. Changing answers after the results: results action, review list, a statement being
+# changed, re-scored results with the Edited note and the runs page, at 1280 dark and 390 light, into shots/edit/.
+edit-shots base="http://localhost:21313/" out="shots/edit":
+    pnpm tsx scripts/edit-shots.ts {{base}} {{out}}

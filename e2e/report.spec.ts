@@ -12,7 +12,7 @@ for (const clipboard of ['modern', 'fallback', 'manual'] as const) {
     if (clipboard === 'fallback') await page.setViewportSize({ width: 390, height: 844 })
     const session: Session = {
       v: 1, mode: 'quick', stage: 'done', finishedAt: '2026-11-01T00:00:00.000Z', runId: 'abcdef1234567890',
-      index: items.length + redLines.length, input: 'grid', sc: {}, country: null, q: {}, save: false, incoming: null, extendFrom: null, extendRed: null,
+      index: items.length + redLines.length, input: 'grid', sc: {}, country: null, q: {}, save: false, incoming: null, extendFrom: null, extendRed: null, review: null, editedFrom: null,
       answers: Object.fromEntries([
         ...items.map(it => [it.id, { i: it.key * 2, n: it.key, input: 'grid' }]),
         ...redLines.map(r => [r.id, { i: r.humane, n: r.humane, input: 'rows' }]),

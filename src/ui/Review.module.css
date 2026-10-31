@@ -1,0 +1,168 @@
+.review {
+  padding: 28px 0 48px;
+  display: grid;
+  gap: 28px;
+}
+
+.head {
+  display: grid;
+  gap: 12px;
+}
+
+.head h1 {
+  margin: 0;
+}
+
+.head p {
+  margin: 0;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+.legend :global(.glyph-now) {
+  margin-left: 10px;
+}
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--rule-major);
+  border-radius: var(--radius-m);
+  background: var(--ink-2);
+}
+
+.bar p {
+  margin: 0;
+}
+
+.group {
+  font-size: 1.05rem;
+  margin: 0 0 10px;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 2.2em minmax(0, 1fr);
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+  font: inherit;
+  color: var(--paper);
+  background: color-mix(in srgb, var(--ink) 80%, transparent);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-m);
+  cursor: pointer;
+}
+
+.row:hover {
+  border-color: var(--rule-major);
+  background: var(--ink-2);
+}
+
+.num {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  padding-top: 1px;
+}
+
+.body {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.text {
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.answers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 14px;
+  font-size: 0.88rem;
+}
+
+.frame {
+  white-space: nowrap;
+}
+
+.chip {
+  font-size: 0.8rem;
+  color: var(--muted);
+  border: 1px solid var(--rule-major);
+  border-radius: 999px;
+  padding: 0 8px;
+}
+
+.changed {
+  justify-self: start;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ideal);
+  border: 1px solid var(--ideal-deep);
+  border-radius: 999px;
+  padding: 0 8px;
+}
+
+.edited {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 20px auto 0;
+  color: var(--muted);
+}
+
+.edited > span:last-child {
+  max-width: var(--measure);
+}
+
+.editedTag {
+  flex: none;
+  font-weight: 700;
+  color: var(--ideal);
+  border: 1px solid var(--ideal-deep);
+  border-radius: 999px;
+  padding: 0 10px;
+}
+
+/* Editing a statement from the review: back to the list, or done, above the statement. */
+.editBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+/* Smaller than the answer controls, so both fit on one row at phone width. */
+.editBar :global(.btn) {
+  min-height: 40px;
+  padding: 0.4em 0.85em;
+  font-size: 0.92rem;
+}
+
+.editBar :global(.btn-ghost) {
+  margin-left: -0.85em;
+}

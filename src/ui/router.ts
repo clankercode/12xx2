@@ -10,6 +10,7 @@ export type Route =
   | { page: 'context' }
   | { page: 'place' }
   | { page: 'results' }
+  | { page: 'review' }
   | { page: 'shared'; payload: string }
   | { page: 'compare'; mine: string; theirs: string }
   | { page: 'method' }
@@ -24,7 +25,7 @@ export type Route =
   /** Dev-only prototype lab ("#/lab?p=…&mode=…"); query is the raw part after "?". */
   | { page: 'lab'; query: string }
 
-const PAGES = ['quiz', 'context', 'place', 'results', 'method', 'criticisms', 'ideologies', 'privacy', 'history', 'map'] as const
+const PAGES = ['quiz', 'context', 'place', 'results', 'review', 'method', 'criticisms', 'ideologies', 'privacy', 'history', 'map'] as const
 
 /** The prototype lab only exists in dev builds or when served from this machine. */
 export function labAllowed(): boolean {
