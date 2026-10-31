@@ -104,6 +104,11 @@ export function CriticismsPage() {
         <li>No validation data yet: no factor analysis, no test–retest study. The thresholds come from simulation, not from real respondents.</li>
         <li>Answering twice per statement takes longer and can nudge people to make answers match or differ. We don’t tell you which is normal.</li>
         <li>Ideology profiles are AI-coded editorial judgements. Disagreement between coders is published, but agreement between AI models is not the same as accuracy.</li>
+        <li>
+          Core commitments, which can rule an ideology out, come from one AI model and our own checks for counterexamples, not
+          from adherents. The simulation behind their error rate reuses our own coding, so it can’t catch a commitment that is
+          simply wrong.
+        </li>
         <li>The 12-axis model itself bundles some ideas and leaves others out. See <a href="#/method">How it works</a>.</li>
       </ul>
       <p className="small muted">

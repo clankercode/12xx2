@@ -299,7 +299,12 @@ The issues above are where we think 12 Axes² improves on its predecessors. This
    - The simulation brackets copy rates; it does not estimate them.
 9. **Self-placement and self-report.** The status-quo sliders ask respondents to place their country directly, while Ideal and Now are item-derived. The gap typology mixes the two kinds of measure. Reason chips are self-explanations, which people construct after the fact and which are not causal evidence.
 10. **Low power for real gaps** (§2.4). Within-person, a modest real gap usually goes unflagged, especially in Quick (21% detection at 1 scale point). The headline "Constant" therefore overstates constancy for some people.
-11. **Self-selected audience.** With no telemetry there are no population norms. Nothing on the results page compares you with "other people", and nothing should.
+11. **Core commitments are coders' judgements, and their error rate is circular.**
+   - A commitment means the coded profiles of an ideology's mainstream all take one side of a statement. Three instances of one model family (Claude Opus, three lenses) proposed them; an entry needs 2 of 3 and the coded sheet at |v| ≥ 2 on that side. No adherent or expert has checked them.
+   - The "under 0.1% wrongly ruled out" figure simulates adherents from the same coded sheets, so it measures consistency with our own coding (answer noise rarely trips a commitment), not whether real adherents hold the position. With noisier simulated answers (`commitments-audit --stress`: noise SD 1.2, axis SD 0.8) it rises to about 0.5%: it tracks the noise model, and no setting of it can detect a commitment real adherents reject.
+   - Counterexamples are the real test. The must-agree `dem-03` ("Any group of citizens should be free to form a party…") was dropped for 11 mainstream ideologies because militant democracy (Germany's Basic Law Art. 21(2)) sincerely rejects "any group". Suspects not yet resolved: `dem-06` must-disagree for constitutional monarchism and centrism (reserve and emergency powers), `int-10` must-agree for civic nationalism (constitutional patriotism), `col-07` must-disagree for social democracy, `col-04` must-agree for democratic socialism, and `pro-01` in the here-and-now frame for progressive liberalism.
+   - The site says "positions our coded profiles share", never "every adherent", and links to a report form for disputing one.
+12. **Self-selected audience.** With no telemetry there are no population norms. Nothing on the results page compares you with "other people", and nothing should.
 
 ### Status as of 2026-10-31
 

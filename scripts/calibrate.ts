@@ -239,7 +239,7 @@ for (let d = 0; d < RT; d++) {
 }
 report.randomGetsHeadline = Number((rndHero / RT).toFixed(3))
 
-// ---------- Core commitments: sincere adherents wrongly ruled out of their own ideology ----------
+// ---------- Core commitments: adherents simulated from our coded sheets, ruled out of their own ideology (consistency with our coding only) ----------
 // Own RNG stream, drawn last, so every threshold above keeps its exact draws.
 const commitments = validateCommitments(
   JSON.parse(readFileSync('content/archetypes/commitments.json', 'utf8')),

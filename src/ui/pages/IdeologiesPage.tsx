@@ -35,7 +35,8 @@ export function IdeologiesPage() {
         {HAS_COMMITMENTS && (
           <>
             {' '}
-            Core commitments are positions every adherent shares; answering decisively against one rules the ideology out (
+            Core commitments are positions that our coded profiles of the ideology’s mainstream share; answering decisively against
+            one rules the ideology out (
             <a href="#/method">how</a>).
           </>
         )}

@@ -11,6 +11,9 @@ export function reportStatementUrl(id: string, text: string): string {
   return `${REPO_URL}/issues/new?labels=statement&title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`
 }
 
+/** A prefilled GitHub issue for disputing a core commitment. Carries no answers. */
+export const REPORT_COMMITMENT_URL = `${REPO_URL}/issues/new?labels=commitment&title=${encodeURIComponent('Commitment: ')}`
+
 export const MATCH_LABEL: Record<MatchLabel, string> = {
   'very-close': 'Very close',
   close: 'Close',
