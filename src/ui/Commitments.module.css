@@ -1,0 +1,124 @@
+.scroll {
+  overflow-x: auto;
+  margin: 14px 0;
+}
+
+.matrix {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 560px;
+  font-size: 0.92rem;
+}
+
+.matrix th,
+.matrix td {
+  border-bottom: 1px solid var(--rule-major);
+  padding: 10px 12px 10px 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.matrix thead th {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.matrix tbody th {
+  font-weight: 700;
+  min-width: 9em;
+}
+
+.matrix tbody th a {
+  color: var(--paper);
+  text-decoration: none;
+}
+
+.matrix tr[data-out] th a {
+  text-decoration: line-through;
+  text-decoration-color: var(--alert);
+}
+
+.cell {
+  max-width: 15em;
+}
+
+.sym {
+  display: inline-block;
+  min-width: 1.1em;
+  font-weight: 700;
+}
+
+.verdict {
+  font-weight: 600;
+}
+
+[data-v='pass'] .sym,
+[data-v='pass'] .verdict {
+  color: var(--ok);
+}
+
+[data-v='fail'] .sym,
+[data-v='fail'] .verdict {
+  color: var(--alert);
+}
+
+[data-v='unknown'] .sym,
+[data-v='unknown'] .verdict,
+.reason {
+  color: var(--muted);
+}
+
+.reason {
+  font-size: 0.82rem;
+}
+
+.stmt {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.both {
+  color: var(--faint);
+}
+
+.empty {
+  color: var(--faint);
+}
+
+.all {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.all[data-v='pass'] {
+  color: var(--ok);
+}
+
+.all[data-v='fail'] {
+  color: var(--alert);
+}
+
+.all[data-v='unknown'],
+.all[data-v='none'] {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.fails {
+  display: grid;
+  gap: 8px;
+  padding-left: 1.2em;
+  max-width: 80ch;
+}
+
+.fails li::marker {
+  content: '✘  ';
+  color: var(--alert);
+}

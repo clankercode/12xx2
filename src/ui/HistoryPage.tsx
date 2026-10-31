@@ -234,7 +234,7 @@ export function RunPage({ id }: { id: string }) {
       {share && <ShareSheet payload={own.payload} />}
     </section>
   )
-  return <ResultsView r={own.results} extras={banner} />
+  return <ResultsView r={own.results} extras={banner} checks={own.commitments} />
 }
 
 export function RunsComparePage({ a, b }: { a: string; b: string }) {

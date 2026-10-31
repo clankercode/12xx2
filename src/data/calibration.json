@@ -96,6 +96,8 @@
    }
   },
   "randomGetsHeadline": 0.1,
+  "commitmentFalseRuleOut": null,
+  "commitmentFalseRuleOutDetail": null,
   "model": {
    "thetaRange": 2.5,
    "itemSd": 0.6,

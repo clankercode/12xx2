@@ -1,14 +1,19 @@
 import type { ReactNode } from 'react'
 import type { HeroPick, Match, Results } from '../engine/results'
+import type { ArchetypeCheck } from '../engine/commitments'
 import { AXES } from '../data/axes'
 import { CALIBRATION } from '../data/calibration'
 import { CATALOGUE_IS_PLACEHOLDER } from '../data/archetypes'
 import { countryName } from '../data/countries'
+import { ALL_ITEMS } from '../data/items'
 import wgi from '../data/wgi.json'
 import { AxisChart, type Overlay } from './AxisChart'
+import { CoreCommitments } from './Commitments'
+import { label as answerLabel } from './answer'
 import { GAP_TYPE, MATCH_LABEL, MODE_NAME, RG_BAND, STABILITY_LABEL } from './copy'
 import css from './Results.module.css'
 
+const ALL_TEXT = new Map(ALL_ITEMS.map(i => [i.id, i.text]))
 const RANDOM_RG = Math.round((16 / 7 / 6) * 100)
 
 export function noGapBaseline(): number | null {
@@ -58,6 +63,15 @@ export function Hero({ r, who = 'You' }: { r: Results; who?: string }) {
           </p>
         </div>
       )}
+      {h.kind === 'none-fit' && (
+        <div>
+          <h1 className={css.heroTitle}>No listed ideology fits</h1>
+          <p>
+            {who === 'You' ? 'You contradict' : 'These answers contradict'} a core commitment of every ideology close enough to
+            name. The chart below is shown as answered, and the closest ideologies are listed with what rules them out.
+          </p>
+        </div>
+      )}
       {h.kind === 'insufficient' && (
         <div>
           <h1 className={css.heroTitle}>Not enough answers to match</h1>
@@ -66,11 +80,11 @@ export function Hero({ r, who = 'You' }: { r: Results; who?: string }) {
       )}
       {h.kind === 'split' && (
         <div className={css.pair}>
-          <HeroHalf frame="I" pick={h.ideal} />
+          <HeroHalf frame="I" pick={h.ideal} who={who} />
           <span className={css.pairArrow} aria-hidden>
             →
           </span>
-          <HeroHalf frame="N" pick={h.now} />
+          <HeroHalf frame="N" pick={h.now} who={who} />
         </div>
       )}
       {h.kind === 'constant' && (
@@ -89,6 +103,7 @@ export function Hero({ r, who = 'You' }: { r: Results; who?: string }) {
           {h.ideal.alsoClose && (
             <p className="small muted">Also close: {h.ideal.alsoClose.arch.name}.</p>
           )}
+          <RuledOutNote pick={h.ideal} who={who} />
           {r.strongestGap && (
             <p className={css.hook}>
               Biggest gap: <strong>{AXES[r.strongestGap.axis].title}</strong>, here and now pulls you toward{' '}
@@ -119,7 +134,7 @@ export function Hero({ r, who = 'You' }: { r: Results; who?: string }) {
   )
 }
 
-function HeroHalf({ frame, pick }: { frame: 'I' | 'N'; pick: HeroPick }) {
+function HeroHalf({ frame, pick, who }: { frame: 'I' | 'N'; pick: HeroPick; who: string }) {
   return (
     <div className={css.half}>
       <p className={`${css.heroKicker} ${frame === 'I' ? 'ideal' : 'now'}`}>
@@ -131,7 +146,18 @@ function HeroHalf({ frame, pick }: { frame: 'I' | 'N'; pick: HeroPick }) {
         {frame === 'N' && <span className="muted"> · your here-and-now answers sit closest to this ideal</span>}
       </p>
       {pick.alsoClose && <p className="small muted">Also close: {pick.alsoClose.arch.name}</p>}
+      <RuledOutNote pick={pick} who={who} />
     </div>
+  )
+}
+
+function RuledOutNote({ pick, who }: { pick: HeroPick; who: string }) {
+  if (!pick.nearestRuledOut) return null
+  return (
+    <p className="small muted">
+      Closest by distance: {pick.nearestRuledOut.arch.name}, but {who === 'You' ? 'you contradict' : 'these answers contradict'}{' '}
+      one of its core commitments.
+    </p>
   )
 }
 
@@ -164,8 +190,11 @@ function WgiStat({ code }: { code: string }) {
   )
 }
 
-export function Matches({ r }: { r: Results }) {
+type Checks = ReadonlyMap<string, ArchetypeCheck>
+
+export function Matches({ r, checks }: { r: Results; checks?: Checks }) {
   if (!r.matchesIdeal.length && !r.matchesNow.length) return null
+  const joint = r.joint.find(m => !m.ruledOut)
   return (
     <section className={css.section}>
       <h2>Closest ideologies</h2>
@@ -175,13 +204,13 @@ export function Matches({ r }: { r: Results }) {
         <a href="#/ideologies">the catalogue</a>.
       </p>
       <div className={css.matchCols}>
-        <MatchList title="Ideal" frame="I" list={r.matchesIdeal} />
-        <MatchList title="Here and now" frame="N" list={r.matchesNow} />
+        <MatchList title="Ideal" frame="I" list={r.matchesIdeal} checks={checks} />
+        <MatchList title="Here and now" frame="N" list={r.matchesNow} checks={checks} />
       </div>
-      {r.joint[0] && (
+      {joint && (
         <p className={css.joint}>
           <strong>Theory-and-practice pattern:</strong> your ideal and here-and-now answers together most resemble{' '}
-          <strong>{r.joint[0].arch.name}</strong> ({MATCH_LABEL[r.joint[0].label].toLowerCase()}), comparing against each
+          <strong>{joint.arch.name}</strong> ({MATCH_LABEL[joint.label].toLowerCase()}), comparing against each
           ideology’s ideal <em>and</em> its practical programme in a present-day liberal democracy
           {r.payload.sc && r.payload.sc.score < 50 ? ' — a different starting point from the one you described, so read this loosely' : ''}.
         </p>
@@ -190,7 +219,20 @@ export function Matches({ r }: { r: Results }) {
   )
 }
 
-function MatchList({ title, frame, list }: { title: string; frame: 'I' | 'N'; list: Match[] }) {
+/** What rules a match out, from the owner's own answers; shared views only know that it is ruled out. */
+function contradiction(m: Match, checks?: Checks) {
+  const c = checks?.get(m.arch.slug)?.checks.find(x => x.verdict === 'fail')
+  const f = c?.frames.find(x => x.verdict === 'fail')
+  if (!c || !f) return null
+  const text = ALL_TEXT.get(c.commitment.item) ?? c.commitment.item
+  return (
+    <>
+      You answered {answerLabel(f.answer).toLowerCase()} to “{text}” ({f.frame === 'I' ? 'ideal system' : 'here and now'}).
+    </>
+  )
+}
+
+function MatchList({ title, frame, list, checks }: { title: string; frame: 'I' | 'N'; list: Match[]; checks?: Checks }) {
   return (
     <div>
       <h3 className={frame === 'I' ? 'ideal' : 'now'}>
@@ -199,13 +241,24 @@ function MatchList({ title, frame, list }: { title: string; frame: 'I' | 'N'; li
       {list.length === 0 && <p className="muted small">Not enough answers in this frame.</p>}
       <ol className={css.matchList}>
         {list.map(m => (
-          <li key={m.arch.slug}>
+          <li key={m.arch.slug} data-ruled-out={m.ruledOut || undefined}>
             <div className={css.matchHead}>
               <a href={`#/ideologies`} className={css.matchName}>
                 {m.arch.name}
               </a>
-              <span className={css.matchLabel}>{MATCH_LABEL[m.label]}</span>
+              {m.ruledOut ? (
+                <span className={`${css.matchLabel} ${css.ruledOut}`}>
+                  <span aria-hidden>✘</span> Ruled out
+                </span>
+              ) : (
+                <span className={css.matchLabel}>{MATCH_LABEL[m.label]}</span>
+              )}
             </div>
+            {m.ruledOut && (
+              <p className="small">
+                Contradicts a core commitment. {contradiction(m, checks)}
+              </p>
+            )}
             <p className="small">{m.arch.summary}</p>
             <p className="small muted">
               Nearest on {m.why.near.map(a => AXES[a].title.toLowerCase()).join(', ')}
@@ -269,7 +322,20 @@ export function Gaps({ r, children }: { r: Results; children?: ReactNode }) {
   )
 }
 
-export function ResultsView({ r, overlay, extras, who }: { r: Results; overlay?: Overlay; extras?: ReactNode; who?: string }) {
+export function ResultsView({
+  r,
+  overlay,
+  extras,
+  who,
+  checks,
+}: {
+  r: Results
+  overlay?: Overlay
+  extras?: ReactNode
+  who?: string
+  /** The owner's core-commitment checks (needs answers, so never in shared views). */
+  checks?: Checks
+}) {
   return (
     <div className={`wrap ${css.results}`}>
       <Hero r={r} who={who} />
@@ -278,7 +344,8 @@ export function ResultsView({ r, overlay, extras, who }: { r: Results; overlay?:
         <AxisChart rows={r.rows} overlay={overlay} />
       </section>
       <Gaps r={r} />
-      <Matches r={r} />
+      <Matches r={r} checks={checks} />
+      {checks && <CoreCommitments r={r} checks={checks} />}
       {extras}
     </div>
   )

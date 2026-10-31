@@ -142,7 +142,7 @@ export function ResultsPage({ own }: { own: Own }) {
     </>
   )
 
-  return <ResultsView r={r} extras={extras} />
+  return <ResultsView r={r} extras={extras} checks={own.commitments} />
 }
 
 function ComparePaste({ mine }: { mine: string }) {
