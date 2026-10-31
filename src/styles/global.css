@@ -1,4 +1,4 @@
-/* 12 Axes² — "squared paper at night". One bold element (the grid); everything else quiet. */
+/* 12 Axes² — "dot paper at night". One bold element (the grid); everything else quiet. */
 :root {
   --ink: #141726;
   --ink-2: #1a1e31;
@@ -20,6 +20,9 @@
   --whisker-opacity: 0.45;
   /* Keyboard focus ring. Light needs a darker amber to clear 3:1 against the grid tints. */
   --focus: var(--now);
+  /* Background dot paper, and the dots under the pointer's lamp. */
+  --dot: #323959;
+  --dot-lit: #8d95e6;
   --alert: #ff8a7a;
   --ok: #8fd6b0;
   --cell: 8px;
@@ -53,6 +56,8 @@
   --tint-now: 30%;
   --whisker-opacity: 0.7;
   --focus: #7a4a06;
+  --dot: #cdc7b8;
+  --dot-lit: #4a55c9;
   color-scheme: light;
 }
 
@@ -78,6 +83,8 @@
     --tint-now: 30%;
     --whisker-opacity: 0.7;
     --focus: #7a4a06;
+    --dot: #cdc7b8;
+    --dot-lit: #4a55c9;
     color-scheme: light;
   }
 }
@@ -97,24 +104,77 @@ body {
   margin: 0;
   min-height: 100dvh;
   background-color: var(--ink);
-  /* Squared paper: minor rule every 24px, major every 120px. */
-  background-image:
-    linear-gradient(var(--rule-major) 1px, transparent 1px),
-    linear-gradient(90deg, var(--rule-major) 1px, transparent 1px),
-    linear-gradient(var(--rule) 1px, transparent 1px),
-    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
-  background-size:
-    120px 120px,
-    120px 120px,
-    24px 24px,
-    24px 24px;
-  background-position: -1px -1px;
-  background-attachment: fixed;
   color: var(--paper);
   font-family: var(--body);
   font-size: 17px;
   line-height: 1.55;
   font-variant-numeric: tabular-nums;
+}
+
+/* Dot paper: one dot every 28px, on a fixed layer so scrolling stays composited. */
+body::before,
+.lamp i {
+  content: '';
+  pointer-events: none;
+  background-size: 28px 28px;
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: radial-gradient(circle at 13.5px 13.5px, var(--dot) 1.1px, transparent 1.7px);
+}
+
+/* Sharper screens draw the full dot; a little smaller keeps it as quiet as on a 1x screen. */
+@media (min-resolution: 2dppx) {
+  body::before {
+    background-image: radial-gradient(circle at 13.5px 13.5px, var(--dot) 0.85px, transparent 1.35px);
+  }
+}
+
+/*
+ * The same dots, lit under the pointer (src/ui/Lamp.tsx). A 400px disc moved by transform, with the dots inside
+ * shifted back onto the page lattice: moving it only re-composites, nothing repaints. Hidden until the pointer moves.
+ */
+.lamp {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 400px;
+  height: 400px;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: radial-gradient(closest-side, #000 10%, rgb(0 0 0 / 0.5) 50%, transparent);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  will-change: transform, opacity;
+}
+
+.lamp i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(100% + 28px);
+  height: calc(100% + 28px);
+  background-image: radial-gradient(circle at 13.5px 13.5px, var(--dot-lit) 1.1px, transparent 1.7px);
+  will-change: transform;
+}
+
+.lamp[data-on] {
+  opacity: 1;
+}
+
+/* Answering: the lamp dims so the grid keeps the attention. */
+.lamp[data-on][data-calm] {
+  opacity: 0.35;
+}
+
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .lamp {
+    display: none;
+  }
 }
 
 h1,
