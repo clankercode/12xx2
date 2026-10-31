@@ -1,6 +1,7 @@
 /**
  * Visual check for the fit-set headline: finds a simulated respondent for each headline case
- * (one fit, several, more than three, none, a split, a ruled-out nearest, overlapping frames),
+ * (one fit, several, exactly four, more than four, none, a split, here and now fitting nothing,
+ * a ruled-out nearest, overlapping frames),
  * seeds each as a finished run and captures the results hero at 1280 and 390 wide in dark and
  * light, plus the shared view, the compare page and the share cards for every case.
  * Needs `just dev` running.
@@ -24,19 +25,22 @@ const out = process.argv[3] ?? 'shots/fit'
 mkdirSync(`${out}/cards`, { recursive: true })
 const sheets = JSON.parse(readFileSync('content/archetypes/sheets.json', 'utf8')) as Sheets
 
-type Case = 'single' | 'multi' | 'many' | 'none' | 'split' | 'ruled-out' | 'overlap'
+type Case = 'single' | 'multi' | 'four' | 'many' | 'none' | 'split' | 'now-empty' | 'ruled-out' | 'overlap'
 const CASES: Record<Case, (r: Results) => boolean> = {
   single: r => r.hero.kind === 'constant' && sameInBothFrames(r.hero) && r.hero.ideal.fits.length === 1 && !r.hero.ideal.ruledOutInRange.length,
   multi: r => r.hero.kind === 'constant' && sameInBothFrames(r.hero) && r.hero.ideal.fits.length === 2,
-  many: r => r.hero.kind === 'constant' && r.hero.ideal.fits.length > 3,
+  four: r => r.hero.kind === 'constant' && r.hero.ideal.fits.length === 4,
+  many: r => r.hero.kind === 'constant' && r.hero.ideal.fits.length > 4,
   none: r => r.hero.kind === 'no-fit' && !!r.hero.ideal.nearest && !r.hero.ideal.ruledOutInRange.length,
-  split: r => r.hero.kind === 'split' && r.hero.now.fits.length > 0,
+  split: r => r.hero.kind === 'split',
+  // The ideal fits, here and now fits nothing: not a split (review S1).
+  'now-empty': r => r.hero.kind === 'constant' && !!r.hero.now && r.hero.now.fits.length === 0,
   // The nearest ideology by distance is ruled out by a core commitment.
   'ruled-out': r =>
     (r.hero.kind === 'constant' || r.hero.kind === 'no-fit') &&
     !!r.hero.ideal.ruledOutInRange[0] &&
     (!r.hero.ideal.fits[0] || r.hero.ideal.ruledOutInRange[0].d < r.hero.ideal.fits[0].d),
-  overlap: r => r.hero.kind === 'constant' && !!r.hero.now && !sameInBothFrames(r.hero),
+  overlap: r => r.hero.kind === 'constant' && !!r.hero.now && r.hero.now.fits.length > 0 && !sameInBothFrames(r.hero),
 }
 
 const session = (mode: Mode, answers: Session['answers'], k: number): Session => ({
@@ -118,7 +122,7 @@ for (const width of [1280, 390]) {
   await page.evaluate(() => document.fonts.ready)
   await page.waitForTimeout(300)
   const top = await page.locator('h3#fit-set').evaluate(e => e.getBoundingClientRect().top + window.scrollY)
-  await page.screenshot({ path: `${out}/method-dark-${width}.png`, fullPage: true, clip: { x: 0, y: top - 20, width, height: width > 500 ? 1100 : 1900 } })
+  await page.screenshot({ path: `${out}/method-dark-${width}.png`, fullPage: true, clip: { x: 0, y: top - 20, width, height: width > 500 ? 1400 : 2400 } })
   if (multi && split) {
     await page.goto(`${base}#c=${enc(multi)}~${enc(split)}`)
     await page.reload()

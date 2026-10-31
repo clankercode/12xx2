@@ -237,11 +237,16 @@ export function MethodPage() {
         The headline shows “in theory A, here and now B” only when both frames fit something and their fit sets share no
         ideology. If they share even one, it is not a split, and the page says what here and now fits. If here and now fits
         nothing, that is not a split either: the cut is the 95th percentile, so about 1 in 20 sincere here-and-now answer sets
-        lands just outside it by chance
-        {rep.splitFalseByMode ? <> ({byModeOf(rep.splitFalseByMode, x => pct(x.nowEmptyRate))} of simulated respondents with no real gap)</> : null}
-        . Counting only respondents whose ideal frame fits something (no one else can be split), a respondent with no real gap
-        gets a false split {rep.splitFalseByMode ? byModeOf(rep.splitFalseByMode, x => pct(x.rate)) : '—'} of the time (Quick /
-        Standard / Full; target at most 5%).
+        lands just outside it by chance.
+        {rep.splitFalseByMode && (
+          <>
+            {' '}
+            In the simulation, among respondents with no real gap whose ideal frame fits something (no one else can be split),
+            here and now fits nothing {byModeOf(rep.splitFalseByMode, x => pct(x.nowEmptyRate))} of the time, and a false split
+            happens {byModeOf(rep.splitFalseByMode, x => pct(x.rate))} of the time (Quick / Standard / Full; the target is at most
+            5%).
+          </>
+        )}
       </p>
       <p>
         Each frame’s nearest ideology is also re-run 200 times with your scores jittered by their error bars: “stable” means the
