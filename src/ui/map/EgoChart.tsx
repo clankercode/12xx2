@@ -21,6 +21,8 @@ export interface EgoItem {
   label?: string
   /** Detail line shown on hover/focus. */
   detail: string
+  /** Short verdict for the full list (e.g. "Fits · Close", "Ruled out"). */
+  verdict?: string
 }
 
 export interface Cuts {
@@ -73,76 +75,103 @@ export function EgoChart({
   const pick = (k: string) => onPick?.(k)
 
   return (
-    <div ref={ref} className={css.chartBox}>
-      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="group" aria-label={ariaLabel} className={`${css.svg} ${css.tween}`}>
-        {grid.map(g => (
-          <g key={g}>
-            <circle cx={cx} cy={cy} r={g * s} fill="none" stroke="var(--rule-major)" strokeWidth={1} />
-            <text x={cx + 3} y={cy - g * s - 3} className={css.tick}>
-              {g.toFixed(1)}
-            </text>
-          </g>
-        ))}
-        <circle cx={cx} cy={cy} r={cuts.veryClose * s} className={css.ringVeryClose} />
-        <circle cx={cx} cy={cy} r={cuts.close * s} className={css.ringClose} />
-        <circle cx={cx} cy={cy} r={cuts.loose * s} className={css.ringLoose} />
-        {hotItem && (
-          <line x1={cx} y1={cy} x2={sx(hotItem.pos)[0]} y2={sx(hotItem.pos)[1]} stroke="var(--paper)" strokeWidth={1.4} strokeDasharray="4 3" />
-        )}
-        {pts.map(({ i, xy }) => {
-          const body = (
-            <>
-              <Mark fam={i.fam} r={i.key === hot ? 7.5 : 5.5} hollow={i.hollow || i.struck} />
-              {i.struck && <line x1={-7} y1={7} x2={7} y2={-7} stroke={famColor(i.fam)} strokeWidth={1.6} />}
-              <title>{i.detail}</title>
-            </>
-          )
-          const common = {
-            className: css.dot,
-            style: { transform: `translate(${xy[0]}px, ${xy[1]}px)` },
-            onMouseEnter: () => setHot(i.key),
-            onMouseLeave: () => setHot(h => (h === i.key ? null : h)),
-            onFocus: () => setHot(i.key),
-            onBlur: () => setHot(h => (h === i.key ? null : h)),
-          }
-          return onPick ? (
-            <g
-              key={i.key}
-              {...common}
-              role="button"
-              // Kept out of the tab order: the page offers a list or a picker for the same choice.
-              tabIndex={-1}
-              aria-label={i.aria}
-              onClick={() => pick(i.key)}
-              onKeyDown={e => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault()
-                  pick(i.key)
-                }
-              }}
-            >
-              {body}
+    <>
+      <div ref={ref} className={css.chartBox}>
+        <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="group" aria-label={ariaLabel} className={`${css.svg} ${css.tween}`}>
+          {grid.map(g => (
+            <g key={g}>
+              <circle cx={cx} cy={cy} r={g * s} fill="none" stroke="var(--rule-major)" strokeWidth={1} />
+              <text x={cx + 3} y={cy - g * s - 3} className={css.tick}>
+                {g.toFixed(1)}
+              </text>
             </g>
-          ) : (
-            <a key={i.key} href={i.href} aria-label={i.aria} tabIndex={-1} {...common}>
-              {body}
-            </a>
-          )
-        })}
-        <g style={{ transform: `translate(${cx}px, ${cy}px)` }} aria-hidden>
-          <circle r={11} fill="none" stroke={centerColor} strokeWidth={2} />
-          <circle r={5} fill={centerColor} />
-        </g>
-        {labels.map(l => (
-          <text key={l.key} x={l.x} y={l.y} className={l.key === '__c' ? css.labelCenter : css.label} style={l.key === '__c' ? { fill: centerColor } : undefined} aria-hidden>
-            {l.text}
-          </text>
-        ))}
-      </svg>
-      <p className={`small ${css.hotLine}`} aria-live="polite">
-        {hotItem ? hotItem.detail : ' '}
-      </p>
-    </div>
+          ))}
+          <circle cx={cx} cy={cy} r={cuts.veryClose * s} className={css.ringVeryClose} />
+          <circle cx={cx} cy={cy} r={cuts.close * s} className={css.ringClose} />
+          <circle cx={cx} cy={cy} r={cuts.loose * s} className={css.ringLoose} />
+          {hotItem && (
+            <line x1={cx} y1={cy} x2={sx(hotItem.pos)[0]} y2={sx(hotItem.pos)[1]} stroke="var(--paper)" strokeWidth={1.4} strokeDasharray="4 3" />
+          )}
+          {pts.map(({ i, xy }) => {
+            const body = (
+              <>
+                <Mark fam={i.fam} r={i.key === hot ? 7.5 : 5.5} hollow={i.hollow || i.struck} />
+                {i.struck && <line x1={-7} y1={7} x2={7} y2={-7} stroke={famColor(i.fam)} strokeWidth={1.6} />}
+                <title>{i.detail}</title>
+              </>
+            )
+            const common = {
+              className: css.dot,
+              style: { transform: `translate(${xy[0]}px, ${xy[1]}px)` },
+              onMouseEnter: () => setHot(i.key),
+              onMouseLeave: () => setHot(h => (h === i.key ? null : h)),
+              onFocus: () => setHot(i.key),
+              onBlur: () => setHot(h => (h === i.key ? null : h)),
+            }
+            return onPick ? (
+              <g
+                key={i.key}
+                {...common}
+                role="button"
+                // Kept out of the tab order: the "All, nearest first" list below offers the same choice.
+                tabIndex={-1}
+                aria-label={i.aria}
+                onClick={() => pick(i.key)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    pick(i.key)
+                  }
+                }}
+              >
+                {body}
+              </g>
+            ) : (
+              <a key={i.key} href={i.href} aria-label={i.aria} tabIndex={-1} {...common}>
+                {body}
+              </a>
+            )
+          })}
+          <g style={{ transform: `translate(${cx}px, ${cy}px)` }} aria-hidden>
+            <circle r={11} fill="none" stroke={centerColor} strokeWidth={2} />
+            <circle r={5} fill={centerColor} />
+          </g>
+          {labels.map(l => (
+            <text key={l.key} x={l.x} y={l.y} className={l.key === '__c' ? css.labelCenter : css.label} style={l.key === '__c' ? { fill: centerColor } : undefined} aria-hidden>
+              {l.text}
+            </text>
+          ))}
+        </svg>
+        <p className={`small ${css.hotLine}`} aria-live="polite">
+          {hotItem ? hotItem.detail : ' '}
+        </p>
+      </div>
+        <details className={css.allList}>
+          <summary>All {items.length}, nearest first</summary>
+          <ol>
+            {[...items]
+              .sort((a, b) => a.r - b.r)
+              .map(i => (
+                <li key={i.key}>
+                  <Swatch fam={i.fam} hollow={i.struck || i.hollow} />{' '}
+                  {onPick ? (
+                    <button type="button" className={css.linkish} onClick={() => onPick(i.key)} aria-label={i.aria}>
+                      {i.name}
+                    </button>
+                  ) : i.href ? (
+                    <a href={i.href} className={i.struck ? css.struck : undefined}>
+                      {i.name}
+                    </a>
+                  ) : (
+                    i.name
+                  )}{' '}
+                  <span className={css.num}>{i.r.toFixed(3)}</span>
+                  {i.verdict && <span className="muted"> · {i.verdict}</span>}
+                </li>
+              ))}
+          </ol>
+        </details>
+    </>
   )
 }
 

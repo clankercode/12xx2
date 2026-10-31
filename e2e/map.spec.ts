@@ -45,7 +45,11 @@ test('results: "Exact from here" renders after a Quick run, with the whole-map l
   const panel = page.getByRole('region', { name: 'Exact from here' })
   await expect(panel).toBeVisible()
   await expect(panel.locator('svg[aria-label]')).toBeVisible()
-  await expect(panel.getByRole('listitem')).toHaveCount(5)
+  await expect(panel.locator('h3 + ol > li')).toHaveCount(5)
+  // Every dot is also in a keyboard-reachable list, nearest first.
+  await panel.getByText(/^All \d+, nearest first$/).click()
+  expect(await panel.locator('details ol > li').count()).toBeGreaterThan(30)
+  await expect(panel.locator('details ol > li a').first()).toHaveAttribute('href', /^#\/ideologies\//)
   await expect(panel.getByRole('button', { name: 'Here and now' })).toBeVisible()
   await expect(panel.getByRole('link', { name: /See the whole map/ })).toHaveAttribute('href', '#/map')
   await page.setViewportSize({ width: 390, height: 844 })
@@ -87,6 +91,32 @@ test('#/map: every view loads with no requests beyond the app, and the tabs work
   await page.getByRole('combobox', { name: /^Find/ }).selectOption({ label: 'Kemalism' })
   await expect(page.getByRole('heading', { name: 'Kemalism', level: 2 })).toBeVisible()
   expect(foreign).toEqual([])
+  expect(errors).toEqual([])
+})
+
+test('#/map review fixes: morph with a picked pair, a 3D dot click, the matrix from the keyboard, focus after navigation', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', e => errors.push(e.message))
+  await page.goto('/')
+  await page.getByRole('link', { name: 'Map', exact: true }).first().click()
+  // Navigating to the lazy page still lands focus on its heading.
+  await expect(page.getByRole('heading', { name: 'Ideology map', level: 1 })).toBeFocused()
+  // A picked pair survives the morph (it used to crash the page).
+  await page.locator('ul button').filter({ hasText: '↔' }).first().click()
+  await page.getByRole('button', { name: /^Morph/ }).click()
+  await page.waitForTimeout(2600)
+  await expect(page.getByRole('heading', { name: 'Ideology map', level: 1 })).toBeVisible()
+  await page.getByRole('button', { name: 'Stop the morph' }).click()
+  // A click (no drag) on a 3D dot selects it.
+  await page.getByRole('tab', { name: '3D map' }).click()
+  await page.getByRole('combobox', { name: /^Find/ }).selectOption({ label: 'Kemalism' })
+  await page.locator('svg[aria-label^="3D map"] g').filter({ has: page.locator('title', { hasText: /^Centrism$/ }) }).click({ force: true })
+  await expect(page.getByRole('heading', { name: 'Centrism', level: 2 })).toBeVisible()
+  // The matrix: arrow keys pick cells, the panel reads them out.
+  await page.getByRole('tab', { name: 'Explore' }).click()
+  await page.getByRole('group', { name: /matrix of directed distances/ }).focus()
+  await page.keyboard.press('ArrowDown')
+  await expect(page.getByRole('heading', { name: /↔/, level: 2 })).toBeVisible()
   expect(errors).toEqual([])
 })
 

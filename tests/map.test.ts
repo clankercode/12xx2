@@ -78,5 +78,14 @@ describe('map geometry', () => {
     const flat = X.map(([a, b]) => [a!, b!, 0])
     const g = procrustes(X, flat)
     expect(dist(g(X[0]!), g(X[1]!))).toBeCloseTo(dist(X[0]!, X[1]!), 9)
+    // A tilted flat target: the null direction comes out of the eigensolver as roundoff, not zero.
+    const rot = (p: number[]) => {
+      const [ca, sa, cb, sb] = [Math.cos(0.1), Math.sin(0.1), Math.cos(0.2), Math.sin(0.2)]
+      const [x, y, z] = [p[0]!, cb * p[1]! - sb * p[2]!, sb * p[1]! + cb * p[2]!]
+      return [ca * x - sa * y, sa * x + ca * y, z]
+    }
+    const X4 = [[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]]
+    const h = procrustes(X4, [[0, 0, 0], rot([1, 0, 0]), rot([0, 1, 0]), [0, 0, 0]])
+    for (let i = 0; i < 4; i++) for (let j = 0; j < i; j++) expect(dist(h(X4[i]!), h(X4[j]!))).toBeCloseTo(dist(X4[i]!, X4[j]!), 9)
   })
 })

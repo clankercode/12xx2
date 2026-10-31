@@ -60,6 +60,7 @@ export default function ExactPanel({ r, catalogue, who }: { r: Results; catalogu
       href: `#/ideologies/${m.a.slug}`,
       aria: detail,
       detail,
+      verdict: v.text,
       label: topSet.has(m.a.slug) ? m.a.name : undefined,
     }
   })

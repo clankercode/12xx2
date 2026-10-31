@@ -18,6 +18,7 @@ import { IdeologiesPage } from './pages/IdeologiesPage'
 import { PrivacyPage } from './pages/PrivacyPage'
 import { Footer, Header } from './Chrome'
 import { Lamp } from './Lamp'
+import { LazyFallback } from './lazyFocus'
 
 // Dev-only prototype lab: its own chunk, never fetched unless "#/lab" is opened.
 const LabPage = lazy(() => import('../lab/LabPage'))
@@ -143,7 +144,7 @@ export function App() {
         {route.page === 'criticisms' && <CriticismsPage />}
         {route.page === 'ideologies' && <IdeologiesPage slug={route.slug} />}
         {route.page === 'map' && (
-          <Suspense fallback={<p className="wrap muted">Loading the map…</p>}>
+          <Suspense fallback={<LazyFallback>Loading the map…</LazyFallback>}>
             <MapPage />
           </Suspense>
         )}

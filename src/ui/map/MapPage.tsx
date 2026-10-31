@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type KeyboardEvent, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
 import { useStore } from '../App'
 import { AXES } from '../../data/axes'
 import { CALIBRATION } from '../../data/calibration'
@@ -15,6 +15,7 @@ import { Matrix, mostAsymmetric } from './Matrix'
 import { Shepard } from './Shepard'
 import { FAMILIES, Swatch, family } from './marks'
 import { ARCH, D, N, PTS, SPACE_IDS, dYou, dir, layout, mapScene, nameOf, neighbours, placeYou, sceneStats, sliceScene, type Scene } from './model'
+import { useLazyRouteFocus } from '../lazyFocus'
 import { reducedMotion } from './useWidth'
 import css from './Map.module.css'
 import page from './MapPage.module.css'
@@ -76,12 +77,25 @@ export default function MapPage() {
   const [axes, setAxes] = useState<[AxisId, AxisId]>(['col', 'pro'])
   const [morph, setMorph] = useState(false)
   const motionOk = !reducedMotion()
+  const h1 = useRef<HTMLHeadingElement>(null)
+  useLazyRouteFocus(h1)
 
   // Morph: flip ideal ⇄ here and now; positions tween (aligned layouts, so stable regions stay put).
+  // A selection follows each flip (same ideology, new frame); a picked pair or matrix cell is frame-specific, so it clears.
   useEffect(() => {
     if (!morph) return
-    const id = setInterval(() => setSpace(sp => (sp === 'ideal' ? 'now' : 'ideal')), 2200)
+    let sp = space
+    const flip = () => {
+      sp = sp === 'ideal' ? 'now' : 'ideal'
+      setSpace(sp)
+      setSel(g => remap(g, sp))
+      setPair(null)
+      setCell(null)
+    }
+    setPair(null)
+    const id = setInterval(flip, 2200)
     return () => clearInterval(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [morph])
   useEffect(() => {
     if (tab !== '2d') setMorph(false)
@@ -148,7 +162,7 @@ export default function MapPage() {
 
   return (
     <article className={`wrap ${page.page}`}>
-      <h1>Ideology map</h1>
+      <h1 ref={h1}>Ideology map</h1>
       <p className={page.lede}>
         All {N} ideologies, laid out so that distance on screen approximates the quiz’s own 12-axis distance. Twelve dimensions don’t fit
         in two, and the quiz’s distance isn’t symmetric (each ideology weighs the axes differently), so every view says how much it
@@ -616,6 +630,7 @@ function EgoView({
       struck: ruled,
       aria: `${detail}. Press to centre on it.`,
       detail,
+      verdict: ruled ? 'Ruled out' : SHORT_LABEL[labelFor(r, cuts)],
       label: top.has(g) ? nameOf(g, space) : undefined,
     }
   })
@@ -639,7 +654,11 @@ function EgoView({
         <p className="small">
           Every dot’s distance from the centre is its <strong>true</strong> quiz distance{' '}
           {typeof focus !== 'number'
-            ? '(each ideology’s own weights: exactly how the quiz ranks you)'
+            ? space === 'ideal'
+              ? '(each ideology’s own weights: exactly how the quiz ranks you)'
+              : space === 'now'
+                ? '(each ideology’s own weights, measured to its here-and-now profile; your match list measures to the ideal profiles, so its order can differ)'
+                : '(each ideology’s own weights, measured to both its ideal and its here-and-now profile; your match list uses only the ideals)'
             : egoW === 'theirs'
               ? `(each ideology scores ${PTS[focus]!.a.name} with its own weights: how they see it)`
               : `(${PTS[focus]!.a.name} scores everyone with its weights: how it sees them)`}

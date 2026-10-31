@@ -196,7 +196,8 @@ export function procrustes(X: readonly (readonly number[])[], Y: readonly (reado
   const As: number[][] = []
   B.forEach((b, k) => {
     const s = Math.sqrt(Math.max(vals[k]!, 0))
-    if (s > 1e-9 * smax) As.push(M.map(r => r.reduce((t, m, j) => t + m * b[j]!, 0) / s))
+    // Roundoff leaves a null direction at ~1e-8·σmax: treat anything under 1e-6·σmax as null.
+    if (s > 1e-6 * smax) As.push(M.map(r => r.reduce((t, m, j) => t + m * b[j]!, 0) / s))
   })
   for (let e = 0; As.length < dim && e < dim; e++) {
     const v = Array.from({ length: dim }, (_, j) => (j === e ? 1 : 0))

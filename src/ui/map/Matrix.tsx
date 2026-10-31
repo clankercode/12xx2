@@ -38,15 +38,28 @@ export function Matrix({ ids, mode, cell, onCell }: { ids: number[]; mode: 'dist
   }
   const rIdx = cell ? order.indexOf(cell[0]) : -1
   const cIdx = cell ? order.indexOf(cell[1]) : -1
+  /** Arrow keys walk the cells (skipping the diagonal); Escape clears. The panel beside it reads the cell out. */
+  const onKey = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') return onCell(null)
+    const d = ({ ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] } as Record<string, [number, number]>)[e.key]
+    if (!d) return
+    e.preventDefault()
+    const clamp = (v: number) => Math.max(0, Math.min(n - 1, v))
+    let [r, c] = rIdx < 0 || cIdx < 0 ? [0, 1] : [clamp(rIdx + d[0]), clamp(cIdx + d[1])]
+    if (r === c) [r, c] = [clamp(r + d[0]), clamp(c + d[1])]
+    if (r !== c) onCell([order[r]!, order[c]!])
+  }
   return (
     <div ref={ref} className={css.chartBox}>
       <svg
         width={W}
         height={H}
         viewBox={`0 0 ${W} ${H}`}
-        className={css.svg}
-        role="img"
-        aria-label={`${n} by ${n} matrix of directed distances between ideologies; the panel lists the most asymmetric pairs`}
+        className={`${css.svg} ${css.focusable}`}
+        role="group"
+        tabIndex={0}
+        onKeyDown={onKey}
+        aria-label={`${n} by ${n} matrix of directed distances between ideologies. Arrow keys move between cells; the panel beside it reads the cell out.`}
         onPointerMove={e => e.pointerType === 'mouse' && onCell(hit(e))}
         onPointerUp={e => onCell(hit(e))}
       >

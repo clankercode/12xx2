@@ -44,7 +44,7 @@ export function MapChart(p: ChartProps) {
   const [ref, W] = useWidth<HTMLDivElement>()
   const H = W < 600 ? Math.round(W * 1.08) : Math.round(Math.min(Math.max(W * 0.7, 380), 640))
   const pad = W < 480 ? 24 : 40
-  const drag = useRef<{ x: number; y: number; yaw: number; pitch: number; moved: number } | null>(null)
+  const drag = useRef<{ x: number; y: number; yaw: number; pitch: number; moved: number; captured: boolean } | null>(null)
   const { sc, kind, space } = p
 
   // Projection to screen: [x, y, depth −1…1].
@@ -115,8 +115,8 @@ export function MapChart(p: ChartProps) {
 
   const onDown = (e: React.PointerEvent) => {
     if (kind !== '3d') return
-    ;(e.currentTarget as Element).setPointerCapture(e.pointerId)
-    drag.current = { x: e.clientX, y: e.clientY, yaw: p.yaw ?? 0, pitch: p.pitch ?? 0, moved: 0 }
+    // No pointer capture yet: a press that doesn't move must still reach the dot under it as a click.
+    drag.current = { x: e.clientX, y: e.clientY, yaw: p.yaw ?? 0, pitch: p.pitch ?? 0, moved: 0, captured: false }
   }
   const onMove = (e: React.PointerEvent) => {
     const d = drag.current
@@ -124,6 +124,10 @@ export function MapChart(p: ChartProps) {
     const dx = e.clientX - d.x
     const dy = e.clientY - d.y
     d.moved = Math.max(d.moved, Math.hypot(dx, dy))
+    if (d.moved > 4 && !d.captured) {
+      ;(e.currentTarget as Element).setPointerCapture(e.pointerId)
+      d.captured = true
+    }
     if (d.moved > 4) p.onRotate?.(d.yaw + dx * 0.01, Math.max(-1.5, Math.min(1.5, d.pitch + dy * 0.01)))
   }
   const dragged = () => (drag.current?.moved ?? 0) > 4

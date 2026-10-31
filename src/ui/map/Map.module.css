@@ -278,3 +278,44 @@
     transition: none;
   }
 }
+
+.focusable:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.allList {
+  margin: 4px 0 8px;
+  font-size: 0.86rem;
+}
+
+.allList summary {
+  cursor: pointer;
+  color: var(--muted);
+  /* Native disclosure marker kept (no flex); padding gives a comfortable tap target. */
+  padding: 6px 0;
+}
+
+.allList ol {
+  margin: 4px 0 0;
+  padding-left: 2.2em;
+  columns: 2 16em;
+  column-gap: 24px;
+}
+
+.allList li {
+  break-inside: avoid;
+  padding: 2px 0;
+}
+
+.linkish {
+  font: inherit;
+  color: var(--paper);
+  background: none;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
