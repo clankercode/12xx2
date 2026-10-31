@@ -349,6 +349,15 @@ describe('red lines', () => {
     }
     expect(isRedLine(items[0]!)).toBe(false)
     expect(() => validateRedLines({ set: 'red', items: [{ id: 'red-01', humane: 0, text: 'x' }] })).toThrow(/humane/)
+    expect(() => validateRedLines({ set: 'red', items: [{ id: 'red-01', humane: 1, text: 'x', note: ' ' }] })).toThrow(/note/)
+  })
+
+  it('each carries a note saying what it asks, shown under the statement', () => {
+    for (const r of RED_LINES) expect(r.note?.trim().length, r.id).toBeGreaterThan(20)
+    // red-10 targets political violence against peaceful opponents, not force against a genuine threat.
+    const r10 = RED_LINES.find(r => r.id === 'red-10')!
+    expect(r10.text).toMatch(/peaceful political opponents/)
+    expect(r10.note).toMatch(/armed takeover/)
     expect(() => validateRedLines({ set: 'red', items: [{ id: 'red-01', humane: 1, text: 'x' }, { id: 'red-01', humane: 1, text: 'y' }] })).toThrow(/duplicate/)
   })
 

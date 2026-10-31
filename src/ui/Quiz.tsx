@@ -275,7 +275,7 @@ export function Quiz() {
           </p>
         )}
         <p className={css.statement}>{item.text}</p>
-        {item.note && <p className={`small muted ${css.note}`}>{item.note}</p>}
+        {item.note && <p className={red ? `small ${css.redNote}` : `small muted ${css.note}`}>{item.note}</p>}
       </section>
 
       <div className={css.answer} ref={answerRef} data-answer-area>
@@ -403,12 +403,20 @@ function RedIntro({
           Red lines
         </h2>
         <p>
-          {count} {count === 1 ? 'statement that tests' : 'statements that test'} red lines: positions some ideologies insist on
-          and others reject outright.
+          {count} {count === 1 ? 'statement' : 'statements'} about red lines: things some ideologies insist on and others reject
+          outright, such as torture or jailing peaceful critics.
         </p>
         <p>
-          They don’t move your axis scores. They check which ideologies your answers rule out, the same way core commitments do.
-          Answer them on the same grid, for your ideal system and for here and now; you can pass any of them.
+          They don’t move your axis scores and are never scored. But answering firmly against an ideology’s red line rules that
+          ideology out, however close the rest of your answers are.
+        </p>
+        <p>
+          Answer each for your ideal system and for here and now, as before. Usually both answers count: an ideology that holds
+          a line holds it today, not just in an ideal world.
+        </p>
+        <p>
+          Each statement is worded narrowly. <strong>The note under it says exactly what it means and what it doesn’t</strong>,
+          so read it before you answer. You can pass any of them.
         </p>
         <div className={css.startRow}>
           <button type="button" className="btn btn-primary" onClick={onStart}>

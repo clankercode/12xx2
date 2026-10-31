@@ -76,6 +76,10 @@ commitments-shots out="shots":
 redlines-shots out="shots":
     pnpm tsx scripts/redlines-shots.ts http://localhost:21313/ {{out}}
 
+# Needs a dev server (real commitments, no fixture). Red-line explainers: intro card, red-10 with its note, Your red lines, Method section, at 1280 dark and 390 light.
+redline-notes-shots base="http://localhost:21313/" out="shots/redlines2":
+    pnpm tsx scripts/redline-notes-shots.ts {{base}} {{out}}
+
 # Needs `just dev` running. Seeds two runs and captures the runs pages into shots/.
 history-shots out="shots":
     pnpm tsx scripts/history-shots.ts http://localhost:21313/ {{out}}

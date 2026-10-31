@@ -43,6 +43,15 @@
   margin-top: 8px;
 }
 
+/* A red line's note says exactly what it asks, so it reads at full strength, not as an aside. */
+.redNote {
+  margin: 10px 0 0;
+  padding-left: 10px;
+  border-left: 2px solid var(--alert);
+  color: var(--paper);
+  max-width: 68ch;
+}
+
 .answer {
   min-height: 300px;
 }

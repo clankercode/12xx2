@@ -225,6 +225,7 @@ export function YourRedLines({ lines }: { lines: Own['redLines'] }) {
         {lines.map(({ line, answer, contradicts }) => (
           <li key={line.id} data-contradicts={contradicts.length > 0 || undefined}>
             <p className={css.redText}>{line.text}</p>
+            {line.note && <p className={`small muted ${css.redNote}`}>{line.note}</p>}
             <p className="small">
               {answer ? (
                 <>
@@ -278,6 +279,7 @@ export function SharedRedLines({ p }: { p: Payload }) {
         {rows.map(({ line, x }) => (
           <li key={line.id} data-firm={x.i === 3 || x.n === 3 || undefined}>
             <p className={css.redText}>{line.text}</p>
+            {line.note && <p className={`small muted ${css.redNote}`}>{line.note}</p>}
             <p className="small">
               <span className="ideal">{redStance(x.i, line.humane)}</span> in their ideal ·{' '}
               <span className="now">{redStance(x.n, line.humane)}</span> here and now
