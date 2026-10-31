@@ -75,6 +75,7 @@ for (const width of [1280, 390]) {
       await page.getByRole('button', { name: /Quick/ }).click()
       await page.getByRole('button', { name: 'Next: answering on the grid' }).click()
       const practice = page.getByRole('region', { name: 'Practice statement' })
+      await page.mouse.move(0, 0)
       await shot('practice-initial', practice)
       await cell(page, 2, -1).click()
       await page.mouse.move(0, 0)

@@ -147,6 +147,25 @@
     border-color 200ms ease;
 }
 
+/* Pale emoji (🩹, 🔭) vanish on the light page without a faint outline. */
+:global(:root[data-theme='light']) .dot {
+  opacity: 1;
+}
+
+:global(:root[data-theme='light']) .dot span {
+  filter: drop-shadow(0 0 0.6px rgb(27 30 46 / 0.8));
+}
+
+@media (prefers-color-scheme: light) {
+  :global(:root:not([data-theme='dark'])) .dot {
+    opacity: 1;
+  }
+
+  :global(:root:not([data-theme='dark'])) .dot span {
+    filter: drop-shadow(0 0 0.6px rgb(27 30 46 / 0.8));
+  }
+}
+
 .dot:hover,
 .dot[aria-pressed='true'] {
   filter: none;
