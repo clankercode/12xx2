@@ -73,29 +73,32 @@ export function AxisChart({ rows, overlay, animate = true }: { rows: AxisRow[]; 
           ))}
         </section>
       ))}
-      <table className="visually-hidden">
-        <caption>Your scores on each axis, from −100 to +100</caption>
-        <thead>
-          <tr>
-            <th>Axis</th>
-            <th>Ideal</th>
-            <th>Here and now</th>
-            <th>Notable gap</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map(r => (
-            <tr key={r.axis}>
-              <th>
-                {AXES[r.axis].title} ({AXES[r.axis].neg} − / {AXES[r.axis].pos} +)
-              </th>
-              <td>{r.I ?? 'not enough answers'}</td>
-              <td>{r.N ?? 'not enough answers'}</td>
-              <td>{r.notable ? 'yes' : 'no'}</td>
+      {/* Tables ignore a 1px width, so the hidden table sits in a hidden box that clips it. */}
+      <div className="visually-hidden">
+        <table>
+          <caption>Your scores on each axis, from −100 to +100</caption>
+          <thead>
+            <tr>
+              <th>Axis</th>
+              <th>Ideal</th>
+              <th>Here and now</th>
+              <th>Notable gap</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rows.map(r => (
+              <tr key={r.axis}>
+                <th>
+                  {AXES[r.axis].title} ({AXES[r.axis].neg} − / {AXES[r.axis].pos} +)
+                </th>
+                <td>{r.I ?? 'not enough answers'}</td>
+                <td>{r.N ?? 'not enough answers'}</td>
+                <td>{r.notable ? 'yes' : 'no'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }
