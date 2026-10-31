@@ -69,7 +69,7 @@ export function CoreCommitments({ r, checks }: { r: Results; checks: ReadonlyMap
     check.checks.flatMap(c => (c.verdict === 'fail' ? c.frames.filter(f => f.verdict === 'fail').map(f => failLine(m.arch, c, f)) : [])),
   )
   return (
-    <section className={rcss.section} aria-labelledby="core-commitments">
+    <section className={`${rcss.section} ${css.section}`} aria-labelledby="core-commitments">
       <h2 id="core-commitments">Core commitments</h2>
       <p className="muted small">
         Some positions are shared by every adherent of an ideology. Answering decisively against one rules that ideology out

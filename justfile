@@ -53,6 +53,11 @@ screenshots out="shots":
 compare-shots out="shots":
     pnpm tsx scripts/compare-shots.ts http://localhost:21313/ {{out}}
 
+# Needs a dev server with the test fixture: `COMMITMENTS_FIXTURE=tests/fixtures/commitments.json just dev`.
+# Seeds a run whose nearest match the fixture rules out; captures results, shared view, ideologies, method.
+commitments-shots out="shots":
+    pnpm tsx scripts/commitments-shots.ts http://localhost:21313/ {{out}}
+
 # Needs `just dev` running. Seeds two runs and captures the runs pages into shots/.
 history-shots out="shots":
     pnpm tsx scripts/history-shots.ts http://localhost:21313/ {{out}}

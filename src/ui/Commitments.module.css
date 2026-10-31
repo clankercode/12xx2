@@ -122,3 +122,25 @@
   content: '✘  ';
   color: var(--alert);
 }
+
+/* A grid item: without this the wide table stretches the page instead of scrolling. */
+.section {
+  min-width: 0;
+}
+
+/* Keep the ideology name in view while the commitments scroll sideways on narrow screens. */
+.matrix th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--ink);
+  padding-left: 0;
+  box-shadow: 8px 0 8px -8px rgb(0 0 0 / 0.5);
+}
+
+@media (max-width: 640px) {
+  .matrix tbody th {
+    min-width: 7.5em;
+    max-width: 7.5em;
+  }
+}
