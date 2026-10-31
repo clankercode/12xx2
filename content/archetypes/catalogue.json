@@ -1532,6 +1532,54 @@
           "by_adherent": true
         }
       ]
+    },
+    {
+      "slug": "critical-rationalism",
+      "name": "Critical-rationalist liberalism",
+      "family": "liberal-centrist",
+      "sensitive": false,
+      "summary": "Prioritises institutions that let a society find and correct its mistakes without violence (removable rulers, criticisable secular laws, piecemeal reform, and a civic culture that keeps them working) over the question of who should rule or a blueprint for the ideal society.",
+      "signature": "ideal: an open society whose rulers and laws can be removed without bloodshed, improved step by step; now: defends the institutions of correction, gradual testable reform and high civic standards",
+      "brief": "All knowledge is fallible, and that includes political knowledge, so the first question is not 'who should rule?' but 'how can we organise institutions so that bad rulers and bad policies do as little harm as possible, and can be got rid of without bloodshed?' That is what democracy is for: not the rule of the people as such, but the peaceful removal of governments and the correction of laws. We favour representative democracy with clear accountability, a free press, independent courts and the rule of law, binding rulers like everyone else. Laws must rest on reasons that anyone can examine and dispute, never on revelation or tradition placed beyond criticism, so church and state are separate. Society should improve by piecemeal social engineering: many small, reversible reforms that fight concrete evils, with each result checked against the problem, rather than utopian redesigns to a plan, which concentrate power, cannot learn from their mistakes and end in violence. Institutions are not enough: they work only where citizens share the habits they depend on, such as honesty, tolerance, respect for rules, willingness to lose an argument or a vote, and high standards of participation and public behaviour, so civic education and standards matter. Tolerance does not extend to movements that reject argument and use or plan violence to destroy the open society (the paradox of tolerance). Economics is settled the same way, by trial and error: most of us favour a market economy with competition, open trade and a state that protects the weak from exploitation, the size of the safety net being a matter for testable reform. We are internationalist: we want an international legal order that restrains aggressors, and we accept force to defend open societies and stop aggression. Newcomers are welcome and should be expected to accept the civic rules of the society they join. We are individualist and socially liberal, and we are optimistic about science and technology, since problems are soluble by new knowledge. We are divided on how much welfare the state should provide, and on how far to go in restricting anti-democratic parties.",
+      "now_notes": "In a present-day liberal democracy the adherent defends the institutions that allow peaceful correction: free and fair elections, independent courts, a free press, scientific freedom and transparent government. They back gradual, evidence-tested reforms (pilots, sunset clauses, evaluation) over sweeping programmes, push for higher standards of civic education and public conduct, support legal limits on movements that organise violence against democracy, favour open trade and Western alliances, and are pro-science and pro-innovation. They oppose populists and revolutionaries alike who place the question of who rules above how rulers can be removed.",
+      "sources": [
+        {
+          "title": "The Open Society and Its Enemies",
+          "author": "Karl Popper",
+          "year": "1945",
+          "by_adherent": true
+        },
+        {
+          "title": "The Poverty of Historicism",
+          "author": "Karl Popper",
+          "year": "1957",
+          "by_adherent": true
+        },
+        {
+          "title": "Conjectures and Refutations",
+          "author": "Karl Popper",
+          "year": "1963",
+          "by_adherent": true
+        },
+        {
+          "title": "The Open Society and Its Enemies Revisited (The Economist)",
+          "author": "Karl Popper",
+          "year": "1988",
+          "by_adherent": true
+        },
+        {
+          "title": "The Beginning of Infinity, ch. 13 'Choices'",
+          "author": "David Deutsch",
+          "year": "2011",
+          "by_adherent": true
+        },
+        {
+          "title": "Popper",
+          "author": "Bryan Magee",
+          "year": "1973",
+          "by_adherent": true
+        }
+      ]
     }
   ],
   "notes": "Composition check (47 archetypes; the spec says about 44). Family counts: socialist 6, left-liberal 5 (including transhumanism), liberal-centrist 4, conservative 4, religious 6, nationalist-populist 6, libertarian-market 4, anarchist 6, hierarchical 6. Every family has at least 3. Non-Western traditions: African socialism (Ujamaa), Islamic democracy, Gandhian Sarvodaya, Kemalism, Peronism (Latin America), Confucian meritocracy, and developmental authoritarianism (East and Southeast Asia); theocratic absolutism is generic but draws on Islamic and Catholic precedents. Centrist or moderate archetypes: Centrism and Third Way, with social liberalism and constitutional monarchism also moderate, so the 1–2 rule is met or slightly exceeded. Gaps and flags: (1) There is no Indigenous or decolonial archetype; consider an Indigenous sovereignty or decolonial archetype. (2) Buddhist political thought is missing (for example Buddhist economics or Buddhist socialism), and Hindu political traditions appear only through Gandhian Sarvodaya; Hindutva would need the sensitive flag if added. (3) Latin American left traditions beyond Peronism and generic left populism (for example Bolivarian socialism or liberation theology) and pan-Africanism as a standalone archetype are missing. (4) There is no agrarian or peasant populist archetype and no feminist-specific archetype; feminism is arguably cross-cutting. (5) Naming rule: the 'Justicialism' parenthetical (self-name of a living party) was dropped in review; the archetype is now 'Peronism'. Trotskyism, Kemalism, Peronism, Georgism and Gandhian are eponyms of deceased figures, which complies with the no-living-individuals rule. (6) Pairs at risk of near-duplication for the leave-one-coder-out check: social liberalism and progressive liberalism; paleolibertarianism and anarcho-capitalism; Confucian meritocracy and developmental authoritarianism; national conservatism and right-populism; democratic socialism and market socialism. (7) Transhumanism is filed under left-liberal, but its tec pole cuts across families, and libertarian transhumanism is absent. (8) The sensitive pairing follows the spec: fascism is coded historically (interwar Italian model, explicitly excluding National Socialism), and Marxism–Leninism is briefed in its Stalinist variant. Neoreaction and developmental authoritarianism are not flagged sensitive per the input list. Reviewers may want to revisit that symmetrically with absolute monarchism. (9) Several sources are by living authors; this is fine because the naming rule covers archetype names only. URLs are included only where confident (Lenin). Review pass (2026-10-31): briefs extended so each touches all 12 axis topics (fed, dem, lib, col, pla, glo, int, mil, mul, rel, pro, tec); neoliberalism's hostile second critic (Harvey) replaced with the Mont Pelerin Society Statement of Aims so no family carries two critical sources against one by adherents; right-populism's Lasch removed and Lind recoded as non-adherent, with Deneen added as an adherent source; MacIntyre recoded non-adherent (he rejected the communitarian label); transhumanism's extropian source swapped for the Transhumanist Declaration to match the techno-progressive variant; Technocracy Study Course author corrected; a few evaluative or uneven phrasings neutralised (e.g. 'humane immigration system', ML religion policy, Kemalist assimilation of Kurds, Italian Fascist gas campaign in Ethiopia)."

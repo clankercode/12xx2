@@ -2,8 +2,10 @@ import { useState } from 'react'
 import { AXIS_IDS } from '../../engine/types'
 import { AXES } from '../../data/axes'
 import { CATALOGUE } from '../../data/archetypes'
-import { COMMITMENTS, HAS_COMMITMENTS } from '../../data/commitments'
+import { COMMITMENTS, HAS_COMMITMENTS, HAS_RED_COMMITMENTS } from '../../data/commitments'
 import { ALL_ITEMS } from '../../data/items'
+import { RED_LINES } from '../../data/redlines'
+import { isRedCommitment, type Commitment } from '../../engine/commitments'
 import css from './Prose.module.css'
 
 const FAMILY: Record<string, string> = {
@@ -19,7 +21,32 @@ const FAMILY: Record<string, string> = {
 }
 
 const pct = (v: number) => `${(v + 100) / 2}%`
-const TEXT = new Map(ALL_ITEMS.map(i => [i.id, i.text]))
+const TEXT = new Map([...ALL_ITEMS.map(i => [i.id, i.text] as const), ...RED_LINES.map(r => [r.id, r.text] as const)])
+
+function CommitmentList({ title, list }: { title: string; list: readonly Commitment[] }) {
+  return (
+    <div style={{ marginTop: 10 }}>
+      <p className="small" style={{ margin: 0, fontWeight: 700 }}>
+        {title}
+      </p>
+      {list.length ? (
+        <ul className="small" style={{ marginTop: 4 }}>
+          {list.map(c => (
+            <li key={c.item}>
+              <strong>{c.side === 1 ? 'Agree' : 'Disagree'}</strong>
+              {c.frame === 'both' ? ' (ideal and here and now)' : ' (ideal)'}: “{TEXT.get(c.item)}”{' '}
+              <span className="muted">{c.why}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="small muted" style={{ marginTop: 4 }}>
+          None listed.
+        </p>
+      )}
+    </div>
+  )
+}
 
 export function IdeologiesPage() {
   const [fam, setFam] = useState<string | null>(null)
@@ -37,7 +64,8 @@ export function IdeologiesPage() {
             {' '}
             Core commitments are positions that our coded profiles of the ideology’s mainstream share; answering decisively against
             one rules the ideology out (
-            <a href="#/method">how</a>).
+            <a href="#/method">how</a>).{HAS_RED_COMMITMENTS && ' Red-line commitments do the same on the red-line statements.'}{' '}
+            Commitments were judged by AI coders, not validated by adherents.
           </>
         )}
       </p>
@@ -82,28 +110,8 @@ export function IdeologiesPage() {
               )
             })}
           </div>
-          {HAS_COMMITMENTS && (
-            <div style={{ marginTop: 10 }}>
-              <p className="small" style={{ margin: 0, fontWeight: 700 }}>
-                Core commitments
-              </p>
-              {COMMITMENTS[a.slug]?.length ? (
-                <ul className="small" style={{ marginTop: 4 }}>
-                  {COMMITMENTS[a.slug]!.map(c => (
-                    <li key={c.item}>
-                      <strong>{c.side === 1 ? 'Agree' : 'Disagree'}</strong>
-                      {c.frame === 'both' ? ' (ideal and here and now)' : ' (ideal)'}: “{TEXT.get(c.item)}”{' '}
-                      <span className="muted">{c.why}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="small muted" style={{ marginTop: 4 }}>
-                  None listed.
-                </p>
-              )}
-            </div>
-          )}
+          {HAS_COMMITMENTS && <CommitmentList title="Core commitments" list={(COMMITMENTS[a.slug] ?? []).filter(c => !isRedCommitment(c))} />}
+          {HAS_RED_COMMITMENTS && <CommitmentList title="Red-line commitments" list={(COMMITMENTS[a.slug] ?? []).filter(isRedCommitment)} />}
           {a.sources.length > 0 && (
             <details style={{ marginTop: 10 }}>
               <summary className="small">Sources</summary>

@@ -307,3 +307,35 @@
 .bothPassed p {
   margin-inline: auto;
 }
+
+/* Red lines: an intro card, then a small tag above each statement so the block reads as one part. */
+.redIntro {
+  padding: 22px 20px;
+  border: 1px solid var(--rule-major);
+  border-left: 3px solid var(--alert);
+  border-radius: var(--radius-m);
+  background: var(--ink-2);
+}
+
+.redIntro h2 {
+  margin: 0 0 10px;
+}
+
+.redIntro h2:focus {
+  outline: none;
+}
+
+.redTag {
+  margin: 0 0 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--alert);
+}
+
+.redTag :global(.muted) {
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+}

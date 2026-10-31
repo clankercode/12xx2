@@ -1,6 +1,6 @@
 {
  "version": 1,
- "method": "Core commitments: statements on which the coded profiles of an ideology's mainstream all take the same side. They are AI coders' judgements, checked for counterexamples but not with adherents or experts, so they do not establish what every adherent holds. Three Opus coders (lenses: theorist, insider, sceptic) proposed commitments independently; an entry is kept when at least 2 of 3 proposed it (coders = how many), and each was checked against the ideology's coded answer sheet (required side at |v| >= 2 in every required frame). side is the sign of the raw answer (+1 agree, -1 disagree) to the statement as worded; the item key is not applied. frame I checks the ideal-system answer; both also checks here and now. A decisive contradiction (|answer| >= 2 on the wrong side) rules the ideology out. Entries whose adherents simulated from the coded sheets are ruled out more than 2% of the time (a consistency check against our own coding, not against real adherents) are moved to dropped by scripts/commitments-audit.ts. Entries refuted by a counterexample (sincere mainstream adherents who reject the statement on principle) are moved to dropped by hand, with the reason. Raw coder output: commitments-raw.json.",
+ "method": "Core commitments: statements on which the coded profiles of an ideology's mainstream all take the same side. They are AI coders' judgements, checked for counterexamples but not with adherents or experts, so they do not establish what every adherent holds. Three Opus coders (lenses: theorist, insider, sceptic) proposed commitments independently; an entry is kept when at least 2 of 3 proposed it (coders = how many), and each was checked against the ideology's coded answer sheet (required side at |v| >= 2 in every required frame). side is the sign of the raw answer (+1 agree, -1 disagree) to the statement as worded; the item key is not applied. frame I checks the ideal-system answer; both also checks here and now. A decisive contradiction (|answer| >= 2 on the wrong side) rules the ideology out. Entries whose adherents simulated from the coded sheets are ruled out more than 2% of the time (a consistency check against our own coding, not against real adherents) are moved to dropped by scripts/commitments-audit.ts. Entries refuted by a counterexample (sincere mainstream adherents who reject the statement on principle) are moved to dropped by hand, with the reason. Content v2 (2026-10-31) added red-line commitments (kind \"red-line\", on the off-axis red-line statements; they rule an ideology out exactly like core ones and do not count toward the core cap of 6) and core commitments on the new Full statements, coded by the same three lenses under the same 2-of-3 and coded-sheet rules (scripts/merge-commitments.ts). Raw coder output: commitments-raw.json (v1 under batches, v2 under v2).",
  "commitments": {
   "marxism-leninism": [
    {
@@ -29,6 +29,13 @@
     "frame": "I",
     "side": 1,
     "why": "Leninist theory has the dictatorship of the proletariat run through a single vanguard party, with rival parties banned as class enemies.",
+    "coders": 3
+   },
+   {
+    "item": "pla-14",
+    "frame": "I",
+    "side": 1,
+    "why": "Capitalism cannot be reformed away; it must be replaced by revolution and the planned building of socialism.",
     "coders": 3
    }
   ],
@@ -60,6 +67,44 @@
     "side": 1,
     "why": "Trotsky's programme requires a democratically planned economy, coordinated nationally and ultimately worldwide, not one run by market competition.",
     "coders": 3
+   },
+   {
+    "item": "pla-14",
+    "frame": "I",
+    "side": 1,
+    "why": "Capitalism must be replaced through workers' revolution and rebuilt as a democratically planned economy, not patched up.",
+    "coders": 3
+   },
+   {
+    "item": "lib-12",
+    "frame": "I",
+    "side": 1,
+    "why": "Capitalism will not reform itself away; workers' revolution is the road to socialism.",
+    "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "democratic-socialism": [
@@ -83,6 +128,100 @@
     "side": -1,
     "why": "Democratic socialism treats competitive multiparty elections as part of socialism itself, which is what separates it from one-party communism.",
     "coders": 3
+   },
+   {
+    "item": "dem-11",
+    "frame": "both",
+    "side": 1,
+    "why": "Socialism must come and stay through democracy: bad governments and laws are replaced at the ballot box, not by force.",
+    "coders": 3
+   },
+   {
+    "item": "col-11",
+    "frame": "both",
+    "side": -1,
+    "why": "Health, education and welfare are rights everyone shares, paid for together, not left to markets or charity.",
+    "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Torture violates human dignity and the rule of law, whatever information it might produce.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "No one should be held for long without an independent court checking whether the detention is lawful.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Free criticism of those in power is essential; jailing peaceful critics is what this tradition opposes.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Voters, not those in power, decide who governs; cancelling an election to stop the other side destroys the point of holding one.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Political opponents are rivals to be argued with and outvoted, never targets for violence.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "market-socialism": [
@@ -113,6 +252,86 @@
     "side": -1,
     "why": "Market socialism is defined by letting markets and prices, not a central plan, decide what is produced.",
     "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Torture violates human dignity and the rule of law, whatever information it might produce.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "No one should be held for long without an independent court checking whether the detention is lawful.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Free criticism of those in power is essential; jailing peaceful critics is what this tradition opposes.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Voters, not those in power, decide who governs; cancelling an election to stop the other side destroys the point of holding one.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Political opponents are rivals to be argued with and outvoted, never targets for violence.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "eco-socialism": [
@@ -136,6 +355,100 @@
     "side": -1,
     "why": "Eco-socialists hold that profit-driven market allocation cannot respect planetary limits, so prices and competition alone cannot decide production.",
     "coders": 3
+   },
+   {
+    "item": "tec-11",
+    "frame": "both",
+    "side": 1,
+    "why": "Growth that exhausts land, water and air is incompatible with a finite planet and must be limited.",
+    "coders": 3
+   },
+   {
+    "item": "tec-12",
+    "frame": "both",
+    "side": -1,
+    "why": "Endless growth is what drives ecological breakdown, so protecting nature must not routinely give way to it.",
+    "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Torture violates human dignity and the rule of law, whatever information it might produce.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "No one should be held for long without an independent court checking whether the detention is lawful.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Free criticism of those in power is essential; jailing peaceful critics is what this tradition opposes.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Voters, not those in power, decide who governs; cancelling an election to stop the other side destroys the point of holding one.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Political opponents are rivals to be argued with and outvoted, never targets for violence.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "african-socialism": [
@@ -159,6 +472,46 @@
     "side": -1,
     "why": "Every variant gives national planning priorities and communal needs a role that pure price competition would rule out.",
     "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "social-democracy": [
@@ -182,15 +535,190 @@
     "side": -1,
     "why": "Social democracy holds that markets left alone distribute wealth unjustly and must be shaped by democratic politics.",
     "coders": 3
+   },
+   {
+    "item": "dem-11",
+    "frame": "both",
+    "side": 1,
+    "why": "Change comes through elections and parliament, so governments and laws must be replaceable without violence.",
+    "coders": 3
+   },
+   {
+    "item": "col-11",
+    "frame": "both",
+    "side": -1,
+    "why": "A universal welfare state funded by taxes is the heart of social democracy, not markets or charity.",
+    "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Torture violates human dignity and the rule of law, whatever information it might produce.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "No one should be held for long without an independent court checking whether the detention is lawful.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Free criticism of those in power is essential; jailing peaceful critics is what this tradition opposes.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Voters, not those in power, decide who governs; cancelling an election to stop the other side destroys the point of holding one.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Political opponents are rivals to be argued with and outvoted, never targets for violence.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "progressive-liberalism": [
    {
     "item": "pro-01",
-    "frame": "both",
+    "frame": "I",
     "side": 1,
     "why": "Modern progressive liberalism treats LGBTQ equality, including equal marriage, as a civil right.",
-    "coders": 3
+    "coders": 3,
+    "frameNote": "Narrowed from both to I (Max, 2026-10-31): a gradualist progressive liberal can reject same-sex marriage here and now while holding it in the ideal."
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Torture violates human dignity and the rule of law, whatever information it might produce.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "No one should be held for long without an independent court checking whether the detention is lawful.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Free criticism of those in power is essential; jailing peaceful critics is what this tradition opposes.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Voters, not those in power, decide who governs; cancelling an election to stop the other side destroys the point of holding one.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Political opponents are rivals to be argued with and outvoted, never targets for violence.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "green-politics": [
@@ -221,6 +749,100 @@
     "side": -1,
     "why": "Ecological wisdom requires keeping production within planetary limits, which unregulated price competition does not do.",
     "coders": 3
+   },
+   {
+    "item": "tec-11",
+    "frame": "both",
+    "side": 1,
+    "why": "Human society must live within the planet's limits, so growth that outruns nature's renewal must be limited.",
+    "coders": 3
+   },
+   {
+    "item": "tec-12",
+    "frame": "both",
+    "side": -1,
+    "why": "Ecological wisdom is a founding pillar; growth should not usually trump protecting nature.",
+    "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Torture violates human dignity and the rule of law, whatever information it might produce.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "No one should be held for long without an independent court checking whether the detention is lawful.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Free criticism of those in power is essential; jailing peaceful critics is what this tradition opposes.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Voters, not those in power, decide who governs; cancelling an election to stop the other side destroys the point of holding one.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Political opponents are rivals to be argued with and outvoted, never targets for violence.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "left-populism": [
@@ -251,6 +873,61 @@
     "side": -1,
     "why": "It holds that markets must not override the popular will and wants public control of key sectors.",
     "coders": 2
+   },
+   {
+    "item": "dem-16",
+    "frame": "both",
+    "side": 1,
+    "why": "Popular sovereignty means the people can directly overturn laws that fail them, not just elites.",
+    "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "The people must actually rule; cancelling elections is what oligarchies do to silence them.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "social-liberalism": [
@@ -260,6 +937,86 @@
     "side": -1,
     "why": "Social liberalism wants a mainly private, market-coordinated economy, so common ownership of nearly all assets contradicts it.",
     "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Torture violates human dignity and the rule of law, whatever information it might produce.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "No one should be held for long without an independent court checking whether the detention is lawful.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Free criticism of those in power is essential; jailing peaceful critics is what this tradition opposes.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Voters, not those in power, decide who governs; cancelling an election to stop the other side destroys the point of holding one.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Political opponents are rivals to be argued with and outvoted, never targets for violence.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "centrism": [
@@ -283,6 +1040,85 @@
     "side": -1,
     "why": "Distrust of concentrated power and support for checks and balances rule out a leader acting without lawmakers' approval.",
     "coders": 3
+   },
+   {
+    "item": "pla-13",
+    "frame": "both",
+    "side": 1,
+    "why": "Good policy comes from evidence and compromise, testing changes step by step rather than gambling on sweeping redesigns.",
+    "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "No one should be held for long without an independent court checking whether the detention is lawful.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Free criticism of those in power is essential; jailing peaceful critics is what this tradition opposes.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Voters, not those in power, decide who governs; cancelling an election to stop the other side destroys the point of holding one.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Political opponents are rivals to be argued with and outvoted, never targets for violence.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "third-way": [
@@ -306,6 +1142,78 @@
     "side": -1,
     "why": "The Third Way rejects the old left's command economy and accepts markets as the main coordinator.",
     "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "No one should be held for long without an independent court checking whether the detention is lawful.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Free criticism of those in power is essential; jailing peaceful critics is what this tradition opposes.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Voters, not those in power, decide who governs; cancelling an election to stop the other side destroys the point of holding one.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Political opponents are rivals to be argued with and outvoted, never targets for violence.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "neoliberalism": [
@@ -336,6 +1244,46 @@
     "side": 1,
     "why": "Neoliberalism holds that capital should go to its most profitable use as markets judge it, not toward goals set by planners.",
     "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "liberal-conservatism": [
@@ -359,6 +1307,77 @@
     "side": -1,
     "why": "Liberal conservatives hold that markets should coordinate the economy, not a central plan.",
     "coders": 3
+   },
+   {
+    "item": "pla-13",
+    "frame": "both",
+    "side": 1,
+    "why": "Inherited institutions should be improved by gradual, prudent reform, not torn up for a grand redesign.",
+    "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Free criticism of those in power is essential; jailing peaceful critics is what this tradition opposes.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Voters, not those in power, decide who governs; cancelling an election to stop the other side destroys the point of holding one.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Political opponents are rivals to be argued with and outvoted, never targets for violence.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "traditional-conservatism": [
@@ -375,6 +1394,68 @@
     "side": -1,
     "why": "Burkean scepticism of grand rational planning rules out running the economy by a deliberate central plan.",
     "coders": 3
+   },
+   {
+    "item": "pla-13",
+    "frame": "both",
+    "side": 1,
+    "why": "Society holds wisdom no single generation can grasp, so reform should repair cautiously, step by step.",
+    "coders": 3
+   },
+   {
+    "item": "pla-14",
+    "frame": "both",
+    "side": -1,
+    "why": "Rebuilding society from scratch to an abstract plan is exactly the rationalist error this tradition rejects.",
+    "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Voters, not those in power, decide who governs; cancelling an election to stop the other side destroys the point of holding one.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Political opponents are rivals to be argued with and outvoted, never targets for violence.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "paleoconservatism": [
@@ -398,9 +1479,145 @@
     "side": -1,
     "why": "Paleoconservatism treats the nation as a historic people and calls for immigration to be sharply reduced.",
     "coders": 3
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "No one should be held for long without an independent court checking whether the detention is lawful.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Free criticism of those in power is essential; jailing peaceful critics is what this tradition opposes.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Voters, not those in power, decide who governs; cancelling an election to stop the other side destroys the point of holding one.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 2,
+    "kind": "red-line"
    }
   ],
-  "communitarianism": [],
+  "communitarianism": [
+   {
+    "item": "mul-11",
+    "frame": "both",
+    "side": 1,
+    "why": "Institutions depend on citizens' shared habits and virtues; without them, even good rules fail.",
+    "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "No one should be held for long without an independent court checking whether the detention is lawful.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Free criticism of those in power is essential; jailing peaceful critics is what this tradition opposes.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Voters, not those in power, decide who governs; cancelling an election to stop the other side destroys the point of holding one.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Political opponents are rivals to be argued with and outvoted, never targets for violence.",
+    "coders": 3,
+    "kind": "red-line"
+   }
+  ],
   "christian-democracy": [
    {
     "item": "col-01",
@@ -422,6 +1639,86 @@
     "side": -1,
     "why": "Its social market economy rests on solidarity, welfare and social partnership, not on market outcomes alone.",
     "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Torture violates human dignity and the rule of law, whatever information it might produce.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "No one should be held for long without an independent court checking whether the detention is lawful.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Free criticism of those in power is essential; jailing peaceful critics is what this tradition opposes.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Voters, not those in power, decide who governs; cancelling an election to stop the other side destroys the point of holding one.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Political opponents are rivals to be argued with and outvoted, never targets for violence.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "catholic-integralism": [
@@ -452,6 +1749,37 @@
     "side": -1,
     "why": "Integralism denies that law can be neutral and orders it to man's supernatural end as taught by the Church.",
     "coders": 2
+   },
+   {
+    "item": "rel-12",
+    "frame": "I",
+    "side": 1,
+    "why": "Divine and natural law come from God, so no vote or court can change them.",
+    "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "islamic-democracy": [
@@ -468,6 +1796,78 @@
     "side": 1,
     "why": "It holds that the community chooses and can hold its rulers to account, so voters must be able to replace entrenched power.",
     "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Torture violates human dignity and the rule of law, whatever information it might produce.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "No one should be held for long without an independent court checking whether the detention is lawful.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Free criticism of those in power is essential; jailing peaceful critics is what this tradition opposes.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Voters, not those in power, decide who governs; cancelling an election to stop the other side destroys the point of holding one.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Political opponents are rivals to be argued with and outvoted, never targets for violence.",
+    "coders": 2,
+    "kind": "red-line"
    }
   ],
   "theocratic-absolutism": [
@@ -498,6 +1898,28 @@
     "side": 1,
     "why": "Theocratic absolutism places lawmaking authority in a supreme religious ruler or clergy.",
     "coders": 2
+   },
+   {
+    "item": "rel-11",
+    "frame": "I",
+    "side": -1,
+    "why": "Law rests on divine revelation and the authority of those learned in it, not on human debate.",
+    "coders": 3
+   },
+   {
+    "item": "rel-12",
+    "frame": "I",
+    "side": 1,
+    "why": "Law is revealed by God, not made by majorities, so its core can never be changed by vote or court.",
+    "coders": 3
+   },
+   {
+    "item": "red-02",
+    "frame": "I",
+    "side": -1,
+    "why": "Heresy, blasphemy and public sin threaten the community of believers, so divine law requires that they be restrained.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "distributism": [
@@ -514,6 +1936,86 @@
     "side": -1,
     "why": "Distributists reject collectivist planning as a route to Belloc's servile state and want production decided by many small proprietors.",
     "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Torture violates human dignity and the rule of law, whatever information it might produce.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "No one should be held for long without an independent court checking whether the detention is lawful.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Free criticism of those in power is essential; jailing peaceful critics is what this tradition opposes.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Voters, not those in power, decide who governs; cancelling an election to stop the other side destroys the point of holding one.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Political opponents are rivals to be argued with and outvoted, never targets for violence.",
+    "coders": 2,
+    "kind": "red-line"
    }
   ],
   "gandhian-sarvodaya": [
@@ -551,6 +2053,93 @@
     "side": -1,
     "why": "Sarvodaya respects all religions equally and prefers none, which an official religion would contradict.",
     "coders": 2
+   },
+   {
+    "item": "lib-12",
+    "frame": "both",
+    "side": -1,
+    "why": "Non-violence governs everything: injustice is resisted by peaceful civil disobedience, never by armed overthrow.",
+    "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Locking people up for their race or ethnicity, with no wrongdoing, violates the equal dignity this tradition insists on.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Belief cannot be forced; the state must not punish anyone for their religion or for having none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Torture violates human dignity and the rule of law, whatever information it might produce.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "No one should be held for long without an independent court checking whether the detention is lawful.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing people for a relative's crime punishes the innocent; guilt belongs to the person who did wrong.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Free criticism of those in power is essential; jailing peaceful critics is what this tradition opposes.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Voters, not those in power, decide who governs; cancelling an election to stop the other side destroys the point of holding one.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Rulers must answer to the same laws as everyone else; no one in power stands above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians to win is never acceptable; non-combatants must not be made targets.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Political opponents are rivals to be argued with and outvoted, never targets for violence.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "national-conservatism": [
@@ -581,6 +2170,69 @@
     "side": -1,
     "why": "National conservatives hold that the nation controls who may settle in it, so an unrestricted right to settle anywhere contradicts their view of borders and nationhood.",
     "coders": 2
+   },
+   {
+    "item": "mul-12",
+    "frame": "both",
+    "side": -1,
+    "why": "Institutions rest on a nation's shared culture, history and loyalty; the culture of the people using them matters a great deal.",
+    "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "A strong state under law protects law-abiding citizens; jailing innocent people for their ancestry breaks the rule of law we defend.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Honouring the nation's religious heritage goes with protecting religious liberty; no one should be punished by the state for their faith or lack of it.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Our legal and biblical heritage holds each person responsible for their own crimes, not their relatives.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Free debate is how the nation holds its rulers to account; jailing peaceful critics is the tyranny we accuse progressive elites of.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Elites must answer to the nation through constitutional, representative government; cancelling elections to stop the voters' choice is exactly the elite arrogance we oppose.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Constitutional government and accountable elites mean those in power are bound by the same law as everyone else.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "We pursue national renewal through law and elections; political violence against opponents destroys the ordered nation we want to protect.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "right-populism": [
@@ -611,6 +2263,30 @@
     "side": -1,
     "why": "Border control and reduced immigration are core right-populist demands, which an unrestricted right to settle anywhere would abolish.",
     "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Law and order means punishing wrongdoing; jailing law-abiding people for their ethnicity is not justice.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Democracy means the people's will prevails; cancelling elections is what a self-serving elite does to ordinary voters.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "The whole point is that the powerful are not above the rules that bind ordinary people.",
+    "coders": 2,
+    "kind": "red-line"
    }
   ],
   "civic-nationalism": [
@@ -627,6 +2303,78 @@
     "side": 1,
     "why": "Civic nationalism is still nationalism: it holds that citizens owe their primary political loyalty to their national community.",
     "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Belonging rests on citizenship, not ancestry; jailing people for their ethnicity is the ethnic nationalism we reject.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "The state is secular and neutral on religion; citizens of any faith or none belong equally.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "One set of rights for all citizens includes the right to challenge detention before an independent court.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "One shared law holds each citizen responsible for their own acts, not their relatives'.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Democratic accountability and civil liberties require that peaceful criticism of government is never a crime.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "The nation is a community of citizens who govern themselves; cancelling their vote denies the daily choice that makes us a nation.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Government must be accountable to citizens under one shared law that binds rulers as much as anyone.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Credible armed forces defend the nation lawfully; deliberately killing civilians betrays the democratic values the nation is built on.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "A nation of citizens settles disputes through democratic institutions; violence against opponents tears apart the civic bond.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "fascism": [
@@ -657,6 +2405,29 @@
     "side": 1,
     "why": "Fascism treats the nation as the supreme object of loyalty, above any individual, class or international community.",
     "coders": 2
+   },
+   {
+    "item": "fed-11",
+    "frame": "both",
+    "side": 1,
+    "why": "Everything within the state: a sovereign state holding all legitimate force is the core of our doctrine.",
+    "coders": 2
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": -1,
+    "why": "Nothing against the state: opposition that undermines national unity cannot be tolerated, even when peaceful.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": 1,
+    "why": "The nation stands above every individual and party; force against those who threaten it was our founding method and is justified.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "kemalism": [
@@ -687,6 +2458,52 @@
     "side": -1,
     "why": "Kemalism abolished the caliphate and religious courts specifically to remove clergy from law-making.",
     "coders": 3
+   },
+   {
+    "item": "dem-15",
+    "frame": "both",
+    "side": 1,
+    "why": "Republicanism is the first of the Six Arrows; the nation, not a dynasty, chooses its head of state.",
+    "coders": 3
+   },
+   {
+    "item": "rel-11",
+    "frame": "both",
+    "side": 1,
+    "why": "Secular law guided by reason and science, not religious authority, is the core of laiklik.",
+    "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Citizenship is civic and shared; the republic does not jail innocent people for their ancestry.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Laiklik keeps religion out of law and politics while guaranteeing each citizen's freedom of conscience.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Modern, secular law makes guilt personal; punishing relatives belongs to the old order the reforms replaced.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Sovereignty belongs to the nation and the republic replaced the sultan; no ruler stands above the law.",
+    "coders": 2,
+    "kind": "red-line"
    }
   ],
   "peronism": [
@@ -703,6 +2520,38 @@
     "side": -1,
     "why": "Peronist social justice and state-directed development require the state to shape production, not leave it to prices and competition alone.",
     "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Immigrants of every origin built the nation and share one national-popular identity; jailing people for their ethnicity betrays that.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "We respect the Catholic tradition and the people's faith; no one should be punished by the state for their religion.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Social justice punishes no one for a relative's crime.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Our movement rests on the people's vote; we were banned from elections ourselves and know cancelling them silences the workers.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "classical-liberalism": [
@@ -726,6 +2575,93 @@
     "side": -1,
     "why": "Classical liberalism holds that markets and voluntary exchange, not planners, should coordinate the economy.",
     "coders": 3
+   },
+   {
+    "item": "fed-11",
+    "frame": "both",
+    "side": 1,
+    "why": "Government exists to secure rights by keeping order and enforcing law through courts and police; limited, not abolished.",
+    "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Every individual has rights to life and liberty; imprisoning the innocent because of ethnicity is a gross violation.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Church and state are separate, with full religious toleration for every faith and none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "The state exists to secure rights; torturing a suspect is the very abuse of power constitutions exist to prevent.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "Habeas corpus is a foundational protection against arbitrary detention by government.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Rights and guilt belong to individuals; punishing innocent relatives violates their natural rights.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Free speech is a core liberty; peaceful criticism of government must never be punished.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Government rests on the consent of the governed; cancelling elections to keep power removes the check that consent provides.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "The rule of law means government is bound by general rules that apply equally to rulers and ruled.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Even in a just war, innocent people keep their rights; deliberately killing civilians can never be justified by winning.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Rights protect everyone, including political opponents; force is only for defending rights against actual aggression.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "minarchism": [
@@ -756,6 +2692,84 @@
     "side": -1,
     "why": "A night-watchman state has no role in planning production, which minarchists leave entirely to markets.",
     "coders": 3
+   },
+   {
+    "item": "col-11",
+    "frame": "I",
+    "side": 1,
+    "why": "Beyond police, courts and defence, schooling, health and welfare belong to markets, charity and voluntary associations, not taxation.",
+    "coders": 3
+   },
+   {
+    "item": "fed-11",
+    "frame": "both",
+    "side": 1,
+    "why": "The legitimate state is a minimal one that provides police, courts and defence to protect rights.",
+    "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Imprisoning people who have harmed no one is initiating force, the core wrong a legitimate state exists to stop.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Church and state are separate, and the state has no business punishing anyone's beliefs.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "Courts exist to protect individuals' rights, above all against being held by the state without justification.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Each person owns themselves and answers only for their own actions; punishing family members is aggression against the innocent.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Peaceful speech harms no one's rights, so jailing someone for it is an act of aggression.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Rulers have no right to keep power by cancelling votes; that is using state force to protect themselves, not people's rights.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "The rule against initiating force applies to everyone, including those running the state.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Force is only legitimate against those who initiate force; disagreeing politically is not aggression.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "georgism": [
@@ -779,6 +2793,78 @@
     "side": -1,
     "why": "Beyond collecting land rent, Georgism leaves the economy to markets and private enterprise, not central planning.",
     "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Civil liberties and equal rights to the earth belong to everyone; jailing the innocent for their ethnicity violates both.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "We are secular and treat belief as a private matter, so no one should be punished for their religion.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "Civil liberties require that anyone the state detains can challenge it before an independent court.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "People own what they do; guilt, like earnings, belongs to the individual, not their family.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Civil liberties include criticising government freely; jailing peaceful critics is never acceptable.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "We support democracy; the community whose land rents fund government must keep the power to choose it.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Ending privilege is our cause; no one, least of all rulers, should stand above the law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "We are internationalist and peaceful; deliberately killing civilians can never be justified.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "We support democracy and peaceful reform; violence against political opponents is never acceptable.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "paleolibertarianism": [
@@ -802,6 +2888,77 @@
     "side": -1,
     "why": "Paleolibertarianism rejects global governance and supranational institutions as the extreme form of the centralised state it opposes.",
     "coders": 3
+   },
+   {
+    "item": "col-11",
+    "frame": "I",
+    "side": 1,
+    "why": "Welfare and public schooling destroy families and communities; markets, churches and charity should provide.",
+    "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "The state imprisoning people who have harmed no one is exactly the central-state aggression we oppose.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Christianity is upheld by private communities and covenants, never by state punishment of belief.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "We oppose expanding state security powers; torture is the most extreme form of them.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "Anyone the state detains must be able to challenge it; unchecked detention is state power at its most dangerous.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Property and justice are individual; punishing a criminal's innocent family is aggression against people who did nothing.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Opposing the central state is our cause; jailing peaceful critics is the state silencing its opponents.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "The state is the great enemy of liberty; its rulers must never be exempt from the rules that bind everyone else.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "We are strongly anti-war; deliberately killing civilians is mass murder by the state, whatever the war aims.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "anarcho-communism": [
@@ -832,6 +2989,76 @@
     "side": -1,
     "why": "It replaces markets and money with distribution by need, so letting prices and competition alone decide production contradicts it.",
     "coders": 2
+   },
+   {
+    "item": "fed-11",
+    "frame": "I",
+    "side": -1,
+    "why": "The state must be abolished, not captured; a monopoly on force just creates rulers.",
+    "coders": 3
+   },
+   {
+    "item": "fed-12",
+    "frame": "I",
+    "side": 1,
+    "why": "Society should be organised from below by free communes and associations, with no state.",
+    "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Humanity is one, without borders or nations; jailing people for their ethnicity is domination in its purest form.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Religion is a private matter; no authority may punish anyone for their beliefs.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Torture is coercive authority at its cruellest, the opposite of a free society of mutual aid.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "We oppose prisons and state detention; anyone the state holds must at least be able to challenge it.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing whole families is authority at its most unjust; we reject hierarchical punishment altogether.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Jailing critics is the state protecting its rulers, the very authority we oppose.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "We oppose militarism and the wars of states; deliberately killing civilians is the crime of rulers against peoples.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "anarcho-syndicalism": [
@@ -862,6 +3089,76 @@
     "side": -1,
     "why": "Anarcho-syndicalism rejects all parties and the state, so permanent single-party rule contradicts it.",
     "coders": 3
+   },
+   {
+    "item": "fed-11",
+    "frame": "I",
+    "side": -1,
+    "why": "No party, no parliament, no state: free association and the organised workers replace police power.",
+    "coders": 3
+   },
+   {
+    "item": "fed-12",
+    "frame": "I",
+    "side": 1,
+    "why": "Society should be run by federated workers' syndicates and assemblies, with no state.",
+    "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Workers of all countries and origins share one cause; jailing people for their ethnicity divides and oppresses them.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Religion is a private matter; no authority should punish anyone for their beliefs.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Torture is state coercion at its worst, the opposite of free association.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "We oppose state detention of workers and activists; anyone held must be able to challenge it.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing a whole family for one person's act is the arbitrary authority workers organise to abolish.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Jailing critics is how states crush workers' movements; peaceful dissent must never be punished.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "We oppose militarism; deliberately killing civilians makes working people pay for their rulers' wars.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "mutualism": [
@@ -885,6 +3182,76 @@
     "side": -1,
     "why": "Mutualism is market anarchism: it holds that markets, not planning, should coordinate production.",
     "coders": 3
+   },
+   {
+    "item": "fed-11",
+    "frame": "I",
+    "side": -1,
+    "why": "Authority should dissolve into contracts and voluntary federation; no body should monopolise force.",
+    "coders": 3
+   },
+   {
+    "item": "fed-12",
+    "frame": "I",
+    "side": 1,
+    "why": "Order should come from contracts and voluntary federation among communes and associations, not a state.",
+    "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Newcomers are welcome as equals and we oppose national borders; imprisoning people for ethnicity is pure domination.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Religion is a private matter, never something authority should punish.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Liberty is central and authority should dissolve into contract; torture is coercion at its most extreme.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "Liberty requires that anyone the state detains can challenge it before an independent court.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Justice is reciprocity between individuals; punishing a family for one member's act is no justice at all.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Liberty is central; jailing peaceful critics is authority protecting itself.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "We are anti-militarist; deliberately killing civilians can never be justified.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "libertarian-municipalism": [
@@ -915,6 +3282,85 @@
     "side": 1,
     "why": "Bookchin's confederalism gives wider councils only the coordinating powers that municipal assemblies delegate to them.",
     "coders": 3
+   },
+   {
+    "item": "fed-11",
+    "frame": "I",
+    "side": -1,
+    "why": "The nation-state, with its professional police and monopoly of force, should be replaced by a confederation of citizen assemblies.",
+    "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Newcomers become equal citizens of the assembly; jailing people for their ethnicity is the opposite.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "We are secular and rational; belief is free, and no authority should punish anyone for it.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Security comes from a self-governing community, not police power; torture is domination at its worst.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "Civic freedom requires that no one can be held by the state without challenge before an independent court.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Free citizens answer for their own acts; collective family punishment is domination, not justice.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Open public debate is the heart of assembly democracy; peaceful criticism must never be punished.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Politics belongs to citizens deciding together; cancelling a vote because of its likely result destroys self-government.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "We oppose rule by a separate political class; where rulers exist, they must be bound by the same law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "We are anti-militarist; militias only defend communities, and deliberately killing civilians is never acceptable.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "anarcho-capitalism": [
@@ -945,6 +3391,84 @@
     "side": -1,
     "why": "Anarcho-capitalists hold that free markets should coordinate everything, with no planning authority.",
     "coders": 3
+   },
+   {
+    "item": "fed-11",
+    "frame": "I",
+    "side": -1,
+    "why": "A territorial monopoly on force funded by taxation is illegitimate; law, courts and defence can be supplied by competing firms.",
+    "coders": 3
+   },
+   {
+    "item": "fed-12",
+    "frame": "I",
+    "side": 1,
+    "why": "Law, courts and policing should be provided by competing private agencies and voluntary contracts, with no state.",
+    "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Imprisoning people who have harmed no one is aggression, the core wrong of the non-aggression principle.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "There is no state religion and no state moral code; punishing belief is aggression.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Torturing a suspect is aggression against a person who may be innocent, the worst kind of state power.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "Anyone the state holds must be able to challenge it; detention is force that has to be justified.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "No one may initiate force against the innocent; punishing family members for another's crime is aggression.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Peaceful speech harms no one; jailing someone for it is aggression.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "No one has special rights to use force, including those who claim to rule.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Deliberately killing civilians is aggression against innocents; war aims cannot justify it.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "anarcho-primitivism": [
@@ -975,6 +3499,61 @@
     "side": -1,
     "why": "The tradition opposes life extension as part of the technological project it wants dismantled.",
     "coders": 3
+   },
+   {
+    "item": "fed-11",
+    "frame": "I",
+    "side": -1,
+    "why": "Small, face-to-face bands decide informally, with no state, police or rulers.",
+    "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "There are no nations or borders in our ideal; jailing people for their ethnicity is state domination at its worst.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "We see organised religion as domination, but punishing people's beliefs is domination too.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Torture is the state's domination of the body, part of the civilisation we oppose.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "We oppose state captivity; anyone the state holds must at least be able to challenge it.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Punishing families is the domination civilisation brought; egalitarian bands have no rulers to impose it.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Jailing peaceful critics is the state protecting its rulers, which we oppose.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "absolute-monarchism": [
@@ -1005,6 +3584,21 @@
     "side": 1,
     "why": "Absolute monarchism is defined by undivided sovereign power vested in a hereditary monarch.",
     "coders": 3
+   },
+   {
+    "item": "dem-15",
+    "frame": "both",
+    "side": -1,
+    "why": "Hereditary succession puts a ruler raised for the role, above faction and with clear succession, at the head of the realm.",
+    "coders": 3
+   },
+   {
+    "item": "red-08",
+    "frame": "I",
+    "side": -1,
+    "why": "The sovereign is bound by divine and natural law and conscience, but not by the laws he himself makes for his subjects.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "constitutional-monarchism": [
@@ -1021,6 +3615,77 @@
     "side": -1,
     "why": "Constitutional monarchism holds that the monarch reigns but does not rule, with government accountable to parliament, so one leader acting without lawmakers' approval contradicts it.",
     "coders": 2
+   },
+   {
+    "item": "dem-15",
+    "frame": "both",
+    "side": -1,
+    "why": "A hereditary head of state stands above party politics and embodies the nation's continuity, which an elected one cannot.",
+    "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "All subjects or citizens stand equal under one crown; jailing innocent people for ethnicity violates the rule of law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Whether or not a realm keeps an established church, every subject is free to follow any faith or none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "Habeas corpus is part of the constitutional heritage the crown embodies and protects.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Liberal democracy under the rule of law punishes individuals for their own crimes, never their families.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Liberal democracy and civil liberties mean criticising the government peacefully must never be a crime.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Governing power belongs to an elected parliament; the crown guards the constitution, including the voters' right to change government.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Armed forces loyal to the crown fight under the law of war; deliberately killing civilians is a war crime.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "The monarchy stands above party conflict so that politics stays peaceful; violence against opponents is never acceptable.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "technocracy": [
@@ -1037,6 +3702,46 @@
     "side": -1,
     "why": "Technocratic governance is secular and evidence-based, so giving religious leaders a formal law-making role contradicts it.",
     "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Jailing law-abiding people by ethnicity is irrational prejudice, the opposite of evidence-based government.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "The state is strictly secular; belief is private and no one should be punished for it.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Rational, evidence-based justice targets the person responsible; punishing relatives is arbitrary and achieves nothing measurable.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Competent, rational order requires rules that bind decision-makers as much as everyone else.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Problems are solved by expertise and evidence, not by violence against political opponents.",
+    "coders": 2,
+    "kind": "red-line"
    }
   ],
   "confucian-meritocracy": [
@@ -1046,6 +3751,30 @@
     "side": -1,
     "why": "Confucian meritocracy holds that governing requires virtue and competence, so officials selected by merit rather than popular opinion should decide.",
     "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Benevolent government exists for the people's welfare; imprisoning innocent people for their ethnicity is cruel and unjust rule.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Mencius praised the sage king who did not punish a criminal's wife and children; benevolent rule punishes only the guilty.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Mencius condemned rulers who kill people to win wars; benevolent government wins by moral influence, not slaughter of civilians.",
+    "coders": 2,
+    "kind": "red-line"
    }
   ],
   "developmental-authoritarianism": [
@@ -1069,6 +3798,14 @@
     "side": -1,
     "why": "Leaving investment to pure returns is the unguided market allocation that developmental states reject in favour of industrial policy.",
     "coders": 3
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Ethnic groups are managed for harmony under a shared national identity; jailing innocent people for ethnicity destroys that harmony.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ],
   "neoreaction": [
@@ -1122,6 +3859,203 @@
     "side": 1,
     "why": "Morphological freedom and brain-computer interfaces are core transhumanist aims, so opposing safe brain-computer links for healthy people contradicts them.",
     "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "We welcome diversity and extend rights ever wider; jailing people for ethnicity is the opposite.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "The state is secular and freedom of mind is central; no one should be punished for belief.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "We defend civil liberties and bodily autonomy; torture is the gravest violation of both.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "Civil liberties require that anyone detained by the state can challenge it before an independent court.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Each person is responsible for their own choices; punishing relatives violates individual rights.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Civil liberties include free criticism of government; jailing peaceful critics is never acceptable.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "We rely on liberal democracy to keep technology fair; cancelling elections destroys the institutions that make that possible.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "Democratic institutions only protect people when those in power are bound by the same law.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Our goal is reducing suffering and death; deliberately killing civilians is never acceptable.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "We are liberal democrats and dovish; violence against political opponents is never acceptable.",
+    "coders": 3,
+    "kind": "red-line"
+   }
+  ],
+  "critical-rationalism": [
+   {
+    "item": "dem-11",
+    "frame": "both",
+    "side": 1,
+    "why": "That is what democracy is for: removing bad laws and bad leaders without bloodshed.",
+    "coders": 3
+   },
+   {
+    "item": "dem-14",
+    "frame": "both",
+    "side": -1,
+    "why": "The key question is not who should rule but how to limit and remove bad rulers peacefully.",
+    "coders": 3
+   },
+   {
+    "item": "pla-13",
+    "frame": "both",
+    "side": 1,
+    "why": "Piecemeal, reversible reforms let us learn from mistakes; complete redesigns cannot.",
+    "coders": 3
+   },
+   {
+    "item": "rel-11",
+    "frame": "both",
+    "side": 1,
+    "why": "Laws must be open to criticism; revelation or authority placed beyond dispute blocks error correction.",
+    "coders": 3
+   },
+   {
+    "item": "pla-14",
+    "frame": "both",
+    "side": -1,
+    "why": "Utopian redesigns to a plan concentrate power, cannot learn from mistakes and end in violence.",
+    "coders": 2
+   },
+   {
+    "item": "red-01",
+    "frame": "both",
+    "side": -1,
+    "why": "We are individualists; imprisoning innocent people for their ethnicity is tribalism at its worst.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-02",
+    "frame": "both",
+    "side": 1,
+    "why": "Church and state are separate, and the open society tolerates all beliefs, including none.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Institutions must limit the harm rulers can do; licensing torture hands officials exactly the unchecked power we fear.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-04",
+    "frame": "both",
+    "side": 1,
+    "why": "Independent courts check the state's power over individuals; detention without challenge cannot be corrected.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-05",
+    "frame": "both",
+    "side": -1,
+    "why": "The open society holds individuals responsible for their own acts; collective family punishment is tribal, not civilised.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Criticism is how we find our mistakes; jailing peaceful critics shuts down error correction.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Democracy exists so bad governments can be removed peacefully; cancelling elections destroys the one mechanism that corrects rulers.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-08",
+    "frame": "both",
+    "side": 1,
+    "why": "The rule of law must bind rulers like everyone else, or bad rulers cannot be checked.",
+    "coders": 3,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Force is for stopping aggression and defending open societies, never for deliberately killing civilians.",
+    "coders": 2,
+    "kind": "red-line"
+   },
+   {
+    "item": "red-10",
+    "frame": "both",
+    "side": -1,
+    "why": "The open society settles disputes by argument and votes; violence against opponents is what its enemies do.",
+    "coders": 3,
+    "kind": "red-line"
    }
   ]
  },

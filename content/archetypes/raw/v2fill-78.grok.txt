@@ -1,0 +1,8 @@
+BEGIN anarcho-primitivism
+Q149 +2 +2
+Q150 +2 +1
+Q151 +3 +3
+Q152 -3 -3
+Q153 0 0
+Q154 +2 +3
+END anarcho-primitivism

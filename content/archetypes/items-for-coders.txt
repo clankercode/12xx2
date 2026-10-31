@@ -118,3 +118,37 @@ Q117: If international bodies mostly serve the interests of the most powerful co
 Q118: Anyone who obeys the law should be free to move to and settle in any country they choose.
 Q119: If a small group comes to own most of a society's wealth, much of it should be shared out among the rest.
 Q120: When an international court and a country's own courts disagree, the international court's ruling should take priority. (Note: An international court is one set up by agreement between countries, whose rulings cover the countries that join it.)
+Q121: Elections should be cancelled if the wrong side is likely to win.
+Q122: Pay and conditions agreed between unions and employers in an industry should apply to every firm in that industry.
+Q123: A society should improve through many small changes that can be undone if they fail, rather than one complete redesign.
+Q124: When institutions make mistakes, being able to correct them quickly matters more than who chose the people in charge.
+Q125: If one member of a family commits a serious crime, it is fair to punish the whole family.
+Q126: The government should have the power to imprison people because of their race or ethnicity, even if they have done nothing wrong.
+Q127: In war, it is acceptable to target civilians on purpose, not just military targets, if it helps win.
+Q128: If a country's ally is attacked but the country itself is not, it should stay out of the fighting.
+Q129: The law should apply to rulers in the same way as to everyone else.
+Q130: Workers should be free to take a job on terms they agree individually, without any union deal applying to them.
+Q131: Any culture can sustain good institutions equally well; the culture of the people using them makes little difference.
+Q132: If economic growth would use up land, water or clean air faster than nature renews them, growth should be limited.
+Q133: Schooling, health care and help for the poor should be left to markets, charity and voluntary groups rather than paid for from taxes.
+Q134: If it might stop a serious attack, officials should be allowed to torture a suspect for information.
+Q135: Some laws should rest on religious revelation and be closed to change by any vote or court.
+Q136: The most important question in politics is who should rule.
+Q137: Even well-designed institutions fail if most citizens lack the habits they depend on, such as honesty, tolerance and respect for rules.
+Q138: A good political system is one where bad laws and bad leaders can be replaced without violence.
+Q139: A state with a monopoly on force should exist to run courts and police. (Note: A monopoly on force means it is the only body allowed to use force or to authorise others to use it.)
+Q140: If a political system blocks needed change, overthrowing it by force can be right.
+Q141: If a law turns out to do more harm than good, citizens should be able to force a public vote to repeal it.
+Q142: Using violence against political opponents is acceptable if they threaten the nation.
+Q143: People should be free to follow any religion or none without being punished by the state.
+Q144: To vote, serve on juries or hold office, people should first show they understand and accept the society's basic rules.
+Q145: A deeply unjust society should be rebuilt from the ground up according to a clear plan.
+Q146: An attack on a military target can be justified even when it is expected to kill some civilians, if the military gain is large enough.
+Q147: If a party aims to abolish free elections, it should be barred from running in them.
+Q148: The head of state should be chosen by election, not by birth.
+Q149: Laws should rest on reasons anyone can examine and dispute, not on religious authority.
+Q150: All law and order should be provided by voluntary associations, with no state.
+Q151: People who peacefully criticise the government should never be jailed for it.
+Q152: If protecting nature and economic growth conflict, growth should usually win.
+Q153: Benefits such as pensions and child payments should go to everyone, rich or poor, not only to those in need.
+Q154: Anyone held by the state for more than a few days should be able to challenge it before an independent court.

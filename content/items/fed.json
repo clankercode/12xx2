@@ -110,6 +110,27 @@
       "text": "If a region refuses to follow national law, national authorities should be able to govern it directly until it complies.",
       "note": "A region is a state, province or similar part of a country.",
       "rationale": "Strong direct-rule stance, mirror of fed-05; some lib cross-loading accepted for the mirror. Bounded by 'until it complies'."
+    },
+    {
+      "id": "fed-11",
+      "key": 1,
+      "facet": "statehood",
+      "form": "rule",
+      "level": 3,
+      "tier": "full",
+      "text": "A state with a monopoly on force should exist to run courts and police.",
+      "note": "A monopoly on force means it is the only body allowed to use force or to authorise others to use it.",
+      "rationale": "Separator: minarchism and every statist view agree; anarcho-capitalists and left anarchists disagree. Abolishing the state is the far Decentralised end of fed. Mirrors fed-12. Content v2 separator (CF review 2026-10-31 §5 draft, reworded); original."
+    },
+    {
+      "id": "fed-12",
+      "key": -1,
+      "facet": "statehood",
+      "form": "rule",
+      "level": 3,
+      "tier": "full",
+      "text": "All law and order should be provided by voluntary associations, with no state.",
+      "rationale": "Separator: no-state anarchism (market or communist) agrees; minarchists and all statists disagree. Mirrors fed-11. Content v2 separator (CF review 2026-10-31 §5 draft, reworded); original."
     }
   ]
 }

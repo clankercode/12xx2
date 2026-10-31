@@ -101,6 +101,66 @@
    "text": "The country should be led by a hereditary ruler who holds real power, not just a ceremonial role.",
    "note": "Hereditary: passed down within a family.",
    "rationale": "Sincere executive monarchism; 'real power' keeps constitutional monarchists on the Democratic side. 'The country' keeps it frame-sensitive. Mirrors dem-09. Audit (draft 12): H 1.0."
+  },
+  {
+   "id": "dem-11",
+   "key": -1,
+   "facet": "contestability",
+   "form": "rule",
+   "level": 2,
+   "tier": "full",
+   "text": "A good political system is one where bad laws and bad leaders can be replaced without violence.",
+   "rationale": "I1 (institutions): Popper's criterion of democracy. Agreeing puts removability first, the Democratic pole; replaces the review's P0/P2. Wording approved by Max Kaye (project owner) for content v2, 2026-10-31; original."
+  },
+  {
+   "id": "dem-12",
+   "key": 1,
+   "facet": "participation",
+   "form": "rule",
+   "level": 2,
+   "tier": "full",
+   "text": "To vote, serve on juries or hold office, people should first show they understand and accept the society's basic rules.",
+   "rationale": "I5 (high civic standards): a conditional franchise is the Hierarchical pole (as dem-02), though here the test is acceptance of rules as well as knowledge. Wording approved by Max Kaye (project owner) for content v2, 2026-10-31; original."
+  },
+  {
+   "id": "dem-13",
+   "key": 1,
+   "facet": "contestability",
+   "form": "conditional",
+   "level": 2,
+   "tier": "full",
+   "text": "When institutions make mistakes, being able to correct them quickly matters more than who chose the people in charge.",
+   "rationale": "I6 (error correction over selection): ranks correction above the source of a mandate, so agreeing moves away from input (electoral) legitimacy toward the Hierarchical pole; populist and radical democrats disagree. Wording approved by Max Kaye (project owner) for content v2, 2026-10-31; original."
+  },
+  {
+   "id": "dem-14",
+   "key": 1,
+   "facet": "contestability",
+   "form": "rule",
+   "level": 2,
+   "tier": "full",
+   "text": "The most important question in politics is who should rule.",
+   "rationale": "I7 (keyed against the institutions view): Plato's question. Doctrines of rule by the best (monarchy, vanguard, meritocracy) agree, so agreeing is the Hierarchical pole. Wording approved by Max Kaye (project owner) for content v2, 2026-10-31; original."
+  },
+  {
+   "id": "dem-15",
+   "key": -1,
+   "facet": "contestability",
+   "form": "rule",
+   "level": 3,
+   "tier": "full",
+   "text": "The head of state should be chosen by election, not by birth.",
+   "rationale": "Separator for constitutional monarchism (its defining idea had no statement, review C4). Agreeing is the Democratic pole. Content v2 separator (CF review 2026-10-31 §5 draft, reworded); original."
+  },
+  {
+   "id": "dem-16",
+   "key": -1,
+   "facet": "participation",
+   "form": "conditional",
+   "level": 2,
+   "tier": "full",
+   "text": "If a law turns out to do more harm than good, citizens should be able to force a public vote to repeal it.",
+   "rationale": "Citizen-initiated repeal: error correction by the public, the Democratic pole; balances dem-13. Content v2 separator (CF review 2026-10-31 §5 draft, reworded); original."
   }
  ]
 }

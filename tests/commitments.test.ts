@@ -14,7 +14,13 @@ import { deriveResults, type Hero } from '../src/engine/results'
 import { computeProfile } from '../src/engine/score'
 import { fnv1a, mulberry32 } from '../src/engine/prng'
 import type { Archetype } from '../src/engine/match'
-import { ALL_ITEMS, itemsForMode } from '../src/data/items'
+import { ALL_ITEMS, askedIdsForMode, itemsForMode } from '../src/data/items'
+import { RED_IDS, RED_LINES } from '../src/data/redlines'
+import { MAX_CORE, MAX_RED, isRedCommitment } from '../src/engine/commitments'
+import { deriveOwn } from '../src/state/derive'
+import { EMPTY } from '../src/state/session'
+import { forSharing } from '../src/engine/payload'
+import type { RedCode } from '../src/engine/types'
 import { CALIBRATION } from '../src/data/calibration'
 import { CATALOGUE, CATALOGUE_VERSION } from '../src/data/archetypes'
 import { CATALOGUE_SLUGS, COMMITMENTS, ruledOutSlugs } from '../src/data/commitments'
@@ -89,12 +95,12 @@ describe('commitments file', () => {
 
   it('the shipped file and the test fixture validate', () => {
     expect(COMMITMENTS).toBeTypeOf('object')
-    expect(() => validateCommitments(fixture, ALL_ITEMS, SLUGS)).not.toThrow()
-    expect(validateCommitments(ok, ALL_ITEMS, SLUGS)[SLUGS[0]!]).toHaveLength(1)
+    expect(() => validateCommitments(fixture, ALL_ITEMS, SLUGS, RED_LINES)).not.toThrow()
+    expect(validateCommitments(ok, ALL_ITEMS, SLUGS, RED_LINES)[SLUGS[0]!]).toHaveLength(1)
   })
 
   it('rejects bad data', () => {
-    const v = (x: unknown) => () => validateCommitments(x, ALL_ITEMS, SLUGS)
+    const v = (x: unknown) => () => validateCommitments(x, ALL_ITEMS, SLUGS, RED_LINES)
     expect(v({ ...ok, version: 2 })).toThrow(/version/)
     expect(v({ ...ok, commitments: { 'no-such-ideology': [] } })).toThrow(/unknown archetype/)
     expect(v(bad({ item: 'lib-99' }))).toThrow(/unknown item/)
@@ -102,9 +108,76 @@ describe('commitments file', () => {
     expect(v(bad({ frame: 'N' }))).toThrow(/frame/)
     expect(v(bad({ why: ' ' }))).toThrow(/why/)
     expect(v({ ...ok, commitments: { [SLUGS[0]!]: [c('lib-02', 1), c('lib-02', -1)] } })).toThrow(/duplicate/)
-    const six = ['lib-01', 'lib-02', 'lib-03', 'lib-04', 'lib-05', 'lib-06'].map(id => c(id, 1))
-    expect(v({ ...ok, commitments: { [SLUGS[0]!]: six } })).toThrow(/at most 5/)
+    const core = (n: number) => ['lib-01', 'lib-02', 'lib-03', 'lib-04', 'lib-05', 'lib-06', 'lib-07'].slice(0, n).map(id => c(id, 1))
+    expect(MAX_CORE).toBe(6)
+    expect(v({ ...ok, commitments: { [SLUGS[0]!]: core(6) } })).not.toThrow()
+    expect(v({ ...ok, commitments: { [SLUGS[0]!]: core(7) } })).toThrow(/at most 6 core/)
     expect(v(bad({ coders: 4 }))).toThrow(/coders/)
+  })
+
+  it('red-line commitments: kind must match the statement, own cap, and do not count towards the core cap', () => {
+    const v = (x: unknown) => () => validateCommitments(x, ALL_ITEMS, SLUGS, RED_LINES)
+    const file = (list: Commitment[]) => ({ ...ok, commitments: { [SLUGS[0]!]: list } })
+    const red = (id: string, side: 1 | -1 = -1): Commitment => ({ item: id, kind: 'red-line', side, frame: 'I', why: 'test' })
+    const sixCore = ['lib-01', 'lib-02', 'lib-03', 'lib-04', 'lib-05', 'lib-06'].map(id => c(id, 1))
+    expect(MAX_RED).toBe(10)
+    const book = validateCommitments(file([...sixCore, ...RED_IDS.map(id => red(id))]), ALL_ITEMS, SLUGS, RED_LINES)
+    expect(book[SLUGS[0]!]!.filter(isRedCommitment)).toHaveLength(10)
+    expect(book[SLUGS[0]!]![6]).toMatchObject({ item: 'red-01', kind: 'red-line' })
+    expect(book[SLUGS[0]!]![0]!.kind).toBeUndefined()
+    expect(v(file([red('lib-02')]))).toThrow(/red-line commitments must name a red-line statement/)
+    expect(v(file([c('red-01', -1)]))).toThrow(/needs kind "red-line"/)
+    expect(v(file([{ ...red('red-01'), kind: 'core' as never }]))).toThrow(/kind/)
+    expect(v(file([red('red-01'), red('red-01', 1)]))).toThrow(/duplicate/)
+    expect(v(file([red('red-99')]))).toThrow(/red-line/)
+    // Eleven red-line commitments can't be made from ten distinct red lines; the cap is checked against fakes.
+    const many = Array.from({ length: 11 }, (_, k) => ({ id: `red-${String(k + 1).padStart(2, '0')}` }))
+    expect(() => validateCommitments(file(many.map(r => red(r.id))), ALL_ITEMS, SLUGS, many)).toThrow(/at most 10 red-line/)
+    // A file with no kinds (as before red lines) validates even when no red lines are known.
+    expect(() => validateCommitments(ok, ALL_ITEMS, SLUGS, [])).not.toThrow()
+    expect(() => validateCommitments(fixture, ALL_ITEMS, SLUGS, [])).toThrow(/red-line/)
+  })
+})
+
+describe('red-line rule-outs', () => {
+  const red = (id: string, side: 1 | -1, frame: 'I' | 'both' = 'I'): Commitment => ({ item: id, kind: 'red-line', side, frame, why: 'test' })
+  const book: CommitmentBook = { a: [c('lib-02', 1), red('red-01', -1)], b: [red('red-03', -1, 'both')], c: [c('lib-02', 1)] }
+  const asked = new Set(askedIdsForMode('quick'))
+
+  it('a decisive red-line contradiction rules the ideology out, exactly like a core one', () => {
+    const ans: Answers = { 'lib-02': { i: 2, n: 2 }, 'red-01': { i: 3, n: -3 }, 'red-03': { i: -2, n: 2 } }
+    expect(checkArchetype('a', book, ans, asked).all).toBe('fail')
+    expect(checkArchetype('b', book, ans, asked).all).toBe('fail')
+    expect(checkArchetype('c', book, ans, asked).all).toBe('pass')
+    expect(ruledOutIndices(['a', 'b', 'c'], book, ans, asked)).toEqual([0, 1])
+    // Slightly the wrong way or neutral is not decisive; the humane side holds.
+    expect(checkArchetype('a', book, { ...ans, 'red-01': { i: 1, n: 1 } }, asked).all).toBe('unknown')
+    expect(checkArchetype('a', book, { ...ans, 'red-01': { i: -1, n: 3 } }, asked).all).toBe('pass')
+    // Red lines are asked at every length.
+    for (const mode of ['quick', 'standard', 'full'] as const) expect(askedIdsForMode(mode)).toEqual(expect.arrayContaining([...RED_IDS]))
+  })
+
+  it('the owner view lists red-line answers and what they rule out; rule-outs and the opt-in block follow', () => {
+    const items = itemsForMode('quick')
+    const answers: Answers = Object.fromEntries(items.map(it => [it.id, { i: 0 as Answer, n: 0 as Answer }]))
+    const slug = SLUGS.find(s2 => (COMMITMENTS[s2] ?? []).some(isRedCommitment))
+    const own = deriveOwn({ ...EMPTY, mode: 'quick', stage: 'done', answers: { ...answers, 'red-02': { i: -3, n: 1 } } })!
+    expect(own.redLines.map(r => r.line.id)).toEqual(RED_IDS)
+    expect(own.redLines[1]!.answer).toEqual({ i: -3, n: 1 })
+    expect(own.redLines[0]!.answer).toBeNull()
+    expect(own.profile.total).toBe(items.length)
+    // red-02 is humane on agree: ideal firmly against (3), here and now humane (1); unanswered = 0.
+    expect(own.payload.red?.[1]).toEqual({ i: 3, n: 1 })
+    expect(own.payload.red?.[0]).toEqual({ i: 0, n: 0 })
+    expect(forSharing(own.payload, { q: false, sc: false, country: false }).red).toBeUndefined()
+    expect(forSharing(own.payload, { q: false, sc: false, country: false, red: true }).red).toHaveLength(10)
+    // A run from before red lines existed: nothing to share, and red-line commitments read "not asked".
+    const old = deriveOwn({ ...EMPTY, mode: 'quick', stage: 'done', answers })!
+    expect(old.payload.red).toBeUndefined()
+    if (slug) {
+      const rc = old.commitments.get(slug)!.checks.find(x => isRedCommitment(x.commitment))!
+      expect(rc.frames[0]!.reason).toBe('not-asked')
+    }
   })
 })
 
@@ -264,7 +337,7 @@ describe('ruled-out field in share links', () => {
     expect(decodePayload(reencode([...head, 2, 8, 0]))).toEqual({ ok: false, error: 'corrupt' })
     expect(decodePayload(reencode([...head, 33, ...new Array(33).fill(1)]))).toEqual({ ok: false, error: 'corrupt' })
     expect(decodePayload(reencode([...head, 2, 8]))).toEqual({ ok: false, error: 'truncated' })
-    expect(decodePayload(reencode([3, ...body.slice(1)]))).toEqual({ ok: false, error: 'newer-version' })
+    expect(decodePayload(reencode([4, ...body.slice(1)]))).toEqual({ ok: false, error: 'newer-version' })
   })
 
   it('survives fuzzing of format-2 links without throwing', () => {
@@ -282,6 +355,94 @@ describe('ruled-out field in share links', () => {
       }
       expect(() => decodePayload(reencode(b))).not.toThrow()
     }
+  })
+
+  // Encoded by the format-2 codec before red lines existed (country + sensitive opt-in + rule-outs 2, 9, 40).
+  const LEGACY2 = 'AgHBRkhuUII8liiqFL4AZP9wUn03mzKgHrQKaf8iITMRIkMiIhERMwBmZV9haW5aaVpuaf8gABFOWgYEAgAAAAHbZ'
+
+  it('old format-2 links decode unchanged and re-encode byte-identically', () => {
+    const d = decodePayload(LEGACY2)
+    expect(d.ok).toBe(true)
+    if (!d.ok) return
+    expect(d.payload).toMatchObject({ format: 2, mode: 'standard', answered: 70, total: 72, country: 'NZ', sensitiveOk: true, ruledOut: [2, 9, 40] })
+    expect(d.payload.I).toEqual([10, -20, 30, -40, 50, -60, 70, -80, 90, -100, 0, null])
+    expect(d.payload.red).toBeUndefined()
+    expect(encodePayload(d.payload)).toBe(LEGACY2)
+  })
+
+  const codes = (n: number, seed: number): { i: RedCode; n: RedCode }[] => {
+    const r = mulberry32(seed)
+    return Array.from({ length: n }, () => ({ i: Math.floor(r() * 4) as RedCode, n: Math.floor(r() * 4) as RedCode }))
+  }
+
+  it('format 3: the red-line block round-trips, with or without rule-outs, and only it makes format 3', () => {
+    for (const ro of [undefined, [0], [3, 21, 27]]) {
+      for (const n of [1, 2, 9, 10, 32]) {
+        const red = codes(n, n * 7 + (ro?.length ?? 0))
+        const p = profileToPayload(computeProfile(itemsForMode('full'), {}, CALIBRATION), { catalogue: 1, mode: 'full', input: 'grid', ruledOut: ro, red })
+        const real = { ...sample(ro), red, format: 3 }
+        for (const x of [p, real]) {
+          expect(formatFor(x)).toBe(3)
+          expect(decodePayload(encodePayload(x))).toEqual({ ok: true, payload: x })
+        }
+        // [ruled-out length (0 = none) + mask] + [count] + ceil(n/2) bytes over the format-1 body.
+        const extra = payloadBytes(real).length - payloadBytes({ ...real, red: undefined, ruledOut: undefined }).length
+        expect(extra).toBe(1 + (ro ? Math.floor(Math.max(...ro) / 8) + 1 : 0) + 1 + Math.ceil(n / 2))
+        // Leaving the block out gives exactly the format-1/2 link.
+        const without = { ...real, red: undefined, format: ro ? 2 : 1 }
+        expect(encodePayload(forSharing(real, { q: false, sc: false, country: false }))).toBe(encodePayload(without))
+        expect(payloadBytes(without)[0]).toBe(ro ? 2 : 1)
+      }
+    }
+  })
+
+  it('the stability seed ignores the red-line block', () => {
+    expect(payloadSeed({ ...sample([3]), red: codes(10, 1) })).toBe(payloadSeed(sample()))
+  })
+
+  it('format 3 rejects non-canonical or malformed red-line blocks', () => {
+    const p = { ...sample(), red: codes(3, 5), format: 3 }
+    const body = [...payloadBytes(p)].slice(0, -1)
+    const head = body.slice(0, -4) // drop [0][3][b0][b1]
+    expect(head[0]).toBe(3)
+    expect(decodePayload(reencode(body)).ok).toBe(true)
+    expect(decodePayload(reencode([...head, 0, 0]))).toEqual({ ok: false, error: 'corrupt' }) // count 0
+    expect(decodePayload(reencode([...head, 0, 33, ...new Array(17).fill(0)]))).toEqual({ ok: false, error: 'corrupt' }) // too many
+    expect(decodePayload(reencode([...head, 0, 3, 0xff, 0xf1]))).toEqual({ ok: false, error: 'corrupt' }) // padding nibble set
+    expect(decodePayload(reencode([...head, 0, 3, 0xff, 0xf0]))).toMatchObject({ ok: true })
+    expect(decodePayload(reencode([...head, 0, 3, 0xff]))).toEqual({ ok: false, error: 'truncated' })
+    expect(decodePayload(reencode([...head, 0, 3, 0xff, 0xf0, 0]))).toEqual({ ok: false, error: 'corrupt' }) // trailing byte
+    expect(decodePayload(reencode([...head, 1, 0, 3, 0xff, 0xf0]))).toEqual({ ok: false, error: 'corrupt' }) // empty mask byte
+    expect(decodePayload(reencode([...head, 0]))).toEqual({ ok: false, error: 'truncated' })
+    // A format-1 body with a stray 3 in the format byte (no block) is not readable.
+    const f1 = [...payloadBytes(sample())].slice(0, -1)
+    expect(decodePayload(reencode([3, ...f1.slice(1)])).ok).toBe(false)
+    expect(decodePayload(reencode([0, ...f1.slice(1)]))).toEqual({ ok: false, error: 'corrupt' })
+  })
+
+  it('survives fuzzing of format-3 links without throwing', () => {
+    const rng = mulberry32(321)
+    const good = [...payloadBytes({ ...sample([2, 9]), red: codes(10, 9) })].slice(0, -1)
+    let ok = 0
+    for (let t = 0; t < 3000; t++) {
+      const b = [...good]
+      const edits = 1 + Math.floor(rng() * 3)
+      for (let e = 0; e < edits; e++) {
+        const k = good.length - 1 - Math.floor(rng() * 12)
+        const op = rng()
+        if (op < 0.5) b[k] = Math.floor(rng() * 256)
+        else if (op < 0.75) b.splice(k, 1)
+        else b.splice(k, 0, Math.floor(rng() * 256))
+      }
+      let d: ReturnType<typeof decodePayload> | undefined
+      expect(() => (d = decodePayload(reencode(b)))).not.toThrow()
+      // Anything that still decodes re-encodes to the same bytes (canonical).
+      if (d?.ok) {
+        ok++
+        expect(encodePayload(d.payload)).toBe(reencode(b))
+      }
+    }
+    expect(ok).toBeGreaterThan(0)
   })
 
   it('a shared link shows the same hero as the owner, rule-outs included', () => {

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { Answer, Mode } from '../engine/types'
-import { itemsForMode } from '../data/items'
+import { askedIdsForMode } from '../data/items'
 import { IDEAL_SHORT, NOW_SHORT } from '../data/frames'
 import { useStore } from './App'
 import { Grid } from './Grid'
@@ -9,9 +9,9 @@ import { go } from './router'
 import css from './Landing.module.css'
 
 const MODES: { mode: Mode; name: string; minutes: number; note: string }[] = [
-  { mode: 'quick', name: 'Quick', minutes: 7, note: 'Rough picture, wider error bars' },
-  { mode: 'standard', name: 'Standard', minutes: 11, note: 'Recommended' },
-  { mode: 'full', name: 'Full', minutes: 18, note: 'Tightest results' },
+  { mode: 'quick', name: 'Quick', minutes: 8, note: 'Rough picture, wider error bars' },
+  { mode: 'standard', name: 'Standard', minutes: 12, note: 'Recommended' },
+  { mode: 'full', name: 'Full', minutes: 22, note: 'Tightest results' },
 ]
 
 const PRESET = { i: 1, n: 3 } as const
@@ -113,7 +113,7 @@ export function Landing() {
             <button key={m.mode} type="button" className={`${css.mode} ${m.mode === 'standard' ? css.modeRec : ''}`} onClick={() => start(m.mode)}>
               <span className={css.modeName}>{m.name}</span>
               <span className={css.modeMeta}>
-                {itemsForMode(m.mode).length} statements · about {m.minutes} min
+                {askedIdsForMode(m.mode).length} statements · about {m.minutes} min
               </span>
               <span className="small muted">{m.note}</span>
             </button>
