@@ -5,8 +5,8 @@
   {
    "id": "red-01",
    "humane": -1,
-   "text": "The government should be able to imprison people because of their race or ethnicity, even if they have done nothing wrong.",
-   "rationale": "R1: detention by ethnicity (✘ if agree)."
+   "text": "The government should have the power to imprison people because of their race or ethnicity, even if they have done nothing wrong.",
+   "rationale": "R1: detention by ethnicity (✘ if agree). Opening reworded from Max's \"The government should be able to\" to \"The government should have the power to\" because the original phrase is an exact 6-word run in an upstream bank (licence-clean provenance gate); meaning unchanged, so the coded answers stand."
   },
   {
    "id": "red-02",
