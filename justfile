@@ -31,6 +31,10 @@ archetypes:
 overlap:
     pnpm tsx scripts/overlap.ts
 
+# Pair separation: catalogue pairs with no statement where one ideology is at >= +2 and the other at <= -2, per length.
+separation *args:
+    pnpm tsx scripts/separation.ts {{args}}
+
 # Refetch World Bank WGI country context (network; review the diff before committing).
 wgi:
     pnpm tsx scripts/wgi.ts

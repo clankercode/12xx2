@@ -123,8 +123,8 @@
   "commitmentFalseRuleOut": 0.0001,
   "commitmentFalseRuleOutDetail": {
    "byMode": {
-    "quick": 0.0001,
-    "standard": 0,
+    "quick": 0,
+    "standard": 0.0001,
     "full": 0.0001
    },
    "byArchetype": {
@@ -145,6 +145,7 @@
     "liberal-conservatism": 0,
     "traditional-conservatism": 0,
     "paleoconservatism": 0,
+    "communitarianism": 0,
     "christian-democracy": 0,
     "catholic-integralism": 0,
     "islamic-democracy": 0,
@@ -173,7 +174,8 @@
     "confucian-meritocracy": 0,
     "developmental-authoritarianism": 0.0025,
     "neoreaction": 0,
-    "transhumanism": 0
+    "transhumanism": 0,
+    "critical-rationalism": 0
    },
    "draws": 400
   },
