@@ -65,5 +65,6 @@ export function heroName(r: Results): string {
   const h = r.hero
   if (h.kind === 'split') return `${h.ideal.match.arch.name} → ${h.now.match.arch.name}`
   if (h.kind === 'constant') return h.ideal.match.arch.name
+  if (h.kind === 'none-fit') return 'No listed ideology fits'
   return 'No reliable match'
 }

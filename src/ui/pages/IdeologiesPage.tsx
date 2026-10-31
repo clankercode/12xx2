@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { AXIS_IDS } from '../../engine/types'
 import { AXES } from '../../data/axes'
 import { CATALOGUE } from '../../data/archetypes'
+import { COMMITMENTS, HAS_COMMITMENTS } from '../../data/commitments'
+import { ALL_ITEMS } from '../../data/items'
 import css from './Prose.module.css'
 
 const FAMILY: Record<string, string> = {
@@ -17,6 +19,7 @@ const FAMILY: Record<string, string> = {
 }
 
 const pct = (v: number) => `${(v + 100) / 2}%`
+const TEXT = new Map(ALL_ITEMS.map(i => [i.id, i.text]))
 
 export function IdeologiesPage() {
   const [fam, setFam] = useState<string | null>(null)
@@ -29,6 +32,13 @@ export function IdeologiesPage() {
         Every ideology you can be matched to, with its profile on each axis. <span className="glyph-ideal" aria-hidden />{' '}
         <span className="ideal">Ideal</span> and <span className="glyph-now" aria-hidden /> <span className="now">here and now</span>{' '}
         (in a present-day liberal democracy). The shaded band shows how far the three coders disagreed.
+        {HAS_COMMITMENTS && (
+          <>
+            {' '}
+            Core commitments are positions every adherent shares; answering decisively against one rules the ideology out (
+            <a href="#/method">how</a>).
+          </>
+        )}
       </p>
       <div className={css.filter} role="group" aria-label="Filter by family">
         <button type="button" className={fam === null ? css.filterOn : ''} onClick={() => setFam(null)}>
@@ -71,6 +81,28 @@ export function IdeologiesPage() {
               )
             })}
           </div>
+          {HAS_COMMITMENTS && (
+            <div style={{ marginTop: 10 }}>
+              <p className="small" style={{ margin: 0, fontWeight: 700 }}>
+                Core commitments
+              </p>
+              {COMMITMENTS[a.slug]?.length ? (
+                <ul className="small" style={{ marginTop: 4 }}>
+                  {COMMITMENTS[a.slug]!.map(c => (
+                    <li key={c.item}>
+                      <strong>{c.side === 1 ? 'Agree' : 'Disagree'}</strong>
+                      {c.frame === 'both' ? ' (ideal and here and now)' : ' (ideal)'}: “{TEXT.get(c.item)}”{' '}
+                      <span className="muted">{c.why}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="small muted" style={{ marginTop: 4 }}>
+                  None listed.
+                </p>
+              )}
+            </div>
+          )}
           {a.sources.length > 0 && (
             <details style={{ marginTop: 10 }}>
               <summary className="small">Sources</summary>

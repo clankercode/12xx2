@@ -252,3 +252,13 @@
     grid-column: 1 / -1;
   }
 }
+
+.ruledOut {
+  color: var(--alert);
+  font-weight: 600;
+}
+
+.matchList li[data-ruled-out] .matchName {
+  text-decoration: line-through;
+  text-decoration-color: var(--alert);
+}

@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { encodePayload, forSharing, type Payload } from '../engine/payload'
 import { deriveResults, type Results } from '../engine/results'
-import { CATALOGUE, catalogueFor } from '../data/archetypes'
+import { CATALOGUE } from '../data/archetypes'
+import { ruledOutSlugs } from '../data/commitments'
+import { deriveShared } from '../state/shared'
 import { CALIBRATION } from '../data/calibration'
 import { countryName } from '../data/countries'
 import { AXES } from '../data/axes'
@@ -66,8 +68,8 @@ export function ShareSheet({ payload }: { payload: Payload }) {
 
   const shared = useMemo(() => forSharing(payload, { ...inc, sensitive: allowSensitive }), [payload, inc, allowSensitive])
   // Everything shared (card, text, link view) names a sensitive ideology only after the opt-in.
-  const r = useMemo(() => deriveResults(shared, catalogueFor(shared), CALIBRATION), [shared])
-  const rFull = useMemo(() => deriveResults(payload, CATALOGUE, CALIBRATION), [payload])
+  const r = useMemo(() => deriveShared(shared), [shared])
+  const rFull = useMemo(() => deriveResults(payload, CATALOGUE, CALIBRATION, ruledOutSlugs(payload)), [payload])
   const enc = useMemo(() => encodePayload(shared), [shared])
   const pPath = previewPath(r)
   const link = `${base()}${kind === 'preview' && pPath ? pPath : ''}#r=${enc}`

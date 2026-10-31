@@ -11,7 +11,8 @@ import { profileToPayload } from '../src/engine/payload'
 import { deriveResults } from '../src/engine/results'
 import { distance, type Archetype } from '../src/engine/match'
 import { mulberry32 } from '../src/engine/prng'
-import { MODEL, archetypeSheet, latentSheet, quantile, randomAnswers, respond, type Sheets } from './sim'
+import { MODEL, archetypeSheet, falseRuleOuts, latentSheet, quantile, randomAnswers, respond, type Sheets } from './sim'
+import { validateCommitments } from '../src/engine/commitments'
 import type { Calibration } from '../src/engine/calibration'
 import { ALL_ITEMS, itemsForMode } from '../src/data/items'
 
@@ -237,6 +238,18 @@ for (let d = 0; d < RT; d++) {
   if (r.hero.kind === 'split' || r.hero.kind === 'constant') rndHero++
 }
 report.randomGetsHeadline = Number((rndHero / RT).toFixed(3))
+
+// ---------- Core commitments: sincere adherents wrongly ruled out of their own ideology ----------
+// Own RNG stream, drawn last, so every threshold above keeps its exact draws.
+const commitments = validateCommitments(
+  JSON.parse(readFileSync('content/archetypes/commitments.json', 'utf8')),
+  ALL_ITEMS,
+  archetypes.map(a => a.slug),
+)
+const fro = falseRuleOuts(mulberry32(0xc0331), sheets, commitments, Math.max(50, Math.round(DRAWS / 20)))
+// Headline figure: the full-length test, where every commitment is asked.
+report.commitmentFalseRuleOut = fro ? fro.byMode.full : null
+report.commitmentFalseRuleOutDetail = fro
 report.model = MODEL
 report.draws = DRAWS
 report.generated = process.env.CAL_DATE ?? new Date().toISOString().slice(0, 10)

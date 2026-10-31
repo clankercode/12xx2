@@ -2,6 +2,8 @@ import { AXIS_IDS } from '../../engine/types'
 import { AXES } from '../../data/axes'
 import { CALIBRATION } from '../../data/calibration'
 import { CATALOGUE, CATALOGUE_IS_PLACEHOLDER } from '../../data/archetypes'
+import { HAS_COMMITMENTS } from '../../data/commitments'
+import { MAX_COMMITMENTS } from '../../engine/commitments'
 import { IDEAL_FRAME, IDEAL_STEM, NOW_FRAME, NOW_STEM, SHARED_RULE } from '../../data/frames'
 import css from './Prose.module.css'
 
@@ -208,6 +210,41 @@ export function MethodPage() {
       <p>
         Ideologies with a history of mass atrocity (historical fascism, Stalinist Marxism–Leninism) and theocratic absolutism can
         lead your headline only when they are very close and stable; share cards need your explicit opt-in to show them.
+      </p>
+
+      <h2 id="core-commitments">Core commitments</h2>
+      <p>
+        Distance alone can call you close to an ideology while you reject something every one of its adherents holds. So each
+        ideology can list up to {MAX_COMMITMENTS} <em>core commitments</em>: statements on which every sincere adherent is on one
+        side. This is a pass/fail check, not a score, in the spirit of Critical Fallibilism’s idea–goal–context evaluation: the
+        ideology is the idea, each commitment a goal it must meet, and your answers the context.
+      </p>
+      <ul>
+        <li>
+          <strong>✔ holds</strong>: you answered on the required side, at least “slightly”.
+        </li>
+        <li>
+          <strong>✘ contradicted</strong>: you answered on the other side at “agree” / “disagree” strength or stronger. “Slightly”
+          the other way is not decisive, because single answers are noisy.
+        </li>
+        <li>
+          <strong>? unknown</strong>: you passed, answered neutral, were only slightly the other way, or the statement is not in
+          your length of test. Unknown never counts as holding.
+        </li>
+      </ul>
+      <p>
+        Most commitments check your ideal-system answer; some also check here and now, and then fail if either frame fails. One
+        contradicted commitment rules the ideology out for you: it can never be your headline match, in either frame, and its
+        stability re-runs skip it. It stays in your ranked list, marked “ruled out” with the statement, and if it was nearest by
+        distance the headline says so. A shared link carries only which ideologies were ruled out, never the answers.
+        {typeof rep.commitmentFalseRuleOut === 'number' && (
+          <>
+            {' '}
+            In the calibration simulation, sincere adherents are wrongly ruled out of their own ideology{' '}
+            {rep.commitmentFalseRuleOut < 0.001 ? 'under 0.1%' : `${(100 * rep.commitmentFalseRuleOut).toFixed(1)}%`} of the time.
+          </>
+        )}
+        {!HAS_COMMITMENTS && ' Commitments are still being coded, so none are applied yet.'}
       </p>
 
       <h2>How the ideology profiles were made</h2>

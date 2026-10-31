@@ -1,0 +1,1207 @@
+{
+ "version": 1,
+ "method": "Core commitments: statements on which every sincere adherent of an ideology must be on one side. Three Opus coders (lenses: theorist, insider, sceptic) proposed commitments independently; an entry is kept when at least 2 of 3 proposed it (coders = how many), and each was checked against the ideology's coded answer sheet (required side at |v| >= 2 in every required frame). side is the sign of the raw answer (+1 agree, -1 disagree) to the statement as worded; the item key is not applied. frame I checks the ideal-system answer; both also checks here and now. A decisive contradiction (|answer| >= 2 on the wrong side) rules the ideology out. Entries whose simulated sincere adherents are wrongly ruled out more than 2% of the time are moved to dropped by scripts/commitments-audit.ts. Raw coder output: commitments-raw.json.",
+ "commitments": {
+  "marxism-leninism": [
+   {
+    "item": "col-01",
+    "frame": "I",
+    "side": 1,
+    "why": "Social ownership of the means of production, through the state and collectives, is the economic base the doctrine is built on.",
+    "coders": 2
+   },
+   {
+    "item": "col-06",
+    "frame": "I",
+    "side": -1,
+    "why": "An economy where nearly all productive assets are privately owned is capitalism, which Marxism-Leninism exists to abolish.",
+    "coders": 3
+   },
+   {
+    "item": "dem-03",
+    "frame": "I",
+    "side": -1,
+    "why": "Marxism-Leninism does not let bourgeois or opposition parties compete to take power from the vanguard party.",
+    "coders": 3
+   },
+   {
+    "item": "dem-04",
+    "frame": "I",
+    "side": 1,
+    "why": "Leninist theory has the dictatorship of the proletariat run through a single vanguard party, with rival parties banned as class enemies.",
+    "coders": 3
+   }
+  ],
+  "trotskyism": [
+   {
+    "item": "col-01",
+    "frame": "I",
+    "side": 1,
+    "why": "Trotskyism aims at a workers' state where the means of production are owned collectively.",
+    "coders": 3
+   },
+   {
+    "item": "col-06",
+    "frame": "I",
+    "side": -1,
+    "why": "Nearly universal private ownership of productive assets is the capitalism that Trotskyism sets out to overthrow.",
+    "coders": 3
+   },
+   {
+    "item": "int-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Permanent revolution and its rejection of socialism in one country put working-class internationalism ahead of national loyalty, now as well as in the ideal.",
+    "coders": 3
+   },
+   {
+    "item": "pla-01",
+    "frame": "I",
+    "side": 1,
+    "why": "Trotsky's programme requires a democratically planned economy, coordinated nationally and ultimately worldwide, not one run by market competition.",
+    "coders": 3
+   }
+  ],
+  "democratic-socialism": [
+   {
+    "item": "col-04",
+    "frame": "I",
+    "side": 1,
+    "why": "Democratic socialism, unlike social democracy, wants the major means of production owned socially by the public, by cooperatives or by workers.",
+    "coders": 3
+   },
+   {
+    "item": "col-06",
+    "frame": "I",
+    "side": -1,
+    "why": "An economy where nearly all productive assets are privately owned contradicts its goal of social ownership of major enterprises.",
+    "coders": 2
+   },
+   {
+    "item": "dem-03",
+    "frame": "both",
+    "side": 1,
+    "why": "The tradition holds that political democracy, including freedom to form rival parties, is non-negotiable.",
+    "coders": 3
+   },
+   {
+    "item": "dem-04",
+    "frame": "both",
+    "side": -1,
+    "why": "Democratic socialism treats competitive multiparty elections as part of socialism itself, which is what separates it from one-party communism.",
+    "coders": 3
+   }
+  ],
+  "market-socialism": [
+   {
+    "item": "col-04",
+    "frame": "I",
+    "side": 1,
+    "why": "Every model of market socialism, from Yugoslav self-management to coupon socialism, makes firms worker-owned or socially owned.",
+    "coders": 3
+   },
+   {
+    "item": "col-06",
+    "frame": "I",
+    "side": -1,
+    "why": "Nearly universal private ownership of productive assets would remove the 'socialism' from market socialism.",
+    "coders": 3
+   },
+   {
+    "item": "col-09",
+    "frame": "I",
+    "side": -1,
+    "why": "Private shareholder ownership of large firms is the capitalist ownership that market socialism replaces.",
+    "coders": 2
+   },
+   {
+    "item": "pla-01",
+    "frame": "I",
+    "side": -1,
+    "why": "Market socialism is defined by letting markets and prices, not a central plan, decide what is produced.",
+    "coders": 3
+   }
+  ],
+  "eco-socialism": [
+   {
+    "item": "col-04",
+    "frame": "I",
+    "side": 1,
+    "why": "Eco-socialism takes energy, land and key industries into common ownership so production can be organised around ecological limits.",
+    "coders": 2
+   },
+   {
+    "item": "col-06",
+    "frame": "I",
+    "side": -1,
+    "why": "The tradition blames private capitalist ownership and its drive to grow for the ecological crisis.",
+    "coders": 3
+   },
+   {
+    "item": "pla-02",
+    "frame": "I",
+    "side": -1,
+    "why": "Eco-socialists hold that profit-driven market allocation cannot respect planetary limits, so prices and competition alone cannot decide production.",
+    "coders": 3
+   }
+  ],
+  "african-socialism": [
+   {
+    "item": "col-06",
+    "frame": "I",
+    "side": -1,
+    "why": "African socialism holds land communally and puts the major means of production under peasants and workers through the state and cooperatives.",
+    "coders": 2
+   },
+   {
+    "item": "col-07",
+    "frame": "I",
+    "side": -1,
+    "why": "Ujamaa's founding principle is that nobody exploits and the community cares for all, so it cannot accept a large rich-poor divide.",
+    "coders": 3
+   },
+   {
+    "item": "pla-02",
+    "frame": "I",
+    "side": -1,
+    "why": "Every variant gives national planning priorities and communal needs a role that pure price competition would rule out.",
+    "coders": 2
+   }
+  ],
+  "social-democracy": [
+   {
+    "item": "col-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Reducing inequality through progressive taxes and universal welfare is the tradition's central purpose.",
+    "coders": 2
+   },
+   {
+    "item": "dem-03",
+    "frame": "both",
+    "side": 1,
+    "why": "Social democracy pursues reform through competitive parliamentary elections and treats them as its foundation.",
+    "coders": 3
+   },
+   {
+    "item": "dem-04",
+    "frame": "both",
+    "side": -1,
+    "why": "Rule by one permanent party abolishes the parliamentary democracy that social democracy depends on.",
+    "coders": 3
+   },
+   {
+    "item": "pla-02",
+    "frame": "both",
+    "side": -1,
+    "why": "Social democracy holds that markets left alone distribute wealth unjustly and must be shaped by democratic politics.",
+    "coders": 3
+   }
+  ],
+  "progressive-liberalism": [
+   {
+    "item": "dem-03",
+    "frame": "both",
+    "side": 1,
+    "why": "Progressive liberalism treats liberal democracy, with open electoral competition, as its framework.",
+    "coders": 2
+   },
+   {
+    "item": "pro-01",
+    "frame": "both",
+    "side": 1,
+    "why": "Modern progressive liberalism treats LGBTQ equality, including equal marriage, as a civil right.",
+    "coders": 3
+   }
+  ],
+  "green-politics": [
+   {
+    "item": "dem-03",
+    "frame": "both",
+    "side": 1,
+    "why": "Grassroots democracy is one of the Greens' four pillars, and it rules out barring citizens from forming parties.",
+    "coders": 2
+   },
+   {
+    "item": "dem-04",
+    "frame": "both",
+    "side": -1,
+    "why": "Grassroots democracy is one of the four Green pillars, so permanent rule by one party without rivals contradicts it.",
+    "coders": 2
+   },
+   {
+    "item": "dem-06",
+    "frame": "both",
+    "side": -1,
+    "why": "Giving one leader power to act without elected lawmakers contradicts the participatory, grassroots democracy pillar.",
+    "coders": 2
+   },
+   {
+    "item": "mil-07",
+    "frame": "I",
+    "side": -1,
+    "why": "Non-violence is a founding pillar, so Greens reject armed force abroad for national interests when no one has attacked.",
+    "coders": 2
+   },
+   {
+    "item": "pla-02",
+    "frame": "both",
+    "side": -1,
+    "why": "Ecological wisdom requires keeping production within planetary limits, which unregulated price competition does not do.",
+    "coders": 3
+   }
+  ],
+  "left-populism": [
+   {
+    "item": "col-05",
+    "frame": "both",
+    "side": 1,
+    "why": "Its basic divide is the many against an enriched few, and it calls for redistributing that concentrated wealth.",
+    "coders": 3
+   },
+   {
+    "item": "col-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Left populism is defined by opposing the gap between the many and a privileged oligarchy.",
+    "coders": 2
+   },
+   {
+    "item": "dem-07",
+    "frame": "both",
+    "side": 1,
+    "why": "Left populism defines democracy as the people ruling rather than unelected technocrats, so voters must outweigh experts.",
+    "coders": 3
+   },
+   {
+    "item": "pla-02",
+    "frame": "both",
+    "side": -1,
+    "why": "It holds that markets must not override the popular will and wants public control of key sectors.",
+    "coders": 2
+   }
+  ],
+  "social-liberalism": [
+   {
+    "item": "col-01",
+    "frame": "I",
+    "side": -1,
+    "why": "Social liberalism wants a mainly private, market-coordinated economy, so common ownership of nearly all assets contradicts it.",
+    "coders": 2
+   },
+   {
+    "item": "dem-03",
+    "frame": "both",
+    "side": 1,
+    "why": "Social liberalism is committed to liberal democracy with open competition for power.",
+    "coders": 3
+   }
+  ],
+  "centrism": [
+   {
+    "item": "col-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Centrism backs a regulated market economy, which nearly complete common ownership of productive assets would abolish.",
+    "coders": 3
+   },
+   {
+    "item": "dem-03",
+    "frame": "both",
+    "side": 1,
+    "why": "Centrists support liberal democracy with competitive elections and checks and balances.",
+    "coders": 2
+   },
+   {
+    "item": "dem-04",
+    "frame": "both",
+    "side": -1,
+    "why": "Centrism backs liberal democracy with checks and balances, which one-party rule abolishes.",
+    "coders": 2
+   },
+   {
+    "item": "dem-06",
+    "frame": "both",
+    "side": -1,
+    "why": "Distrust of concentrated power and support for checks and balances rule out a leader acting without lawmakers' approval.",
+    "coders": 3
+   }
+  ],
+  "third-way": [
+   {
+    "item": "col-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Its defining move was dropping wholesale common ownership in favour of a market economy.",
+    "coders": 3
+   },
+   {
+    "item": "dem-03",
+    "frame": "both",
+    "side": 1,
+    "why": "The Third Way works within representative democracy and seeks to modernise it, not to replace it.",
+    "coders": 2
+   },
+   {
+    "item": "dem-04",
+    "frame": "both",
+    "side": -1,
+    "why": "The Third Way works within representative democracy and seeks to modernise it, so it rejects one-party rule.",
+    "coders": 2
+   },
+   {
+    "item": "pla-01",
+    "frame": "both",
+    "side": -1,
+    "why": "The Third Way rejects the old left's command economy and accepts markets as the main coordinator.",
+    "coders": 3
+   }
+  ],
+  "neoliberalism": [
+   {
+    "item": "col-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Private property is a foundation of the neoliberal order, and it privatises state enterprises.",
+    "coders": 3
+   },
+   {
+    "item": "glo-01",
+    "frame": "both",
+    "side": 1,
+    "why": "Open trade without protectionist barriers is a core neoliberal principle.",
+    "coders": 3
+   },
+   {
+    "item": "pla-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Neoliberal thought holds that prices coordinate dispersed knowledge better than any planner can.",
+    "coders": 3
+   },
+   {
+    "item": "pla-04",
+    "frame": "both",
+    "side": 1,
+    "why": "Neoliberalism holds that capital should go to its most profitable use as markets judge it, not toward goals set by planners.",
+    "coders": 2
+   }
+  ],
+  "liberal-conservatism": [
+   {
+    "item": "col-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Free enterprise and private property are the economic-liberal half of liberal conservatism.",
+    "coders": 3
+   },
+   {
+    "item": "dem-03",
+    "frame": "both",
+    "side": 1,
+    "why": "Liberal conservatives treat liberal democracy and parliamentary institutions as inherited goods to protect.",
+    "coders": 3
+   },
+   {
+    "item": "dem-04",
+    "frame": "both",
+    "side": -1,
+    "why": "Liberal conservatism defends liberal democracy and parliamentary institutions as inherited goods, and one-party rule destroys them.",
+    "coders": 2
+   },
+   {
+    "item": "pla-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Liberal conservatives hold that markets should coordinate the economy, not a central plan.",
+    "coders": 3
+   }
+  ],
+  "traditional-conservatism": [
+   {
+    "item": "col-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Traditional conservatism treats private property as a bulwark of independence and continuity.",
+    "coders": 3
+   },
+   {
+    "item": "pla-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Burkean scepticism of grand rational planning rules out running the economy by a deliberate central plan.",
+    "coders": 3
+   }
+  ],
+  "paleoconservatism": [
+   {
+    "item": "int-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Paleoconservatism opposes supranational bodies overriding national self-government.",
+    "coders": 2
+   },
+   {
+    "item": "int-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Paleoconservatives rank loyalty to their own particular people above abstract universal humanity.",
+    "coders": 2
+   },
+   {
+    "item": "mul-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Paleoconservatism treats the nation as a historic people and calls for immigration to be sharply reduced.",
+    "coders": 3
+   }
+  ],
+  "communitarianism": [
+   {
+    "item": "dem-03",
+    "frame": "both",
+    "side": 1,
+    "why": "Communitarianism favours democracy with active civic participation and does not bar citizens from forming parties.",
+    "coders": 2
+   }
+  ],
+  "christian-democracy": [
+   {
+    "item": "col-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Catholic social teaching, the tradition's base, defends private property (with a social obligation) against collectivisation.",
+    "coders": 3
+   },
+   {
+    "item": "dem-03",
+    "frame": "both",
+    "side": 1,
+    "why": "Christian democracy is committed to constitutional democracy with competing parties.",
+    "coders": 2
+   },
+   {
+    "item": "dem-04",
+    "frame": "both",
+    "side": -1,
+    "why": "Christian democracy is committed to constitutional multiparty democracy, so it rejects one-party rule.",
+    "coders": 2
+   },
+   {
+    "item": "pla-02",
+    "frame": "both",
+    "side": -1,
+    "why": "Its social market economy rests on solidarity, welfare and social partnership, not on market outcomes alone.",
+    "coders": 2
+   }
+  ],
+  "catholic-integralism": [
+   {
+    "item": "pro-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Integralists hold that public law must reflect natural-law teaching that marriage is between a man and a woman, now as well as in the ideal.",
+    "coders": 3
+   },
+   {
+    "item": "rel-01",
+    "frame": "I",
+    "side": -1,
+    "why": "Integralism subordinates the temporal power to the spiritual power, as body to soul, which is the opposite of strict separation.",
+    "coders": 3
+   },
+   {
+    "item": "rel-02",
+    "frame": "I",
+    "side": 1,
+    "why": "Integralists hold that the state should recognise the true religion, Catholicism.",
+    "coders": 3
+   },
+   {
+    "item": "rel-05",
+    "frame": "I",
+    "side": -1,
+    "why": "Integralism denies that law can be neutral and orders it to man's supernatural end as taught by the Church.",
+    "coders": 2
+   }
+  ],
+  "islamic-democracy": [
+   {
+    "item": "dem-04",
+    "frame": "both",
+    "side": -1,
+    "why": "Islamic democracy is defined by elected, accountable government, which permanent single-party rule abolishes.",
+    "coders": 3
+   },
+   {
+    "item": "dem-05",
+    "frame": "both",
+    "side": 1,
+    "why": "It holds that the community chooses and can hold its rulers to account, so voters must be able to replace entrenched power.",
+    "coders": 3
+   }
+  ],
+  "theocratic-absolutism": [
+   {
+    "item": "dem-03",
+    "frame": "I",
+    "side": -1,
+    "why": "Supreme religious authority is final and is not checked or replaced through parties and elections.",
+    "coders": 3
+   },
+   {
+    "item": "rel-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Theocratic absolutism holds that faith and state are one.",
+    "coders": 3
+   },
+   {
+    "item": "rel-05",
+    "frame": "both",
+    "side": -1,
+    "why": "It holds that law is revealed by God, not made from secular reasons, and it rejects liberal secularism now as well.",
+    "coders": 3
+   },
+   {
+    "item": "rel-06",
+    "frame": "I",
+    "side": 1,
+    "why": "Theocratic absolutism places lawmaking authority in a supreme religious ruler or clergy.",
+    "coders": 2
+   }
+  ],
+  "distributism": [
+   {
+    "item": "col-07",
+    "frame": "I",
+    "side": -1,
+    "why": "Distributism's founding claim is that property and wealth must be spread widely, not concentrated in a few hands.",
+    "coders": 3
+   },
+   {
+    "item": "pla-01",
+    "frame": "I",
+    "side": -1,
+    "why": "Distributists reject collectivist planning as a route to Belloc's servile state and want production decided by many small proprietors.",
+    "coders": 3
+   }
+  ],
+  "gandhian-sarvodaya": [
+   {
+    "item": "fed-01",
+    "frame": "I",
+    "side": 1,
+    "why": "Gram swaraj builds self-rule from self-governing village republics, so most decisions are made locally rather than nationally.",
+    "coders": 2
+   },
+   {
+    "item": "mil-01",
+    "frame": "I",
+    "side": -1,
+    "why": "Gandhian ahimsa rejects relying on overwhelming military force, and the ideal relies on unarmed peace brigades instead.",
+    "coders": 2
+   },
+   {
+    "item": "mil-05",
+    "frame": "both",
+    "side": -1,
+    "why": "A pre-emptive military strike breaks non-violence, which Gandhian thought holds even in defence.",
+    "coders": 2
+   },
+   {
+    "item": "mil-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Ahimsa governs everything in Sarvodaya, so armed force abroad when no one has attacked is ruled out.",
+    "coders": 3
+   },
+   {
+    "item": "rel-02",
+    "frame": "both",
+    "side": -1,
+    "why": "Sarvodaya respects all religions equally and prefers none, which an official religion would contradict.",
+    "coders": 2
+   }
+  ],
+  "national-conservatism": [
+   {
+    "item": "int-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Letting an international court override national courts subordinates national self-government to a supranational body, which national conservatives define themselves against.",
+    "coders": 2
+   },
+   {
+    "item": "int-07",
+    "frame": "both",
+    "side": -1,
+    "why": "The doctrine holds that the world should be a family of self-governing nations, which a binding world government would abolish.",
+    "coders": 3
+   },
+   {
+    "item": "int-10",
+    "frame": "both",
+    "side": 1,
+    "why": "National conservatism puts loyalty to the independent nation-state first, so placing a global community above one's country rejects its starting premise.",
+    "coders": 2
+   },
+   {
+    "item": "mul-05",
+    "frame": "both",
+    "side": -1,
+    "why": "National conservatives hold that the nation controls who may settle in it, so an unrestricted right to settle anywhere contradicts their view of borders and nationhood.",
+    "coders": 2
+   }
+  ],
+  "right-populism": [
+   {
+    "item": "dem-07",
+    "frame": "both",
+    "side": 1,
+    "why": "Right-populism is defined by the claim that the people's will should prevail over experts and unelected elites.",
+    "coders": 3
+   },
+   {
+    "item": "dem-08",
+    "frame": "both",
+    "side": -1,
+    "why": "Handing contested questions to an unelected council of the wise is exactly the elite rule populism exists to oppose.",
+    "coders": 2
+   },
+   {
+    "item": "int-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Right-populists demand that sovereignty be reclaimed from supranational institutions, so a binding world government contradicts them.",
+    "coders": 3
+   },
+   {
+    "item": "mul-05",
+    "frame": "both",
+    "side": -1,
+    "why": "Border control and reduced immigration are core right-populist demands, which an unrestricted right to settle anywhere would abolish.",
+    "coders": 2
+   }
+  ],
+  "civic-nationalism": [
+   {
+    "item": "int-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Civic nationalists treat the nation-state as the main home of self-government, which a binding world government would supersede.",
+    "coders": 3
+   },
+   {
+    "item": "int-10",
+    "frame": "both",
+    "side": 1,
+    "why": "Civic nationalism is still nationalism: it holds that citizens owe their primary political loyalty to their national community.",
+    "coders": 2
+   }
+  ],
+  "fascism": [
+   {
+    "item": "dem-03",
+    "frame": "I",
+    "side": -1,
+    "why": "Free formation of parties competing to replace the government is the liberal pluralism fascism explicitly rejects.",
+    "coders": 3
+   },
+   {
+    "item": "dem-04",
+    "frame": "I",
+    "side": 1,
+    "why": "Fascist doctrine calls for a single party and leader ruling permanently, with rival parties abolished as obsolete.",
+    "coders": 3
+   },
+   {
+    "item": "int-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Fascism holds national sovereignty to be absolute and scorns international bodies, so a binding world government contradicts it.",
+    "coders": 2
+   },
+   {
+    "item": "int-10",
+    "frame": "both",
+    "side": 1,
+    "why": "Fascism treats the nation as the supreme object of loyalty, above any individual, class or international community.",
+    "coders": 2
+   }
+  ],
+  "kemalism": [
+   {
+    "item": "dem-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Republicanism is a founding arrow of Kemalism, which replaced the hereditary Ottoman dynasty with a republic.",
+    "coders": 3
+   },
+   {
+    "item": "fed-01",
+    "frame": "I",
+    "side": -1,
+    "why": "Kemalism insists on a unitary, centralised republic, so having most law made by regions contradicts its constitutional design.",
+    "coders": 2
+   },
+   {
+    "item": "rel-05",
+    "frame": "both",
+    "side": 1,
+    "why": "Laiklik, one of the Six Arrows, requires that law and politics rest on secular reason rather than religious authority.",
+    "coders": 3
+   },
+   {
+    "item": "rel-06",
+    "frame": "both",
+    "side": -1,
+    "why": "Kemalism abolished the caliphate and religious courts specifically to remove clergy from law-making.",
+    "coders": 3
+   }
+  ],
+  "peronism": [
+   {
+    "item": "int-10",
+    "frame": "both",
+    "side": 1,
+    "why": "Political sovereignty and economic independence, two of Peronism's three banners, put the nation's own people first in loyalty.",
+    "coders": 2
+   },
+   {
+    "item": "pla-02",
+    "frame": "I",
+    "side": -1,
+    "why": "Peronist social justice and state-directed development require the state to shape production, not leave it to prices and competition alone.",
+    "coders": 3
+   }
+  ],
+  "classical-liberalism": [
+   {
+    "item": "col-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Private property is a natural right in classical liberalism, so common ownership of nearly all productive assets contradicts it.",
+    "coders": 3
+   },
+   {
+    "item": "dem-04",
+    "frame": "both",
+    "side": -1,
+    "why": "Classical liberalism requires government by consent with power limited and checked, which rules out permanent single-party rule.",
+    "coders": 3
+   },
+   {
+    "item": "pla-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Classical liberalism holds that markets and voluntary exchange, not planners, should coordinate the economy.",
+    "coders": 3
+   }
+  ],
+  "minarchism": [
+   {
+    "item": "col-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Minarchism holds property fully private, so common ownership of nearly all productive assets contradicts it.",
+    "coders": 2
+   },
+   {
+    "item": "col-05",
+    "frame": "I",
+    "side": -1,
+    "why": "The minimal state is limited to police, courts and defence, so it cannot redistribute wealth from rich to poor.",
+    "coders": 3
+   },
+   {
+    "item": "lib-10",
+    "frame": "both",
+    "side": -1,
+    "why": "Under self-ownership and non-aggression, punishing a person for conduct that harms only themselves is illegitimate force.",
+    "coders": 3
+   },
+   {
+    "item": "pla-01",
+    "frame": "both",
+    "side": -1,
+    "why": "A night-watchman state has no role in planning production, which minarchists leave entirely to markets.",
+    "coders": 3
+   }
+  ],
+  "georgism": [
+   {
+    "item": "glo-01",
+    "frame": "both",
+    "side": 1,
+    "why": "Free trade is a core Georgist commitment, set out in George's own 'Protection or Free Trade'.",
+    "coders": 3
+   },
+   {
+    "item": "glo-06",
+    "frame": "both",
+    "side": -1,
+    "why": "Georgism wants taxes on trade replaced by a land-value tax, so tariffs favouring local goods contradict it.",
+    "coders": 3
+   },
+   {
+    "item": "pla-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Beyond collecting land rent, Georgism leaves the economy to markets and private enterprise, not central planning.",
+    "coders": 3
+   }
+  ],
+  "paleolibertarianism": [
+   {
+    "item": "col-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Paleolibertarians treat property rights as absolute and private, so common ownership of nearly all productive assets contradicts it.",
+    "coders": 2
+   },
+   {
+    "item": "fed-01",
+    "frame": "both",
+    "side": 1,
+    "why": "Decentralisation, states' rights and secession are central to paleolibertarianism, which sees small units as the safeguard of liberty.",
+    "coders": 2
+   },
+   {
+    "item": "int-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Paleolibertarianism rejects global governance and supranational institutions as the extreme form of the centralised state it opposes.",
+    "coders": 3
+   }
+  ],
+  "anarcho-communism": [
+   {
+    "item": "col-01",
+    "frame": "I",
+    "side": 1,
+    "why": "Anarcho-communism holds that everything belongs to everyone, with production held in common by communes and workers' associations.",
+    "coders": 3
+   },
+   {
+    "item": "col-06",
+    "frame": "both",
+    "side": -1,
+    "why": "Abolishing capital and private ownership of the means of production is a defining anarcho-communist aim.",
+    "coders": 3
+   },
+   {
+    "item": "dem-04",
+    "frame": "both",
+    "side": -1,
+    "why": "Anarcho-communists reject any ruling party or 'workers' state' as a new set of rulers.",
+    "coders": 3
+   },
+   {
+    "item": "pla-02",
+    "frame": "I",
+    "side": -1,
+    "why": "It replaces markets and money with distribution by need, so letting prices and competition alone decide production contradicts it.",
+    "coders": 2
+   }
+  ],
+  "anarcho-syndicalism": [
+   {
+    "item": "col-01",
+    "frame": "I",
+    "side": 1,
+    "why": "In the syndicalist ideal, workers' collectives hold the means of production in common.",
+    "coders": 3
+   },
+   {
+    "item": "col-04",
+    "frame": "both",
+    "side": 1,
+    "why": "Anarcho-syndicalism's programme is for workers to take over the means of production and run them through their syndicates.",
+    "coders": 3
+   },
+   {
+    "item": "col-06",
+    "frame": "both",
+    "side": -1,
+    "why": "It seeks to expropriate capital, so wanting productive assets privately owned by investors contradicts it.",
+    "coders": 2
+   },
+   {
+    "item": "dem-04",
+    "frame": "both",
+    "side": -1,
+    "why": "Anarcho-syndicalism rejects all parties and the state, so permanent single-party rule contradicts it.",
+    "coders": 3
+   }
+  ],
+  "mutualism": [
+   {
+    "item": "col-09",
+    "frame": "both",
+    "side": -1,
+    "why": "Mutualism rejects absentee ownership that collects profit without working, which is exactly what passive shareholding is.",
+    "coders": 3
+   },
+   {
+    "item": "dem-04",
+    "frame": "both",
+    "side": -1,
+    "why": "Mutualists want authority dissolved into contract and voluntary federation, which rules out single-party rule.",
+    "coders": 3
+   },
+   {
+    "item": "pla-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Mutualism is market anarchism: it holds that markets, not planning, should coordinate production.",
+    "coders": 3
+   }
+  ],
+  "libertarian-municipalism": [
+   {
+    "item": "col-01",
+    "frame": "I",
+    "side": 1,
+    "why": "Libertarian municipalism calls for land and enterprises to be municipalised, owned in common by the community.",
+    "coders": 3
+   },
+   {
+    "item": "col-06",
+    "frame": "both",
+    "side": -1,
+    "why": "The doctrine rejects private ownership of the economy in favour of control by citizen assemblies.",
+    "coders": 3
+   },
+   {
+    "item": "dem-04",
+    "frame": "both",
+    "side": -1,
+    "why": "Libertarian municipalism puts policy-making in face-to-face assemblies, which permanent rule by one party would replace.",
+    "coders": 3
+   },
+   {
+    "item": "fed-02",
+    "frame": "I",
+    "side": 1,
+    "why": "Bookchin's confederalism gives wider councils only the coordinating powers that municipal assemblies delegate to them.",
+    "coders": 3
+   }
+  ],
+  "anarcho-capitalism": [
+   {
+    "item": "col-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Common ownership of productive assets is incompatible with the absolute private property anarcho-capitalism rests on.",
+    "coders": 3
+   },
+   {
+    "item": "col-06",
+    "frame": "both",
+    "side": 1,
+    "why": "Anarcho-capitalism holds that all property is private, including every productive asset.",
+    "coders": 3
+   },
+   {
+    "item": "col-10",
+    "frame": "I",
+    "side": 1,
+    "why": "Because taxation is held to be theft, wealth gained through voluntary exchange belongs entirely to the person who earned it.",
+    "coders": 2
+   },
+   {
+    "item": "pla-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Anarcho-capitalists hold that free markets should coordinate everything, with no planning authority.",
+    "coders": 3
+   }
+  ],
+  "anarcho-primitivism": [
+   {
+    "item": "dem-04",
+    "frame": "both",
+    "side": -1,
+    "why": "Anarcho-primitivism rejects the state and all rulers, so long-term single-party rule contradicts it.",
+    "coders": 2
+   },
+   {
+    "item": "tec-01",
+    "frame": "both",
+    "side": -1,
+    "why": "Anarcho-primitivists explicitly oppose genetic engineering, still more so for enhancement.",
+    "coders": 3
+   },
+   {
+    "item": "tec-03",
+    "frame": "both",
+    "side": -1,
+    "why": "Anarcho-primitivism rejects technology as a system and explicitly opposes AI development.",
+    "coders": 3
+   },
+   {
+    "item": "tec-05",
+    "frame": "both",
+    "side": -1,
+    "why": "The tradition opposes life extension as part of the technological project it wants dismantled.",
+    "coders": 3
+   }
+  ],
+  "absolute-monarchism": [
+   {
+    "item": "dem-01",
+    "frame": "I",
+    "side": -1,
+    "why": "Under absolute monarchy the ruler is chosen by hereditary succession, not by a popular vote of adults.",
+    "coders": 3
+   },
+   {
+    "item": "dem-03",
+    "frame": "I",
+    "side": -1,
+    "why": "Parties competing to replace those in power contradict a sovereign who is not answerable to elections or parliaments.",
+    "coders": 3
+   },
+   {
+    "item": "dem-05",
+    "frame": "I",
+    "side": -1,
+    "why": "A reigning dynasty being replaceable by voters is incompatible with hereditary, unaccountable-to-voters sovereignty.",
+    "coders": 2
+   },
+   {
+    "item": "dem-10",
+    "frame": "I",
+    "side": 1,
+    "why": "Absolute monarchism is defined by undivided sovereign power vested in a hereditary monarch.",
+    "coders": 3
+   }
+  ],
+  "constitutional-monarchism": [
+   {
+    "item": "dem-03",
+    "frame": "both",
+    "side": 1,
+    "why": "Constitutional monarchism puts governing power in an elected parliament, where rival parties compete for office.",
+    "coders": 3
+   },
+   {
+    "item": "dem-04",
+    "frame": "both",
+    "side": -1,
+    "why": "A monarch above party politics presupposes competing parties in parliament, which permanent single-party rule would abolish.",
+    "coders": 3
+   },
+   {
+    "item": "dem-06",
+    "frame": "both",
+    "side": -1,
+    "why": "Constitutional monarchism holds that the monarch reigns but does not rule, with government accountable to parliament, so one leader acting without lawmakers' approval contradicts it.",
+    "coders": 2
+   }
+  ],
+  "technocracy": [
+   {
+    "item": "dem-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Technocracy is defined by giving qualified experts, not voters, control over technical policy decisions.",
+    "coders": 3
+   },
+   {
+    "item": "rel-06",
+    "frame": "both",
+    "side": -1,
+    "why": "Technocratic governance is secular and evidence-based, so giving religious leaders a formal law-making role contradicts it.",
+    "coders": 2
+   }
+  ],
+  "confucian-meritocracy": [
+   {
+    "item": "dem-07",
+    "frame": "I",
+    "side": -1,
+    "why": "Confucian meritocracy holds that governing requires virtue and competence, so officials selected by merit rather than popular opinion should decide.",
+    "coders": 2
+   }
+  ],
+  "developmental-authoritarianism": [
+   {
+    "item": "pla-02",
+    "frame": "both",
+    "side": -1,
+    "why": "Developmental authoritarianism has the state guide industrial priorities rather than letting prices and competition alone decide output.",
+    "coders": 3
+   },
+   {
+    "item": "pla-03",
+    "frame": "both",
+    "side": 1,
+    "why": "The developmental state is defined by steering investment and credit toward national development goals.",
+    "coders": 3
+   },
+   {
+    "item": "pla-04",
+    "frame": "both",
+    "side": -1,
+    "why": "Leaving investment to pure returns is the unguided market allocation that developmental states reject in favour of industrial policy.",
+    "coders": 3
+   }
+  ],
+  "neoreaction": [
+   {
+    "item": "dem-01",
+    "frame": "I",
+    "side": -1,
+    "why": "Neoreaction rejects democracy and wants citizens treated as customers with exit, not as voters who choose the government.",
+    "coders": 3
+   },
+   {
+    "item": "dem-03",
+    "frame": "I",
+    "side": -1,
+    "why": "Neocameralism gives a sovereign CEO secure power, which party competition to replace the government contradicts.",
+    "coders": 3
+   },
+   {
+    "item": "int-07",
+    "frame": "both",
+    "side": -1,
+    "why": "Neoreaction's ideal is a patchwork of many competing small sovereigns, the opposite of a binding world government.",
+    "coders": 3
+   }
+  ],
+  "transhumanism": [
+   {
+    "item": "tec-02",
+    "frame": "both",
+    "side": -1,
+    "why": "Transhumanists favour genetic therapy and morphological freedom, so a blanket ban on heritable editing for any purpose contradicts them.",
+    "coders": 3
+   },
+   {
+    "item": "tec-05",
+    "frame": "both",
+    "side": 1,
+    "why": "Overcoming ageing through life extension is a founding goal of transhumanism.",
+    "coders": 3
+   },
+   {
+    "item": "tec-06",
+    "frame": "both",
+    "side": -1,
+    "why": "Transhumanism rejects 'natural' limits and treats ageing as a condition medicine should defeat.",
+    "coders": 2
+   },
+   {
+    "item": "tec-07",
+    "frame": "I",
+    "side": 1,
+    "why": "Morphological freedom and brain-computer interfaces are core transhumanist aims, so opposing safe brain-computer links for healthy people contradicts them.",
+    "coders": 2
+   }
+  ]
+ },
+ "dropped": []
+}

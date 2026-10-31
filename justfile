@@ -20,6 +20,10 @@ typecheck:
 calibrate:
     pnpm tsx scripts/calibrate.ts
 
+# Core commitments vs simulated sincere adherents; add --write to move any over 2% into `dropped`.
+commitments-audit *args:
+    pnpm tsx scripts/commitments-audit.ts {{args}}
+
 archetypes:
     pnpm tsx scripts/build-archetypes.ts
 
@@ -52,6 +56,11 @@ screenshots out="shots":
 # Needs `just dev` running. Compare page and cards for three simulated pairs, into shots/.
 compare-shots out="shots":
     pnpm tsx scripts/compare-shots.ts http://localhost:21313/ {{out}}
+
+# Needs a dev server with the test fixture: `COMMITMENTS_FIXTURE=tests/fixtures/commitments.json just dev`.
+# Seeds a run whose nearest match the fixture rules out; captures results, shared view, ideologies, method.
+commitments-shots out="shots":
+    pnpm tsx scripts/commitments-shots.ts http://localhost:21313/ {{out}}
 
 # Needs `just dev` running. Seeds two runs and captures the runs pages into shots/.
 history-shots out="shots":

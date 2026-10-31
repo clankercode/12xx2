@@ -1,6 +1,8 @@
 /** Respondent simulator shared by scripts/calibrate.ts and the calibration tests (spec §4.9). */
-import { AXIS_IDS, type Answer, type Answers, type AxisId, type Item } from '../src/engine/types'
+import { AXIS_IDS, MODES, type Answer, type Answers, type AxisId, type Item, type Mode } from '../src/engine/types'
 import { gaussian } from '../src/engine/prng'
+import { checkArchetype, type CommitmentBook } from '../src/engine/commitments'
+import { itemsForMode } from '../src/data/items'
 
 // Simulation model constants (published on the methodology page).
 export const MODEL = { thetaRange: 2.5, itemSd: 0.6, noiseSd: 0.8, copyRates: [0.3, 0.5, 0.7], passRates: [0, 0.1, 0.2], personAxisSd: 0.4 }
@@ -69,3 +71,40 @@ export function randomAnswers(rng: () => number, items: readonly Item[], pass = 
   return Object.fromEntries(items.map(it => [it.id, { i: r(), n: r() }]))
 }
 
+
+export interface FalseRuleOuts {
+  /** Per mode: share of simulated sincere adherents ruled out of their own ideology. */
+  byMode: Record<Mode, number>
+  /** Full-length test, per ideology that lists commitments. */
+  byArchetype: Record<string, number>
+  draws: number
+}
+
+/**
+ * Simulated sincere adherents (coders' sheets in both frames, ordinary noise and passing) of each
+ * ideology that lists core commitments: how often their answers rule out their own ideology.
+ * Null when no commitments exist yet.
+ */
+export function falseRuleOuts(rng: () => number, sheets: Sheets, book: CommitmentBook, perArchetype: number): FalseRuleOuts | null {
+  const slugs = Object.keys(book).filter(s => book[s]!.length > 0 && sheets[s])
+  if (!slugs.length) return null
+  const byMode = {} as Record<Mode, number>
+  const byArchetype: Record<string, number> = {}
+  for (const mode of MODES) {
+    const items = itemsForMode(mode)
+    const asked = new Set(items.map(i => i.id))
+    let out = 0
+    for (const slug of slugs) {
+      let own = 0
+      for (let d = 0; d < perArchetype; d++) {
+        const sheet = archetypeSheet(rng, items, sheets[slug]!, 'both')
+        const ans = respond(rng, items, sheet, { p: MODEL.copyRates[d % 3]!, pass: MODEL.passRates[(d >> 1) % 3]! })
+        if (checkArchetype(slug, book, ans, asked).all === 'fail') own++
+      }
+      out += own
+      if (mode === 'full') byArchetype[slug] = Number((own / perArchetype).toFixed(4))
+    }
+    byMode[mode] = Number((out / (perArchetype * slugs.length)).toFixed(4))
+  }
+  return { byMode, byArchetype, draws: perArchetype }
+}
