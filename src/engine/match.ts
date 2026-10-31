@@ -21,8 +21,22 @@ export interface Archetype {
 
 export type Vec = (number | null)[]
 
-/** Shared calculation for both ranking and diagnostic explanations. */
-function measureDistance(u: Vec, a: readonly number[], w: readonly number[]) {
+/** Weighted RMS distance over covered axes, normalised to 0…1 (spec §4.8). */
+export function distance(u: Vec, a: readonly number[], w: readonly number[]): number {
+  let num = 0
+  let den = 0
+  for (let i = 0; i < u.length; i++) {
+    const x = u[i]
+    if (x === null || x === undefined) continue
+    const wi = w[i] ?? 1
+    num += wi * (x - a[i]!) ** 2
+    den += wi
+  }
+  return den === 0 ? 1 : Math.sqrt(num / den) / 200
+}
+
+/** Diagnostic breakdown of distance(). Missing axes contribute zero; shares describe the squared gap, not the RMS distance. Not for hot paths. */
+export function explainDistance(u: Vec, a: readonly number[], w: readonly number[]) {
   let num = 0
   let den = 0
   const terms = u.map((score, i) => {
@@ -35,25 +49,14 @@ function measureDistance(u: Vec, a: readonly number[], w: readonly number[]) {
     }
     return { score: score ?? null, target: a[i]!, weight, covered, weightedSquaredGap }
   })
-  return { terms, coveredWeight: den, squaredWeightedGap: num, distance: den === 0 ? 1 : Math.sqrt(num / den) / 200 }
-}
-
-/** Weighted RMS distance over covered axes, normalised to 0…1 (spec §4.8). */
-export function distance(u: Vec, a: readonly number[], w: readonly number[]): number {
-  return measureDistance(u, a, w).distance
-}
-
-/** Missing axes contribute zero; shares describe the squared gap, not the RMS distance. */
-export function explainDistance(u: Vec, a: readonly number[], w: readonly number[]) {
-  const { terms, coveredWeight, squaredWeightedGap, distance: d } = measureDistance(u, a, w)
   return {
-    distance: d,
-    coveredWeight,
-    squaredWeightedGap,
+    distance: den === 0 ? 1 : Math.sqrt(num / den) / 200,
+    coveredWeight: den,
+    squaredWeightedGap: num,
     terms: terms.map(t => ({
       ...t,
-      share: squaredWeightedGap ? t.weightedSquaredGap / squaredWeightedGap : 0,
-      distanceSquaredContribution: coveredWeight ? t.weightedSquaredGap / coveredWeight / 200 ** 2 : 0,
+      share: num ? t.weightedSquaredGap / num : 0,
+      distanceSquaredContribution: den ? t.weightedSquaredGap / den / 200 ** 2 : 0,
     })),
   }
 }
