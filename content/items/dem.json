@@ -8,8 +8,8 @@
    "form": "rule",
    "level": 3,
    "tier": "quick",
-   "text": "Every adult should have an equal vote in choosing who governs, whatever their level of education or knowledge.",
-   "rationale": "Universal equal franchise, sharpened against epistocracy; 'equal vote' (not 'say') avoids direct-democracy and wealth readings. Mirrors dem-02. Audit (draft 01): D 0.99."
+   "text": "Every adult citizen should have an equal vote in choosing who governs, whatever their level of education or knowledge.",
+   "rationale": "Universal equal franchise, sharpened against epistocracy; 'equal vote' (not 'say') avoids direct-democracy and wealth readings. Mirrors dem-02. Audit (draft 01): D 0.99. 'citizen' added 2026-11-01 so the item tests epistocracy only, not who counts as a voter (non-citizen voting is a separate question)."
   },
   {
    "id": "dem-02",
