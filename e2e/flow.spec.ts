@@ -22,6 +22,30 @@ async function finishSteps(page: Page) {
   await expect(page.getByRole('region', { name: 'Headline result' })).toBeVisible()
 }
 
+test('the how-to is labelled, steps on with Next or Enter, and can be skipped from top or bottom', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /Quick/ }).click()
+  const heading = page.getByRole('heading', { level: 2 })
+  await expect(heading).toHaveText('How to answer, step 1 of 3: Every statement gets two answers')
+  // A way straight into the quiz at the top and the bottom of every step.
+  await expect(page.getByRole('button', { name: 'Skip to the first statement' })).toHaveCount(2)
+  await page.getByRole('button', { name: 'Next: answering on the grid' }).click()
+  await expect(heading).toHaveText(/step 2 of 3/)
+  // Focus moves to the new step's heading, so screen readers hear it; Enter then goes on.
+  await expect(heading).toBeFocused()
+  await expect(page.getByRole('button', { name: 'Skip to the first statement' })).toHaveCount(2)
+  await page.keyboard.press('Enter')
+  await expect(heading).toHaveText('How to answer, step 3 of 3: Pass, and save your progress')
+  await expect(page.getByRole('button', { name: 'Start the quiz' })).toHaveCount(2)
+  await page.keyboard.press('Enter')
+  await expect(page.getByText(/^1 of \d+$/)).toBeVisible()
+  // Back from the first statement reopens the how-to; the top button goes straight back.
+  await page.getByRole('button', { name: 'Back', exact: true }).click()
+  await expect(heading).toHaveText(/step 1 of 3/)
+  await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
+  await expect(page.getByText(/^1 of \d+$/)).toBeVisible()
+})
+
 test('quick run: no third-party or network requests beyond the app itself', async ({ page, baseURL }) => {
   const foreign: string[] = []
   page.on('request', r => {
@@ -30,7 +54,7 @@ test('quick run: no third-party or network requests beyond the app itself', asyn
   })
   await page.goto('/')
   await page.getByRole('button', { name: /Quick/ }).click()
-  await page.getByRole('button', { name: 'Start the questions' }).click()
+  await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
   await answerQuick(page)
   await finishSteps(page)
   // After load, the app makes no requests at all while answering.
@@ -42,10 +66,10 @@ test('quick run: no third-party or network requests beyond the app itself', asyn
   await expect(page.getByRole('region', { name: 'Headline result' })).toBeVisible()
 })
 
-test('shared link shows the same headline and axes as the owner view', async ({ page }) => {
+test('shared link shows the same headline and axes as the owner view', async ({ page, baseURL }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /Quick/ }).click()
-  await page.getByRole('button', { name: 'Start the questions' }).click()
+  await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
   await answerQuick(page)
   await finishSteps(page)
   const hero = await page.getByRole('region', { name: 'Headline result' }).innerText()
@@ -55,7 +79,7 @@ test('shared link shows the same headline and axes as the owner view', async ({ 
 
   const other = await page.context().browser()!.newContext()
   const p2 = await other.newPage()
-  await p2.goto(link.replace(/^https?:\/\/[^/]+/, 'http://localhost:21314'))
+  await p2.goto(link.replace(/^https?:\/\/[^/]+/, baseURL!))
   const hero2 = await p2.getByRole('region', { name: 'Headline result' }).innerText()
   // The shared view is derived from the same quantised payload as the owner's view.
   expect(hero2.split('\n')).toEqual(expect.arrayContaining(hero.split('\n').filter(l => /\S/.test(l)).slice(0, 3)))
@@ -65,7 +89,7 @@ test('shared link shows the same headline and axes as the owner view', async ({ 
 test('pasting a result link opens the comparison and draws its card', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /Quick/ }).click()
-  await page.getByRole('button', { name: 'Start the questions' }).click()
+  await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
   await answerQuick(page)
   await finishSteps(page)
   await page.getByRole('button', { name: 'Share my result' }).click()
@@ -84,7 +108,7 @@ test('pasting a result link opens the comparison and draws its card', async ({ p
 test('a finished Quick run continues into Standard: only the added statements, then straight to results', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /Quick/ }).click()
-  await page.getByRole('button', { name: 'Start the questions' }).click()
+  await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
   await answerQuick(page)
   await finishSteps(page)
   await expect(page.getByText(/Answer 24 or 72 more statements/)).toBeVisible()
@@ -115,7 +139,7 @@ test('a damaged link is rejected with a clear message', async ({ page }) => {
 test('grid is keyboard operable', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /Quick/ }).click()
-  await page.getByRole('button', { name: 'Start the questions' }).click()
+  await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
   const cell = page.locator('[role="gridcell"][tabindex="0"]').first()
   await cell.focus()
   await page.keyboard.press('ArrowRight')

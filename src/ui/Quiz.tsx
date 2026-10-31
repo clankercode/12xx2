@@ -54,8 +54,9 @@ export function Quiz() {
     target?.focus({ preventScroll: true })
   }, [item?.id])
 
+  // The how-to sets its own title, per step.
   useEffect(() => {
-    document.title = intro ? 'How to answer — 12 Axes²' : `Statement ${s.index + 1} of ${order.length}${adding ? ' more' : ''} — 12 Axes²`
+    if (!intro) document.title = `Statement ${s.index + 1} of ${order.length}${adding ? ' more' : ''} — 12 Axes²`
   }, [intro, s.index, order.length, adding])
 
   /** Whether focus is in the answer area or chip row right now (i.e. a keyboard or tap answer, not Back). */
@@ -304,46 +305,169 @@ function ChipRow({ chip, onChip, onNext }: { chip?: ChipId; onChip: (c: ChipId |
   )
 }
 
+/** The how-to before the first statement: short steps, each with a way straight into the quiz at top and bottom. */
+const HOW_TO = [
+  { title: 'Every statement gets two answers', next: 'Next: answering on the grid' },
+  { title: 'One tap gives both answers', next: 'Next: passing and saving' },
+  { title: 'Pass, and save your progress', next: null },
+] as const
+
 function Intro({ onStart }: { onStart: () => void }) {
   const { s, dispatch } = useStore()
+  const [step, setStep] = useState(0)
   const [practice, setPractice] = useState<{ i: Answer; n: Answer } | null>(null)
+  const heading = useRef<HTMLHeadingElement>(null)
+  const moved = useRef(false)
+  const resuming = Object.keys(s.answers).length > 0
+  const startLabel = resuming ? 'Back to the statements' : 'Start the quiz'
+  const skipLabel = resuming ? 'Back to the statements' : 'Skip to the first statement'
+  const here = HOW_TO[step]!
+  const last = step === HOW_TO.length - 1
+  const at = `${step + 1} of ${HOW_TO.length}`
+
+  const goStep = (k: number) => {
+    moved.current = true
+    setStep(k)
+  }
+  const next = () => (last ? onStart() : goStep(step + 1))
+
+  // A new step starts at the top, and screen readers hear its heading.
+  useLayoutEffect(() => {
+    if (!moved.current) return
+    moved.current = false
+    scrollTo(0, 0)
+    heading.current?.focus({ preventScroll: true })
+  }, [step])
+
+  useEffect(() => {
+    document.title = `How to answer, ${at} — 12 Axes²`
+  }, [at])
+
+  // Enter goes to the next step, unless focus is on a control that has its own Enter.
+  const onEnter = useRef(next)
+  onEnter.current = next
+  useEffect(() => {
+    const on = (e: globalThis.KeyboardEvent) => {
+      if (e.key !== 'Enter' || e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return
+      const t = e.target as HTMLElement
+      if (t.closest?.('button, a, input, select, textarea, [role="gridcell"]')) return
+      e.preventDefault()
+      onEnter.current()
+    }
+    addEventListener('keydown', on)
+    return () => removeEventListener('keydown', on)
+  }, [])
+
   return (
     <div className={`narrow ${css.intro}`}>
-      <h2>Two answers, one tap</h2>
-      <p>Every statement gets two answers. You give both with a single tap on the grid.</p>
-      <div className={css.frames}>
-        <div>
-          <h3 className="ideal">
-            <span className="glyph-ideal" aria-hidden /> In your ideal system
-          </h3>
-          <p className="small">
-            {IDEAL_FRAME} {IDEAL_STEM}
+      <section className={css.howto} aria-labelledby="howto-title">
+        <div className={css.howBar}>
+          <p className={css.howWhere} aria-hidden>
+            <span className={css.howName}>How to answer</span>
+            <span className={css.howCount}>Step {at}</span>
+            <span className={css.dots}>
+              {HOW_TO.map((_, k) => (
+                <i key={k} className={k === step ? css.dotOn : k < step ? css.dotDone : undefined} />
+              ))}
+            </span>
           </p>
+          <button type="button" className={`btn btn-ghost ${css.howSkip}`} onClick={onStart}>
+            {last ? startLabel : skipLabel}
+          </button>
         </div>
-        <div>
-          <h3 className="now">
-            <span className="glyph-now" aria-hidden /> Here and now
-          </h3>
-          <p className="small">
-            {NOW_FRAME} {NOW_STEM}
-          </p>
+
+        <div className={css.howBody}>
+          <h2 id="howto-title" ref={heading} tabIndex={-1} data-route-focus>
+            <span className="visually-hidden">How to answer, step {at}: </span>
+            {here.title}
+          </h2>
+
+          {step === 0 && (
+            <>
+              <p>
+                A short how-to before the statements: {HOW_TO.length} steps, about a minute. Each statement is answered twice,
+                once for each of these:
+              </p>
+              <div className={css.frames}>
+                <div>
+                  <h3 className="ideal">
+                    <span className="glyph-ideal" aria-hidden /> In your ideal system
+                  </h3>
+                  <p className="small">
+                    {IDEAL_FRAME} {IDEAL_STEM}
+                  </p>
+                </div>
+                <div>
+                  <h3 className="now">
+                    <span className="glyph-now" aria-hidden /> Here and now
+                  </h3>
+                  <p className="small">
+                    {NOW_FRAME} {NOW_STEM}
+                  </p>
+                </div>
+              </div>
+              <p className="small muted">{SHARED_RULE}</p>
+            </>
+          )}
+
+          {step === 1 && (
+            <>
+              <p>
+                Across the grid is your <span className="ideal">ideal system</span>; up the grid is{' '}
+                <span className="now">here and now</span>. One square holds both answers. Try it on this practice statement.
+              </p>
+              <section className={css.practice} aria-label="Practice statement">
+                <p className="small muted">Practice. This one isn’t scored.</p>
+                <p className={css.statement}>{PRACTICE_ITEM}</p>
+                <Grid value={practice} onPick={(i, n) => setPractice({ i, n })} idPrefix="practice" />
+                <p className={`small ${css.practiceSaid}`} role="status">
+                  {practice && 'That’s both answers. In the quiz, the same tap also takes you to the next statement.'}
+                </p>
+              </section>
+              <p className="small muted">Prefer two separate rows? You can switch under every statement.</p>
+            </>
+          )}
+
+          {step === 2 && (
+            <>
+              <dl className={css.tips}>
+                <dt>Not sure? Pass.</dt>
+                <dd>
+                  Pass if you don’t understand a statement, don’t know, or would rather not say. Passed answers are left out of
+                  your results; they never count as neutral.
+                </dd>
+                <dt>Sure about only one frame?</dt>
+                <dd>Tick “Pass ideal only” or “Pass here-and-now only” and answer the other on a single row.</dd>
+                <dt>Very different answers?</dt>
+                <dd>You’ll be asked why, in one tap. It’s optional.</dd>
+                <dt>Keyboard</dt>
+                <dd>Arrow keys move on the grid, Enter answers, P passes and Backspace goes back.</dd>
+              </dl>
+              <label className={css.toggle}>
+                <input type="checkbox" checked={s.save} onChange={e => dispatch({ type: 'save', save: e.target.checked })} /> Save
+                my progress on this device (you can clear it any time)
+              </label>
+            </>
+          )}
+
+          <div className={css.howNav}>
+            <button type="button" className="btn btn-primary" onClick={next}>
+              {last ? startLabel : here.next}
+            </button>
+            {step > 0 && (
+              <button type="button" className="btn btn-ghost" onClick={() => goStep(step - 1)}>
+                Back
+              </button>
+            )}
+            {!last && (
+              <button type="button" className={`btn ${css.howSkipEnd}`} onClick={onStart}>
+                {skipLabel}
+              </button>
+            )}
+          </div>
+          <p className={`small muted ${css.howKey}`}>{last ? 'Press Enter to start.' : 'Press Enter for the next step.'}</p>
         </div>
-      </div>
-      <p className="small muted">{SHARED_RULE}</p>
-      <section className={css.practice}>
-        <p className="small muted">Practice — this one isn’t scored.</p>
-        <p className={css.statement}>{PRACTICE_ITEM}</p>
-        <Grid value={practice} onPick={(i, n) => setPractice({ i, n })} idPrefix="practice" />
       </section>
-      <label className={css.toggle}>
-        <input type="checkbox" checked={s.save} onChange={e => dispatch({ type: 'save', save: e.target.checked })} /> Save my
-        progress on this device (you can clear it any time)
-      </label>
-      <div className={css.startRow}>
-        <button type="button" className="btn btn-primary" onClick={onStart}>
-          {Object.keys(s.answers).length ? 'Continue' : 'Start the questions'}
-        </button>
-      </div>
     </div>
   )
 }

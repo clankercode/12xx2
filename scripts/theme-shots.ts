@@ -68,7 +68,7 @@ for (const [vp, viewport] of [
   await snap(page, vp, '01-landing')
   await page.getByRole('button', { name: /Quick/ }).click()
   await snap(page, vp, '02-intro')
-  await page.getByRole('button', { name: 'Start the questions' }).click()
+  await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
   await snap(page, vp, '03-grid')
   const grid = page.locator('[role="grid"]').first()
   await grid.locator('[role="row"]').nth(1).locator('[role="gridcell"]').nth(5).click()
