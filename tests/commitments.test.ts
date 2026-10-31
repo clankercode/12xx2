@@ -133,8 +133,9 @@ describe('commitments file', () => {
     // Eleven red-line commitments can't be made from ten distinct red lines; the cap is checked against fakes.
     const many = Array.from({ length: 11 }, (_, k) => ({ id: `red-${String(k + 1).padStart(2, '0')}` }))
     expect(() => validateCommitments(file(many.map(r => red(r.id))), ALL_ITEMS, SLUGS, many)).toThrow(/at most 10 red-line/)
-    // Without red lines known, the shipped file without kinds still validates.
-    expect(() => validateCommitments(fixture, ALL_ITEMS, SLUGS, [])).not.toThrow()
+    // A file with no kinds (as before red lines) validates even when no red lines are known.
+    expect(() => validateCommitments(ok, ALL_ITEMS, SLUGS, [])).not.toThrow()
+    expect(() => validateCommitments(fixture, ALL_ITEMS, SLUGS, [])).toThrow(/red-line/)
   })
 })
 
