@@ -8,6 +8,7 @@ import { COUNTRY_CODES } from '../data/countries'
 import { CATALOGUE_VERSION } from '../data/archetypes'
 import { CALIBRATION } from '../data/calibration'
 import { EMPTY, type Session } from './session'
+import { RED_WORDING, migrateAnswers } from './wording'
 
 /**
  * Every finished run is kept on this device with its raw answers, so a later visit can show how
@@ -25,6 +26,8 @@ export interface Run {
   q: Partial<Record<AxisId, number | null>>
   /** Versions the run was first scored with; a mismatch with the current build means it is re-scored. */
   method: { format: number; catalogue: number; calibration: number; headline?: number }
+  /** Red-line wording the answers were given to (src/state/wording.ts); older runs are migrated on load. */
+  wording?: number
   /** What the results page said when the run finished, kept verbatim for comparison after re-scoring. */
   snapshot: { headline: string }
   /** Set when the run came in through import rather than being taken here. */
@@ -84,6 +87,7 @@ export function buildRun(s: Session, headline: string): Run | null {
     country: s.country,
     q: s.q,
     method: CURRENT_METHOD(),
+    wording: RED_WORDING,
     snapshot: { headline },
     ...(s.editedFrom ? { editedFrom: s.editedFrom } : {}),
   }
@@ -180,10 +184,11 @@ const cleanTime = (x: unknown, fallback: string) => (typeof x === 'string' && !N
 
 export function cleanRun(x: unknown, now: string): Run | null {
   if (!isObj(x) || !isMode(x.mode)) return null
-  const answers = cleanAnswers(x.answers)
+  const num = (v: unknown) => (Number.isInteger(v) ? (v as number) : 0)
+  const given = cleanAnswers(x.answers)
+  const answers = given && migrateAnswers(given, num(x.wording) || 1)
   if (!answers || Object.keys(answers).length === 0) return null
   const m = isObj(x.method) ? x.method : {}
-  const num = (v: unknown) => (Number.isInteger(v) ? (v as number) : 0)
   const snap = isObj(x.snapshot) && typeof x.snapshot.headline === 'string' ? x.snapshot.headline.slice(0, 200) : ''
   return {
     id: typeof x.id === 'string' && /^[0-9a-f]{8,32}$/.test(x.id) ? x.id : newRunId(),
@@ -195,6 +200,7 @@ export function cleanRun(x: unknown, now: string): Run | null {
     country: cleanCountry(x.country),
     q: cleanQ(x.q),
     method: { format: num(m.format) || FORMAT, catalogue: num(m.catalogue), calibration: num(m.calibration), headline: num(m.headline) || 1 },
+    wording: RED_WORDING,
     snapshot: { headline: snap },
     ...(x.imported === true ? { imported: true } : {}),
     ...(typeof x.editedFrom === 'string' && /^[0-9a-f]{8,32}$/.test(x.editedFrom) ? { editedFrom: x.editedFrom } : {}),

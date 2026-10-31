@@ -1,5 +1,6 @@
 import type { Answer, Answers, AxisId, ChipId, ItemAnswer, Mode, Statement } from '../engine/types'
 import { askedIdsForMode, longerModes, quizItems, unansweredRedLines } from '../data/items'
+import { RED_WORDING, migrateAnswers } from './wording'
 
 export interface Session {
   v: 1
@@ -37,6 +38,8 @@ export interface Session {
   review: { base: Answers; from: string | null } | null
   /** Set on a run that came from changing another run's answers after its results: that run's id. */
   editedFrom: string | null
+  /** Red-line wording the answers were given to (src/state/wording.ts); missing = 1. */
+  wording?: number
 }
 
 export const EMPTY: Session = {
@@ -57,6 +60,7 @@ export const EMPTY: Session = {
   extendRed: null,
   review: null,
   editedFrom: null,
+  wording: RED_WORDING,
 }
 
 export type Action =
@@ -176,6 +180,11 @@ export function loadSession(): Session {
       const s = JSON.parse(raw) as Session
       if (s && s.v === 1) {
         const out: Session = { ...EMPTY, ...s, incoming: readIncoming() ?? s.incoming }
+        // Answers given to older red-line wording: drop the ones that no longer mean the same.
+        const from = s.wording ?? 1
+        out.answers = migrateAnswers(out.answers ?? {}, from)
+        if (out.review?.base) out.review = { ...out.review, base: migrateAnswers(out.review.base, from) }
+        out.wording = RED_WORDING
         // An extension saved before red lines existed: fix the red lines it asks now, once.
         if (out.extendFrom && out.stage === 'quiz' && !Array.isArray(s.extendRed)) out.extendRed = unansweredRedLines(out.answers)
         // A review with nothing to compare against can't be finished: back to the results as they are.
