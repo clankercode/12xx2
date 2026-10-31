@@ -66,3 +66,11 @@ commitments-shots out="shots":
 # Needs `just dev` running. Seeds two runs and captures the runs pages into shots/.
 history-shots out="shots":
     pnpm tsx scripts/history-shots.ts http://localhost:21313/ {{out}}
+
+# Needs `just dev` running. Every how-to step at desktop and phone width, dark and light, into shots/intro/.
+intro-shots out="shots/intro":
+    pnpm tsx scripts/intro-shots.ts http://localhost:21313/ {{out}}
+
+# Needs `just dev` running. Post, story and wide share cards plus the comparison card, into shots/cards/.
+card-shots out="shots/cards":
+    pnpm tsx scripts/card-shots.ts http://localhost:21313/ {{out}}

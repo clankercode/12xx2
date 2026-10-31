@@ -41,7 +41,7 @@ for (const [name, viewport] of [
   await page.screenshot({ path: `${out}/${name}-01-landing.png`, fullPage: true })
   await page.getByRole('button', { name: /Quick/ }).click()
   await page.screenshot({ path: `${out}/${name}-02-intro.png`, fullPage: true })
-  await page.getByRole('button', { name: 'Start the questions' }).click()
+  await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
   await page.screenshot({ path: `${out}/${name}-03-grid.png`, fullPage: true })
   // A coherent respondent: a lean per axis; here and now differs on Ownership and Liberty vs security.
   const leanI: Record<AxisId, number> = { fed: -1, dem: -2, lib: -1.5, col: 1, pla: 1.5, glo: -1, int: 0.5, mil: 1, mul: -0.5, rel: -2.5, pro: -1.5, tec: -1 }

@@ -127,11 +127,79 @@
 }
 
 .intro {
-  padding: 28px 0 40px;
+  padding: 24px 0 40px;
 }
 
-.intro h2 {
-  margin-bottom: 10px;
+/* The how-to is a framed panel with its own header, so it can't be mistaken for a statement. */
+.howto {
+  border: 1px solid var(--rule-major);
+  border-radius: var(--radius-m);
+  background: var(--ink);
+  overflow: hidden;
+}
+
+.howBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  flex-wrap: wrap;
+  padding: 8px 20px;
+  background: var(--ink-2);
+  border-bottom: 1px solid var(--rule-major);
+}
+
+.howWhere {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.howName {
+  font-weight: 700;
+}
+
+.howCount {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.dots {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--rule-major);
+}
+
+.dots .dotDone {
+  background: var(--muted);
+}
+
+.dots .dotOn {
+  width: 20px;
+  background: linear-gradient(90deg, var(--ideal), var(--now));
+}
+
+.howSkip {
+  min-height: 40px;
+  padding: 0.35em 0.95em;
+  font-size: 0.92rem;
+  border-color: var(--rule-major);
+  color: var(--paper);
+}
+
+.howBody {
+  padding: 22px 20px 20px;
+}
+
+.howBody h2 {
+  margin-bottom: 12px;
 }
 
 .frames {
@@ -145,9 +213,11 @@
   margin-bottom: 6px;
 }
 
+/* A size container, so the grid fits the panel rather than the whole viewport on phones. */
 .practice {
-  margin: 22px 0;
-  padding: 18px 12px;
+  container-type: inline-size;
+  margin: 18px 0;
+  padding: 18px 12px 10px;
   border: 1px dashed var(--rule-major);
   border-radius: var(--radius-m);
 }
@@ -157,13 +227,72 @@
   text-align: center;
 }
 
-.startRow {
-  margin-top: 16px;
+/* Reserves its space so the panel doesn't jump when the practice answer is read back. */
+.practiceSaid {
+  min-height: 3em;
+  max-width: 40ch;
+  margin: 4px auto 0;
+  text-align: center;
+}
+
+.tips {
+  margin: 0 0 20px;
+}
+
+.tips dt {
+  font-weight: 700;
+  margin-top: 14px;
+}
+
+.tips dd {
+  margin: 4px 0 0;
+  max-width: var(--measure);
+}
+
+.howNav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule-major);
+}
+
+.howSkipEnd {
+  margin-left: auto;
+}
+
+.howKey {
+  margin: 10px 0 0;
+}
+
+/* Touch screens have no Enter key to mention. */
+@media (hover: none) {
+  .howKey {
+    display: none;
+  }
 }
 
 @media (max-width: 640px) {
   .frames {
     grid-template-columns: 1fr;
+  }
+
+  .howBar {
+    padding-inline: 14px;
+  }
+
+  .howBody {
+    padding: 18px 14px 16px;
+  }
+
+  .howNav > * {
+    flex: 1 1 100%;
+  }
+
+  .howSkipEnd {
+    margin-left: 0;
   }
 }
 
