@@ -58,8 +58,21 @@
 
 .unsure {
   display: flex;
-  gap: 14px;
+  gap: 4px 14px;
   flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+/* Pass and Next sit together on the right, Next last (the primary way on). */
+.go {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.next:disabled:hover {
+  background: var(--paper);
+  border-color: var(--paper);
 }
 
 .toggle {
@@ -82,7 +95,12 @@
   margin-top: 14px;
 }
 
+/* Input mode and the auto-advance setting: quiet, at the foot of the statement. */
 .modeSwitch {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 16px;
   margin-top: 4px;
 }
 

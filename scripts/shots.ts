@@ -20,10 +20,11 @@ async function answerAll(page: Page, pick: (k: number) => [number, number]) {
     const row = 3 - n
     const col = i + 3
     await grid.locator('[role="row"]').nth(row).locator('[role="gridcell"]').nth(col).click()
-    const next = page.getByRole('button', { name: 'Next statement' })
-    if (await next.isVisible().catch(() => false)) {
+    // Next is always shown now; the reason chips are what a big split opens.
+    const chips = page.getByRole('region', { name: 'Why the difference? (optional)' })
+    if (await chips.isVisible().catch(() => false)) {
       if (k % 2 === 0) await page.getByRole('button', { name: 'Can’t trust those in charge' }).click()
-      else await next.click()
+      else await page.getByRole('button', { name: /^(Next statement|Continue)$/ }).click()
     }
     await page.waitForTimeout(330)
   }
