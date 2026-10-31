@@ -172,7 +172,7 @@ The "closest match" uses squared Euclidean distance on **4 axes only**: Economy,
 - **Recovery [sim].** The same simulated adherents get their own archetype as the top Ideal match **87.5%** (Quick), **93%** (Standard) and **96%** (Full) of the time, and in the top 3 at least **99%** of the time. This is optimistic: the adherents are simulated from the very sheets the archetypes were built from.
 - **Stability.** 200 seeded bootstrap draws perturb each axis by its standard error and count how often the top match holds: ≥70% is "stable", 40–70% "fairly stable", otherwise "toss-up between A and B". The seed is a hash of the payload, so the owner and every viewer see the same label (`match.ts:87-110`).
 - **Why-lines and the top 3.** Each match lists the 3 axes that bring you closest and the 1 that pushes you furthest.
-- **Careless responding.** A within-frame keyed-dispersion index. In simulation it flags **89–90%** of uniform random clickers and at most **0.13%** of simulated honest respondents. When it fires the hero becomes "No reliable match", and random clickers receive a headline only **10%** of the time.
+- **Careless responding.** A within-frame keyed-dispersion index. In simulation it flags **89–90%** of uniform random clickers and at most **0.13%** of simulated honest respondents. When it fires the hero becomes "No reliable match". Random clickers receive a named headline only **0.2%** of the time (10% before the naming breakpoint below).
 - **Catalogue rules.** No living people, parties or countries. 47 named archetypes in 9 families, each family with at least 3. Sensitive archetypes (historical Fascism, Stalinist Marxism–Leninism, theocratic absolutism) can lead the hero only if "very close" **and** "stable" **and** the user opts in.
 
 ### 5.4 Residual limitations
@@ -226,7 +226,7 @@ The "closest match" uses squared Euclidean distance on **4 axes only**: Economy,
 
 **12 Axes².**
 
-- **The hero is gated.** It is "Ideal: A · Here and now: B" only when B beats A on the Now vector by a calibrated margin **and** is at least fairly stable. Otherwise it is "Constant: A". In simulation, no-gap respondents get a false split **4.4%** of the time (μ is set at the 95th percentile of no-gap margins). A careless flag replaces the hero with "No reliable match".
+- **The hero is gated.** It is "Ideal: A · Here and now: B" only when B beats A on the Now vector by a calibrated margin **and** is at least fairly stable. Otherwise it is "Constant: A". An ideology is named at all only when it is at least "loosely similar" and not a toss-up; otherwise the hero says "No close match" (or "No clear match") and shows the nearest as a measurement. In simulation, no-gap respondents get a false split **1.1%** of the time (4.4% before that naming breakpoint; μ is set at the 95th percentile of no-gap margins). A careless flag replaces the hero with "No reliable match".
 - **No percentages**, and no living people, parties or countries.
 - The Reality Gap is always printed with two baselines: random clicking (about 38/100) and simulated no-gap noise (median **7**, or **14.1** if a respondent never copies the Ideal cell). Its bands (12 / 22 / 33) are set so that ≥90% of no-gap respondents fall in the lowest band. Gaps are never framed as hypocrisy.
 - Archetype summaries are contrastive ("prioritizes X over Y"), not flattering.
@@ -299,7 +299,12 @@ The issues above are where we think 12 Axes² improves on its predecessors. This
    - The simulation brackets copy rates; it does not estimate them.
 9. **Self-placement and self-report.** The status-quo sliders ask respondents to place their country directly, while Ideal and Now are item-derived. The gap typology mixes the two kinds of measure. Reason chips are self-explanations, which people construct after the fact and which are not causal evidence.
 10. **Low power for real gaps** (§2.4). Within-person, a modest real gap usually goes unflagged, especially in Quick (21% detection at 1 scale point). The headline "Constant" therefore overstates constancy for some people.
-11. **Self-selected audience.** With no telemetry there are no population norms. Nothing on the results page compares you with "other people", and nothing should.
+11. **Core commitments are coders' judgements, and their error rate is circular.**
+   - A commitment means the coded profiles of an ideology's mainstream all take one side of a statement. Three instances of one model family (Claude Opus, three lenses) proposed them; an entry needs 2 of 3 and the coded sheet at |v| ≥ 2 on that side. No adherent or expert has checked them.
+   - The "under 0.1% wrongly ruled out" figure simulates adherents from the same coded sheets, so it measures consistency with our own coding (answer noise rarely trips a commitment), not whether real adherents hold the position. With noisier simulated answers (`commitments-audit --stress`: noise SD 1.2, axis SD 0.8) it rises to about 0.5%: it tracks the noise model, and no setting of it can detect a commitment real adherents reject.
+   - Counterexamples are the real test. The must-agree `dem-03` ("Any group of citizens should be free to form a party…") was dropped for 11 mainstream ideologies because militant democracy (Germany's Basic Law Art. 21(2)) sincerely rejects "any group". Suspects not yet resolved: `dem-06` must-disagree for constitutional monarchism and centrism (reserve and emergency powers), `int-10` must-agree for civic nationalism (constitutional patriotism), `col-07` must-disagree for social democracy, `col-04` must-agree for democratic socialism, and `pro-01` in the here-and-now frame for progressive liberalism.
+   - The site says "positions our coded profiles share", never "every adherent", and links to a report form for disputing one.
+12. **Self-selected audience.** With no telemetry there are no population norms. Nothing on the results page compares you with "other people", and nothing should.
 
 ### Status as of 2026-10-31
 

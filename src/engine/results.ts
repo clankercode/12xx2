@@ -40,6 +40,9 @@ export type Hero =
   | { kind: 'insufficient' }
   /** Every ideology close enough to lead is ruled out by a core commitment. */
   | { kind: 'none-fit' }
+  /** The nearest ideology fails the site's own breakpoint (beyond "loose", or a toss-up): a measurement, never a match. */
+  | { kind: 'no-close'; nearest: HeroPick }
+  /** `now` can fail `nameable` (no close match here and now); it is then shown as a measurement only. */
   | { kind: 'split'; ideal: HeroPick; now: HeroPick }
   | { kind: 'constant'; ideal: HeroPick; leaning?: HeroPick; nowMissing?: boolean }
 
@@ -113,6 +116,19 @@ function stabilityOf(stab: Stability, slug: string): Stability {
   const share = stab.wins.get(slug) ?? 0
   const label: Stability['label'] = share >= 0.7 ? 'stable' : share >= 0.4 ? 'fairly-stable' : 'toss-up'
   return { ...stab, share, label }
+}
+
+/**
+ * The breakpoint for naming an ideology in any headline: within the "loose" cut and not a
+ * toss-up. Below it the nearest ideology is shown only as a labelled measurement.
+ */
+export function nameable(p: HeroPick): boolean {
+  return p.match.label !== 'none' && p.stability.label !== 'toss-up'
+}
+
+/** A "constant" hero whose two frames really share their nearest match (no lean elsewhere, no missing frame). */
+export function sameInBothFrames(h: Extract<Hero, { kind: 'constant' }>): boolean {
+  return !h.nowMissing && (!h.leaning || h.leaning.match.arch.slug === h.ideal.match.arch.slug)
 }
 
 function pickHero(
@@ -199,6 +215,7 @@ export function deriveResults(p: Payload, cat: readonly Archetype[], cal: Calibr
 
   const ideal = pickHero(rankedI, p.I, p.seI, cat, seed, cal, p.mode, out)
   if (!ideal) return { ...base, hero: { kind: 'none-fit' } }
+  if (!nameable(ideal)) return { ...base, hero: { kind: 'no-close', nearest: ideal } }
   if (!covN) return { ...base, hero: { kind: 'constant', ideal, nowMissing: true } }
 
   const now = pickHero(rankedN, p.N, p.seN, cat, (seed ^ 0x9e3779b9) >>> 0, cal, p.mode, out)

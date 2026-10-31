@@ -90,7 +90,7 @@ console.log('  worst commitments:', topC.map(([k, w]) => `${k} ${(100 * w.rate).
 const fro = falseRuleOuts(mulberry32(0xc0332), sheets, book, 200)
 if (fro) console.log('falseRuleOuts (calibration report function, 200/ideology):', JSON.stringify(fro.byMode))
 console.log(`commitments over ${100 * LIMIT}% on any length: ${over.length}`)
-for (const o of over) console.log(`  ${o.slug} ${o.item} ${o.frame} side ${o.side}: ${(100 * o.falseRuleOut).toFixed(2)}%`)
+for (const o of over) console.log(`  ${o.slug} ${o.item} ${o.frame} side ${o.side}: ${(100 * o.falseRuleOut!).toFixed(2)}%`)
 
 // Impact on everyone else: latent (non-adherent) respondents from the calibration model.
 {

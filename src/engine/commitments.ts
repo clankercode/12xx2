@@ -1,26 +1,31 @@
 import type { Answer, Answers, Item } from './types'
 
 /**
- * Core commitments (an IGC-style binary check): statements on which every adherent of an
- * ideology must be on one side. A decisive contradiction rules the ideology out, however close
+ * Core commitments (an IGC-style binary check): statements on which the coded profiles of an
+ * ideology's mainstream all take the same side (coders' judgements, not a survey of adherents). A decisive contradiction rules the ideology out, however close
  * the distance match is. Ideologies are the ideas, commitments the goals, answers the context.
  */
 export interface Commitment {
   item: string
   /** 'I' checks the ideal-system answer; 'both' checks the ideal and here-and-now answers. */
   frame: 'I' | 'both'
-  /** Sign of the raw answer every adherent gives: +1 agree, −1 disagree (item key NOT applied). */
+  /** Required sign of the raw answer: +1 agree, −1 disagree (item key NOT applied). */
   side: 1 | -1
   why: string
   /** Provenance: how many of the three coders proposed it independently. */
   coders?: number
 }
 
-/** A coded commitment removed because simulated sincere adherents fail it too often. */
+/**
+ * A coded commitment removed because simulated sincere adherents fail it too often (the audit
+ * sets `falseRuleOut`), or because a counterexample refutes it (set by hand with `reason`).
+ */
 export interface DroppedCommitment extends Commitment {
   slug: string
-  /** Simulated adherents of `slug` wrongly ruled out by this commitment alone (full test). */
-  falseRuleOut: number
+  /** Adherents of `slug` simulated from the coded sheets, ruled out by this commitment alone (full test). */
+  falseRuleOut?: number
+  /** Why it was dropped, when a real counterexample rather than the audit refuted it. */
+  reason?: string
 }
 
 export type CommitmentBook = Readonly<Record<string, readonly Commitment[]>>

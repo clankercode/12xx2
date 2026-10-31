@@ -4,6 +4,7 @@ import { HAS_COMMITMENTS } from '../data/commitments'
 import { ALL_ITEMS } from '../data/items'
 import { MAX_COMMITMENTS } from '../engine/commitments'
 import { label } from './answer'
+import { REPORT_COMMITMENT_URL } from './copy'
 import css from './Commitments.module.css'
 import rcss from './Results.module.css'
 
@@ -81,8 +82,10 @@ export function CoreCommitments({ r, checks }: { r: Results; checks: ReadonlyMap
     <section className={`${rcss.section} ${css.section}`} aria-labelledby="core-commitments">
       <h2 id="core-commitments">Core commitments</h2>
       <p className="muted small">
-        Some positions are shared by every adherent of an ideology. Answering decisively against one rules that ideology out
-        for you, however close the rest of your answers are. <a href="#/method">How this works</a>.
+        Core commitments are positions that our coded profiles of an ideology’s mainstream share, checked for counterexamples.
+        Answering decisively against one rules that ideology out for you, however close the rest of your answers are. They are
+        our coders’ judgements, not checked with adherents or experts: <a href={REPORT_COMMITMENT_URL}>report one you think is
+        wrong</a>. <a href="#/method">How this works</a>.
       </p>
       <div className={css.scroll}>
         <table className={css.matrix}>

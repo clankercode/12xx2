@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { HeroPick, Match, Results } from '../engine/results'
+import { nameable, type HeroPick, type Match, type Results } from '../engine/results'
 import type { ArchetypeCheck } from '../engine/commitments'
 import { AXES } from '../data/axes'
 import { CALIBRATION } from '../data/calibration'
@@ -10,7 +10,7 @@ import wgi from '../data/wgi.json'
 import { AxisChart, type Overlay } from './AxisChart'
 import { CoreCommitments } from './Commitments'
 import { label as answerLabel } from './answer'
-import { GAP_TYPE, MATCH_LABEL, MODE_NAME, RG_BAND, STABILITY_LABEL } from './copy'
+import { GAP_TYPE, MATCH_LABEL, MODE_NAME, RG_BAND, STABILITY_LABEL, constantNote, nearestNote, noCloseNote, noMatchTitle, pickTitle } from './copy'
 import css from './Results.module.css'
 
 const ALL_TEXT = new Map(ALL_ITEMS.map(i => [i.id, i.text]))
@@ -72,6 +72,16 @@ export function Hero({ r, who = 'You' }: { r: Results; who?: string }) {
           </p>
         </div>
       )}
+      {h.kind === 'no-close' && (
+        <div>
+          <h1 className={css.heroTitle}>{noMatchTitle(h.nearest)}</h1>
+          <p className={css.heroSub}>
+            {nearestNote(h.nearest)} · {stabilityText(h.nearest)}. {noCloseNote(h.nearest, who)}
+          </p>
+          <RuledOutNote pick={h.nearest} who={who} />
+          <GapHook r={r} />
+        </div>
+      )}
       {h.kind === 'insufficient' && (
         <div>
           <h1 className={css.heroTitle}>Not enough answers to match</h1>
@@ -92,25 +102,13 @@ export function Hero({ r, who = 'You' }: { r: Results; who?: string }) {
           <p className={css.heroKicker}>Constant</p>
           <h1 className={css.heroTitle}>{h.ideal.match.arch.name}</h1>
           <p className={css.heroSub}>
-            {MATCH_LABEL[h.ideal.match.label]} · {stabilityText(h.ideal)}.{' '}
-            {h.nowMissing
-              ? 'Not enough here-and-now answers to place that frame.'
-              : 'Your ideal and here-and-now answers sit closest to the same ideology.'}
-            {h.leaning && h.leaning.match.arch.slug !== h.ideal.match.arch.slug && (
-              <> Here and now you lean toward {h.leaning.match.arch.name}, but not by enough to call it a split.</>
-            )}
+            {MATCH_LABEL[h.ideal.match.label]} · {stabilityText(h.ideal)}. {constantNote(h, who)}
           </p>
           {h.ideal.alsoClose && (
             <p className="small muted">Also close: {h.ideal.alsoClose.arch.name}.</p>
           )}
           <RuledOutNote pick={h.ideal} who={who} />
-          {r.strongestGap && (
-            <p className={css.hook}>
-              Biggest gap: <strong>{AXES[r.strongestGap.axis].title}</strong>, here and now pulls you toward{' '}
-              <strong>{r.strongestGap.G! > 0 ? AXES[r.strongestGap.axis].pos : AXES[r.strongestGap.axis].neg}</strong>
-              {r.strongestGap.type && <> ({GAP_TYPE[r.strongestGap.type].name.toLowerCase()})</>}.
-            </p>
-          )}
+          <GapHook r={r} />
         </div>
       )}
       <div className={css.stats}>
@@ -134,16 +132,27 @@ export function Hero({ r, who = 'You' }: { r: Results; who?: string }) {
   )
 }
 
+function GapHook({ r }: { r: Results }) {
+  if (!r.strongestGap) return null
+  return (
+    <p className={css.hook}>
+      Biggest gap: <strong>{AXES[r.strongestGap.axis].title}</strong>, here and now pulls you toward{' '}
+      <strong>{r.strongestGap.G! > 0 ? AXES[r.strongestGap.axis].pos : AXES[r.strongestGap.axis].neg}</strong>
+      {r.strongestGap.type && <> ({GAP_TYPE[r.strongestGap.type].name.toLowerCase()})</>}.
+    </p>
+  )
+}
+
 function HeroHalf({ frame, pick, who }: { frame: 'I' | 'N'; pick: HeroPick; who: string }) {
   return (
     <div className={css.half}>
       <p className={`${css.heroKicker} ${frame === 'I' ? 'ideal' : 'now'}`}>
         <span className={frame === 'I' ? 'glyph-ideal' : 'glyph-now'} aria-hidden /> {frame === 'I' ? 'Ideal' : 'Here and now'}
       </p>
-      <h1 className={css.heroTitle}>{pick.match.arch.name}</h1>
+      <h1 className={css.heroTitle}>{pickTitle(pick)}</h1>
       <p className={css.heroSub}>
-        {MATCH_LABEL[pick.match.label]} · {stabilityText(pick)}
-        {frame === 'N' && <span className="muted"> · your here-and-now answers sit closest to this ideal</span>}
+        {nameable(pick) ? MATCH_LABEL[pick.match.label] : nearestNote(pick)} · {stabilityText(pick)}
+        {frame === 'N' && nameable(pick) && <span className="muted"> · your here-and-now answers sit closest to this ideal</span>}
       </p>
       {pick.alsoClose && <p className="small muted">Also close: {pick.alsoClose.arch.name}</p>}
       <RuledOutNote pick={pick} who={who} />

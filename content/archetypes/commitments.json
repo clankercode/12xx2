@@ -1,6 +1,6 @@
 {
  "version": 1,
- "method": "Core commitments: statements on which every sincere adherent of an ideology must be on one side. Three Opus coders (lenses: theorist, insider, sceptic) proposed commitments independently; an entry is kept when at least 2 of 3 proposed it (coders = how many), and each was checked against the ideology's coded answer sheet (required side at |v| >= 2 in every required frame). side is the sign of the raw answer (+1 agree, -1 disagree) to the statement as worded; the item key is not applied. frame I checks the ideal-system answer; both also checks here and now. A decisive contradiction (|answer| >= 2 on the wrong side) rules the ideology out. Entries whose simulated sincere adherents are wrongly ruled out more than 2% of the time are moved to dropped by scripts/commitments-audit.ts. Raw coder output: commitments-raw.json.",
+ "method": "Core commitments: statements on which the coded profiles of an ideology's mainstream all take the same side. They are AI coders' judgements, checked for counterexamples but not with adherents or experts, so they do not establish what every adherent holds. Three Opus coders (lenses: theorist, insider, sceptic) proposed commitments independently; an entry is kept when at least 2 of 3 proposed it (coders = how many), and each was checked against the ideology's coded answer sheet (required side at |v| >= 2 in every required frame). side is the sign of the raw answer (+1 agree, -1 disagree) to the statement as worded; the item key is not applied. frame I checks the ideal-system answer; both also checks here and now. A decisive contradiction (|answer| >= 2 on the wrong side) rules the ideology out. Entries whose adherents simulated from the coded sheets are ruled out more than 2% of the time (a consistency check against our own coding, not against real adherents) are moved to dropped by scripts/commitments-audit.ts. Entries refuted by a counterexample (sincere mainstream adherents who reject the statement on principle) are moved to dropped by hand, with the reason. Raw coder output: commitments-raw.json.",
  "commitments": {
   "marxism-leninism": [
    {
@@ -76,13 +76,6 @@
     "side": -1,
     "why": "An economy where nearly all productive assets are privately owned contradicts its goal of social ownership of major enterprises.",
     "coders": 2
-   },
-   {
-    "item": "dem-03",
-    "frame": "both",
-    "side": 1,
-    "why": "The tradition holds that political democracy, including freedom to form rival parties, is non-negotiable.",
-    "coders": 3
    },
    {
     "item": "dem-04",
@@ -177,13 +170,6 @@
     "coders": 2
    },
    {
-    "item": "dem-03",
-    "frame": "both",
-    "side": 1,
-    "why": "Social democracy pursues reform through competitive parliamentary elections and treats them as its foundation.",
-    "coders": 3
-   },
-   {
     "item": "dem-04",
     "frame": "both",
     "side": -1,
@@ -200,13 +186,6 @@
   ],
   "progressive-liberalism": [
    {
-    "item": "dem-03",
-    "frame": "both",
-    "side": 1,
-    "why": "Progressive liberalism treats liberal democracy, with open electoral competition, as its framework.",
-    "coders": 2
-   },
-   {
     "item": "pro-01",
     "frame": "both",
     "side": 1,
@@ -215,13 +194,6 @@
    }
   ],
   "green-politics": [
-   {
-    "item": "dem-03",
-    "frame": "both",
-    "side": 1,
-    "why": "Grassroots democracy is one of the Greens' four pillars, and it rules out barring citizens from forming parties.",
-    "coders": 2
-   },
    {
     "item": "dem-04",
     "frame": "both",
@@ -288,13 +260,6 @@
     "side": -1,
     "why": "Social liberalism wants a mainly private, market-coordinated economy, so common ownership of nearly all assets contradicts it.",
     "coders": 2
-   },
-   {
-    "item": "dem-03",
-    "frame": "both",
-    "side": 1,
-    "why": "Social liberalism is committed to liberal democracy with open competition for power.",
-    "coders": 3
    }
   ],
   "centrism": [
@@ -304,13 +269,6 @@
     "side": -1,
     "why": "Centrism backs a regulated market economy, which nearly complete common ownership of productive assets would abolish.",
     "coders": 3
-   },
-   {
-    "item": "dem-03",
-    "frame": "both",
-    "side": 1,
-    "why": "Centrists support liberal democracy with competitive elections and checks and balances.",
-    "coders": 2
    },
    {
     "item": "dem-04",
@@ -334,13 +292,6 @@
     "side": -1,
     "why": "Its defining move was dropping wholesale common ownership in favour of a market economy.",
     "coders": 3
-   },
-   {
-    "item": "dem-03",
-    "frame": "both",
-    "side": 1,
-    "why": "The Third Way works within representative democracy and seeks to modernise it, not to replace it.",
-    "coders": 2
    },
    {
     "item": "dem-04",
@@ -393,13 +344,6 @@
     "frame": "both",
     "side": -1,
     "why": "Free enterprise and private property are the economic-liberal half of liberal conservatism.",
-    "coders": 3
-   },
-   {
-    "item": "dem-03",
-    "frame": "both",
-    "side": 1,
-    "why": "Liberal conservatives treat liberal democracy and parliamentary institutions as inherited goods to protect.",
     "coders": 3
    },
    {
@@ -456,15 +400,7 @@
     "coders": 3
    }
   ],
-  "communitarianism": [
-   {
-    "item": "dem-03",
-    "frame": "both",
-    "side": 1,
-    "why": "Communitarianism favours democracy with active civic participation and does not bar citizens from forming parties.",
-    "coders": 2
-   }
-  ],
+  "communitarianism": [],
   "christian-democracy": [
    {
     "item": "col-01",
@@ -472,13 +408,6 @@
     "side": -1,
     "why": "Catholic social teaching, the tradition's base, defends private property (with a social obligation) against collectivisation.",
     "coders": 3
-   },
-   {
-    "item": "dem-03",
-    "frame": "both",
-    "side": 1,
-    "why": "Christian democracy is committed to constitutional democracy with competing parties.",
-    "coders": 2
    },
    {
     "item": "dem-04",
@@ -1080,13 +1009,6 @@
   ],
   "constitutional-monarchism": [
    {
-    "item": "dem-03",
-    "frame": "both",
-    "side": 1,
-    "why": "Constitutional monarchism puts governing power in an elected parliament, where rival parties compete for office.",
-    "coders": 3
-   },
-   {
     "item": "dem-04",
     "frame": "both",
     "side": -1,
@@ -1203,5 +1125,105 @@
    }
   ]
  },
- "dropped": []
+ "dropped": [
+  {
+   "slug": "democratic-socialism",
+   "item": "dem-03",
+   "frame": "both",
+   "side": 1,
+   "why": "The tradition holds that political democracy, including freedom to form rival parties, is non-negotiable.",
+   "coders": 3,
+   "reason": "Refuted by counterexample, not by noise: militant democracy (e.g. Germany's Basic Law Art. 21(2), party bans supported by mainstream CDU and SPD figures) sincerely rejects \"any group\" being free to run, so must-agree falsely rules such adherents out of the whole democratic mainstream at once. The item's universal \"any\" is a quantifier beyond the core belief (CF review D2/B4/D3)."
+  },
+  {
+   "slug": "social-democracy",
+   "item": "dem-03",
+   "frame": "both",
+   "side": 1,
+   "why": "Social democracy pursues reform through competitive parliamentary elections and treats them as its foundation.",
+   "coders": 3,
+   "reason": "Refuted by counterexample, not by noise: militant democracy (e.g. Germany's Basic Law Art. 21(2), party bans supported by mainstream CDU and SPD figures) sincerely rejects \"any group\" being free to run, so must-agree falsely rules such adherents out of the whole democratic mainstream at once. The item's universal \"any\" is a quantifier beyond the core belief (CF review D2/B4/D3)."
+  },
+  {
+   "slug": "progressive-liberalism",
+   "item": "dem-03",
+   "frame": "both",
+   "side": 1,
+   "why": "Progressive liberalism treats liberal democracy, with open electoral competition, as its framework.",
+   "coders": 2,
+   "reason": "Refuted by counterexample, not by noise: militant democracy (e.g. Germany's Basic Law Art. 21(2), party bans supported by mainstream CDU and SPD figures) sincerely rejects \"any group\" being free to run, so must-agree falsely rules such adherents out of the whole democratic mainstream at once. The item's universal \"any\" is a quantifier beyond the core belief (CF review D2/B4/D3)."
+  },
+  {
+   "slug": "green-politics",
+   "item": "dem-03",
+   "frame": "both",
+   "side": 1,
+   "why": "Grassroots democracy is one of the Greens' four pillars, and it rules out barring citizens from forming parties.",
+   "coders": 2,
+   "reason": "Refuted by counterexample, not by noise: militant democracy (e.g. Germany's Basic Law Art. 21(2), party bans supported by mainstream CDU and SPD figures) sincerely rejects \"any group\" being free to run, so must-agree falsely rules such adherents out of the whole democratic mainstream at once. The item's universal \"any\" is a quantifier beyond the core belief (CF review D2/B4/D3)."
+  },
+  {
+   "slug": "social-liberalism",
+   "item": "dem-03",
+   "frame": "both",
+   "side": 1,
+   "why": "Social liberalism is committed to liberal democracy with open competition for power.",
+   "coders": 3,
+   "reason": "Refuted by counterexample, not by noise: militant democracy (e.g. Germany's Basic Law Art. 21(2), party bans supported by mainstream CDU and SPD figures) sincerely rejects \"any group\" being free to run, so must-agree falsely rules such adherents out of the whole democratic mainstream at once. The item's universal \"any\" is a quantifier beyond the core belief (CF review D2/B4/D3)."
+  },
+  {
+   "slug": "centrism",
+   "item": "dem-03",
+   "frame": "both",
+   "side": 1,
+   "why": "Centrists support liberal democracy with competitive elections and checks and balances.",
+   "coders": 2,
+   "reason": "Refuted by counterexample, not by noise: militant democracy (e.g. Germany's Basic Law Art. 21(2), party bans supported by mainstream CDU and SPD figures) sincerely rejects \"any group\" being free to run, so must-agree falsely rules such adherents out of the whole democratic mainstream at once. The item's universal \"any\" is a quantifier beyond the core belief (CF review D2/B4/D3)."
+  },
+  {
+   "slug": "third-way",
+   "item": "dem-03",
+   "frame": "both",
+   "side": 1,
+   "why": "The Third Way works within representative democracy and seeks to modernise it, not to replace it.",
+   "coders": 2,
+   "reason": "Refuted by counterexample, not by noise: militant democracy (e.g. Germany's Basic Law Art. 21(2), party bans supported by mainstream CDU and SPD figures) sincerely rejects \"any group\" being free to run, so must-agree falsely rules such adherents out of the whole democratic mainstream at once. The item's universal \"any\" is a quantifier beyond the core belief (CF review D2/B4/D3)."
+  },
+  {
+   "slug": "liberal-conservatism",
+   "item": "dem-03",
+   "frame": "both",
+   "side": 1,
+   "why": "Liberal conservatives treat liberal democracy and parliamentary institutions as inherited goods to protect.",
+   "coders": 3,
+   "reason": "Refuted by counterexample, not by noise: militant democracy (e.g. Germany's Basic Law Art. 21(2), party bans supported by mainstream CDU and SPD figures) sincerely rejects \"any group\" being free to run, so must-agree falsely rules such adherents out of the whole democratic mainstream at once. The item's universal \"any\" is a quantifier beyond the core belief (CF review D2/B4/D3)."
+  },
+  {
+   "slug": "communitarianism",
+   "item": "dem-03",
+   "frame": "both",
+   "side": 1,
+   "why": "Communitarianism favours democracy with active civic participation and does not bar citizens from forming parties.",
+   "coders": 2,
+   "reason": "Refuted by counterexample, not by noise: militant democracy (e.g. Germany's Basic Law Art. 21(2), party bans supported by mainstream CDU and SPD figures) sincerely rejects \"any group\" being free to run, so must-agree falsely rules such adherents out of the whole democratic mainstream at once. The item's universal \"any\" is a quantifier beyond the core belief (CF review D2/B4/D3)."
+  },
+  {
+   "slug": "christian-democracy",
+   "item": "dem-03",
+   "frame": "both",
+   "side": 1,
+   "why": "Christian democracy is committed to constitutional democracy with competing parties.",
+   "coders": 2,
+   "reason": "Refuted by counterexample, not by noise: militant democracy (e.g. Germany's Basic Law Art. 21(2), party bans supported by mainstream CDU and SPD figures) sincerely rejects \"any group\" being free to run, so must-agree falsely rules such adherents out of the whole democratic mainstream at once. The item's universal \"any\" is a quantifier beyond the core belief (CF review D2/B4/D3)."
+  },
+  {
+   "slug": "constitutional-monarchism",
+   "item": "dem-03",
+   "frame": "both",
+   "side": 1,
+   "why": "Constitutional monarchism puts governing power in an elected parliament, where rival parties compete for office.",
+   "coders": 3,
+   "reason": "Refuted by counterexample, not by noise: militant democracy (e.g. Germany's Basic Law Art. 21(2), party bans supported by mainstream CDU and SPD figures) sincerely rejects \"any group\" being free to run, so must-agree falsely rules such adherents out of the whole democratic mainstream at once. The item's universal \"any\" is a quantifier beyond the core belief (CF review D2/B4/D3)."
+  }
+ ]
 }

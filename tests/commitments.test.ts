@@ -120,7 +120,11 @@ describe('rule-outs in matching', () => {
     G: AXIS_IDS.map(() => N - I), notable: AXIS_IDS.map(() => false), rg: 10,
   })
   const slugOf = (h: Hero, which: 'ideal' | 'now' = 'ideal') =>
-    h.kind === 'constant' || h.kind === 'split' ? (which === 'now' && h.kind === 'split' ? h.now : h.ideal).match.arch.slug : null
+    h.kind === 'no-close'
+      ? h.nearest.match.arch.slug
+      : h.kind === 'constant' || h.kind === 'split'
+        ? (which === 'now' && h.kind === 'split' ? h.now : h.ideal).match.arch.slug
+        : null
 
   it('no rule-outs leaves results exactly as before', () => {
     for (const [i, n] of [[-60, 60], [-55, -50], [84, 84], [10, 30]] as const) {
@@ -136,13 +140,14 @@ describe('rule-outs in matching', () => {
     const p = payloadFor(-55, -50)
     expect(slugOf(deriveResults(p, cat, CALIBRATION).hero)).toBe('left')
     const r = deriveResults(p, cat, CALIBRATION, new Set(['left']))
-    expect(r.hero.kind).toBe('constant')
-    if (r.hero.kind !== 'constant') return
-    expect(r.hero.ideal.match.arch.slug).toBe('centre')
-    expect(r.hero.ideal.match.ruledOut).toBe(false)
-    expect(r.hero.ideal.nearestRuledOut?.arch.slug).toBe('left')
+    // 'centre' is far from these answers, so it is shown as the nearest, not named as a match.
+    expect(r.hero.kind).toBe('no-close')
+    if (r.hero.kind !== 'no-close') return
+    expect(r.hero.nearest.match.arch.slug).toBe('centre')
+    expect(r.hero.nearest.match.ruledOut).toBe(false)
+    expect(r.hero.nearest.nearestRuledOut?.arch.slug).toBe('left')
     // The bootstrap never counts a ruled-out archetype as a winner.
-    expect(r.hero.ideal.stability.wins.has('left')).toBe(false)
+    expect(r.hero.nearest.stability.wins.has('left')).toBe(false)
     // Ranked list keeps it visible, marked, plus three that are not ruled out.
     expect(r.matchesIdeal.map(m => [m.arch.slug, m.ruledOut])).toEqual([
       ['left', true],
@@ -167,7 +172,7 @@ describe('rule-outs in matching', () => {
     expect(slugOf(before)).not.toBe('far')
     const out = new Set([slugOf(before)!])
     const r = deriveResults(p, cat, CALIBRATION, out)
-    expect(r.hero.kind).toBe('constant')
+    expect(['constant', 'no-close']).toContain(r.hero.kind)
     expect(out.has(slugOf(r.hero)!)).toBe(false)
     expect(slugOf(r.hero)).not.toBe('far')
   })
@@ -295,7 +300,7 @@ describe('ruled-out field in share links', () => {
       const prof = computeProfile(items, a, CALIBRATION)
       const base = profileToPayload(prof, { catalogue: CATALOGUE_VERSION, mode: 'standard', input: 'grid' })
       const plain = deriveResults(base, CATALOGUE, CALIBRATION)
-      if (plain.hero.kind !== 'constant' && plain.hero.kind !== 'split') continue
+      if (plain.hero.kind !== 'constant' && plain.hero.kind !== 'split' && plain.hero.kind !== 'no-close') continue
       const top = CATALOGUE_SLUGS.indexOf(plain.matchesIdeal[0]!.arch.slug)
       const owner = profileToPayload(prof, { catalogue: CATALOGUE_VERSION, mode: 'standard', input: 'grid', ruledOut: [top] })
       const mine = deriveResults(owner, CATALOGUE, CALIBRATION, ruledOutSlugs(owner))
@@ -319,5 +324,6 @@ describe('ruled-out field in share links', () => {
 })
 
 function slugOf(h: Hero) {
+  if (h.kind === 'no-close') return h.nearest.match.arch.slug
   return h.kind === 'constant' || h.kind === 'split' ? h.ideal.match.arch.slug : null
 }

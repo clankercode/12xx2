@@ -5,6 +5,7 @@ import { CATALOGUE, CATALOGUE_IS_PLACEHOLDER } from '../../data/archetypes'
 import { HAS_COMMITMENTS } from '../../data/commitments'
 import { MAX_COMMITMENTS } from '../../engine/commitments'
 import { IDEAL_FRAME, IDEAL_STEM, NOW_FRAME, NOW_STEM, SHARED_RULE } from '../../data/frames'
+import { REPORT_COMMITMENT_URL } from '../copy'
 import css from './Prose.module.css'
 
 const VERCEL: Record<string, string> = {
@@ -198,6 +199,11 @@ export function MethodPage() {
         least 70% of the time, fairly stable 40–70%.
       </p>
       <p>
+        The headline names an ideology only when it is at least loosely similar and not a toss-up. Otherwise it says “No close
+        match” (or “No clear match” for a toss-up) and shows the nearest ideology as a measurement, not as your match. The same
+        rule applies to share cards, share text, preview links and saved runs.
+      </p>
+      <p>
         The headline shows two different ideologies (“in theory A, here and now B”) only when your here-and-now scores are closer to
         B than to A by at least {c.mu.toFixed(3)} and B is not a toss-up. That margin is set so a respondent with no real gap
         gets a false split at most 5% of the time{typeof rep.splitFalseRate === 'number' && <> (measured: {(100 * rep.splitFalseRate).toFixed(1)}%)</>}.
@@ -214,9 +220,14 @@ export function MethodPage() {
 
       <h2 id="core-commitments">Core commitments</h2>
       <p>
-        Distance alone can call you close to an ideology while you reject something every one of its adherents holds. So each
-        ideology can list up to {MAX_COMMITMENTS} <em>core commitments</em>: statements on which every sincere adherent is on one
-        side. This is a pass/fail check, not a score, in the spirit of Critical Fallibilism’s idea–goal–context evaluation: the
+        Distance alone can call you close to an ideology while you reject something central to it. So each ideology can list up
+        to {MAX_COMMITMENTS} <em>core commitments</em>: statements on which the coded profiles of its mainstream all take the same
+        side. Three instances of one AI model (Claude Opus, reading as a theorist, an insider and a sceptic) proposed them
+        independently; one is kept when at least two proposed it and the ideology’s coded answers sit firmly on that side. Each is
+        then checked for counterexamples: a statement that sincere mainstream adherents reject on principle is dropped, as the
+        must-agree “any group of citizens should be free to form a party” was, because militant democracies ban anti-democratic
+        parties. They have not been checked with adherents or experts, so “every adherent” is a claim we cannot make;{' '}
+        <a href={REPORT_COMMITMENT_URL}>report one you think is wrong</a>. This is a pass/fail check, not a score, in the spirit of Critical Fallibilism’s idea–goal–context evaluation: the
         ideology is the idea, each commitment a goal it must meet, and your answers the context.
       </p>
       <ul>
@@ -240,8 +251,10 @@ export function MethodPage() {
         {typeof rep.commitmentFalseRuleOut === 'number' && (
           <>
             {' '}
-            In the calibration simulation, sincere adherents are wrongly ruled out of their own ideology{' '}
+            In the calibration simulation, adherents simulated from our own coded profiles are ruled out of their own ideology{' '}
             {rep.commitmentFalseRuleOut < 0.001 ? 'under 0.1%' : `${(100 * rep.commitmentFalseRuleOut).toFixed(1)}%`} of the time.
+            That only shows ordinary answer noise rarely trips a commitment, which is consistency with our own coding. It cannot show
+            that real adherents hold them.
           </>
         )}
         {!HAS_COMMITMENTS && ' Commitments are still being coded, so none are applied yet.'}

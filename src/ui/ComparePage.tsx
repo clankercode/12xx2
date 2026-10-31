@@ -9,7 +9,7 @@ import { NOT_COMPARABLE, clearCount, drawCompareCard } from '../share/compareCar
 import { useStore } from './App'
 import { AxisChart } from './AxisChart'
 import { DECODE_MESSAGE } from './SharedPage'
-import { MATCH_LABEL, heroName } from './copy'
+import { MATCH_LABEL, heroName, nearestNote } from './copy'
 import css from './Results.module.css'
 import share from './Share.module.css'
 
@@ -62,7 +62,11 @@ export function ComparePage({ mine, theirs }: { mine: string; theirs: string }) 
               <h1 className={css.heroTitle} style={{ fontSize: 'clamp(1.6rem, 4vw, 2.6rem)' }}>
                 {heroName(r)}
               </h1>
-              {topViable(r) && <p className="small muted">{MATCH_LABEL[topViable(r)!.label]}</p>}
+              {r.hero.kind === 'no-close' ? (
+                <p className="small muted">{nearestNote(r.hero.nearest)}</p>
+              ) : (
+                topViable(r) && <p className="small muted">{MATCH_LABEL[topViable(r)!.label]}</p>
+              )}
             </div>
           ))}
         </div>
