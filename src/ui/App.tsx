@@ -17,6 +17,7 @@ import { CriticismsPage } from './pages/CriticismsPage'
 import { IdeologiesPage } from './pages/IdeologiesPage'
 import { PrivacyPage } from './pages/PrivacyPage'
 import { Footer, Header } from './Chrome'
+import { Lamp } from './Lamp'
 
 interface Store {
   s: Session
@@ -121,6 +122,7 @@ export function App() {
 
   return (
     <StoreCtx.Provider value={store}>
+      <Lamp calm={focused} />
       <Header compact={focused} />
       <main id="main">
         {route.page === 'landing' && <Landing />}

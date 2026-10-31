@@ -1,4 +1,4 @@
-/* 12 Axes² — "squared paper at night". One bold element (the grid); everything else quiet. */
+/* 12 Axes² — "dot paper at night". One bold element (the grid); everything else quiet. */
 :root {
   --ink: #141726;
   --ink-2: #1a1e31;
@@ -20,6 +20,9 @@
   --whisker-opacity: 0.45;
   /* Keyboard focus ring. Light needs a darker amber to clear 3:1 against the grid tints. */
   --focus: var(--now);
+  /* Background dot paper, and the dots under the pointer's lamp. */
+  --dot: #323959;
+  --dot-lit: #8d95e6;
   --alert: #ff8a7a;
   --ok: #8fd6b0;
   --cell: 8px;
@@ -53,6 +56,8 @@
   --tint-now: 30%;
   --whisker-opacity: 0.7;
   --focus: #7a4a06;
+  --dot: #cdc7b8;
+  --dot-lit: #4a55c9;
   color-scheme: light;
 }
 
@@ -78,6 +83,8 @@
     --tint-now: 30%;
     --whisker-opacity: 0.7;
     --focus: #7a4a06;
+    --dot: #cdc7b8;
+    --dot-lit: #4a55c9;
     color-scheme: light;
   }
 }
@@ -97,24 +104,49 @@ body {
   margin: 0;
   min-height: 100dvh;
   background-color: var(--ink);
-  /* Squared paper: minor rule every 24px, major every 120px. */
-  background-image:
-    linear-gradient(var(--rule-major) 1px, transparent 1px),
-    linear-gradient(90deg, var(--rule-major) 1px, transparent 1px),
-    linear-gradient(var(--rule) 1px, transparent 1px),
-    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
-  background-size:
-    120px 120px,
-    120px 120px,
-    24px 24px,
-    24px 24px;
-  background-position: -1px -1px;
-  background-attachment: fixed;
   color: var(--paper);
   font-family: var(--body);
   font-size: 17px;
   line-height: 1.55;
   font-variant-numeric: tabular-nums;
+}
+
+/* Dot paper: one dot every 28px, on a fixed layer so scrolling stays composited. */
+body::before,
+.lamp {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-size: 28px 28px;
+}
+
+body::before {
+  background-image: radial-gradient(circle at 13.5px 13.5px, var(--dot) 1.1px, transparent 1.7px);
+}
+
+/* The same dots, lit where the pointer is (src/ui/Lamp.tsx); hidden until the pointer moves. */
+.lamp {
+  background-image: radial-gradient(circle at 13.5px 13.5px, var(--dot-lit) 1.1px, transparent 1.7px);
+  mask-image: radial-gradient(circle 200px at var(--mx, -400px) var(--my, -400px), #000, rgb(0 0 0 / 0.4) 45%, transparent);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.lamp[data-on] {
+  opacity: 0.9;
+}
+
+/* Answering: the lamp dims so the grid keeps the attention. */
+.lamp[data-on][data-calm] {
+  opacity: 0.35;
+}
+
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .lamp {
+    display: none;
+  }
 }
 
 h1,
