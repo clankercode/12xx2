@@ -3,12 +3,14 @@
  *   COMMITMENTS_FIXTURE=tests/fixtures/commitments.json pnpm vite
  * Seeds a finished run whose nearest match the fixture rules out, then captures the results page,
  * the shared view of its link, and the ideologies and method sections.
+ * With real data instead (no fixture), SHOT_RESPONDENT=latent seeds a typical respondent whose
+ * nearest match the shipped commitments rule out.
  * Usage: pnpm tsx scripts/commitments-shots.ts [baseURL] [outDir]
  */
 import { chromium } from '@playwright/test'
 import { existsSync, mkdirSync } from 'node:fs'
 import { EMPTY, type Session } from '../src/state/session'
-import { SHOT_MODE, shotAnswers } from './commitments-respondent'
+import { SHOT_MODE, ruledOutLatentAnswers, shotAnswers } from './commitments-respondent'
 
 const base = process.argv[2] ?? 'http://localhost:21313/'
 const out = process.argv[3] ?? 'shots'
@@ -17,7 +19,7 @@ mkdirSync(out, { recursive: true })
 const session: Session = {
   ...EMPTY,
   mode: SHOT_MODE,
-  answers: shotAnswers(),
+  answers: process.env.SHOT_RESPONDENT === 'latent' ? ruledOutLatentAnswers() : shotAnswers(),
   stage: 'done',
   runId: 'cccccccccccccccc',
   finishedAt: '2026-10-31T09:00:00.000Z',
