@@ -32,7 +32,8 @@ function shareLink(slug: string, seed: number, country?: string): string {
 async function snap(page: Page, vp: string, name: string) {
   for (const s of schemes) {
     await page.emulateMedia({ colorScheme: s })
-    await page.evaluate(() => document.fonts.ready)
+    // Full-page shots of a scrolled page paint the sticky header mid-page.
+    await page.evaluate(() => (scrollTo(0, 0), document.fonts.ready))
     await page.waitForTimeout(150)
     await page.screenshot({ path: `${out}/${s}/${vp}-${name}.png`, fullPage: true })
   }

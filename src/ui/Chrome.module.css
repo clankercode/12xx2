@@ -156,9 +156,10 @@
   color: var(--paper);
 }
 
-.seg label:focus-within {
-  outline: 2px solid var(--now);
-  outline-offset: -2px;
+/* Ring the whole group: the focused radio is always the selected one, whose fill would swallow an inset ring. */
+.seg:has(:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
 }
 
 .seg label + label {

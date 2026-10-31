@@ -88,8 +88,8 @@
   border: 1px solid var(--rule-major);
   /* Each cell tints toward Ideal (periwinkle) by column and Now (amber) by row. */
   background:
-    linear-gradient(90deg, color-mix(in srgb, var(--ideal) calc(var(--ix) * 26%), transparent), color-mix(in srgb, var(--ideal) calc(var(--ix) * 26%), transparent)),
-    color-mix(in srgb, var(--now) calc(var(--nx) * 24%), var(--ink-2));
+    linear-gradient(90deg, color-mix(in srgb, var(--ideal) calc(var(--ix) * var(--tint-ideal)), transparent), color-mix(in srgb, var(--ideal) calc(var(--ix) * var(--tint-ideal)), transparent)),
+    color-mix(in srgb, var(--now) calc(var(--nx) * var(--tint-now)), var(--ink-2));
   cursor: pointer;
   padding: 0;
   position: relative;
@@ -186,7 +186,7 @@
 }
 
 .pill:focus-within {
-  outline: 2px solid var(--now);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
