@@ -37,6 +37,11 @@ build: typecheck test overlap
 preview:
     pnpm vite preview
 
+# Build for the live site and publish it to Netlify (needs `netlify login`).
+deploy:
+    SITE_ORIGIN=https://12axes-squared.netlify.app BASE_PATH=/ just build
+    netlify deploy --prod --no-build --dir dist --site 1c4ba7d9-e076-4624-a3f7-6d7da6803f43  # 12axes-squared
+
 e2e:
     pnpm playwright test
 

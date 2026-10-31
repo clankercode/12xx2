@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { clearAllData } from '../state/session'
 import { useStore } from './App'
 import { go } from './router'
+import { REPO_URL } from './copy'
 import css from './Chrome.module.css'
 
 export function Wordmark({ size = 'm' }: { size?: 's' | 'm' }) {
@@ -126,6 +127,7 @@ export function Footer() {
           <a href="#/ideologies">Ideology catalogue</a>
           <a href="#/criticisms">Why a new test</a>
           <a href="#/privacy">Privacy</a>
+          <a href={REPO_URL}>Source and issues</a>
         </div>
         <div className={css.footerCol}>
           <ThemeToggle />

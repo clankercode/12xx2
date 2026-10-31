@@ -4,7 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "description": "12 Axes²: every political question answered twice — for your ideal system and for here and now.",
-  "license": "MIT",
+  "license": "(MIT AND CC-BY-4.0)",
+  "repository": "github:clankercode/12xx2",
+  "homepage": "https://12axes-squared.netlify.app",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

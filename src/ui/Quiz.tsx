@@ -6,6 +6,7 @@ import { IDEAL_FRAME, IDEAL_STEM, NOW_FRAME, NOW_STEM, PRACTICE_ITEM, SHARED_RUL
 import { useStore } from './App'
 import { Grid, Strip } from './Grid'
 import { go } from './router'
+import { reportStatementUrl } from './copy'
 import css from './Quiz.module.css'
 
 const ADVANCE_MS = 260
@@ -217,7 +218,11 @@ export function Quiz() {
       </div>
       <p className={`small muted ${css.hint}`}>
         Pass if you don’t understand a statement, don’t know, or would rather not say. Passed answers are left out of your
-        results — they never count as neutral.
+        results — they never count as neutral.{' '}
+        <a href={reportStatementUrl(item.id, item.text)} target="_blank" rel="noopener noreferrer">
+          Report this statement
+        </a>{' '}
+        if it seems loaded or unclear.
       </p>
       <div className={css.modeSwitch}>
         <button

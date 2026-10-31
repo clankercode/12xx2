@@ -2,6 +2,8 @@
 
 **A 12-axis political values quiz where every statement is answered twice: once for your ideal system, once for here and now in your own country.**
 
+**Take it: https://12axes-squared.netlify.app**
+
 One click on a 7×7 grid gives both answers. Your results show where your ideals and your practical politics agree, where they part ways, and which ideologies you're closest to in theory and in practice.
 
 ![Landing page](docs/screenshots/desktop-01-landing.png)
@@ -50,6 +52,7 @@ just dev          # http://localhost:21313
 just test         # unit + invariant tests (vitest)
 just e2e          # Playwright: quick run, no-network check, share parity, keyboard grid
 SITE_ORIGIN=https://example.org BASE_PATH=/ just build   # static site in dist/
+just deploy       # build for 12axes-squared.netlify.app and publish it (needs `netlify login`)
 ```
 
 A production build needs `SITE_ORIGIN` and `BASE_PATH`. `scripts/og.ts` uses them to emit link-preview pages (`/p/<ideal>/<now>/`) and preview images. Serve `dist/` from any static host.
@@ -89,5 +92,11 @@ The method page in the app and [`docs/criticisms.md`](docs/criticisms.md) list t
 - Not affiliated with 12axes.vercel.app.
 - Country context uses the World Bank's [Worldwide Governance Indicators](https://www.worldbank.org/en/publication/worldwide-governance-indicators) (CC BY 4.0).
 - Fonts: Bricolage Grotesque and Atkinson Hyperlegible Next (SIL OFL), self-hosted.
+
+## Licence
+
+Code is MIT ([`LICENSE`](LICENSE)). Statements, the ideology catalogue and docs are CC BY 4.0 ([`LICENSE-CONTENT.md`](LICENSE-CONTENT.md)).
+
+Think a statement is loaded or unclear? [Open an issue](https://github.com/clankercode/12xx2/issues/new?labels=statement) — the quiz has a link on every statement that fills in its ID.
 
 Created by [Max Kaye (XertroV)](https://xk.io) + AI.

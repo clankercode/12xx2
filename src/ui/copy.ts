@@ -2,6 +2,15 @@ import type { GapType } from '../engine/typology'
 import type { MatchLabel, StabilityLabel } from '../engine/match'
 import type { RgBand } from '../engine/results'
 
+export const REPO_URL = 'https://github.com/clankercode/12xx2'
+
+/** A prefilled GitHub issue for one statement. Carries the statement only, never the person's answers. */
+export function reportStatementUrl(id: string, text: string): string {
+  const title = `Statement ${id}: `
+  const body = `**Statement ${id}:** ${text}\n\n**What's wrong with it?** (loaded, unclear, assumes something, doesn't fit its axis, other)\n\n`
+  return `${REPO_URL}/issues/new?labels=statement&title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`
+}
+
 export const MATCH_LABEL: Record<MatchLabel, string> = {
   'very-close': 'Very close',
   close: 'Close',
