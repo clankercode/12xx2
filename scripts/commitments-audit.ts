@@ -32,10 +32,28 @@ const PATH = 'content/archetypes/commitments.json'
 const file = JSON.parse(readFileSync(PATH, 'utf8')) as CommitmentsFile
 const slugs = (JSON.parse(readFileSync('content/archetypes/archetypes.json', 'utf8')) as { archetypes: { slug: string }[] }).archetypes.map(a => a.slug)
 const book = validateCommitments(file, ALL_ITEMS, slugs, RED_LINES)
-const missingRed = RED_LINES.filter(r => !Object.values(JSON.parse(readFileSync('content/archetypes/sheets.json', 'utf8')) as Sheets).some(s => s[r.id]))
+const sheets = JSON.parse(readFileSync('content/archetypes/sheets.json', 'utf8')) as Sheets
+const missingRed = RED_LINES.filter(r => !Object.values(sheets).some(s => s[r.id]))
 if (missingRed.length && Object.values(book).some(l => l.some(c => c.kind === 'red-line')))
   console.warn(`WARNING: sheets.json has no coded answers for ${missingRed.map(r => r.id).join(', ')}; red-line audits assume neutral adherents there (rerun just archetypes)`)
-const sheets = JSON.parse(readFileSync('content/archetypes/sheets.json', 'utf8')) as Sheets
+
+// Consistency with the coded sheets (the rule commitments were kept under): the ideology's median
+// coded answer must be on the required side at |v| >= 2, in every frame the commitment checks.
+{
+  const off: string[] = []
+  for (const slug of slugs)
+    for (const c of book[slug] ?? []) {
+      const v = sheets[slug]?.[c.item]
+      const frames = c.frame === 'both' ? [0, 1] : [0]
+      const bad = frames.filter(f => {
+        const x = v?.[f]
+        return x === null || x === undefined || Math.sign(x) !== c.side || Math.abs(x) < 2
+      })
+      if (bad.length) off.push(`${slug} ${c.item}${c.kind ? ' (red line)' : ''} ${c.frame} side ${c.side}: sheet ${JSON.stringify(v ?? null)}`)
+    }
+  console.log(`commitments disagreeing with the coded sheets (need the required side at |v| >= 2): ${off.length}`)
+  for (const o of off) console.log(`  ${o}`)
+}
 
 // Own seeded stream: independent of scripts/calibrate.ts.
 const rng = mulberry32(0xa0d17)
