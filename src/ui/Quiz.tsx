@@ -419,7 +419,7 @@ function Intro({ onStart }: { onStart: () => void }) {
               <section className={css.practice} aria-label="Practice statement">
                 <p className="small muted">Practice. This one isn’t scored.</p>
                 <p className={css.statement}>{PRACTICE_ITEM}</p>
-                <Grid value={practice} onPick={(i, n) => setPractice({ i, n })} idPrefix="practice" />
+                <Grid value={practice} onPick={(i, n) => setPractice({ i, n })} idPrefix="practice" legend="full" />
                 <p className={`small ${css.practiceSaid}`} role="status">
                   {practice && 'That’s both answers. In the quiz, the same tap also takes you to the next statement.'}
                 </p>

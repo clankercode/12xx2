@@ -4,6 +4,8 @@ import { useStore } from './App'
 import { go } from './router'
 import { REPO_URL } from './copy'
 import { applyTheme, readTheme, type ThemeChoice } from './theme'
+import { PALETTES } from './tiles/palettes'
+import { PALETTE_CHOICES, applyPalette, usePalette } from './tiles/paletteChoice'
 import css from './Chrome.module.css'
 
 export function Wordmark({ size = 'm' }: { size?: 's' | 'm' }) {
@@ -40,6 +42,39 @@ function ThemePicker() {
               className="visually-hidden"
             />
             {l}
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  )
+}
+
+/** Answer-grid colours: four scales, two of them safe for colour blindness. Real radios, like the theme. */
+function PalettePicker() {
+  const current = usePalette().id
+  return (
+    <fieldset className={css.palette} id="grid-colours">
+      <legend className="muted small">Grid colours</legend>
+      <div className={css.palList} role="radiogroup" aria-label="Grid colours">
+        {PALETTE_CHOICES.map(({ id, name, hint }) => (
+          <label key={id} className={current === id ? css.palOn : ''}>
+            <input
+              type="radio"
+              name="palette"
+              value={id}
+              checked={current === id}
+              onChange={() => applyPalette(id)}
+              className="visually-hidden"
+            />
+            <span className={css.swatch} aria-hidden>
+              {[-3, -2, -1, 0, 1, 2, 3].map(v => (
+                <i key={v} style={{ background: PALETTES[id].fill(v) }} />
+              ))}
+            </span>
+            <span className={css.palText}>
+              <span className={css.palName}>{name}</span>
+              <span className={css.palHint}>{hint}</span>
+            </span>
           </label>
         ))}
       </div>
@@ -146,6 +181,7 @@ export function Footer() {
         </div>
         <div className={css.footerCol}>
           <ThemePicker />
+          <PalettePicker />
           {confirming ? (
             <Confirm
               confirmLabel="Erase my data"
