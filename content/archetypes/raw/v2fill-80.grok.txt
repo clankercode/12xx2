@@ -1,0 +1,11 @@
+BEGIN absolute-monarchism
+Q146 +2 +2
+Q147 -3 -3
+Q148 -3 -3
+Q149 -2 -2
+Q150 -3 -3
+Q151 -2 +1
+Q152 +2 +2
+Q153 -2 -1
+Q154 -2 -2
+END absolute-monarchism

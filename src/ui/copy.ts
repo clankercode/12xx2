@@ -88,6 +88,7 @@ export function fitTitle(f: FitSet): string {
 
 /** The nearest ideology as a labelled measurement, for a frame that fits nothing (cards, compare, short notes). */
 export function nearestNote(f: FitSet): string {
+  if (f.flat && f.nearest) return `Nearest: ${f.nearest.arch.name}, but every axis scored exactly 0`
   if (!f.nearest) return 'Every listed ideology is ruled out'
   return `Nearest: ${f.nearest.arch.name}, but ${f.nearest.label === 'none' ? 'not close' : 'not named (sensitive ideologies need to be very close)'}`
 }
@@ -97,7 +98,7 @@ export function nearestNote(f: FitSet): string {
  * with the breakpoint that decides. A sensitive nearest is held to the stricter "very close" cut.
  */
 export function distanceNote(f: FitSet, cuts: { loose: number; veryClose: number }): string {
-  if (!f.nearest) return 'every listed ideology is ruled out by a core commitment'
+  if (!f.nearest) return 'every listed ideology is ruled out by a core or red-line commitment'
   const m = f.nearest
   const cut = m.arch.sensitive
     ? `a sensitive ideology “fits” only at ${cuts.veryClose.toFixed(3)} or less`
@@ -108,10 +109,12 @@ export function distanceNote(f: FitSet, cuts: { loose: number; veryClose: number
 /** Why an empty fit set names nobody. */
 export function noFitNote(f: FitSet, who = 'You'): string {
   const you = who === 'You'
-  if (!f.nearest) return `${you ? 'You contradict' : 'These answers contradict'} a core commitment of every listed ideology.`
+  if (f.flat)
+    return `Every axis came out at exactly 0, which is what answering every statement the same way gives, so ${you ? 'your' : 'these'} answers carry no position to match.`
+  if (!f.nearest) return `${you ? 'You contradict' : 'These answers contradict'} a core or red-line commitment of every listed ideology.`
   const far = `${you ? 'You sit' : 'These answers sit'} further from every listed ideology than 95% of simulated adherents sit from their own`
   if (f.ruledOutInRange.length)
-    return `Every ideology close enough to fit is ruled out by a core commitment; the rest sit further away than 95% of simulated adherents sit from their own. None is named as ${you ? 'your' : 'their'} match.`
+    return `Every ideology close enough to fit is ruled out by a core or red-line commitment; the rest sit further away than 95% of simulated adherents sit from their own. None is named as ${you ? 'your' : 'their'} match.`
   if (f.heldBack.length) return `The only ideologies close enough are sensitive ones, which are named only when very close. None is named as ${you ? 'your' : 'their'} match.`
   return `${far}, so none is named as ${you ? 'your' : 'their'} match.`
 }
@@ -120,6 +123,7 @@ export function noFitNote(f: FitSet, who = 'You'): string {
 export function constantNote(h: Extract<Hero, { kind: 'constant' }>, who = 'You'): string {
   const you = who === 'You'
   if (!h.now) return 'Not enough here-and-now answers to place that frame.'
+  if (h.now.flat) return 'Here and now every axis scored exactly 0, so those answers carry no position to match. That alone isn’t a split.'
   if (!h.now.fits.length)
     return `Here and now no listed ideology is close enough to name. That alone isn’t a split: about 1 in 20 sincere here-and-now answer sets lands just outside the cut by chance.`
   if (!sameInBothFrames(h))

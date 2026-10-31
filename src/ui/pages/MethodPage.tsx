@@ -3,8 +3,10 @@ import type { FitStats, FitStatsRow } from '../../engine/fitstats'
 import { AXES } from '../../data/axes'
 import { CALIBRATION } from '../../data/calibration'
 import { CATALOGUE, CATALOGUE_IS_PLACEHOLDER } from '../../data/archetypes'
-import { HAS_COMMITMENTS } from '../../data/commitments'
-import { MAX_COMMITMENTS } from '../../engine/commitments'
+import { HAS_COMMITMENTS, HAS_RED_COMMITMENTS } from '../../data/commitments'
+import { MAX_CORE } from '../../engine/commitments'
+import { ALL_ITEMS, itemsForMode } from '../../data/items'
+import { RED_LINES } from '../../data/redlines'
 import { IDEAL_FRAME, IDEAL_STEM, NOW_FRAME, NOW_STEM, SHARED_RULE } from '../../data/frames'
 import { MODE_NAME, REPORT_COMMITMENT_URL } from '../copy'
 import css from './Prose.module.css'
@@ -43,6 +45,10 @@ const pct = (x: number | undefined) => (typeof x === 'number' ? `${(100 * x).toF
 const byMode = (rows: FitStats['adherents'] | undefined, f: (r: FitStatsRow) => string) =>
   rows ? MODES.map(m => f(rows[m])).join(' / ') : '—'
 const byModeOf = <T,>(rows: Record<Mode, T>, f: (r: T) => string) => MODES.map(m => f(rows[m])).join(' / ')
+
+const FULL = ALL_ITEMS.length
+const PER_AXIS = AXIS_IDS.map(a => ALL_ITEMS.filter(i => i.axis === a).length)
+const FULL_ONLY = FULL - itemsForMode('standard').length - AXIS_IDS.length * 4
 
 export function MethodPage() {
   const c = CALIBRATION
@@ -93,8 +99,31 @@ export function MethodPage() {
 
       <h2>The statements</h2>
       <ul>
-        <li>120 original statements, 10 per axis: 5 where agreeing points to each pole, at matched strength.</li>
-        <li>Quick, Standard and Full use 4, 6 and 10 per axis, always half for each pole. The sets are nested and fixed, and the order is the same for everyone, so results are comparable.</li>
+        <li>
+          {FULL} original axis statements, {Math.min(...PER_AXIS)} to {Math.max(...PER_AXIS)} per axis: on every axis, half point
+          to each pole, at matched strength.
+        </li>
+        <li>
+          Quick and Standard use 4 and 6 per axis; Full uses all {FULL}. Every set is half for each pole, the sets are nested and
+          fixed, and the order is the same for everyone, so results are comparable.
+        </li>
+        <li>
+          The last {FULL_ONLY} Full statements were added to separate ideologies that sit close together on the first ten per
+          axis (for example, two kinds of liberalism or of conservatism). Quick and Standard are unchanged.
+        </li>
+        <li>
+          Every length also ends with {RED_LINES.length} <a
+            href="#/method"
+            onClick={e => {
+              // Hash routing: scroll to the section instead of changing the route.
+              e.preventDefault()
+              document.getElementById('red-lines')?.scrollIntoView()
+            }}
+          >
+            red-line statements
+          </a>, which are never scored on an
+          axis.
+        </li>
         <li>Statements are standing rules or “if this happens, then that” conditionals, with conditionals split evenly between poles. None use “more than now” or “too much”, which would mean different things in the two frames.</li>
         <li>Each statement’s direction was checked blind by a model from a different family than the writer; disagreements were rewritten.</li>
         <li>A script checks every statement against the original 12axes bank and the popular 2026 12axes bank. Overlapping phrasing is rewritten.</li>
@@ -214,7 +243,7 @@ export function MethodPage() {
       </p>
       <ol>
         <li>
-          none of its <a href="#core-commitments">core commitments</a> is contradicted by your answers (a “?” neither rules it out nor
+          none of its <a href="#core-commitments">core commitments</a> or <a href="#red-lines">red-line commitments</a> is contradicted by your answers (a “?” neither rules it out nor
           counts in its favour), and
         </li>
         <li>
@@ -223,7 +252,8 @@ export function MethodPage() {
         </li>
       </ol>
       <p>
-        Distance is worked out per frame. Core commitments are not yet: a commitment that is checked in both frames counts as
+        A frame with every scored axis at exactly 0 fits no ideology: it carries no position to match.
+        Distance is worked out per frame. Commitments (including red lines) are not yet: a commitment that is checked in both frames counts as
         contradicted if either frame contradicts it, so a here-and-now answer can rule an ideology out of your ideal fit set too.
       </p>
       <p>
@@ -279,7 +309,7 @@ export function MethodPage() {
       <h2 id="core-commitments">Core commitments</h2>
       <p>
         Distance alone can call you close to an ideology while you reject something central to it. So each ideology can list up
-        to {MAX_COMMITMENTS} <em>core commitments</em>: statements on which the coded profiles of its mainstream all take the same
+        to {MAX_CORE} <em>core commitments</em>: statements on which the coded profiles of its mainstream all take the same
         side. Three instances of one AI model (Claude Opus, reading as a theorist, an insider and a sceptic) proposed them
         independently; one is kept when at least two proposed it and the ideology’s coded answers sit firmly on that side. Each is
         then checked for counterexamples: a statement that sincere mainstream adherents reject on principle is dropped, as the
@@ -318,11 +348,32 @@ export function MethodPage() {
         {!HAS_COMMITMENTS && ' Commitments are still being coded, so none are applied yet.'}
       </p>
 
+      <h3 id="red-lines">Red lines</h3>
+      <p>
+        Every test, at every length, ends with {RED_LINES.length} short red-line statements, answered in both frames on the same
+        grid. They cover things like imprisonment by ethnicity, torture, collective punishment, jailing peaceful critics,
+        cancelling elections and targeting civilians. They are deliberately <em>off-axis</em>: they never move an axis score,
+        and they are not part of your profile, the careless-answering check, the Reality Gap, axis coverage or the “answered”
+        count.
+      </p>
+      <p>
+        Their only job is to rule ideologies out. An ideology can list a <em>red-line commitment</em>: the side the coded
+        profiles of its mainstream all take on that statement. These work exactly like core commitments (✔ / ✘ / ?, “agree” strength or stronger on
+        the wrong side is decisive) and are coded the same way: three independent Opus lenses (theorist, insider, sceptic), kept
+        when at least two of three agree and the coded sheet agrees, and audited so that no more than 2% of respondents
+        simulated from an ideology’s coded answers are ruled out of it. Like core commitments, they are AI coders’ judgements,
+        not checked with adherents. Red-line commitments don’t count towards the {MAX_CORE} core commitments. Your results
+        show one “Red lines” column per ideology and, for you only, your answer on each red line with the ideologies it rules
+        out. A shared link includes where you stand on them only if you tick that box when sharing.
+        {!HAS_RED_COMMITMENTS && ' Red-line commitments are still being coded, so none are applied yet.'}
+      </p>
+
       <h2>How the ideology profiles were made</h2>
       <p>
         Each of the {CATALOGUE.length} ideologies was given a packet: a fair, adherent-voice description, its practical programme
         today, and sources including at least one written by adherents. Three AI coders from different model families (Anthropic
-        Claude, OpenAI GPT, xAI Grok), working blind to each other, answered all 120 statements in both frames as a sincere,
+        Claude, OpenAI GPT, xAI Grok), working blind to each other, answered all {FULL + RED_LINES.length} statements ({FULL} axis statements and the{' '}
+        {RED_LINES.length} red lines) in both frames as a sincere,
         mainstream adherent would. The median answer per statement was scored with exactly the same formula as yours, so profiles
         and people sit on the same scale. Per-axis disagreement between coders is published on the{' '}
         <a href="#/ideologies">catalogue page</a>. These profiles are informed editorial judgements, not facts about every

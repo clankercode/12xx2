@@ -1,5 +1,5 @@
-import type { Answer, Answers, AxisId, ChipId, ItemAnswer, Mode } from '../engine/types'
-import { itemsForMode, longerModes } from '../data/items'
+import type { Answer, Answers, AxisId, ChipId, ItemAnswer, Mode, Statement } from '../engine/types'
+import { longerModes, quizItems, unansweredRedLines } from '../data/items'
 
 export interface Session {
   v: 1
@@ -24,6 +24,11 @@ export interface Session {
    * statements that mode lacked are asked, and the context steps are skipped. Kept after finishing.
    */
   extendFrom: Mode | null
+  /**
+   * While extending: the red lines this extension asks, fixed when it starts (those the run had not
+   * answered, e.g. a run from before red lines existed), so answering them never shifts `index`.
+   */
+  extendRed: string[] | null
 }
 
 export const EMPTY: Session = {
@@ -41,6 +46,7 @@ export const EMPTY: Session = {
   runId: null,
   finishedAt: null,
   extendFrom: null,
+  extendRed: null,
 }
 
 export type Action =
@@ -93,15 +99,21 @@ export function reduce(s: Session, a: Action): Session {
     case 'extend':
       // Same run, same answers: only the statements the longer mode adds are asked.
       if (s.stage !== 'done' || !s.mode || !longerModes(s.mode).includes(a.mode)) return s
-      return { ...s, mode: a.mode, extendFrom: s.mode, stage: 'quiz', index: 0 }
+      return { ...s, mode: a.mode, extendFrom: s.mode, extendRed: unansweredRedLines(s.answers), stage: 'quiz', index: 0 }
     case 'cancelExtend':
       // Back to the results as they were. Answers to added statements stay in the session (they are
       // offered again if the person continues later) but don't count towards the shorter mode.
       if (s.stage !== 'quiz' || !s.extendFrom) return s
-      return { ...s, mode: s.extendFrom, extendFrom: null, stage: 'done', index: itemsForMode(s.extendFrom).length }
+      return { ...s, mode: s.extendFrom, extendFrom: null, extendRed: null, stage: 'done', index: quizItems(s.extendFrom, null).length }
     case 'reset':
       return { ...EMPTY, input: s.input }
   }
+}
+
+/** The statements this session's quiz asks, in order (see quizItems); `index` points into it. */
+export function sessionStatements(s: Session): Statement[] {
+  if (!s.mode) return []
+  return quizItems(s.mode, s.extendFrom, s.extendFrom ? (s.extendRed ?? unansweredRedLines(s.answers)) : undefined)
 }
 
 /** How long after finishing a run can still be continued; later, views may have moved and a fresh run is better. */
@@ -112,8 +124,8 @@ export function extendOptions(s: Session, now: number): { mode: Mode; added: num
   if (s.stage !== 'done' || !s.mode || !s.finishedAt) return []
   const age = now - Date.parse(s.finishedAt)
   if (!(age >= 0 && age <= EXTEND_WINDOW_MS)) return []
-  const base = itemsForMode(s.mode).length
-  return longerModes(s.mode).map(mode => ({ mode, added: itemsForMode(mode).length - base }))
+  const red = unansweredRedLines(s.answers)
+  return longerModes(s.mode).map(mode => ({ mode, added: quizItems(mode, s.mode, red).length }))
 }
 
 const KEY = '12xx2.session.v1'
@@ -125,7 +137,12 @@ export function loadSession(): Session {
     const raw = localStorage.getItem(KEY)
     if (raw) {
       const s = JSON.parse(raw) as Session
-      if (s && s.v === 1) return { ...EMPTY, ...s, incoming: readIncoming() ?? s.incoming }
+      if (s && s.v === 1) {
+        const out: Session = { ...EMPTY, ...s, incoming: readIncoming() ?? s.incoming }
+        // An extension saved before red lines existed: fix the red lines it asks now, once.
+        if (out.extendFrom && out.stage === 'quiz' && !Array.isArray(s.extendRed)) out.extendRed = unansweredRedLines(out.answers)
+        return out
+      }
     }
   } catch {
     /* ignore */

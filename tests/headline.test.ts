@@ -9,7 +9,7 @@ import { CALIBRATION } from '../src/data/calibration'
 import { CATALOGUE } from '../src/data/archetypes'
 import { EMPTY } from '../src/state/session'
 import { deriveOwn } from '../src/state/derive'
-import { constantNote, distanceNote, fitNames, heroName } from '../src/ui/copy'
+import { constantNote, distanceNote, fitNames, heroName, noFitNote } from '../src/ui/copy'
 import { previewPath, shareText } from '../src/ui/ShareSheet'
 import { headline } from '../src/share/card'
 
@@ -38,9 +38,9 @@ describe('fit-set headline on the real catalogue', () => {
     }
   })
 
-  it('"slightly agree" and "slightly disagree" straight-liners never get a named fit', () => {
+  it('straight-liners at every non-neutral strength never get a named fit', () => {
     for (const mode of MODES)
-      for (const v of [1, -1] as const) expect(namedAnywhere(straightLiner(mode, v)), `${mode} ${v}`).toEqual([])
+      for (const v of [1, -1, 2, -2, 3, -3] as const) expect(namedAnywhere(straightLiner(mode, v)), `${mode} ${v}`).toEqual([])
   })
 
   it('all-neutral answers show the nearest ideology as a labelled measurement', () => {
@@ -51,7 +51,8 @@ describe('fit-set headline on the real catalogue', () => {
     const card = headline(r, false)
     expect(card.kicker).toBe('My 12 axes, twice')
     expect(card.lines[0]!.name).toBe('No close match')
-    expect(card.lines[0]!.note).toBe(`Nearest: ${r.hero.ideal.nearest!.arch.name}, but not close`)
+    expect(r.hero.ideal.flat).toBe(true)
+    expect(card.lines[0]!.note).toBe(`Nearest: ${r.hero.ideal.nearest!.arch.name}, but every axis scored exactly 0`)
     expect(shareText(r)).not.toMatch(/I fit/)
   })
 
@@ -104,6 +105,29 @@ describe('fit-set headline on a synthetic catalogue', () => {
   })
   // Standard-length cuts: "loose" ≈ 25.4 points on uniform vectors, "very close" ≈ 17.4.
   const spread = [mk('l', -60), mk('c', 0), mk('r', 60)]
+
+  it('a flat frame fits nothing even with a catalogue entry exactly at zero', () => {
+    const r = deriveResults(payloadFor(0, -60), spread, CALIBRATION)
+    if (r.hero.kind !== 'no-fit') throw new Error(r.hero.kind)
+    expect(r.hero.ideal.flat).toBe(true)
+    expect(slugs(r.hero.ideal)).toEqual([])
+    expect(slugs(r.hero.now)).toEqual(['l'])
+    expect(r.matchesIdeal.every(m => !fits(m))).toBe(true)
+    expect(noFitNote(r.hero.ideal)).toContain('every statement the same way')
+    expect(shareText(r)).toContain('no position to match')
+    expect(previewPath(r)).toBeNull()
+  })
+
+  it('a flat here-and-now frame is empty, not a split or a shared fit', () => {
+    const r = deriveResults(payloadFor(-60, 0), spread, CALIBRATION)
+    if (r.hero.kind !== 'constant') throw new Error(r.hero.kind)
+    expect(slugs(r.hero.ideal)).toEqual(['l'])
+    expect(slugs(r.hero.now)).toEqual([])
+    expect(r.hero.now?.flat).toBe(true)
+    expect(constantNote(r.hero)).toContain('no position to match')
+    expect(shareText(r)).toContain('Here and now every axis scored exactly 0')
+    expect(previewPath(r)).toBeNull()
+  })
 
   it('single fit: names it, everywhere', () => {
     const r = deriveResults(payloadFor(-60, -58), spread, CALIBRATION)
@@ -168,7 +192,7 @@ describe('fit-set headline on a synthetic catalogue', () => {
     // Four archetypes equally close to the centre, each on a different pattern of sides.
     const pat = (k: number) => AXIS_IDS.map((_, i) => (((i >> (k % 2)) + k) % 2 ? 20 : -20))
     const cat = [0, 1, 2, 3].map(k => mk(`p${k}`, k < 2 ? pat(k) : pat(k - 2).map(x => -x)))
-    const r = deriveResults(payloadFor(0, 0), cat, CALIBRATION)
+    const r = deriveResults(payloadFor(1, 1), cat, CALIBRATION)
     if (r.hero.kind !== 'constant') throw new Error(r.hero.kind)
     expect(r.hero.ideal.fits).toHaveLength(4)
     expect(r.hero.ideal.stability?.label).toBe('toss-up')

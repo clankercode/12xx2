@@ -31,6 +31,10 @@ archetypes:
 overlap:
     pnpm tsx scripts/overlap.ts
 
+# Pair separation: catalogue pairs with no statement where one ideology is at >= +2 and the other at <= -2, per length.
+separation *args:
+    pnpm tsx scripts/separation.ts {{args}}
+
 # Refetch World Bank WGI country context (network; review the diff before committing).
 wgi:
     pnpm tsx scripts/wgi.ts
@@ -63,6 +67,11 @@ compare-shots out="shots":
 commitments-shots out="shots":
     pnpm tsx scripts/commitments-shots.ts http://localhost:21313/ {{out}}
 
+# Needs a dev server with the test fixture (it lists red-line commitments): `COMMITMENTS_FIXTURE=tests/fixtures/commitments.json just dev`.
+# Red-line intro card and statement, matrix Red lines column, Your red lines, share opt-in, shared panel.
+redlines-shots out="shots":
+    pnpm tsx scripts/redlines-shots.ts http://localhost:21313/ {{out}}
+
 # Needs `just dev` running. Seeds two runs and captures the runs pages into shots/.
 history-shots out="shots":
     pnpm tsx scripts/history-shots.ts http://localhost:21313/ {{out}}
@@ -79,3 +88,8 @@ card-shots out="shots/cards":
 # nearest, overlapping frames) at 1280 and 390 in dark and light, shared view, compare and cards.
 fit-shots base="http://localhost:21313/" out="shots/fit":
     pnpm tsx scripts/fit-shots.ts {{base}} {{out}}
+
+# Needs `just dev` running. Split-tile grid: landing hero, quiz and how-to practice grids at desktop and phone width,
+# dark and light, every palette, initial/hover/focus/selected states, into shots/hero/.
+hero-shots out="shots/hero":
+    pnpm tsx scripts/hero-shots.ts http://localhost:21313/ {{out}}

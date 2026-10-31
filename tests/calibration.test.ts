@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { AXIS_IDS, MODES } from '../src/engine/types'
-import { computeProfile } from '../src/engine/score'
+import { MAX_AXIS_ITEMS, MIN_ITEMS, computeProfile } from '../src/engine/score'
 import { mulberry32 } from '../src/engine/prng'
 import { itemsForMode } from '../src/data/items'
 import { CALIBRATION } from '../src/data/calibration'
@@ -18,9 +18,10 @@ const sheets = sheetsJson as unknown as Sheets
  */
 describe('committed calibration still meets its criteria', () => {
   it('has every table entry', () => {
-    for (let n = 3; n <= 10; n++) {
-      expect(CALIBRATION.tauG[String(n)]).toBeGreaterThan(0)
-      expect(CALIBRATION.careless[String(n)]).toBeGreaterThan(0)
+    // Up to the largest axis (Full: 16 items), so no paired count falls back to a smaller table entry.
+    for (let n = MIN_ITEMS; n <= MAX_AXIS_ITEMS; n++) {
+      expect(CALIBRATION.tauG[String(n)], `tauG ${n}`).toBeGreaterThan(0)
+      expect(CALIBRATION.careless[String(n)], `careless ${n}`).toBeGreaterThan(0)
     }
     for (const m of MODES) {
       const l = CALIBRATION.labels[m]
@@ -74,6 +75,15 @@ describe('core commitments', () => {
     const book = (side: 1 | -1) => ({ [slug]: [{ item: strong.id, frame: 'I' as const, side, why: 'test' }] })
     expect(falseRuleOuts(mulberry32(1), sheets, book(1), 60)!.byMode.quick).toBeLessThanOrEqual(0.02)
     expect(falseRuleOuts(mulberry32(1), sheets, book(-1), 60)!.byArchetype[slug]).toBeGreaterThan(0.8)
+  })
+
+  it('fit-set simulation asks red lines and applies their rule-outs', () => {
+    const a = CATALOGUE.find(a => a.slug === 'classical-liberalism')!
+    const wrongRed = { [a.slug]: [{ item: 'red-01', kind: 'red-line' as const, frame: 'I' as const, side: 1 as const, why: 'deliberately opposite the coded sheet' }] }
+    const st = fitSetStats(mulberry32(12), [a], sheets, wrongRed, CALIBRATION, CATALOGUE_VERSION, 20, 1)
+    const baseline = fitSetStats(mulberry32(12), [a], sheets, {}, CALIBRATION, CATALOGUE_VERSION, 20, 1)
+    // Passing the red line is unknown, not a failure, so some adherents may still fit.
+    for (const m of MODES) expect(st.adherents[m].ownInFit!).toBeLessThan(baseline.adherents[m].ownInFit! - 0.5)
   })
 
   it('fit-set headline: sincere adherents usually fit their own ideology; random clickers almost never get a named fit', () => {

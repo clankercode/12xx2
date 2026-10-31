@@ -31,6 +31,12 @@
      "rationale": "Concrete version replaces status-quo-relative 'wide powers'; cost clause keeps it polar. Loose mirror of lib-02."},
     {"id": "lib-10", "key": 1, "facet": "civil-liberties", "form": "conditional", "level": 3, "tier": "full",
      "text": "If a drug mainly harms only the people who use it, possessing it should be a crime.",
-     "rationale": "Hard conditional (condition favours Liberty): strong paternalist enforcement. Criminal enforcement belongs on lib per spec; cross-loads on pro, disclose."}
+     "rationale": "Hard conditional (condition favours Liberty): strong paternalist enforcement. Criminal enforcement belongs on lib per spec; cross-loads on pro, disclose."},
+    {"id": "lib-11", "key": 1, "facet": "political-order", "form": "conditional", "level": 3, "tier": "full",
+     "text": "If a party aims to abolish free elections, it should be barred from running in them.",
+     "rationale": "Militant democracy / paradox of tolerance (review B4, P1). Restricting who may contest is the Security pole. Mirrors lib-12's condition style. Content v2 separator (CF review 2026-10-31 §5 draft, reworded); original."},
+    {"id": "lib-12", "key": -1, "facet": "political-order", "form": "conditional", "level": 3, "tier": "full",
+     "text": "If a political system blocks needed change, overthrowing it by force can be right.",
+     "rationale": "Method of change (review C5): the right of revolution against an order, the Liberty pole. Splits revolutionary from reformist socialists, mainly in the here-and-now frame. Content v2 separator (CF review 2026-10-31 §5 draft, reworded); original."}
   ]
 }

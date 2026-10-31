@@ -48,15 +48,19 @@ export function shareText(r: Results): string {
   const rg = r.payload.rg !== null ? ` (Reality Gap ${r.payload.rg})` : ''
   if (h.kind === 'split') return `In theory I fit ${fitPhrase(h.ideal)}. Here and now, I fit ${fitPhrase(h.now)}. What’s your gap?`
   if (h.kind === 'constant' && !h.now) return `In theory I fit ${fitPhrase(h.ideal)}. What’s your gap?`
+  if (h.kind === 'constant' && h.now?.flat)
+    return `In theory I fit ${fitPhrase(h.ideal)}. Here and now every axis scored exactly 0${rg}. What’s your gap?`
   if (h.kind === 'constant' && h.now?.fits.length === 0)
     return `In theory I fit ${fitPhrase(h.ideal)}. Here and now no listed ideology is close enough to name${rg}. What’s your gap?`
   if (h.kind === 'constant' && !sameInBothFrames(h))
     return `In theory I fit ${fitPhrase(h.ideal)}. Here and now I fit ${fitPhrase(h.now!)}, which overlaps, so it isn’t a split${rg}. What’s yours?`
   if (h.kind === 'constant') return `In theory and here and now, I fit ${fitPhrase(h.ideal)}${rg}. What’s yours?`
+  if (h.kind === 'no-fit' && h.ideal.flat)
+    return 'Every ideal axis scored exactly 0, so my answers carry no position to match. What’s your gap?'
   if (h.kind === 'no-fit')
     return h.ideal.nearest
       ? `No listed ideology is a close match for my politics; the nearest, ${h.ideal.nearest.arch.name}, isn’t close enough to name. What’s your gap?`
-      : 'My answers contradict a core commitment of every listed ideology. What’s your gap?'
+      : 'My answers contradict a core or red-line commitment of every listed ideology. What’s your gap?'
   return 'I answered every political question twice: for my ideal system and for here and now. What’s your gap?'
 }
 
@@ -78,7 +82,7 @@ export function resultText(r: Results): string {
 }
 
 export function ShareSheet({ payload }: { payload: Payload }) {
-  const [inc, setInc] = useState({ sc: false, country: false, q: false })
+  const [inc, setInc] = useState({ sc: false, country: false, q: false, red: false })
   const [minimal, setMinimal] = useState(false)
   const [size, setSize] = useState<CardSize>('post')
   const [allowSensitive, setAllowSensitive] = useState(false)
@@ -235,10 +239,16 @@ export function ShareSheet({ payload }: { payload: Payload }) {
               <input type="checkbox" checked={inc.q} onChange={e => setInc({ ...inc, q: e.target.checked })} /> Where I placed my country
             </label>
           )}
+          {payload.red && (
+            <label className={css.check}>
+              <input type="checkbox" checked={inc.red} onChange={e => setInc({ ...inc, red: e.target.checked })} /> Include where I stand on
+              the red-line statements (reveals those answers)
+            </label>
+          )}
           {inc.country && (inc.sc || inc.q) && (
             <p className={css.warn}>Country together with your view of its system can say more about you than you intend. Share with care.</p>
           )}
-          {!payload.sc && !payload.country && !payload.q && <p className="small muted">Nothing optional to include.</p>}
+          {!payload.sc && !payload.country && !payload.q && !payload.red && <p className="small muted">Nothing optional to include.</p>}
         </fieldset>
         <fieldset className={css.fs}>
           <legend>Link</legend>
@@ -251,7 +261,8 @@ export function ShareSheet({ payload }: { payload: Payload }) {
           </label>
           <input className={css.link} readOnly value={link} onFocus={e => e.target.select()} aria-label="Your result link" />
           <p className="small muted">
-            Anyone who gets this link — and any site it’s posted on — can read the scores in it (not your answers).
+            Anyone who gets this link — and any site it’s posted on — can read the scores in it
+            {inc.red ? ', and where you stand on each red-line statement.' : ' (not your answers).'}
             {kind === 'preview' && ' A preview link also shows your headline ideology in the address, which the web host can see.'}
           </p>
         </fieldset>

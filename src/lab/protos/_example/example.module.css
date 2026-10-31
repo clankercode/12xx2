@@ -1,0 +1,144 @@
+.root {
+  --c: clamp(34px, calc((100cqi - 40px) / 7), 64px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.small {
+  --c: clamp(26px, calc((100cqi - 24px) / 7), 40px);
+  gap: 8px;
+  font-size: 0.8rem;
+}
+
+.statement {
+  max-width: 34em;
+  margin: 0;
+  text-align: center;
+  font-family: var(--display);
+  font-size: 1.15em;
+}
+
+.frame {
+  position: relative;
+  padding: 18px 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, var(--c));
+  grid-auto-rows: var(--c);
+  gap: 3px;
+}
+
+.cell {
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  overflow: hidden;
+  background: none;
+  outline: 1px solid var(--rule-major);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+button.cell {
+  cursor: pointer;
+}
+
+button.cell:hover {
+  transform: scale(1.08);
+  z-index: 1;
+}
+
+.on {
+  outline: 2px solid var(--paper);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--paper) 25%, transparent);
+  transform: scale(1.1);
+  z-index: 2;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.glyph {
+  font: 700 26px var(--body);
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.chip {
+  position: absolute;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--rule-major);
+  background: var(--ink-2);
+  font-size: 0.72em;
+  white-space: nowrap;
+  color: var(--paper);
+}
+
+.tl {
+  top: 0;
+  left: 0;
+  transform: translate(-12%, -30%);
+}
+
+.tr {
+  top: 0;
+  right: 0;
+  transform: translate(12%, -30%);
+}
+
+.bl {
+  bottom: 0;
+  left: 0;
+  transform: translate(-12%, 30%);
+}
+
+.br {
+  bottom: 0;
+  right: 0;
+  transform: translate(12%, 30%);
+}
+
+.key {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 0.82em;
+  color: var(--muted);
+}
+
+.keyTri {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-left: 8px;
+}
+
+.keyTri[data-half='now'] {
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.keyTri[data-half='ideal'] {
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+.readout {
+  min-height: 3em;
+  margin: 0;
+  text-align: center;
+  max-width: 34em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cell {
+    transition: none;
+  }
+}

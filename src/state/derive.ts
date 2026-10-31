@@ -1,4 +1,4 @@
-import { AXIS_IDS, CHIPS, type ChipId, type Item } from '../engine/types'
+import { AXIS_IDS, CHIPS, redCode, type ChipId, type Item, type ItemAnswer, type RedLine } from '../engine/types'
 import { computeProfile, type Profile } from '../engine/score'
 import { profileToPayload, type Payload } from '../engine/payload'
 import { scoreSc, type ScResult } from '../engine/sc'
@@ -9,6 +9,7 @@ import { CATALOGUE, CATALOGUE_VERSION } from '../data/archetypes'
 import { CATALOGUE_SLUGS, COMMITMENTS, ruledOutSlugs } from '../data/commitments'
 import { checkArchetype, type ArchetypeCheck } from '../engine/commitments'
 import { SC_ITEMS } from '../data/sc'
+import { RED_LINES } from '../data/redlines'
 import type { Session } from './session'
 
 export interface Own {
@@ -20,6 +21,11 @@ export interface Own {
   results: Results
   /** Core-commitment checks for every archetype, by slug (owner only: they need the answers). */
   commitments: ReadonlyMap<string, ArchetypeCheck>
+  /**
+   * Each red line with the owner's answer and the ideologies (catalogue slugs) whose red-line
+   * commitment on it that answer contradicts. Owner only; shared only as codes, on opt-in.
+   */
+  redLines: { line: RedLine; answer: ItemAnswer | null; contradicts: string[] }[]
   splits: { item: Item; i: number; n: number; delta: number }[]
   reasons: { chip: ChipId; count: number }[]
   diagnostics: { paired: number; diagonal: number; extreme: number; midpoint: number; passed: number; frames: number }
@@ -33,7 +39,9 @@ export function deriveOwn(s: Session): Own | null {
   const qVec = AXIS_IDS.map(a => s.q[a] ?? null)
   const inputs = Object.values(s.answers).map(a => a.input ?? 'grid')
   const rows = inputs.filter(x => x === 'rows').length
-  const asked = new Set(items.map(it => it.id))
+  // Axis items by mode; red lines are asked at every length, but only count as asked once the run
+  // reached them (a run from before red lines existed has none, so they read "not asked").
+  const asked = new Set([...items.map(it => it.id), ...RED_LINES.filter(r => s.answers[r.id]).map(r => r.id)])
   const commitments = new Map(CATALOGUE_SLUGS.map(slug => [slug, checkArchetype(slug, COMMITMENTS, s.answers, asked)]))
   // Careless answering makes no claims, rule-outs included.
   const ruledOut = profile.careless ? [] : CATALOGUE_SLUGS.flatMap((slug, k) => (commitments.get(slug)!.all === 'fail' ? [k] : []))
@@ -45,8 +53,18 @@ export function deriveOwn(s: Session): Own | null {
     sc: sc ? { score: sc.score, se: sc.se } : undefined,
     country: s.country ?? undefined,
     ruledOut,
+    red: asked.size > items.length ? RED_LINES.map(r => ({ i: redCode(s.answers[r.id]?.i, r.humane), n: redCode(s.answers[r.id]?.n, r.humane) })) : undefined,
   })
   const results = deriveResults(payload, CATALOGUE, CALIBRATION, ruledOutSlugs(payload))
+
+  const redLines = RED_LINES.map(line => ({
+    line,
+    answer: s.answers[line.id] ?? null,
+    // Careless answering makes no claims, so it names no contradicted ideologies either.
+    contradicts: profile.careless ? [] : CATALOGUE_SLUGS.filter(slug =>
+      commitments.get(slug)!.checks.some(c => c.commitment.item === line.id && c.verdict === 'fail'),
+    ),
+  }))
 
   const splits = items
     .flatMap(item => {
@@ -85,5 +103,5 @@ export function deriveOwn(s: Session): Own | null {
       if (a.i === a.n) diagonal++
     }
   }
-  return { items, profile, sc, payload, results, commitments, splits, reasons, diagnostics: { paired, diagonal, extreme, midpoint, passed, frames } }
+  return { items, profile, sc, payload, results, commitments, redLines, splits, reasons, diagnostics: { paired, diagonal, extreme, midpoint, passed, frames } }
 }

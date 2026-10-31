@@ -2,23 +2,24 @@
  * Seeded calibration of every threshold in 12 Axes² (spec §4.9).
  * Writes src/data/calibration.json; tests re-check the criteria on a smaller run.
  *
- *   pnpm tsx scripts/calibrate.ts [--draws N]
+ *   pnpm tsx scripts/calibrate.ts [--draws N] [--out PATH]
  */
 import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { AXIS_IDS, MODES, type Answer, type Answers, type AxisId, type Item, type Mode } from '../src/engine/types'
-import { computeProfile, gapAxis, groupByAxis, inconsistencyIndex, realityGap } from '../src/engine/score'
+import { MAX_AXIS_ITEMS, MIN_ITEMS, computeProfile, gapAxis, groupByAxis, inconsistencyIndex, realityGap } from '../src/engine/score'
 import { profileToPayload } from '../src/engine/payload'
 import { deriveResults } from '../src/engine/results'
 import { distance, type Archetype } from '../src/engine/match'
 import { mulberry32 } from '../src/engine/prng'
-import { MODEL, archetypeSheet, falseRuleOuts, fitSetStats, latentSheet, quantile, randomAnswers, respond, type Sheets } from './sim'
-import { validateCommitments } from '../src/engine/commitments'
+import { MODEL, RED_SIM, archetypeSheet, falseRuleOuts, fitSetStats, latentSheet, quantile, randomAnswers, respond, type Sheets } from './sim'
+import { checkArchetype, validateCommitments } from '../src/engine/commitments'
 import type { Calibration } from '../src/engine/calibration'
 import { ALL_ITEMS, itemsForMode } from '../src/data/items'
+import { RED_LINES } from '../src/data/redlines'
 
 const args = process.argv.slice(2)
 const DRAWS = Number(args[args.indexOf('--draws') + 1]) || 4000
-const OUT = 'src/data/calibration.json'
+const OUT = args.includes('--out') ? args[args.indexOf('--out') + 1]! : 'src/data/calibration.json'
 
 const FAMILY_FALSE_ALARM = 0.1
 const PER_AXIS_ALPHA = 1 - (1 - FAMILY_FALSE_ALARM) ** (1 / 12)
@@ -42,17 +43,26 @@ else {
   }
 }
 
+const commitments = validateCommitments(
+  JSON.parse(readFileSync('content/archetypes/commitments.json', 'utf8')),
+  ALL_ITEMS,
+  archetypes.map(a => a.slug),
+  RED_LINES,
+)
+
 const rng = mulberry32(0x12a2)
 const byAxisAll = groupByAxis(ALL_ITEMS)
 const report: Record<string, unknown> = {}
 
 // ---------- τ_G per paired-item count ----------
 const tauG: Record<string, number> = {}
-for (let n = 3; n <= 10; n++) {
+// The largest axis, so every count up to MAX_AXIS_ITEMS can be drawn (structure is otherwise identical).
+const pool = AXIS_IDS.map(a => byAxisAll[a]).reduce((big, xs) => (xs.length > big.length ? xs : big))
+if (pool.length < MAX_AXIS_ITEMS) throw new Error(`largest axis has ${pool.length} items; MAX_AXIS_ITEMS is ${MAX_AXIS_ITEMS}`)
+for (let n = MIN_ITEMS; n <= MAX_AXIS_ITEMS; n++) {
   let worst = 0
   for (const p of MODEL.copyRates) {
     const stats: number[] = []
-    const pool = byAxisAll.fed // any axis: structure is identical
     for (let d = 0; d < DRAWS * 5; d++) {
       // Pick n items with keys as balanced as possible.
       const plus = pool.filter(i => i.key === 1).slice(0, Math.ceil(n / 2))
@@ -79,7 +89,7 @@ const bucket = (answers: Answers, items: readonly Item[]) => {
     if (a?.i !== null && a?.i !== undefined) c++
     if (a?.n !== null && a?.n !== undefined) c++
   }
-  return Math.max(3, Math.min(10, Math.round(c / 24)))
+  return Math.max(MIN_ITEMS, Math.min(MAX_AXIS_ITEMS, Math.round(c / 24)))
 }
 for (const mode of MODES) {
   const items = itemsForMode(mode)
@@ -100,7 +110,7 @@ const careless: Record<string, number> = {}
 const carelessDetection: Record<string, number> = {}
 const carelessFalseFlag: Record<string, number> = {}
 const buckets = Object.keys(honestIdx).map(Number).sort((a, b) => a - b)
-for (let n = 3; n <= 10; n++) {
+for (let n = MIN_ITEMS; n <= MAX_AXIS_ITEMS; n++) {
   const b = buckets.reduce((best, x) => (Math.abs(x - n) < Math.abs(best - n) ? x : best), buckets[0]!)
   // At least the honest 95th percentile, but as lenient as possible while still catching 90% of
   // random clickers: real respondents are messier than the simulation, so err toward not flagging them.
@@ -172,14 +182,14 @@ for (const mode of MODES) {
 // ---------- μ: headline split margin ----------
 const provisional: Calibration = { version: 1, tauG, mu: 0, rgCuts, careless, labels }
 const margins: number[] = []
-const noGapProfiles: { mode: Mode; ans: Answers; items: Item[] }[] = []
+const noGapProfiles: { mode: Mode; ans: Answers; items: Item[]; slug?: string }[] = []
 for (let d = 0; d < Math.min(DRAWS, 3000); d++) {
   const mode = MODES[d % 3]!
   const items = itemsForMode(mode)
   const a = archetypes[d % archetypes.length]!
   const sheet = d % 2 ? archetypeSheet(rng, items, sheets[a.slug]!, 'ideal') : latentSheet(rng, items)
   const ans = respond(rng, items, sheet, { p: MODEL.copyRates[d % 3]!, pass: MODEL.passRates[(d >> 1) % 3]!, noGap: true })
-  noGapProfiles.push({ mode, ans, items })
+  noGapProfiles.push({ mode, ans, items, ...(d % 2 && { slug: a.slug }) })
   const prof = computeProfile(items, ans, provisional)
   const uI = AXIS_IDS.map(ax => prof.I[ax].score)
   const uN = AXIS_IDS.map(ax => prof.N[ax].score)
@@ -197,10 +207,19 @@ let n = 0
 // False splits per length, counted only over respondents who could be split at all: a split needs
 // the ideal frame to fit something, and most "typical" (latent) respondents fit nothing.
 const splitBy = Object.fromEntries(MODES.map(m => [m, { split: 0, eligible: 0, nowEmpty: 0 }])) as Record<Mode, { split: number; eligible: number; nowEmpty: number }>
-for (const { mode, ans, items } of noGapProfiles) {
+// Simulate off-axis answers separately so none of the threshold RNG draws change.
+const splitRedRng = mulberry32(0x5f117)
+for (const { mode, ans: axisAnswers, items, slug } of noGapProfiles) {
+  const redSheet = slug ? archetypeSheet(splitRedRng, RED_SIM, sheets[slug]!, 'ideal') : latentSheet(splitRedRng, RED_SIM)
+  const redAnswers = respond(splitRedRng, RED_SIM, redSheet, {
+    p: MODEL.copyRates[n % 3]!, pass: MODEL.passRates[(n >> 1) % 3]!, noGap: true,
+  })
+  const ans = { ...axisAnswers, ...redAnswers }
+  const asked = new Set([...items.map(it => it.id), ...RED_LINES.map(r => r.id)])
   const prof = computeProfile(items, ans, cal)
-  const payload = profileToPayload(prof, { catalogue: cat.version, mode, input: 'grid' })
-  const r = deriveResults(payload, archetypes, cal)
+  const ruledOut = prof.careless ? [] : archetypes.flatMap((a, k) => checkArchetype(a.slug, commitments, ans, asked).all === 'fail' ? [k] : [])
+  const payload = profileToPayload(prof, { catalogue: cat.version, mode, input: 'grid', ruledOut })
+  const r = deriveResults(payload, archetypes, cal, new Set(ruledOut.map(k => archetypes[k]!.slug)))
   const h = r.hero
   if (h.kind === 'split') falseSplit++
   if ((h.kind === 'split' || h.kind === 'constant') && h.now) {
@@ -244,7 +263,8 @@ for (const shift of [1, 2]) {
 report.power = power
 report.archetypeRecovery = recovery
 
-// Random clickers: how often they still get a headline (should be rare thanks to the careless flag).
+// Legacy axis-only random-clicker diagnostic (no commitment rule-outs). The combined-pipeline
+// named-fit rates are report.fitSet.random, which includes the red-line answers and rule-outs.
 let rndHero = 0
 const RT = 600
 for (let d = 0; d < RT; d++) {
@@ -258,11 +278,6 @@ report.randomGetsHeadline = Number((rndHero / RT).toFixed(3))
 
 // ---------- Core commitments: adherents simulated from our coded sheets, ruled out of their own ideology (consistency with our coding only) ----------
 // Own RNG stream, drawn last, so every threshold above keeps its exact draws.
-const commitments = validateCommitments(
-  JSON.parse(readFileSync('content/archetypes/commitments.json', 'utf8')),
-  ALL_ITEMS,
-  archetypes.map(a => a.slug),
-)
 const fro = falseRuleOuts(mulberry32(0xc0331), sheets, commitments, Math.max(50, Math.round(DRAWS / 20)))
 // Headline figure: the full-length test, where every commitment is asked.
 report.commitmentFalseRuleOut = fro ? fro.byMode.full : null

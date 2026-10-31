@@ -21,26 +21,30 @@ export interface Match {
   d: number
   label: MatchLabel
   why: WhyLine
-  /** The answers contradict one of its core commitments: listed, but never "your match". */
+  /** The answers contradict one of its core or red-line commitments: listed, but never "your match". */
   ruledOut: boolean
+  /** The frame has no scored position, so this measurement cannot be a fit. */
+  flat?: true
 }
 
 /**
  * One frame's fit set (the headline rule): every ideology the answers FIT in that frame. An
- * ideology fits when no core commitment rules it out and its distance is within the "loose" cut
+ * ideology fits when no core or red-line commitment rules it out and its distance is within the "loose" cut
  * (the 95th percentile of simulated sincere adherents' distance to their own ideology). A sensitive
  * ideology has the stricter "very close" cut (spec §2.6). Distance orders the set and is shown as a
  * measurement; it never picks a single winner out of the set.
  */
 export interface FitSet {
   frame: 'I' | 'N'
+  /** Every scored axis is exactly zero: no position to name, regardless of distance. */
+  flat?: true
   /** Every ideology that fits, nearest first. Empty = no close match. */
   fits: Match[]
   /** The nearest ideology not ruled out (a measurement, fit or not); null when all are ruled out. */
   nearest: Match | null
   /** How often the nearest stays nearest when the scores are jittered by their error bars (a measurement). */
   stability: Stability | null
-  /** Within the "loose" cut but ruled out by a core commitment, nearest first. */
+  /** Within the "loose" cut but ruled out by a core or red-line commitment, nearest first. */
   ruledOutInRange: Match[]
   /** Sensitive ideologies within the "loose" cut but outside their stricter "very close" cut: listed, never named. */
   heldBack: Match[]
@@ -104,7 +108,7 @@ function toMatch(
   mode: Payload['mode'],
   out: ReadonlySet<string>,
 ): Match {
-  return { arch: r.arch, d: r.d, label: labelFor(r.d, cal.labels[mode]), why: why(u, r.arch[which], r.arch.weight), ruledOut: out.has(r.arch.slug) }
+  return { arch: r.arch, d: r.d, label: labelFor(r.d, cal.labels[mode]), why: why(u, r.arch[which], r.arch.weight), ruledOut: out.has(r.arch.slug), ...(isFlat(u) && { flat: true as const }) }
 }
 
 /** The top 3 not ruled out, plus any ruled-out archetype that would have ranked in the top 3, in rank order. */
@@ -130,8 +134,11 @@ function stabilityOf(stab: Stability, slug: string): Stability {
 
 /** Does this ranked match fit? Not ruled out, and within the "loose" cut ("very close" if sensitive). */
 export function fits(m: Match): boolean {
-  return !m.ruledOut && (m.arch.sensitive ? m.label === 'very-close' : m.label !== 'none')
+  return !m.flat && !m.ruledOut && (m.arch.sensitive ? m.label === 'very-close' : m.label !== 'none')
 }
+
+/** All scored axes at exactly zero carry no position to name. */
+export const isFlat = (scores: readonly (number | null)[]) => scores.some(v => v !== null) && scores.every(v => v === null || v === 0)
 
 /** The two fit sets name exactly the same ideologies. */
 export function sameFits(a: FitSet, b: FitSet): boolean {
@@ -163,9 +170,11 @@ function fitSetFor(
   const nearest = all.find(m => !m.ruledOut) ?? null
   // The bootstrap never counts a ruled-out ideology as nearest.
   const stab = nearest ? stability(u, se, cat, 'ideal', seed, 200, out.size ? a => !out.has(a.slug) : undefined) : null
+  const flat = isFlat(u)
   return {
     frame,
-    fits: all.filter(fits),
+    ...(flat && { flat: true as const }),
+    fits: flat ? [] : all.filter(fits),
     nearest,
     stability: nearest && stab ? stabilityOf(stab, nearest.arch.slug) : null,
     ruledOutInRange: all.filter(m => m.ruledOut && m.label !== 'none'),
@@ -174,7 +183,7 @@ function fitSetFor(
 }
 
 /**
- * `ruledOut` holds the slugs the payload's core-commitment field rules out (see
+ * `ruledOut` holds the slugs the payload's commitment rule-out field rules out (see
  * data/commitments `ruledOutSlugs`); empty = no rule-outs known.
  */
 export function deriveResults(p: Payload, cat: readonly Archetype[], cal: Calibration, ruledOut: ReadonlySet<string> = new Set()): Results {
@@ -213,6 +222,7 @@ export function deriveResults(p: Payload, cat: readonly Archetype[], cal: Calibr
           label: labelFor(r.d, cal.labels[p.mode]),
           why: why([...p.I], r.arch.ideal, r.arch.weight),
           ruledOut: out.has(r.arch.slug),
+          ...(isFlat(p.I) && isFlat(p.N) && { flat: true as const }),
         }))
       : []
 

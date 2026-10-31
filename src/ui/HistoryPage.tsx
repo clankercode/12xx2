@@ -161,7 +161,8 @@ function RunRow(props: { run: Run; picked: boolean; onPick: () => void; confirmi
   const own = useScored(run)
   const now = own ? heroName(own.results) : ''
   const changed = !!run.snapshot.headline && run.snapshot.headline !== now
-  const answered = Object.values(run.answers).filter(a => a.i !== null || a.n !== null).length
+  // Axis statements only: red lines are never part of the answered/total counts.
+  const answered = itemsForMode(run.mode).filter(it => { const a = run.answers[it.id]; return !!a && (a.i !== null || a.n !== null) }).length
   return (
     <li className={`${h.item} ${props.picked ? h.itemOn : ''}`}>
       <label className={h.pick}>

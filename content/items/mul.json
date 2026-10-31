@@ -30,6 +30,12 @@
      "rationale": "Humanitarian intake; 'even in large numbers' keeps it polar. Condition favours Pluralist; likely frame-splitter."},
     {"id": "mul-10", "axis": "mul", "key": 1, "facet": "integration", "form": "conditional", "level": 2, "tier": "full",
      "text": "If newcomers' customs clash with the local way of life, it should be the newcomers who adapt.",
-     "rationale": "Host-culture precedence; rewritten from 'a group' to 'newcomers' to stop leakage into indigenous/subculture and Progressive/Traditional."}
+     "rationale": "Host-culture precedence; rewritten from 'a group' to 'newcomers' to stop leakage into indigenous/subculture and Progressive/Traditional."},
+    {"id": "mul-11", "key": 1, "facet": "civic-culture", "form": "rule", "level": 2, "tier": "full",
+     "text": "Even well-designed institutions fail if most citizens lack the habits they depend on, such as honesty, tolerance and respect for rules.",
+     "rationale": "I3 (civic culture matters): a shared common culture as a condition of working institutions, the Assimilationist pole. Mirrors mul-12. Wording approved by Max Kaye (project owner) for content v2, 2026-10-31; original."},
+    {"id": "mul-12", "key": -1, "facet": "civic-culture", "form": "rule", "level": 2, "tier": "full",
+     "text": "Any culture can sustain good institutions equally well; the culture of the people using them makes little difference.",
+     "rationale": "I4 (keyed against the civic-culture view): culture is irrelevant to institutions, the Pluralist pole. Mirrors mul-11. Wording approved by Max Kaye (project owner) for content v2, 2026-10-31; original."}
   ]
 }

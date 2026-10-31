@@ -1,0 +1,7 @@
+BEGIN green-politics
+Q150 -3 -3
+Q151 3 3
+Q152 -3 -3
+Q153 2 2
+Q154 3 3
+END green-politics

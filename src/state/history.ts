@@ -1,7 +1,8 @@
 import { CHIPS, MODES, type Answer, type Answers, type AxisId, type ChipId, type Mode } from '../engine/types'
 import { AXIS_IDS } from '../engine/types'
 import { FORMAT } from '../engine/payload'
-import { ALL_ITEMS, itemsForMode } from '../data/items'
+import { ALL_ITEMS, askedIdsForMode } from '../data/items'
+import { RED_IDS } from '../data/redlines'
 import { SC_ITEMS } from '../data/sc'
 import { COUNTRY_CODES } from '../data/countries'
 import { CATALOGUE_VERSION } from '../data/archetypes'
@@ -35,7 +36,8 @@ export const HISTORY_KEY = '12xx2.history.v1'
 export const MAX_RUNS = 200
 export const EXPORT_KIND = '12xx2-export'
 
-const ITEM_IDS = new Set(ALL_ITEMS.map(it => it.id))
+/** Axis items and red lines: both are answers a run keeps. */
+const ITEM_IDS = new Set([...ALL_ITEMS.map(it => it.id), ...RED_IDS])
 const SC_IDS = new Set(SC_ITEMS.map(it => it.id))
 const COUNTRIES = new Set<string>(COUNTRY_CODES)
 
@@ -64,9 +66,9 @@ export const sameMethod = (m: Run['method']) => {
 /** The run record for a finished session. */
 export function buildRun(s: Session, headline: string): Run | null {
   if (s.stage !== 'done' || !s.runId || !s.mode) return null
-  // Only the mode's statements: a cancelled extension leaves extra answers in the session.
+  // Only the mode's statements (and the red lines): a cancelled extension leaves extra answers in the session.
   const answers: Answers = {}
-  for (const it of itemsForMode(s.mode)) if (s.answers[it.id]) answers[it.id] = s.answers[it.id]!
+  for (const id of askedIdsForMode(s.mode)) if (s.answers[id]) answers[id] = s.answers[id]!
   return {
     id: s.runId,
     finishedAt: s.finishedAt ?? new Date().toISOString(),

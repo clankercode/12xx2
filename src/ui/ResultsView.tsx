@@ -62,7 +62,7 @@ function LeftOut({ f, who }: { f: FitSet; who: string }) {
     <>
       {f.ruledOutInRange.length > 0 && (
         <p className="small muted">
-          Within range but ruled out ({who === 'You' ? 'you contradict' : 'these answers contradict'} a core commitment):{' '}
+          Within range but ruled out ({who === 'You' ? 'you contradict' : 'these answers contradict'} a core or red-line commitment):{' '}
           {f.ruledOutInRange.map(m => m.arch.name).join(', ')}.
         </p>
       )}
@@ -300,7 +300,7 @@ function MatchList({ title, frame, list, checks }: { title: string; frame: 'I' |
             </div>
             {m.ruledOut && (
               <p className="small">
-                Contradicts a core commitment. {contradiction(m, checks)}
+                Contradicts a core or red-line commitment. {contradiction(m, checks)}
               </p>
             )}
             <p className="small">{m.arch.summary}</p>

@@ -1,16 +1,24 @@
 import { expect, test, type Page } from '@playwright/test'
 
-/** Answers the quiz on the grid: a lean per item, shifted in the here-and-now frame. */
+/** Answers the quiz on the grid: a lean per item, shifted in the here-and-now frame. Red lines come last, after their own card. */
 async function answerQuick(page: Page) {
   const total = Number((await page.getByText(/^1 of \d+$/).innerText()).split(' of ')[1])
+  const redCard = page.getByRole('heading', { name: 'Red lines', exact: true })
   for (let k = 0; k < total; k++) {
+    if (await redCard.isVisible().catch(() => false)) {
+      // The 10 red lines follow the axis statements, introduced as off-axis.
+      expect(total - k).toBe(10)
+      await expect(page.getByText(/They don’t move your axis scores/)).toBeVisible()
+      await page.getByRole('button', { name: 'Continue to the red lines' }).click()
+      await expect(page.getByText('Red line 1 of 10')).toBeVisible()
+    }
     const i = [2, -1, 3, -2, 1, 0, -3][k % 7]!
     const n = Math.max(-3, Math.min(3, i + (k % 4 === 0 ? -1 : 0)))
     const grid = page.locator('[role="grid"]').first()
     await grid.locator('[role="row"]').nth(3 - n).locator('[role="gridcell"]').nth(i + 3).click()
     const next = page.getByRole('button', { name: 'Next statement' })
     if (await next.isVisible().catch(() => false)) await next.click()
-    if (k < total - 1) await expect(page.getByText(`${k + 2} of ${total}`)).toBeVisible()
+    if (k < total - 1) await expect(page.getByText(`${k + 2} of ${total}`, { exact: true }).or(redCard)).toBeVisible()
   }
 }
 
@@ -72,10 +80,17 @@ test('shared link shows the same headline and axes as the owner view', async ({ 
   await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
   await answerQuick(page)
   await finishSteps(page)
+  // The owner sees their red-line answers; they are never in a link unless opted in.
+  await expect(page.getByRole('heading', { name: 'Your red lines' })).toBeVisible()
   const hero = await page.getByRole('region', { name: 'Headline result' }).innerText()
   await page.getByRole('button', { name: 'Share my result' }).click()
   const link = await page.getByLabel('Your result link').inputValue()
   expect(link).toMatch(/#r=[A-Za-z0-9_-]+$/)
+  const optIn = page.getByLabel(/Include where I stand on the red-line statements/)
+  await expect(optIn).not.toBeChecked()
+  await optIn.check()
+  const redLink = await page.getByLabel('Your result link').inputValue()
+  expect(redLink).not.toBe(link)
 
   const other = await page.context().browser()!.newContext()
   const p2 = await other.newPage()
@@ -83,6 +98,11 @@ test('shared link shows the same headline and axes as the owner view', async ({ 
   const hero2 = await p2.getByRole('region', { name: 'Headline result' }).innerText()
   // The shared view is derived from the same quantised payload as the owner's view.
   expect(hero2.split('\n')).toEqual(expect.arrayContaining(hero.split('\n').filter(l => /\S/.test(l)).slice(0, 3)))
+  await expect(p2.getByRole('heading', { name: 'Their red lines' })).toHaveCount(0)
+  // With the opt-in: the same headline, plus a red-lines panel.
+  await p2.goto(redLink.replace(/^https?:\/\/[^/]+/, baseURL!))
+  await expect(p2.getByRole('heading', { name: 'Their red lines' })).toBeVisible()
+  expect(await p2.getByRole('region', { name: 'Headline result' }).innerText()).toBe(hero2)
   await other.close()
 })
 
@@ -111,7 +131,8 @@ test('a finished Quick run continues into Standard: only the added statements, t
   await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
   await answerQuick(page)
   await finishSteps(page)
-  await expect(page.getByText(/Answer 24 or 72 more statements/)).toBeVisible()
+  // Red lines were answered in the Quick run, so only axis statements are added (Full has 144).
+  await expect(page.getByText(/Answer 24 or 96 more statements/)).toBeVisible()
   await page.getByRole('button', { name: 'Continue to Standard (+24)' }).click()
   // No intro or practice screen again; progress counts only the added statements.
   await expect(page.getByText('1 of 24 more')).toBeVisible()
@@ -125,7 +146,7 @@ test('a finished Quick run continues into Standard: only the added statements, t
   await expect(page.getByRole('region', { name: 'Headline result' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'How well does your system work by its own rules?' })).toHaveCount(0)
   // Now a Standard run: only Full is offered, and the same run is updated in place.
-  await expect(page.getByRole('button', { name: 'Continue to Full (+48)' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Continue to Full (+72)' })).toBeVisible()
   await expect(page.getByRole('button', { name: /Continue to Standard/ })).toHaveCount(0)
   const runs = await page.evaluate(() => JSON.parse(localStorage.getItem('12xx2.history.v1')!).runs as { mode: string }[])
   expect(runs.map(r => r.mode)).toEqual(['standard'])
@@ -151,4 +172,127 @@ test('grid is keyboard operable', async ({ page }) => {
   await expect(page.locator('[role="gridcell"]:focus')).toHaveAttribute('tabindex', '0')
   await page.keyboard.press('ArrowRight')
   await expect(page.locator('[role="gridcell"]:focus')).toHaveAttribute('aria-label', 'Ideal: Slightly agree. Here and now: Neutral / torn.')
+  // Home and End jump along the row; moving never answers.
+  await page.keyboard.press('End')
+  await expect(page.locator('[role="gridcell"]:focus')).toHaveAttribute('aria-label', 'Ideal: Strongly agree. Here and now: Neutral / torn.')
+  await page.keyboard.press('Home')
+  await expect(page.locator('[role="gridcell"]:focus')).toHaveAttribute('aria-label', 'Ideal: Strongly disagree. Here and now: Neutral / torn.')
+  await page.keyboard.press('ArrowRight')
+  await page.keyboard.press('ArrowRight')
+  await expect(page.getByText(/^2 of \d+$/)).toBeVisible()
+  // The focused square shows a visible ring, and the read-out says what it means in one sentence.
+  const ring = await page.locator('[role="gridcell"]:focus').evaluate(el => getComputedStyle(el).outlineStyle)
+  expect(ring).toBe('solid')
+  const help = await page.locator('[role="grid"]').getAttribute('aria-describedby')
+  await expect(page.locator(`[id="${help}"]`)).toContainText('Ideally it’s slightly bad, but here and now you’re torn.')
+  // Enter answers; the answer is announced as selected when you come back.
+  await page.keyboard.press('Enter')
+  await expect(page.getByText(/^3 of \d+$/)).toBeVisible()
+  await page.getByRole('button', { name: 'Back', exact: true }).click()
+  await expect(page.locator('[role="gridcell"][aria-selected="true"]')).toHaveAttribute(
+    'aria-label',
+    'Ideal: Slightly disagree. Here and now: Neutral / torn.',
+  )
 })
+
+test('two rows instead of the grid still answers both frames', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /Quick/ }).click()
+  await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
+  await page.getByRole('button', { name: 'Use two rows instead of the grid' }).click()
+  await expect(page.locator('[role="grid"]')).toHaveCount(0)
+  await page.getByRole('group', { name: 'In your ideal system' }).getByText('Agree', { exact: true }).click()
+  await page.getByRole('group', { name: 'Here and now' }).getByText('Slightly agree').click()
+  await expect(page.getByText(/^2 of \d+$/)).toBeVisible()
+  await page.getByRole('button', { name: 'Use the grid' }).click()
+  await expect(page.locator('[role="grid"]')).toHaveCount(1)
+})
+
+test('grid colours: picked in the footer, used by every grid, kept after a reload', async ({ page }) => {
+  await page.goto('/')
+  const fill = () => page.locator('figure [role="img"] svg rect').first().getAttribute('fill')
+  // Default green–red: the top-left tile's ideal half is strongly-disagree red.
+  expect(await fill()).toBe('#b42318')
+  const picker = page.getByRole('group', { name: 'Grid colours' })
+  await picker.getByText('Blue–orange').click()
+  expect(await fill()).toBe('#b4500b')
+  expect(await page.evaluate(() => localStorage.getItem('12xx2.palette'))).toBe('bo')
+  await page.reload()
+  expect(await fill()).toBe('#b4500b')
+  await expect(page.getByRole('radio', { name: /Blue–orange/ })).toBeChecked()
+  // Back to the default stores nothing, like the theme.
+  await page.getByRole('group', { name: 'Grid colours' }).getByText('Green–red').click()
+  expect(await page.evaluate(() => localStorage.getItem('12xx2.palette'))).toBeNull()
+})
+
+test('landing hero: the corner tour, the story and a try-it grid', async ({ page }) => {
+  await page.goto('/')
+  const hero = page.locator('figure')
+  await expect(hero.getByRole('img', { name: /Each square is split/ })).toBeVisible()
+  await hero.getByRole('button', { name: 'Neutral or torn' }).click()
+  await expect(hero.getByRole('heading', { name: /Neutral or torn/ }).first()).toBeVisible()
+  await hero.getByText('Two people').click()
+  await expect(hero.getByRole('group', { name: 'Story steps' })).toBeVisible()
+  await hero.getByText('Try it', { exact: true }).click()
+  const grid = hero.locator('[role="grid"]')
+  await grid.locator('[role="row"]').nth(0).locator('[role="gridcell"]').nth(6).click()
+  await expect(hero.getByRole('heading', { name: /Good now, good ideally/ })).toBeVisible()
+  await expect(grid.locator('[aria-selected="true"]')).toHaveCount(1)
+})
+
+test('a click answer opens the next statement on the prompt, not a lit centre square', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /Quick/ }).click()
+  await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
+  const grid = () => page.locator('[role="grid"]').first()
+  await grid().locator('[role="row"]').nth(1).locator('[role="gridcell"]').nth(5).click()
+  const next = page.getByRole('button', { name: 'Next statement' })
+  if (await next.isVisible().catch(() => false)) await next.click()
+  await expect(page.getByText(/^2 of \d+$/)).toBeVisible()
+  // Focus follows to the new grid (so keyboard users keep their place), but a pointer answer
+  // must not light it: the read-out invites a pick instead of saying "Neutral or torn".
+  await page.mouse.move(0, 0)
+  await expect(page.getByRole('heading', { name: 'Pick the square that fits both' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /Neutral or torn/ })).toHaveCount(0)
+  // A keyboard move from there lights the read-out as usual.
+  await page.keyboard.press('ArrowUp')
+  await expect(page.locator('[id$="-help"]').first()).toContainText('now +1')
+  await expect(page.getByRole('heading', { name: 'Pick the square that fits both' })).toHaveCount(0)
+})
+
+test('quiz grid colours can be changed without leaving the statement', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /Quick/ }).click()
+  await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
+  const fill = () => page.locator('[role="grid"] svg rect').first().getAttribute('fill')
+  expect(await fill()).toBe('#b42318')
+  await page.getByLabel('Grid colours').selectOption('bo')
+  expect(await fill()).toBe('#b4500b')
+  expect(await page.evaluate(() => localStorage.getItem('12xx2.palette'))).toBe('bo')
+  await expect(page.getByText(/^1 of \d+$/)).toBeVisible()
+})
+
+test('landing hero: tapping a tour square opens Try it with that square picked', async ({ page }) => {
+  await page.goto('/')
+  const hero = page.locator('figure')
+  await expect(hero.getByText('Two answers, one tap.')).toBeVisible()
+  // Top-right square: +3 here and now, +3 ideal.
+  await hero.locator('[data-i="3"][data-n="3"]').click()
+  const grid = hero.locator('[role="grid"]')
+  await expect(grid).toBeVisible()
+  await expect(grid.locator('[aria-selected="true"]')).toHaveAttribute('aria-label', 'Ideal: Strongly agree. Here and now: Strongly agree.')
+  await expect(hero.getByRole('radio', { name: 'Try it' })).toBeChecked()
+})
+
+for (const path of ['/', 'quiz']) {
+  test(`no sideways scrolling at 390px: ${path === '/' ? 'landing' : 'quiz grid'}`, async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/')
+    if (path === 'quiz') {
+      await page.getByRole('button', { name: /Quick/ }).click()
+      await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
+      await expect(page.locator('[role="grid"]')).toBeVisible()
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390)
+  })
+}
