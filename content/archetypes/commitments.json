@@ -18,6 +18,13 @@
     "coders": 3
    },
    {
+    "item": "dem-03",
+    "frame": "I",
+    "side": -1,
+    "why": "Marxism-Leninism does not let bourgeois or opposition parties compete to take power from the vanguard party.",
+    "coders": 3
+   },
+   {
     "item": "dem-04",
     "frame": "I",
     "side": 1,
@@ -465,6 +472,13 @@
   ],
   "theocratic-absolutism": [
    {
+    "item": "dem-03",
+    "frame": "I",
+    "side": -1,
+    "why": "Supreme religious authority is final and is not checked or replaced through parties and elections.",
+    "coders": 3
+   },
+   {
     "item": "rel-01",
     "frame": "both",
     "side": -1,
@@ -616,6 +630,13 @@
    }
   ],
   "fascism": [
+   {
+    "item": "dem-03",
+    "frame": "I",
+    "side": -1,
+    "why": "Free formation of parties competing to replace the government is the liberal pluralism fascism explicitly rejects.",
+    "coders": 3
+   },
    {
     "item": "dem-04",
     "frame": "I",
@@ -965,6 +986,13 @@
     "coders": 3
    },
    {
+    "item": "dem-03",
+    "frame": "I",
+    "side": -1,
+    "why": "Parties competing to replace those in power contradict a sovereign who is not answerable to elections or parliaments.",
+    "coders": 3
+   },
+   {
     "item": "dem-05",
     "frame": "I",
     "side": -1,
@@ -1052,6 +1080,13 @@
     "coders": 3
    },
    {
+    "item": "dem-03",
+    "frame": "I",
+    "side": -1,
+    "why": "Neocameralism gives a sovereign CEO secure power, which party competition to replace the government contradicts.",
+    "coders": 3
+   },
+   {
     "item": "int-07",
     "frame": "both",
     "side": -1,
@@ -1091,15 +1126,6 @@
   ]
  },
  "dropped": [
-  {
-   "slug": "marxism-leninism",
-   "item": "dem-03",
-   "frame": "I",
-   "side": -1,
-   "why": "Marxism-Leninism does not let bourgeois or opposition parties compete to take power from the vanguard party.",
-   "coders": 3,
-   "reason": "Dropped with every dem-03 entry: the item's universal \"any group\" conflates refusing anti-democratic parties (militant democracy) with refusing party competition, so it is not a clean test of the core belief either way; dem-04 already tests one-party rule (CF review D2/B4/D3)."
-  },
   {
    "slug": "democratic-socialism",
    "item": "dem-03",
@@ -1191,33 +1217,6 @@
    "reason": "Refuted by counterexample, not by noise: militant democracy (e.g. Germany's Basic Law Art. 21(2), party bans supported by mainstream CDU and SPD figures) sincerely rejects \"any group\" being free to run, so must-agree falsely rules such adherents out of the whole democratic mainstream at once. The item's universal \"any\" is a quantifier beyond the core belief (CF review D2/B4/D3)."
   },
   {
-   "slug": "theocratic-absolutism",
-   "item": "dem-03",
-   "frame": "I",
-   "side": -1,
-   "why": "Supreme religious authority is final and is not checked or replaced through parties and elections.",
-   "coders": 3,
-   "reason": "Dropped with every dem-03 entry: the item's universal \"any group\" conflates refusing anti-democratic parties (militant democracy) with refusing party competition, so it is not a clean test of the core belief either way; dem-04 already tests one-party rule (CF review D2/B4/D3)."
-  },
-  {
-   "slug": "fascism",
-   "item": "dem-03",
-   "frame": "I",
-   "side": -1,
-   "why": "Free formation of parties competing to replace the government is the liberal pluralism fascism explicitly rejects.",
-   "coders": 3,
-   "reason": "Dropped with every dem-03 entry: the item's universal \"any group\" conflates refusing anti-democratic parties (militant democracy) with refusing party competition, so it is not a clean test of the core belief either way; dem-04 already tests one-party rule (CF review D2/B4/D3)."
-  },
-  {
-   "slug": "absolute-monarchism",
-   "item": "dem-03",
-   "frame": "I",
-   "side": -1,
-   "why": "Parties competing to replace those in power contradict a sovereign who is not answerable to elections or parliaments.",
-   "coders": 3,
-   "reason": "Dropped with every dem-03 entry: the item's universal \"any group\" conflates refusing anti-democratic parties (militant democracy) with refusing party competition, so it is not a clean test of the core belief either way; dem-04 already tests one-party rule (CF review D2/B4/D3)."
-  },
-  {
    "slug": "constitutional-monarchism",
    "item": "dem-03",
    "frame": "both",
@@ -1225,15 +1224,6 @@
    "why": "Constitutional monarchism puts governing power in an elected parliament, where rival parties compete for office.",
    "coders": 3,
    "reason": "Refuted by counterexample, not by noise: militant democracy (e.g. Germany's Basic Law Art. 21(2), party bans supported by mainstream CDU and SPD figures) sincerely rejects \"any group\" being free to run, so must-agree falsely rules such adherents out of the whole democratic mainstream at once. The item's universal \"any\" is a quantifier beyond the core belief (CF review D2/B4/D3)."
-  },
-  {
-   "slug": "neoreaction",
-   "item": "dem-03",
-   "frame": "I",
-   "side": -1,
-   "why": "Neocameralism gives a sovereign CEO secure power, which party competition to replace the government contradicts.",
-   "coders": 3,
-   "reason": "Dropped with every dem-03 entry: the item's universal \"any group\" conflates refusing anti-democratic parties (militant democracy) with refusing party competition, so it is not a clean test of the core belief either way; dem-04 already tests one-party rule (CF review D2/B4/D3)."
   }
  ]
 }
