@@ -27,7 +27,7 @@ function ThemePicker() {
   return (
     <fieldset className={css.theme}>
       <legend className="muted small">Theme</legend>
-      <div className={css.seg} role="radiogroup" aria-label="Theme">
+      <div className={css.seg}>
         {options.map(([k, l]) => (
           <label key={k} className={theme === k ? css.segOn : ''}>
             <input
@@ -55,7 +55,7 @@ function PalettePicker() {
   return (
     <fieldset className={css.palette} id="grid-colours">
       <legend className="muted small">Grid colours</legend>
-      <div className={css.palList} role="radiogroup" aria-label="Grid colours">
+      <div className={css.palList}>
         {PALETTE_CHOICES.map(({ id, name, hint }) => (
           <label key={id} className={current === id ? css.palOn : ''}>
             <input

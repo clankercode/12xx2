@@ -3,6 +3,8 @@
 .demo {
   container-type: inline-size;
   display: grid;
+  /* One column no wider than the card: an auto track would grow to the widest child's min-content. */
+  grid-template-columns: minmax(0, 1fr);
   justify-items: center;
   gap: 16px;
 }
@@ -15,8 +17,51 @@
   text-wrap: balance;
 }
 
+.hint {
+  margin: -6px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.hint strong {
+  color: var(--paper);
+  font-weight: 650;
+}
+
+/* Tour and story tiles: a tap opens "Try it" with that square picked. */
+.tap {
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .tap:not([data-on]):hover {
+    z-index: 4;
+    transform: scale(1.06);
+    box-shadow: 0 6px 18px -6px rgb(0 0 0 / 0.5);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: reduce) {
+  .tap:not([data-on]):hover {
+    transform: none;
+  }
+}
+
+/* Very narrow phones (320px): let the tiles go below the shared 32px floor so the board fits the card. */
+@container (max-width: 290px) {
+  .tour {
+    --c: clamp(26px, calc((100cqi - 2 * var(--p) - 2px - 6 * var(--g)) / 7), 32px);
+  }
+
+  .seg label {
+    padding-inline: 10px;
+  }
+}
+
 .tour {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   justify-items: center;
   gap: 18px;
   width: 100%;
@@ -86,11 +131,12 @@
   color: var(--paper);
 }
 
-/* "gap N": bracket beside the shared column, from A's row to B's. */
+/* "gap N": bracket from A's tile to B's. Its upright runs in the gutter right of the shared
+   column, so it never strikes a numeral; its ticks point into A's and B's tiles. */
 .gapMark {
   position: absolute;
-  z-index: 5;
-  left: calc((var(--col) + 1) * (var(--c) + var(--g)) + 4px);
+  z-index: 7;
+  left: calc((var(--col) + 1) * (var(--c) + var(--g)) - var(--g) / 2 + 1px - 9px);
   top: calc(var(--row) * (var(--c) + var(--g)) + var(--c) / 2);
   width: 9px;
   height: calc(var(--rows) * (var(--c) + var(--g)));
@@ -106,16 +152,18 @@
   opacity: 1;
 }
 
+/* On the upright, at a row gap (between numerals), with a page-colour band so it reads as a label on top. */
 .gapLabel {
   position: absolute;
-  top: 50%;
-  left: calc(100% + 4px);
-  transform: translateY(-50%);
-  padding: 2px 8px;
+  top: calc(50% + var(--half, 0) * (var(--c) + var(--g)));
+  left: calc(100% - 1px);
+  transform: translate(-50%, -50%);
+  padding: 1px 7px;
   border-radius: 999px;
   background: var(--paper);
+  box-shadow: 0 0 0 2px var(--ink);
   color: var(--ink);
-  font: 700 12px/1.2 var(--body);
+  font: 700 11px/1.2 var(--body);
   white-space: nowrap;
 }
 

@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties, type FocusEvent, type ReactNode } from 'react'
+import { useEffect, useState, type CSSProperties, type FocusEvent, type MouseEvent, type ReactNode } from 'react'
 import type { Answer } from '../engine/types'
 import type { V } from './answer'
 import { Grid } from './Grid'
@@ -34,10 +34,22 @@ export function HeroDemo({ statement }: { statement: string }) {
       {view === 'try' ? (
         <Grid value={mine} onPick={(i, n) => setMine({ i, n })} idPrefix="demo" legend="full" />
       ) : (
-        <Tour key={view} story={view === 'story'} />
+        <>
+          <p className={css.hint}>
+            <strong>Two answers, one tap.</strong> Tap any square to try it.
+          </p>
+          <Tour
+            key={view}
+            story={view === 'story'}
+            onPick={(i, n) => {
+              setMine({ i, n })
+              setView('try')
+            }}
+          />
+        </>
       )}
       <fieldset className={css.views}>
-        <legend className="visually-hidden">Show</legend>
+        <legend className="visually-hidden">Grid demo view</legend>
         <div className={css.seg}>
           {VIEWS.map(([k, l]) => (
             <label key={k} className={view === k ? css.segOn : ''}>
@@ -90,14 +102,18 @@ function StoryCopy({ f, palette }: { f: Frame; palette: Palette }) {
               <span className={t.pinInline} data-who={p.id}>
                 {p.pin}
               </span>
+              {/* Same order as everywhere else: here and now, then ideal. The words are for screen readers. */}
+              <Tri half="now" fill={palette.fill(p.n)} />
+              <span className="visually-hidden">here and now</span>
+              <span className={t.chip} style={{ background: palette.fill(p.n), color: palette.ink(p.n) }}>
+                {signed(p.n)}
+              </span>
+              <span className="visually-hidden">, ideal</span>
               <Tri half="ideal" fill={palette.fill(p.i)} />
               <span className={t.chip} style={{ background: palette.fill(p.i), color: palette.ink(p.i) }}>
                 {signed(p.i)}
               </span>
-              <Tri half="now" fill={palette.fill(p.n)} />
-              <span className={t.chip} style={{ background: palette.fill(p.n), color: palette.ink(p.n) }}>
-                {signed(p.n)}
-              </span>
+              <span className="visually-hidden">: </span>
               <span className={css.readingWord}>{p.id === 'a' ? 'Rich bought the courts' : 'Well-run democracy'}</span>
             </span>
           ))}
@@ -120,7 +136,14 @@ function Stack({ active, live, children }: { active: number; live: boolean; chil
   )
 }
 
-function Tour({ story }: { story: boolean }) {
+/** A tapped tour tile: its column and row, read off the cell's data attributes. */
+function tileAt(e: MouseEvent<HTMLDivElement>): { i: V; n: V } | null {
+  const cell = (e.target as Element).closest<HTMLElement>('[data-i]')
+  if (!cell) return null
+  return { i: Number(cell.dataset.i) as V, n: Number(cell.dataset.n) as V }
+}
+
+function Tour({ story, onPick }: { story: boolean; onPick: (i: V, n: V) => void }) {
   const palette = usePalette()
   const still = useReducedMotion()
   const stops = story ? STORY.length : TOUR.length
@@ -150,7 +173,8 @@ function Tour({ story }: { story: boolean }) {
   } else active = region.id
 
   const gap = gapSpan()
-  const gapStyle = { '--col': COLS.indexOf(gap.i), '--row': ROWS.indexOf(gap.top), '--rows': gap.rows } as CSSProperties
+  // An even span centres on a tile; --half moves the label down half a step onto a row gap.
+  const gapStyle = { '--col': COLS.indexOf(gap.i), '--row': ROWS.indexOf(gap.top), '--rows': gap.rows, '--half': gap.rows % 2 === 0 ? 0.5 : 0 } as CSSProperties
 
   return (
     <div
@@ -170,6 +194,11 @@ function Tour({ story }: { story: boolean }) {
         cells={{
           role: 'img',
           'aria-label': 'Answer grid. Each square is split: top-left half for here and now, bottom-right half for your ideal system.',
+          // Pointer shortcut into "Try it" with that square picked; keyboard users have the view switch.
+          onClick: e => {
+            const at = tileAt(e)
+            if (at) onPick(at.i, at.n)
+          },
         }}
         rows={ROWS.map(n => (
           <div key={n} className={t.row}>
@@ -177,7 +206,7 @@ function Tour({ story }: { story: boolean }) {
               const s = story ? storyCell(frame, i, n) : { dim: !inSpotlight(region.id, i, n), veil: null }
               const on = story ? live.has(cellKey(i, n)) : region.i === i && region.n === n
               return (
-                <div key={i} className={t.cell} data-on={on || undefined} data-dim={s.dim || undefined} data-round={(i === 0 && n === 0) || undefined}>
+                <div key={i} className={`${t.cell} ${css.tap}`} data-i={i} data-n={n} data-on={on || undefined} data-dim={s.dim || undefined} data-round={(i === 0 && n === 0) || undefined}>
                   <Tile now={n} ideal={i} palette={palette} glyphs={palette.needsGlyphs || on} veil={s.veil} />
                 </div>
               )

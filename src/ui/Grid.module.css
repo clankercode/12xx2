@@ -28,6 +28,31 @@
   min-height: 6.2em;
 }
 
+/* Very narrow hosts (the landing card at 320px): tiles may go below the shared 32px floor so the board fits. */
+@container (max-width: 290px) {
+  .wrap {
+    --c: clamp(26px, calc((100cqi - 2 * var(--p) - 2px - 6 * var(--g)) / 7), 32px);
+  }
+}
+
+/* Quiz: a small colour switch under the key (the footer picker is hidden while answering). */
+.colours {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.colours select {
+  padding: 3px 6px;
+  border: 1px solid var(--rule-major);
+  border-radius: var(--radius-s);
+  background: var(--ink-2);
+  color: var(--paper);
+  font: inherit;
+}
+
 /* Wide enough: board left, read-out right. */
 @container (min-width: 660px) {
   .wrap {

@@ -82,8 +82,10 @@ export function Values({ i, n, palette, children }: { i: V; n: V; palette: Palet
     <p className={css.kicker}>
       <Tri half="now" fill={palette.fill(n)} />
       now {signed(n)}
+      <span className="visually-hidden">, </span>
       <Tri half="ideal" fill={palette.fill(i)} />
       ideal {signed(i)}
+      {children && <span className="visually-hidden">. </span>}
       {children}
     </p>
   )

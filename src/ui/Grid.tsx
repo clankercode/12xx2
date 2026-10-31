@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import type { Answer } from '../engine/types'
 import { LABEL, VALUES, type V } from './answer'
-import { usePalette } from './tiles/paletteChoice'
+import { PALETTE_CHOICES, applyPalette, usePalette } from './tiles/paletteChoice'
+import { isPaletteId } from './tiles/palettes'
 import { headline, regionOf, sentence } from './tiles/regions'
 import { Board, COLS, Key, Legend, ROWS, Ring, Tile, Values, cellKey, clampV, tileCss as t } from './tiles/Tiles'
 import css from './Grid.module.css'
@@ -89,9 +90,12 @@ export function Grid({ value, onPick, idPrefix = 'g', legend = 'key' }: GridProp
                     data-on={(on && !selected) || undefined}
                     data-round={(i === 0 && n === 0) || undefined}
                     onMouseEnter={() => setHover({ i, n })}
-                    onFocus={() => {
+                    onFocus={e => {
                       setCursor({ i, n })
-                      setFocus({ i, n })
+                      // Only keyboard focus lights the read-out. A click or tap focuses the button too,
+                      // and the quiz then moves focus to the next statement's centre cell: lighting
+                      // that would open every statement on an unrequested "Neutral or torn".
+                      if (focusVisible(e.currentTarget)) setFocus({ i, n })
                     }}
                     onBlur={() => setFocus(null)}
                     onClick={() => onPick(i, n)}
@@ -124,11 +128,37 @@ export function Grid({ value, onPick, idPrefix = 'g', legend = 'key' }: GridProp
               </>
             )}
           </div>
-          {legend === 'full' ? <Legend palette={palette} cell={lit && { now: lit.n, ideal: lit.i }} /> : <Key palette={palette} />}
+          {legend === 'full' ? (
+            <Legend palette={palette} cell={lit && { now: lit.n, ideal: lit.i }} />
+          ) : (
+            <>
+              <Key palette={palette} />
+              {/* The footer's picker is hidden while answering, so colour-blind users can switch here. */}
+              <label className={css.colours}>
+                Grid colours{' '}
+                <select value={palette.id} onChange={e => isPaletteId(e.target.value) && applyPalette(e.target.value)}>
+                  {PALETTE_CHOICES.map(c => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                      {c.id === 'bo' || c.id === 'rt' ? ' (colour-blind safe)' : ''}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </>
+          )}
         </div>
       </div>
     </div>
   )
+}
+
+function focusVisible(el: Element): boolean {
+  try {
+    return el.matches(':focus-visible')
+  } catch {
+    return true
+  }
 }
 
 /** Single-frame strip, used when one frame is passed and in two-row mode. */

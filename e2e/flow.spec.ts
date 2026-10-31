@@ -212,11 +212,55 @@ test('landing hero: the corner tour, the story and a try-it grid', async ({ page
   await expect(hero.getByRole('heading', { name: /Neutral or torn/ }).first()).toBeVisible()
   await hero.getByText('Two people').click()
   await expect(hero.getByRole('group', { name: 'Story steps' })).toBeVisible()
-  await hero.getByText('Try it').click()
+  await hero.getByText('Try it', { exact: true }).click()
   const grid = hero.locator('[role="grid"]')
   await grid.locator('[role="row"]').nth(0).locator('[role="gridcell"]').nth(6).click()
   await expect(hero.getByRole('heading', { name: /Good now, good ideally/ })).toBeVisible()
   await expect(grid.locator('[aria-selected="true"]')).toHaveCount(1)
+})
+
+test('a click answer opens the next statement on the prompt, not a lit centre square', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /Quick/ }).click()
+  await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
+  const grid = () => page.locator('[role="grid"]').first()
+  await grid().locator('[role="row"]').nth(1).locator('[role="gridcell"]').nth(5).click()
+  const next = page.getByRole('button', { name: 'Next statement' })
+  if (await next.isVisible().catch(() => false)) await next.click()
+  await expect(page.getByText(/^2 of \d+$/)).toBeVisible()
+  // Focus follows to the new grid (so keyboard users keep their place), but a pointer answer
+  // must not light it: the read-out invites a pick instead of saying "Neutral or torn".
+  await page.mouse.move(0, 0)
+  await expect(page.getByRole('heading', { name: 'Pick the square that fits both' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /Neutral or torn/ })).toHaveCount(0)
+  // A keyboard move from there lights the read-out as usual.
+  await page.keyboard.press('ArrowUp')
+  await expect(page.locator('[id$="-help"]').first()).toContainText('now +1')
+  await expect(page.getByRole('heading', { name: 'Pick the square that fits both' })).toHaveCount(0)
+})
+
+test('quiz grid colours can be changed without leaving the statement', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /Quick/ }).click()
+  await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
+  const fill = () => page.locator('[role="grid"] svg rect').first().getAttribute('fill')
+  expect(await fill()).toBe('#b42318')
+  await page.getByLabel('Grid colours').selectOption('bo')
+  expect(await fill()).toBe('#b4500b')
+  expect(await page.evaluate(() => localStorage.getItem('12xx2.palette'))).toBe('bo')
+  await expect(page.getByText(/^1 of \d+$/)).toBeVisible()
+})
+
+test('landing hero: tapping a tour square opens Try it with that square picked', async ({ page }) => {
+  await page.goto('/')
+  const hero = page.locator('figure')
+  await expect(hero.getByText('Two answers, one tap.')).toBeVisible()
+  // Top-right square: +3 here and now, +3 ideal.
+  await hero.locator('[data-i="3"][data-n="3"]').click()
+  const grid = hero.locator('[role="grid"]')
+  await expect(grid).toBeVisible()
+  await expect(grid.locator('[aria-selected="true"]')).toHaveAttribute('aria-label', 'Ideal: Strongly agree. Here and now: Strongly agree.')
+  await expect(hero.getByRole('radio', { name: 'Try it' })).toBeChecked()
 })
 
 for (const path of ['/', 'quiz']) {
