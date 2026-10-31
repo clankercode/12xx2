@@ -172,6 +172,7 @@ function RunRow(props: { run: Run; picked: boolean; onPick: () => void; confirmi
         <p className={h.meta}>
           {when(run.finishedAt)} · {MODE_NAME[run.mode]} · {answered} of {itemsForMode(run.mode).length} statements
           {run.imported && ' · imported'}
+          {run.editedFrom && ' · edited'}
         </p>
         <p className={h.headline}>{now}</p>
         {changed && (
@@ -222,6 +223,13 @@ export function RunPage({ id }: { id: string }) {
     <section className={css.section} style={{ display: 'grid', gap: 10 }}>
       <p className="small muted">
         A past run from {when(run.finishedAt)} ({MODE_NAME[run.mode]}), scored with the current method.
+        {run.editedFrom && (
+          <>
+            {' '}
+            Edited: answers were changed after seeing the results of{' '}
+            {runs.some(r => r.id === run.editedFrom) ? <a href={`#/run/${run.editedFrom}`}>an earlier run</a> : 'an earlier run'}.
+          </>
+        )}
         {run.snapshot.headline && run.snapshot.headline !== now && ` When you finished, it said: ${run.snapshot.headline}.`}
       </p>
       <div className={css.actions}>

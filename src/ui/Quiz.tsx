@@ -9,7 +9,9 @@ import { go, goReplace } from './router'
 import { newRunId } from '../state/history'
 import { reportStatementUrl } from './copy'
 import { afterAnswer, applyAutoAdvance, nextFor, readAutoAdvance, useAutoAdvance } from './advance'
+import { backToList, useFinishReview } from './Review'
 import css from './Quiz.module.css'
+import rv from './Review.module.css'
 
 const ADVANCE_MS = 260
 /** Splits of at least this size pause for an optional reason (spec §3.1). */
@@ -28,10 +30,12 @@ function viewOf(existing: ItemAnswer | undefined, red: boolean) {
 export function Quiz() {
   const { s, dispatch } = useStore()
   // Fixed per run (extendRed is set when an extension starts), so answering never reorders it.
-  const order = useMemo(() => sessionStatements(s), [s.mode, s.extendFrom, s.extendRed])
+  const order = useMemo(() => sessionStatements(s), [s.mode, s.extendFrom, s.extendRed, s.stage])
+  /** Changing answers after the results (opened from the review list): every statement, then back to the list. */
+  const editing = s.stage === 'review'
   /** Continuing a finished run: only the added statements are asked, then straight back to results. */
-  const adding = s.extendFrom !== null
-  const [intro, setIntro] = useState(() => !adding && Object.keys(s.answers).length === 0)
+  const adding = !editing && s.extendFrom !== null
+  const [intro, setIntro] = useState(() => !adding && !editing && Object.keys(s.answers).length === 0)
   /** Set when leaving for the results, so the changed state isn't mistaken for the end of the questions. */
   const [leaving, setLeaving] = useState(false)
   const item = order[s.index]
@@ -41,7 +45,7 @@ export function Quiz() {
   const redStart = order.findIndex(isRedLine)
   const redCount = redStart < 0 ? 0 : order.length - redStart
   const [redIntroSeen, setRedIntroSeen] = useState(false)
-  const redIntro = !intro && red && s.index === redStart && !redIntroSeen && !existing
+  const redIntro = !intro && !editing && red && s.index === redStart && !redIntroSeen && !existing
   // Initialised from the stored answer too, so a reload or route re-entry shows a saved pass or split as left.
   const [passI, setPassI] = useState(() => viewOf(existing, red).passI)
   const [passN, setPassN] = useState(() => viewOf(existing, red).passN)
@@ -92,8 +96,10 @@ export function Quiz() {
   // The how-to sets its own title, per step.
   useEffect(() => {
     if (intro) return
-    document.title = redIntro ? 'Red lines — 12 Axes²' : `Statement ${s.index + 1} of ${order.length}${adding ? ' more' : ''} — 12 Axes²`
-  }, [intro, redIntro, s.index, order.length, adding])
+    document.title = redIntro
+      ? 'Red lines — 12 Axes²'
+      : `${editing ? 'Changing statement' : 'Statement'} ${s.index + 1} of ${order.length}${adding ? ' more' : ''} — 12 Axes²`
+  }, [intro, redIntro, s.index, order.length, adding, editing])
 
   /** Whether focus is in the answer area or chip row right now (i.e. a keyboard or tap answer, not Back). */
   const noteFocus = () => {
@@ -101,9 +107,17 @@ export function Quiz() {
     refocus.current = !!a?.closest('[data-answer-area]')
   }
 
+  /** Back to the review list, focused on this statement's row. */
+  const toList = useCallback(() => {
+    if (timer.current) clearTimeout(timer.current)
+    setLeaving(true)
+    backToList(Math.min(s.index, order.length - 1))
+  }, [s.index, order.length])
+
   useEffect(() => {
     if (leaving || s.index < order.length) return
-    if (adding) {
+    if (editing) toList()
+    else if (adding) {
       // The context steps were answered when the run first finished.
       if (s.stage === 'quiz') dispatch({ type: 'finish', at: new Date().toISOString(), runId: newRunId() })
       goReplace('#/results')
@@ -111,7 +125,7 @@ export function Quiz() {
       dispatch({ type: 'stage', stage: 'context' })
       go('#/context')
     }
-  }, [leaving, s.index, order.length, adding, s.stage, dispatch])
+  }, [leaving, s.index, order.length, adding, editing, toList, s.stage, dispatch])
 
   useEffect(() => () => {
     if (timer.current) clearTimeout(timer.current)
@@ -168,6 +182,7 @@ export function Quiz() {
 
   const back = useCallback(() => {
     if (timer.current) clearTimeout(timer.current)
+    if (s.index === 0 && editing) return toList()
     if (s.index === 0 && adding) {
       // Back from the first added statement returns to the results, unchanged.
       setLeaving(true)
@@ -180,7 +195,7 @@ export function Quiz() {
       return
     }
     dispatch({ type: 'goto', index: s.index - 1 })
-  }, [dispatch, s.index, adding])
+  }, [dispatch, s.index, adding, editing, toList])
 
   const shown = nextFor(existing, passI, passN)
   const nx = rowsDraft && !(passI || passN) ? { enabled: false } : shown
@@ -194,13 +209,28 @@ export function Quiz() {
     else dispatch({ type: 'goto', index: s.index + 1 })
   }, [item, nx, dispatch, s.input, s.index])
 
+  const finishReview = useFinishReview()
+  /** "Done, show my results" while changing a statement: keeps the answer as shown (as Next would), then re-scores. */
+  const done = () => {
+    if (timer.current) clearTimeout(timer.current)
+    if (item && nx.enabled && nx.pass) dispatch({ type: 'answer', id: item.id, answer: { i: null, n: null, input: s.input }, advance: false })
+    else if (item && nx.enabled && nx.commit) dispatch({ type: 'answer', id: item.id, answer: { ...nx.commit, input: s.input }, advance: false })
+    setLeaving(true)
+    finishReview()
+  }
+
   // Keyboard shortcuts outside the grid: P = pass both, I/N = pass one frame, Backspace = back,
-  // Enter = Next once the statement is answered.
+  // Enter = Next once the statement is answered; Escape = back to the list when changing answers.
   useEffect(() => {
     if (intro || redIntro) return
     const on = (e: globalThis.KeyboardEvent) => {
       const t = e.target as HTMLElement
       if (e.metaKey || e.ctrlKey || e.altKey) return
+      if (e.key === 'Escape' && editing) {
+        e.preventDefault()
+        toList()
+        return
+      }
       // A two-row (or one-frame) answer pill has no Enter of its own, so Enter there goes on too.
       const pill = t instanceof HTMLInputElement && t.type === 'radio' && !!t.closest('[data-answer-area]')
       if (e.key === 'Enter' && pill && nx.enabled) {
@@ -221,7 +251,7 @@ export function Quiz() {
     }
     addEventListener('keydown', on)
     return () => removeEventListener('keydown', on)
-  }, [intro, redIntro, passBoth, back, nx.enabled, goNext, togglePass])
+  }, [intro, redIntro, passBoth, back, nx.enabled, goNext, togglePass, editing, toList])
 
   // Leaving the intro unmounts the focused Start button: move focus to the first statement instead.
   const focusStatement = useRef(false)
@@ -258,6 +288,16 @@ export function Quiz() {
 
   return (
     <div className={`narrow ${css.quiz}`}>
+      {editing && (
+        <div className={rv.editBar} role="group" aria-label="Changing your answers">
+          <button type="button" className="btn btn-ghost" onClick={toList}>
+            ← All statements
+          </button>
+          <button type="button" className="btn" onClick={done}>
+            Done, show my results
+          </button>
+        </div>
+      )}
       <div className={css.progress}>
         <div className={css.bar} aria-hidden>
           <div className={css.fill} style={{ width: `${progress * 100}%` }} />
@@ -317,7 +357,7 @@ export function Quiz() {
 
       <div className={css.controls}>
         <button type="button" className="btn btn-ghost" onClick={back}>
-          {adding && s.index === 0 ? 'Back to my results' : 'Back'}
+          {adding && s.index === 0 ? 'Back to my results' : editing && s.index === 0 ? 'Back to the list' : 'Back'}
         </button>
         <div className={css.go}>
           <button type="button" className="btn" onClick={passBoth}>
@@ -330,7 +370,7 @@ export function Quiz() {
             disabled={!nx.enabled}
             onClick={goNext}
           >
-            {s.index === order.length - 1 ? 'Continue' : 'Next statement'}
+            {s.index < order.length - 1 ? 'Next statement' : editing ? 'Back to the list' : 'Continue'}
           </button>
         </div>
       </div>
