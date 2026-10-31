@@ -70,12 +70,14 @@ export function noMatchTitle(p: HeroPick): string {
 
 /** The nearest ideology as a labelled measurement, for a pick that fails the naming breakpoint. */
 export function nearestNote(p: HeroPick): string {
-  return `Nearest: ${p.match.arch.name}, but ${p.match.label === 'none' ? 'not close' : 'others are about as close'}`
+  return `Nearest: ${p.match.arch.name}, but ${p.flat ? 'every axis scored exactly 0' : p.match.label === 'none' ? 'not close' : 'others are about as close'}`
 }
 
 /** Why a no-close headline names nobody. */
 export function noCloseNote(p: HeroPick, who = 'You'): string {
   const you = who === 'You'
+  if (p.flat)
+    return `Every axis came out at exactly 0, which is what answering every statement the same way gives, so ${you ? 'your' : 'these'} answers carry no position to match.`
   return p.match.label === 'none'
     ? `${you ? 'You sit' : 'These answers sit'} further from every listed ideology than 95% of simulated adherents sit from their own, so none is named as ${you ? 'your' : 'their'} match.`
     : `Other ideologies are about as close, and ${you ? 'your' : 'these'} answers can’t separate them, so none is named as ${you ? 'your' : 'their'} match.`
