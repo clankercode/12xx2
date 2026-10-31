@@ -1,7 +1,8 @@
 import { AXIS_IDS, GROUPS, type AxisId, type GroupId } from '../engine/types'
 import type { Results } from '../engine/results'
 import { AXES, GROUP_TITLES } from '../data/axes'
-import { MATCH_LABEL, RG_BAND } from '../ui/copy'
+import { nameable } from '../engine/results'
+import { MATCH_LABEL, RG_BAND, nearestNote, noMatchTitle, pickTitle } from '../ui/copy'
 
 export type CardSize = 'post' | 'story' | 'wide'
 export const CARD_DIMS: Record<CardSize, [number, number]> = {
@@ -57,7 +58,7 @@ export function headline(r: Results, allowSensitive: boolean): Headline {
       kicker: 'My politics',
       lines: [
         { label: 'In theory', name: h.ideal.match.arch.name, color: C.ideal, note: MATCH_LABEL[h.ideal.match.label] },
-        { label: 'Here and now', name: h.now.match.arch.name, color: C.now, note: MATCH_LABEL[h.now.match.label] },
+        { label: 'Here and now', name: pickTitle(h.now), color: C.now, note: nameable(h.now) ? MATCH_LABEL[h.now.match.label] : nearestNote(h.now) },
       ],
     }
   }
@@ -71,6 +72,8 @@ export function headline(r: Results, allowSensitive: boolean): Headline {
       lines: [{ name: h.ideal.match.arch.name, color: C.paper, note: MATCH_LABEL[h.ideal.match.label] }],
     }
   }
+  // Fails the naming breakpoint: say so, with the nearest ideology as a measurement, not a verdict.
+  if (h.kind === 'no-close') return { kicker: 'My 12 axes, twice', lines: [{ name: noMatchTitle(h.nearest), color: C.paper, note: nearestNote(h.nearest) }] }
   return { kicker: 'My 12 axes, twice', lines: [] }
 }
 

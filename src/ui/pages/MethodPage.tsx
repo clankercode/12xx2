@@ -198,6 +198,11 @@ export function MethodPage() {
         least 70% of the time, fairly stable 40–70%.
       </p>
       <p>
+        The headline names an ideology only when it is at least loosely similar and not a toss-up. Otherwise it says “No close
+        match” (or “No clear match” for a toss-up) and shows the nearest ideology as a measurement, not as your match. The same
+        rule applies to share cards, share text, preview links and saved runs.
+      </p>
+      <p>
         The headline shows two different ideologies (“in theory A, here and now B”) only when your here-and-now scores are closer to
         B than to A by at least {c.mu.toFixed(3)} and B is not a toss-up. That margin is set so a respondent with no real gap
         gets a false split at most 5% of the time{typeof rep.splitFalseRate === 'number' && <> (measured: {(100 * rep.splitFalseRate).toFixed(1)}%)</>}.

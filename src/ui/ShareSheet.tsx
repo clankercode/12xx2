@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { encodePayload, forSharing, type Payload } from '../engine/payload'
-import { deriveResults, type Results } from '../engine/results'
+import { deriveResults, nameable, type HeroPick, type Results } from '../engine/results'
 import { CATALOGUE } from '../data/archetypes'
 import { ruledOutSlugs } from '../data/commitments'
 import { deriveShared } from '../state/shared'
@@ -15,8 +15,7 @@ const base = () => `${location.origin}${import.meta.env.BASE_URL}`
 /** "Link with preview" goes to a static stub page whose path names the headline (spec §6.6). */
 export function previewPath(r: Results): string | null {
   const h = r.hero
-  const ok = (p: { match: { label: string; arch: { sensitive: boolean } }; stability: { label: string } }) =>
-    p.match.label !== 'none' && p.stability.label !== 'toss-up' && !p.match.arch.sensitive
+  const ok = (p: HeroPick) => nameable(p) && !p.match.arch.sensitive
   if (h.kind === 'split' && ok(h.ideal) && ok(h.now)) return `p/${h.ideal.match.arch.slug}/${h.now.match.arch.slug}/`
   if (h.kind === 'constant' && ok(h.ideal)) return `p/${h.ideal.match.arch.slug}/`
   return null
@@ -31,10 +30,14 @@ function heroIsSensitive(r: Results): boolean {
 export function shareText(r: Results): string {
   const h = r.hero
   if (h.kind === 'split')
-    return `In theory I’m closest to ${h.ideal.match.arch.name}. Here and now, ${h.now.match.arch.name}. What’s your gap?`
+    return `In theory I’m closest to ${h.ideal.match.arch.name}. Here and now, ${nameable(h.now) ? h.now.match.arch.name : 'no listed ideology is close'}. What’s your gap?`
   if (h.kind === 'constant' && h.nowMissing) return `In theory I’m closest to ${h.ideal.match.arch.name}. What’s your gap?`
   if (h.kind === 'constant')
     return `In theory and here and now, I’m closest to ${h.ideal.match.arch.name}${r.payload.rg !== null ? ` (Reality Gap ${r.payload.rg})` : ''}. What’s yours?`
+  if (h.kind === 'no-close')
+    return h.nearest.match.label === 'none'
+      ? `No listed ideology is a close match for my politics; the nearest, ${h.nearest.match.arch.name}, isn’t close. What’s your gap?`
+      : `My answers can’t single out one ideology: ${h.nearest.match.arch.name} is nearest, but others are about as close. What’s your gap?`
   return 'I answered every political question twice: for my ideal system and for here and now. What’s your gap?'
 }
 
