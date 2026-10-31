@@ -13,3 +13,5 @@ export const LABEL: Record<(typeof VALUES)[number], string> = {
 }
 
 export const label = (a: Answer) => (a === null ? 'Passed' : LABEL[a])
+
+export type V = (typeof VALUES)[number]

@@ -1,8 +1,8 @@
 /** Shared constants for lab prototypes. */
-import { LABEL, VALUES } from '../ui/answer'
+import { LABEL, VALUES, type V } from '../ui/answer'
 
 export { LABEL, VALUES }
-export type V = (typeof VALUES)[number]
+export type { V }
 
 export const DEFAULT_STATEMENT =
   'If a few people come to own most of a society’s wealth, much of it should be shared out among the rest.'
