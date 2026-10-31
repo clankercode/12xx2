@@ -64,6 +64,7 @@ const FONTS = `
 @font-face { font-family: D; font-weight: 200 800; src: url(${font('bricolage-grotesque', 'bricolage-grotesque-latin-wght-normal.woff2')}) format('woff2'); }
 @font-face { font-family: B; font-weight: 200 800; src: url(${font('atkinson-hyperlegible-next', 'atkinson-hyperlegible-next-latin-wght-normal.woff2')}) format('woff2'); }`
 
+// The share cards' dot paper (src/share/card.ts paper()): 56px pitch, lattice centred on 1200×630.
 // Track width in px: .rs (470) minus the title column (150) and gap (14).
 const TRACK_W = 306
 
@@ -91,9 +92,8 @@ function imageHtml(a: Archetype | null) {
   return `<!doctype html><html><head><meta charset="utf-8"><style>${FONTS}
   * { box-sizing: border-box; margin: 0 }
   body { width: 1200px; height: 630px; background: #141726; color: #ece8df; font-family: B; overflow: hidden;
-    background-image: linear-gradient(#262b45 1px, transparent 1px), linear-gradient(90deg, #262b45 1px, transparent 1px),
-      linear-gradient(#1c2036 1px, transparent 1px), linear-gradient(90deg, #1c2036 1px, transparent 1px);
-    background-size: 150px 150px, 150px 150px, 30px 30px, 30px 30px; display: flex; padding: 56px; gap: 48px }
+    background-image: radial-gradient(circle at 28px 28px, #323959 2px, transparent 2.6px);
+    background-size: 56px 56px; background-position: 12px 7px; display: flex; padding: 56px; gap: 48px }
   .l { flex: 1 1 0; display: flex; flex-direction: column; min-width: 0 }
   .w { font-family: D; font-weight: 800; font-size: 44px; letter-spacing: -0.03em }
   .w sup { color: #f2b45a; font-size: 0.55em }

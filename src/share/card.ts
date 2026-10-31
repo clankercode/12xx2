@@ -26,6 +26,8 @@ export const C = {
   ink2: '#1a1e31',
   rule: '#23283f',
   major: '#2d3352',
+  /** The page's --dot in dark mode. */
+  dot: '#323959',
   paper: '#ece8df',
   muted: '#9a9fb8',
   ideal: '#a3acff',
@@ -99,25 +101,27 @@ export function diamond(ctx: CanvasRenderingContext2D, x: number, y: number, r: 
   ctx.fill()
 }
 
-/** Dark squared-paper background shared by every card. */
-export function paper(ctx: CanvasRenderingContext2D, W: number, H: number) {
+/**
+ * Dark dot-paper background shared by every card: the site's dot grid (28px pitch, ~1.1px dots;
+ * src/styles/global.css body::before) at twice the size, as a card is usually seen at about half its
+ * width. The lattice is centred so the margins match on every side.
+ */
+export function paper(ctx: CanvasRenderingContext2D, W: number, H: number, scale = 2) {
   ctx.fillStyle = C.ink
   ctx.fillRect(0, 0, W, H)
-  ctx.lineWidth = 1
-  for (let x = 0; x <= W; x += 30) {
-    ctx.strokeStyle = x % 150 === 0 ? C.major : C.rule
-    ctx.beginPath()
-    ctx.moveTo(x + 0.5, 0)
-    ctx.lineTo(x + 0.5, H)
-    ctx.stroke()
+  const pitch = 28 * scale
+  const r = 1.1 * scale
+  const x0 = (W - pitch * Math.floor(W / pitch) + pitch) / 2
+  const y0 = (H - pitch * Math.floor(H / pitch) + pitch) / 2
+  ctx.fillStyle = C.dot
+  ctx.beginPath()
+  for (let y = y0; y < H; y += pitch) {
+    for (let x = x0; x < W; x += pitch) {
+      ctx.moveTo(x + r, y)
+      ctx.arc(x, y, r, 0, Math.PI * 2)
+    }
   }
-  for (let y = 0; y <= H; y += 30) {
-    ctx.strokeStyle = y % 150 === 0 ? C.major : C.rule
-    ctx.beginPath()
-    ctx.moveTo(0, y + 0.5)
-    ctx.lineTo(W, y + 0.5)
-    ctx.stroke()
-  }
+  ctx.fill()
 }
 
 export function wordmark(ctx: CanvasRenderingContext2D, x: number, top: number, wide: boolean) {
