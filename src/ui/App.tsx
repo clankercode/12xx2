@@ -124,7 +124,7 @@ export function App() {
     const page = parseHash(location.hash).page
     // Browser Back from reviewing answers to the results: finish the review, as "Done" does.
     if (page === 'results' && s.stage === 'review') dispatch({ type: 'finishReview', at: new Date().toISOString(), runId: newRunId() })
-    else if (page === 'review' && s.stage === 'done') goReplace('#/results')
+    else if ((page === 'review' || page === 'quiz') && s.stage === 'done') goReplace('#/results')
     else if ((page === 'quiz' && !s.mode) || (page === 'results' && s.stage !== 'done') || (page === 'review' && s.stage !== 'review')) go('#/')
   }, [route.page, s.mode, s.stage])
 
@@ -137,7 +137,7 @@ export function App() {
       <Header compact={focused} />
       <main id="main">
         {route.page === 'landing' && <Landing />}
-        {route.page === 'quiz' && s.mode && <Quiz />}
+        {route.page === 'quiz' && s.mode && s.stage !== 'done' && <Quiz />}
         {route.page === 'context' && <Context />}
         {route.page === 'place' && <Place />}
         {route.page === 'results' && own && <ResultsPage own={own} />}

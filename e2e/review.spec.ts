@@ -80,6 +80,34 @@ test('after the results, answers can be reviewed and changed; the results update
   await expect(items.nth(1)).not.toContainText('edited')
 })
 
+test('a pass ticked before going back to the list is kept; browser Back and Forward never reopen the finished quiz', async ({ page }) => {
+  await finishQuick(page)
+  await page.getByRole('button', { name: 'Review and change my answers' }).click()
+  const row = page.locator('[data-review-row="2"]')
+  await row.click()
+  await expect(page.getByText(/^3 of \d+$/)).toBeVisible()
+  await page.getByLabel('Pass ideal only').check()
+  await page.getByRole('button', { name: '← All statements' }).click()
+  await expect(row).toBeFocused()
+  await expect(row).toContainText('Changed')
+  await expect(row).toContainText('Passed')
+
+  // Open a statement, then Back twice (list, then results: that finishes the review) and Forward twice.
+  await row.click()
+  await expect(page.getByText(/^3 of \d+$/)).toBeVisible()
+  await page.goBack()
+  await expect(page.getByRole('heading', { name: 'Review your answers', level: 1 })).toBeVisible()
+  await page.goBack()
+  await expect(page.locator('[data-edited]')).toContainText('Edited')
+  await page.goForward()
+  await page.goForward()
+  await expect(page.getByRole('region', { name: 'Headline result' })).toBeVisible()
+  await expect(page).toHaveURL(/#\/results$/)
+  await expect(page.getByRole('heading', { name: 'How well does your system work by its own rules?' })).toHaveCount(0)
+  await page.getByRole('link', { name: 'All my runs' }).click()
+  await expect(page.locator('ol li', { has: page.getByRole('link', { name: 'View' }) })).toHaveCount(2)
+})
+
 test('reviewing without changing anything adds no run', async ({ page }) => {
   await finishQuick(page)
   await page.getByRole('button', { name: 'Review and change my answers' }).click()

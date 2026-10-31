@@ -107,9 +107,12 @@ export function Quiz() {
     refocus.current = !!a?.closest('[data-answer-area]')
   }
 
-  /** Back to the review list, focused on this statement's row. */
+  /** Stores the answer as shown when it differs from the stored one (a ticked pass); set each render, below. */
+  const commitShown = useRef(() => {})
+  /** Back to the review list, focused on this statement's row, keeping the answer as shown. */
   const toList = useCallback(() => {
     if (timer.current) clearTimeout(timer.current)
+    commitShown.current()
     setLeaving(true)
     backToList(Math.min(s.index, order.length - 1))
   }, [s.index, order.length])
@@ -209,12 +212,16 @@ export function Quiz() {
     else dispatch({ type: 'goto', index: s.index + 1 })
   }, [item, nx, dispatch, s.input, s.index])
 
+  commitShown.current = () => {
+    if (!item || !nx.enabled) return
+    if (nx.pass) dispatch({ type: 'answer', id: item.id, answer: { i: null, n: null, input: s.input }, advance: false })
+    else if (nx.commit) dispatch({ type: 'answer', id: item.id, answer: { ...nx.commit, input: s.input }, advance: false })
+  }
   const finishReview = useFinishReview()
   /** "Done, show my results" while changing a statement: keeps the answer as shown (as Next would), then re-scores. */
   const done = () => {
     if (timer.current) clearTimeout(timer.current)
-    if (item && nx.enabled && nx.pass) dispatch({ type: 'answer', id: item.id, answer: { i: null, n: null, input: s.input }, advance: false })
-    else if (item && nx.enabled && nx.commit) dispatch({ type: 'answer', id: item.id, answer: { ...nx.commit, input: s.input }, advance: false })
+    commitShown.current()
     setLeaving(true)
     finishReview()
   }

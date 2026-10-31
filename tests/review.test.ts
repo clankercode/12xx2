@@ -81,6 +81,16 @@ describe('reviewing and changing answers after the results', () => {
     expect(record(runs0, s, 'A different headline')).toBe(runs0)
   })
 
+  it('switching between the grid and two rows while reviewing, and changing nothing, rewrites nothing', () => {
+    const s0 = done()
+    const runs0 = record([], s0, 'Original headline')
+    let s = reduce(s0, { type: 'review' })
+    s = reduce(s, { type: 'input', input: 'rows' })
+    s = finishReview(s)
+    expect(s).toMatchObject({ runId: ORIGINAL, input: 'rows' })
+    expect(record(runs0, s, 'A different headline')).toBe(runs0)
+  })
+
   it('a changed reason alone counts as a change', () => {
     let s = reduce(done(), { type: 'review' })
     s = edit(s, first, { i: 3, n: -3 })

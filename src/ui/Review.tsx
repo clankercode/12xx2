@@ -36,6 +36,7 @@ export function ReviewButton() {
       type="button"
       className="btn"
       onClick={() => {
+        returnFocus = null
         dispatch({ type: 'review' })
         go('#/review')
       }}
@@ -89,9 +90,9 @@ export function ReviewPage() {
   useEffect(() => {
     openedFromList = false
     const k = returnFocus
-    returnFocus = null
     if (k === null) return
     const id = requestAnimationFrame(() => {
+      returnFocus = null
       const el = document.querySelector<HTMLElement>(`[data-review-row="${k}"]`)
       el?.focus({ preventScroll: true })
       el?.scrollIntoView({ block: 'center' })

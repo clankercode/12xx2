@@ -106,8 +106,11 @@ export function recordRun(runs: readonly Run[], run: Run): Run[] | null {
   return upsertRun(runs, run)
 }
 
-/** Everything a run was scored from (not the method or headline it was saved with). */
-const content = (r: Run) => ({ finishedAt: r.finishedAt, mode: r.mode, input: r.input, answers: r.answers, sc: r.sc, country: r.country, q: r.q, editedFrom: r.editedFrom })
+/**
+ * Everything a run was scored from (not the method or headline it was saved with, and not the grid/rows
+ * preference at the time: switching layout while reviewing, then changing nothing, must not rewrite it).
+ */
+const content = (r: Run) => ({ finishedAt: r.finishedAt, mode: r.mode, answers: r.answers, sc: r.sc, country: r.country, q: r.q, editedFrom: r.editedFrom })
 
 export const sameRunContent = (a: Run, b: Run) => JSON.stringify(canon(content(a))) === JSON.stringify(canon(content(b)))
 
