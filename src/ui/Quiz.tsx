@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { CHIPS, isRedLine, type Answer, type ChipId } from '../engine/types'
+import { CHIPS, isRedLine, type Answer, type ChipId, type ItemAnswer } from '../engine/types'
 import { sessionStatements } from '../state/session'
 import { CHIP_LABELS } from '../data/chips'
 import { IDEAL_FRAME, IDEAL_STEM, NOW_FRAME, NOW_STEM, PRACTICE_ITEM, SHARED_RULE } from '../data/frames'
@@ -8,11 +8,22 @@ import { Grid, Strip } from './Grid'
 import { go, goReplace } from './router'
 import { newRunId } from '../state/history'
 import { reportStatementUrl } from './copy'
+import { afterAnswer, applyAutoAdvance, nextFor, readAutoAdvance, useAutoAdvance } from './advance'
 import css from './Quiz.module.css'
 
 const ADVANCE_MS = 260
 /** Splits of at least this size pause for an optional reason (spec §3.1). */
 const CHIP_THRESHOLD = 3
+
+/** Per-statement view state from its stored answer: which frame is passed, and whether the reason chips show. */
+function viewOf(existing: ItemAnswer | undefined, red: boolean) {
+  return {
+    passI: existing ? existing.i === null && existing.n !== null : false,
+    passN: existing ? existing.n === null && existing.i !== null : false,
+    pendingChip:
+      !red && !!(existing && existing.i !== null && existing.n !== null && Math.abs(existing.n - existing.i) >= CHIP_THRESHOLD),
+  }
+}
 
 export function Quiz() {
   const { s, dispatch } = useStore()
@@ -31,12 +42,21 @@ export function Quiz() {
   const redCount = redStart < 0 ? 0 : order.length - redStart
   const [redIntroSeen, setRedIntroSeen] = useState(false)
   const redIntro = !intro && red && s.index === redStart && !redIntroSeen && !existing
-  const [passI, setPassI] = useState(false)
-  const [passN, setPassN] = useState(false)
-  const [pendingChip, setPendingChip] = useState(false)
+  // Initialised from the stored answer too, so a reload or route re-entry shows a saved pass or split as left.
+  const [passI, setPassI] = useState(() => viewOf(existing, red).passI)
+  const [passN, setPassN] = useState(() => viewOf(existing, red).passN)
+  const [pendingChip, setPendingChip] = useState(() => viewOf(existing, red).pendingChip)
+  /** A fresh answer opened the reason chips with auto-advance on: a chip pick then moves on. */
+  const [afterChip, setAfterChip] = useState(false)
+  /** Two rows with one row picked and the other not yet: Next waits rather than drop the visible pick. */
+  const [rowsDraft, setRowsDraft] = useState(false)
+  /** Bumped when an answer opens the reason chips, so focus moves to Next (Enter then goes on). */
+  const [chipsOpened, setChipsOpened] = useState(0)
+  const auto = useAutoAdvance()
   const timer = useRef<number | null>(null)
   const answerRef = useRef<HTMLDivElement>(null)
   const statementRef = useRef<HTMLElement>(null)
+  const nextRef = useRef<HTMLButtonElement>(null)
   /** Set when an answer is given from inside the answer area, so focus follows to the next item. */
   const refocus = useRef(false)
 
@@ -44,10 +64,18 @@ export function Quiz() {
   const [seenId, setSeenId] = useState(item?.id)
   if (seenId !== item?.id) {
     setSeenId(item?.id)
-    setPassI(existing ? existing.i === null && existing.n !== null : false)
-    setPassN(existing ? existing.n === null && existing.i !== null : false)
-    setPendingChip(!red && !!(existing && existing.i !== null && existing.n !== null && Math.abs(existing.n - existing.i) >= CHIP_THRESHOLD))
+    const v = viewOf(existing, red)
+    setPassI(v.passI)
+    setPassN(v.passN)
+    setPendingChip(v.pendingChip)
+    setAfterChip(false)
+    setRowsDraft(false)
   }
+
+  // Declared before the refocus effect below, so moving on to a new statement wins over this.
+  useEffect(() => {
+    if (chipsOpened) nextRef.current?.focus()
+  }, [chipsOpened])
 
   // Keyboard users keep their place: after answering, focus the new item's grid cursor (or strip).
   useEffect(() => {
@@ -91,8 +119,25 @@ export function Quiz() {
 
   const advanceSoon = useCallback(() => {
     if (timer.current) clearTimeout(timer.current)
-    timer.current = window.setTimeout(() => dispatch({ type: 'goto', index: s.index + 1 }), ADVANCE_MS)
+    timer.current = window.setTimeout(() => {
+      timer.current = null
+      if (readAutoAdvance()) dispatch({ type: 'goto', index: s.index + 1 })
+    }, ADVANCE_MS)
   }, [dispatch, s.index])
+
+  /** Drops a pending automatic move (and one held for the chips): the answer as shown is changing. */
+  const cancelAuto = useCallback(() => {
+    if (timer.current) clearTimeout(timer.current)
+    timer.current = null
+    setAfterChip(false)
+  }, [])
+  const togglePass = useCallback(
+    (frame: 'I' | 'N', on?: boolean) => {
+      cancelAuto()
+      ;(frame === 'I' ? setPassI : setPassN)(v => on ?? !v)
+    },
+    [cancelAuto],
+  )
 
   const record = useCallback(
     (i: Answer, n: Answer, input: 'grid' | 'rows') => {
@@ -101,14 +146,22 @@ export function Quiz() {
       // Reason chips explain axis splits; red lines skip them.
       const big = !red && i !== null && n !== null && Math.abs(n - i) >= CHIP_THRESHOLD
       dispatch({ type: 'answer', id: item.id, answer: { i, n, input, chip: big ? existing?.chip : undefined }, advance: false })
+      setRowsDraft(false)
+      if (big && !pendingChip) setChipsOpened(k => k + 1)
       setPendingChip(big)
-      if (!big) advanceSoon()
+      // Only unanswered -> answered moves on: an edit to an answered statement stays put.
+      const then = afterAnswer({ auto, answeredBefore: !!existing, big })
+      setAfterChip(then.afterChip)
+      if (then.advance) advanceSoon()
+      // A quick second tap before a pending move keeps that move, unless it opens the reason chips.
+      else if (big && timer.current) clearTimeout(timer.current)
     },
-    [item, red, dispatch, existing?.chip, advanceSoon],
+    [item, red, dispatch, existing, pendingChip, auto, advanceSoon],
   )
 
   const passBoth = useCallback(() => {
     if (!item) return
+    if (timer.current) clearTimeout(timer.current)
     noteFocus()
     dispatch({ type: 'answer', id: item.id, answer: { i: null, n: null, input: s.input }, advance: true })
   }, [item, dispatch, s.input])
@@ -129,31 +182,46 @@ export function Quiz() {
     dispatch({ type: 'goto', index: s.index - 1 })
   }, [dispatch, s.index, adding])
 
-  const nextItem = useCallback(() => {
-    noteFocus()
-    dispatch({ type: 'goto', index: s.index + 1 })
-  }, [dispatch, s.index])
+  const shown = nextFor(existing, passI, passN)
+  const nx = rowsDraft && !(passI || passN) ? { enabled: false } : shown
+  /** Next: on to the following statement, keeping the answer as shown. Focus follows to its answer area. */
+  const goNext = useCallback(() => {
+    if (!item || !nx.enabled) return
+    if (timer.current) clearTimeout(timer.current)
+    refocus.current = true
+    if (nx.pass) dispatch({ type: 'answer', id: item.id, answer: { i: null, n: null, input: s.input }, advance: true })
+    else if (nx.commit) dispatch({ type: 'answer', id: item.id, answer: { ...nx.commit, input: s.input }, advance: true })
+    else dispatch({ type: 'goto', index: s.index + 1 })
+  }, [item, nx, dispatch, s.input, s.index])
 
-  // Keyboard shortcuts outside the grid: P = pass both, I/N = pass one frame, Backspace = back.
+  // Keyboard shortcuts outside the grid: P = pass both, I/N = pass one frame, Backspace = back,
+  // Enter = Next once the statement is answered.
   useEffect(() => {
     if (intro || redIntro) return
     const on = (e: globalThis.KeyboardEvent) => {
       const t = e.target as HTMLElement
-      if (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA') return
       if (e.metaKey || e.ctrlKey || e.altKey) return
+      // A two-row (or one-frame) answer pill has no Enter of its own, so Enter there goes on too.
+      const pill = t instanceof HTMLInputElement && t.type === 'radio' && !!t.closest('[data-answer-area]')
+      if (e.key === 'Enter' && pill && nx.enabled) {
+        e.preventDefault()
+        goNext()
+        return
+      }
+      if (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA') return
       // Enter on a focused control keeps its own meaning (activate that button, link or cell).
       if (e.key === 'Enter' && t.closest?.('button, a, [role="gridcell"]')) return
       if (e.key === 'p' || e.key === 'P') passBoth()
-      else if (e.key === 'i' || e.key === 'I') setPassI(v => !v)
-      else if (e.key === 'n' || e.key === 'N') setPassN(v => !v)
+      else if (e.key === 'i' || e.key === 'I') togglePass('I')
+      else if (e.key === 'n' || e.key === 'N') togglePass('N')
       else if (e.key === 'Backspace') back()
-      else if (e.key === 'Enter' && pendingChip) nextItem()
+      else if (e.key === 'Enter' && nx.enabled) goNext()
       else return
       e.preventDefault()
     }
     addEventListener('keydown', on)
     return () => removeEventListener('keydown', on)
-  }, [intro, redIntro, passBoth, back, pendingChip, nextItem])
+  }, [intro, redIntro, passBoth, back, nx.enabled, goNext, togglePass])
 
   // Leaving the intro unmounts the focused Start button: move focus to the first statement instead.
   const focusStatement = useRef(false)
@@ -227,7 +295,7 @@ export function Quiz() {
             onPick={v => (passI ? record(null, v, s.input) : record(v, null, s.input))}
           />
         ) : rowsMode ? (
-          <TwoRows key={item.id} value={value} onDone={(i, n) => record(i, n, 'rows')} />
+          <TwoRows key={item.id} value={value} onDone={(i, n) => record(i, n, 'rows')} onDraft={setRowsDraft} />
         ) : (
           <Grid key={item.id} value={value} onPick={(i, n) => record(i, n, 'grid')} idPrefix={item.id} />
         )}
@@ -238,12 +306,12 @@ export function Quiz() {
           chip={existing.chip}
           onChip={c => {
             dispatch({ type: 'chip', id: item.id, chip: c })
-            if (c) {
+            // The move a fresh answer held back for the chips; editing a reason never moves on.
+            if (c && afterChip && auto) {
               noteFocus()
               advanceSoon()
             }
           }}
-          onNext={nextItem}
         />
       )}
 
@@ -251,17 +319,28 @@ export function Quiz() {
         <button type="button" className="btn btn-ghost" onClick={back}>
           {adding && s.index === 0 ? 'Back to my results' : 'Back'}
         </button>
-        <div className={css.unsure} role="group" aria-label="Pass one frame only">
-          <label className={css.toggle}>
-            <input type="checkbox" checked={passI} onChange={e => setPassI(e.target.checked)} /> Pass ideal only
-          </label>
-          <label className={css.toggle}>
-            <input type="checkbox" checked={passN} onChange={e => setPassN(e.target.checked)} /> Pass here-and-now only
-          </label>
+        <div className={css.go}>
+          <button type="button" className="btn" onClick={passBoth}>
+            Pass
+          </button>
+          <button
+            ref={nextRef}
+            type="button"
+            className={`btn btn-primary ${css.next}`}
+            disabled={!nx.enabled}
+            onClick={goNext}
+          >
+            {s.index === order.length - 1 ? 'Continue' : 'Next statement'}
+          </button>
         </div>
-        <button type="button" className="btn" onClick={passBoth}>
-          Pass
-        </button>
+      </div>
+      <div className={css.unsure} role="group" aria-label="Pass one frame only">
+        <label className={css.toggle}>
+          <input type="checkbox" checked={passI} onChange={e => togglePass('I', e.target.checked)} /> Pass ideal only
+        </label>
+        <label className={css.toggle}>
+          <input type="checkbox" checked={passN} onChange={e => togglePass('N', e.target.checked)} /> Pass here-and-now only
+        </label>
       </div>
       <p className={`small muted ${css.hint}`}>
         Pass if you don’t understand a statement, don’t know, or would rather not say. Passed answers are left out of your
@@ -279,6 +358,17 @@ export function Quiz() {
         >
           {rowsMode ? 'Use the grid' : 'Use two rows instead of the grid'}
         </button>
+        <label className={css.toggle}>
+          <input
+            type="checkbox"
+            checked={auto}
+            onChange={e => {
+              if (!e.target.checked) cancelAuto()
+              applyAutoAdvance(e.target.checked)
+            }}
+          /> Move to the next
+          statement automatically
+        </label>
       </div>
     </div>
   )
@@ -333,13 +423,29 @@ function RedIntro({
   )
 }
 
-function TwoRows({ value, onDone }: { value: { i: Answer; n: Answer } | null; onDone: (i: Answer, n: Answer) => void }) {
+/**
+ * One row per frame. A pair is recorded once both rows are picked; until then the half-made pair
+ * is a draft (onDraft), so Next can't move on and drop it. Leaving the rows clears the draft.
+ */
+function TwoRows({
+  value,
+  onDone,
+  onDraft,
+}: {
+  value: { i: Answer; n: Answer } | null
+  onDone: (i: Answer, n: Answer) => void
+  onDraft: (draft: boolean) => void
+}) {
   const [i, setI] = useState<Answer>(value?.i ?? null)
   const [n, setN] = useState<Answer>(value?.n ?? null)
+  const draftRef = useRef(onDraft)
+  draftRef.current = onDraft
+  useEffect(() => () => draftRef.current(false), [])
   const pick = (ni: Answer, nn: Answer) => {
     setI(ni)
     setN(nn)
     if (ni !== null && nn !== null) onDone(ni, nn)
+    else onDraft(true)
   }
   return (
     <div>
@@ -354,9 +460,8 @@ function TwoRows({ value, onDone }: { value: { i: Answer; n: Answer } | null; on
   )
 }
 
-function ChipRow({ chip, onChip, onNext }: { chip?: ChipId; onChip: (c: ChipId | undefined) => void; onNext: () => void }) {
-  const next = useRef<HTMLButtonElement>(null)
-  useEffect(() => next.current?.focus(), [])
+/** Optional reasons for a big split. Next (with Back, under the statement) moves on, chip or not. */
+function ChipRow({ chip, onChip }: { chip?: ChipId; onChip: (c: ChipId | undefined) => void }) {
   return (
     <section className={css.chips} aria-label="Why the difference? (optional)" data-answer-area>
       <p className={css.chipsTitle}>
@@ -375,9 +480,6 @@ function ChipRow({ chip, onChip, onNext }: { chip?: ChipId; onChip: (c: ChipId |
           </button>
         ))}
       </div>
-      <button ref={next} type="button" className="btn btn-primary" onClick={onNext}>
-        Next statement
-      </button>
     </section>
   )
 }
@@ -391,6 +493,7 @@ const HOW_TO = [
 
 function Intro({ onStart }: { onStart: () => void }) {
   const { s, dispatch } = useStore()
+  const auto = useAutoAdvance()
   const [step, setStep] = useState(0)
   const [practice, setPractice] = useState<{ i: Answer; n: Answer } | null>(null)
   const heading = useRef<HTMLHeadingElement>(null)
@@ -498,7 +601,10 @@ function Intro({ onStart }: { onStart: () => void }) {
                 <p className={css.statement}>{PRACTICE_ITEM}</p>
                 <Grid value={practice} onPick={(i, n) => setPractice({ i, n })} idPrefix="practice" legend="full" />
                 <p className={`small ${css.practiceSaid}`} role="status">
-                  {practice && 'That’s both answers. In the quiz, the same tap also takes you to the next statement.'}
+                  {practice &&
+                    (auto
+                      ? 'That’s both answers. In the quiz, the same tap also takes you to the next statement.'
+                      : 'That’s both answers. In the quiz, press Next statement to go on.')}
                 </p>
               </section>
               <p className="small muted">Prefer two separate rows? You can switch under every statement.</p>

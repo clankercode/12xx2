@@ -93,3 +93,8 @@ fit-shots base="http://localhost:21313/" out="shots/fit":
 # dark and light, every palette, initial/hover/focus/selected states, into shots/hero/.
 hero-shots out="shots/hero":
     pnpm tsx scripts/hero-shots.ts http://localhost:21313/ {{out}}
+
+# Needs a dev server. Next button and auto-advance setting: grid and two rows, unanswered, revisited and
+# reason chips, at 1280 dark and 390 light, into shots/next/; fails on any sideways scroll.
+next-shots base="http://localhost:21313/" out="shots/next":
+    pnpm tsx scripts/next-shots.ts {{base}} {{out}}

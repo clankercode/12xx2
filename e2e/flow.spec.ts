@@ -15,9 +15,8 @@ async function answerQuick(page: Page) {
     const i = [2, -1, 3, -2, 1, 0, -3][k % 7]!
     const n = Math.max(-3, Math.min(3, i + (k % 4 === 0 ? -1 : 0)))
     const grid = page.locator('[role="grid"]').first()
+    // n is i or i - 1, never a big split, so no reason chips: a fresh answer moves on by itself.
     await grid.locator('[role="row"]').nth(3 - n).locator('[role="gridcell"]').nth(i + 3).click()
-    const next = page.getByRole('button', { name: 'Next statement' })
-    if (await next.isVisible().catch(() => false)) await next.click()
     if (k < total - 1) await expect(page.getByText(`${k + 2} of ${total}`, { exact: true }).or(redCard)).toBeVisible()
   }
 }
@@ -208,6 +207,181 @@ test('two rows instead of the grid still answers both frames', async ({ page }) 
   await expect(page.locator('[role="grid"]')).toHaveCount(1)
 })
 
+/** Opens the first statement of a Quick run. */
+async function firstStatement(page: Page) {
+  await page.goto('/')
+  await page.getByRole('button', { name: /Quick/ }).click()
+  await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
+  await expect(page.getByText(/^1 of \d+$/)).toBeVisible()
+}
+const at = (page: Page, k: number) => page.getByText(new RegExp(`^${k} of \\d+$`))
+/** Longer than the auto-advance delay, so "still on this statement" means it really stayed. */
+const settle = (page: Page) => page.waitForTimeout(700)
+const cell = (page: Page, i: number, n: number) =>
+  page.locator('[role="grid"]').first().locator('[role="row"]').nth(3 - n).locator('[role="gridcell"]').nth(i + 3)
+
+test('two rows: changing both answers on a revisited statement stays put, and Next moves on', async ({ page }) => {
+  await firstStatement(page)
+  const next = page.getByRole('button', { name: 'Next statement' })
+  // Unanswered: Next is there but disabled (Pass is the way past).
+  await expect(next).toBeDisabled()
+  await page.getByRole('button', { name: 'Use two rows instead of the grid' }).click()
+  const ideal = page.getByRole('group', { name: 'In your ideal system' })
+  const now = page.getByRole('group', { name: 'Here and now' })
+  await ideal.getByText('Agree', { exact: true }).click()
+  await settle(page)
+  await expect(at(page, 1)).toBeVisible()
+  // The second row completes a fresh statement: that moves on.
+  await now.getByText('Slightly agree').click()
+  await expect(at(page, 2)).toBeVisible()
+  await page.getByRole('button', { name: 'Back', exact: true }).click()
+  await expect(at(page, 1)).toBeVisible()
+  await expect(next).toBeEnabled()
+  // Editing either row of an answered statement never kicks you forward.
+  await ideal.getByText('Slightly disagree').click()
+  await settle(page)
+  await expect(at(page, 1)).toBeVisible()
+  await now.getByText('Disagree', { exact: true }).click()
+  await settle(page)
+  await expect(at(page, 1)).toBeVisible()
+  await next.click()
+  await expect(at(page, 2)).toBeVisible()
+  // Both edits were kept.
+  await page.getByRole('button', { name: 'Back', exact: true }).click()
+  await expect(ideal.getByRole('radio', { name: 'Slightly disagree' })).toBeChecked()
+  await expect(now.getByRole('radio', { name: 'Disagree', exact: true })).toBeChecked()
+})
+
+test('grid: a tap on a revisited statement updates the answer and stays; Enter goes on', async ({ page }) => {
+  await firstStatement(page)
+  await cell(page, 1, 1).click()
+  await expect(at(page, 2)).toBeVisible()
+  await page.getByRole('button', { name: 'Back', exact: true }).click()
+  await expect(at(page, 1)).toBeVisible()
+  await cell(page, -1, 0).click()
+  await settle(page)
+  await expect(at(page, 1)).toBeVisible()
+  await expect(page.locator('[role="gridcell"][aria-selected="true"]')).toHaveAttribute(
+    'aria-label',
+    'Ideal: Slightly disagree. Here and now: Neutral / torn.',
+  )
+  // Enter goes on from anywhere that has no Enter of its own (here, the statement itself).
+  await page.locator('section[data-route-focus]').focus()
+  await page.keyboard.press('Enter')
+  await expect(at(page, 2)).toBeVisible()
+  // On an unanswered statement Enter does nothing.
+  await page.locator('section[data-route-focus]').focus()
+  await page.keyboard.press('Enter')
+  await settle(page)
+  await expect(at(page, 2)).toBeVisible()
+})
+
+test('auto-advance off: no answer moves on by itself, Next does, and the setting survives a reload', async ({ page }) => {
+  await firstStatement(page)
+  const auto = page.getByLabel('Move to the next statement automatically')
+  await expect(auto).toBeChecked()
+  await auto.uncheck()
+  expect(await page.evaluate(() => localStorage.getItem('12xx2.autoAdvance'))).toBe('0')
+  // Grid: a fresh answer stays.
+  await cell(page, 2, 2).click()
+  await settle(page)
+  await expect(at(page, 1)).toBeVisible()
+  await page.getByRole('button', { name: 'Next statement' }).click()
+  await expect(at(page, 2)).toBeVisible()
+  // A big split opens the reason chips; a chip pick doesn't move on either.
+  await cell(page, 3, -1).click()
+  await page.getByRole('region', { name: 'Why the difference? (optional)' }).getByRole('button').first().click()
+  await settle(page)
+  await expect(at(page, 2)).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Next statement' })).toHaveCount(1)
+  await page.getByRole('button', { name: 'Next statement' }).click()
+  await expect(at(page, 3)).toBeVisible()
+  // Two rows: completing both rows stays too.
+  await page.getByRole('button', { name: 'Use two rows instead of the grid' }).click()
+  await page.getByRole('group', { name: 'In your ideal system' }).getByText('Agree', { exact: true }).click()
+  await page.getByRole('group', { name: 'Here and now' }).getByText('Agree', { exact: true }).click()
+  await settle(page)
+  await expect(at(page, 3)).toBeVisible()
+  // Enter on an answer pill goes on.
+  await page.getByRole('group', { name: 'Here and now' }).getByRole('radio', { name: 'Agree', exact: true }).focus()
+  await page.keyboard.press('Enter')
+  await expect(at(page, 4)).toBeVisible()
+
+  await page.reload()
+  await expect(at(page, 4)).toBeVisible()
+  await expect(page.getByLabel('Move to the next statement automatically')).not.toBeChecked()
+  await page.getByRole('group', { name: 'In your ideal system' }).getByText('Agree', { exact: true }).click()
+  await page.getByRole('group', { name: 'Here and now' }).getByText('Agree', { exact: true }).click()
+  await settle(page)
+  await expect(at(page, 4)).toBeVisible()
+  // Back on: the next fresh answer moves on again, and that is stored too.
+  await page.getByLabel('Move to the next statement automatically').check()
+  expect(await page.evaluate(() => localStorage.getItem('12xx2.autoAdvance'))).toBe('1')
+  await page.getByRole('button', { name: 'Next statement' }).click()
+  await expect(at(page, 5)).toBeVisible()
+  await page.getByRole('group', { name: 'In your ideal system' }).getByText('Agree', { exact: true }).click()
+  await page.getByRole('group', { name: 'Here and now' }).getByText('Agree', { exact: true }).click()
+  await expect(at(page, 6)).toBeVisible()
+})
+
+test('a fresh big split waits for the reason chips; a chip pick moves on, and Next is the only Next', async ({ page }) => {
+  await firstStatement(page)
+  await cell(page, 3, -1).click()
+  const chips = page.getByRole('region', { name: 'Why the difference? (optional)' })
+  await expect(chips).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Next statement' })).toHaveCount(1)
+  // Focus moves to Next, so Enter goes on.
+  await expect(page.getByRole('button', { name: 'Next statement' })).toBeFocused()
+  await chips.getByRole('button').first().click()
+  await expect(at(page, 2)).toBeVisible()
+  // Revisited: changing the reason stays put.
+  await page.getByRole('button', { name: 'Back', exact: true }).click()
+  await chips.getByRole('button').nth(1).click()
+  await settle(page)
+  await expect(at(page, 1)).toBeVisible()
+})
+
+test('review fixes: a half-made two-row edit, a pass ticked mid-move, the setting turned off mid-chips, a reload', async ({ page }) => {
+  await firstStatement(page)
+  const next = page.getByRole('button', { name: 'Next statement' })
+  // A pass toggled straight after a fresh answer cancels the pending move; Next keeps what is shown.
+  await cell(page, 2, 1).click()
+  await page.keyboard.press('i')
+  await settle(page)
+  await expect(at(page, 1)).toBeVisible()
+  await expect(page.getByLabel('Pass ideal only')).toBeChecked()
+  await next.click()
+  await expect(at(page, 2)).toBeVisible()
+  // Reload on statement 1: its one-frame answer shows as left (ideal passed, Next enabled).
+  await page.getByRole('button', { name: 'Back', exact: true }).click()
+  await page.reload()
+  await expect(at(page, 1)).toBeVisible()
+  await expect(page.getByLabel('Pass ideal only')).toBeChecked()
+  await expect(page.getByRole('group', { name: 'Here and now' }).getByRole('radio', { name: 'Slightly agree' })).toBeChecked()
+  await expect(next).toBeEnabled()
+  await next.click()
+  // Passed statement, then a half-made replacement in two rows: Next waits rather than drop it.
+  await page.getByRole('button', { name: 'Pass', exact: true }).click()
+  await expect(at(page, 3)).toBeVisible()
+  await page.getByRole('button', { name: 'Back', exact: true }).click()
+  await expect(next).toBeEnabled()
+  await page.getByRole('button', { name: 'Use two rows instead of the grid' }).click()
+  await page.getByRole('group', { name: 'In your ideal system' }).getByText('Agree', { exact: true }).click()
+  await expect(next).toBeDisabled()
+  await page.getByRole('group', { name: 'Here and now' }).getByText('Agree', { exact: true }).click()
+  await expect(next).toBeEnabled()
+  await settle(page)
+  await expect(at(page, 2)).toBeVisible()
+  await next.click()
+  // A fresh big split, then the setting turned off before the chip: the chip no longer moves on.
+  await page.getByRole('button', { name: 'Use the grid' }).click()
+  await cell(page, 3, -1).click()
+  await page.getByLabel('Move to the next statement automatically').uncheck()
+  await page.getByRole('region', { name: 'Why the difference? (optional)' }).getByRole('button').first().click()
+  await settle(page)
+  await expect(at(page, 3)).toBeVisible()
+})
+
 test('grid colours: picked in the footer, used by every grid, kept after a reload', async ({ page }) => {
   await page.goto('/')
   const fill = () => page.locator('figure [role="img"] svg rect').first().getAttribute('fill')
@@ -245,9 +419,8 @@ test('a click answer opens the next statement on the prompt, not a lit centre sq
   await page.getByRole('button', { name: /Quick/ }).click()
   await page.getByRole('button', { name: 'Skip to the first statement' }).first().click()
   const grid = () => page.locator('[role="grid"]').first()
+  // Ideal +2, now +2: no reason chips, so the fresh answer moves on by itself.
   await grid().locator('[role="row"]').nth(1).locator('[role="gridcell"]').nth(5).click()
-  const next = page.getByRole('button', { name: 'Next statement' })
-  if (await next.isVisible().catch(() => false)) await next.click()
   await expect(page.getByText(/^2 of \d+$/)).toBeVisible()
   // Focus follows to the new grid (so keyboard users keep their place), but a pointer answer
   // must not light it: the read-out invites a pick instead of saying "Neutral or torn".
