@@ -143,6 +143,7 @@ export function Header({ compact }: { compact: boolean }) {
           <nav className={css.nav} aria-label="Site">
             <a href="#/method">How it works</a>
             <a href="#/ideologies">Ideologies</a>
+            <a href="#/map">Map</a>
             <a href="#/criticisms">Why a new test</a>
           </nav>
         )}
@@ -174,6 +175,7 @@ export function Footer() {
         <div className={css.footerCol}>
           <a href="#/method">How it works</a>
           <a href="#/ideologies">Ideology catalogue</a>
+          <a href="#/map">Ideology map</a>
           <a href="#/criticisms">Why a new test</a>
           <a href="#/privacy">Privacy</a>
           <a href="#/history">Your runs</a>

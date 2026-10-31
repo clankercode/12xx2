@@ -235,6 +235,11 @@ export function MethodPage() {
         is as close as the median adherent, “close” as the 80th percentile, “loosely similar” as the 95th. There are no compatibility
         percentages. These labels are measurements; the headline uses only one of them, as a breakpoint.
       </p>
+      <p>
+        The <a href="#/map">ideology map</a> lays the same distances out in 2D and 3D (metric multidimensional scaling, with its
+        distortion reported), and its “Exact from here” view draws every ideology at its true distance from one point. Your results
+        page shows that view centred on you.
+      </p>
 
       <h3 id="fit-set">The headline: which ideologies you fit</h3>
       <p>
