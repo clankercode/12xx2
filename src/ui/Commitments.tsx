@@ -28,7 +28,8 @@ function unknownWhy(c: CommitmentCheck): string {
 
 function Cell({ c, n }: { c: CommitmentCheck; n: number }) {
   const text = TEXT.get(c.commitment.item) ?? c.commitment.item
-  const stance = c.commitment.side === 1 ? 'Agree' : 'Disagree'
+  // The ideology's required stance, worded so it can't be read as your own answer.
+  const stance = c.commitment.side === 1 ? 'Must agree' : 'Must disagree'
   const frames = c.commitment.frame === 'both' ? 'ideal and here and now' : 'ideal'
   return (
     <td className={css.cell} data-v={c.verdict} title={`${stance} (${frames}): ${text}`}>
@@ -46,13 +47,21 @@ function Cell({ c, n }: { c: CommitmentCheck; n: number }) {
   )
 }
 
-function failLine(arch: Match['arch'], c: CommitmentCheck, f: FrameCheck) {
+/** One line per contradicted commitment, naming each frame that failed. */
+function failLine(arch: Match['arch'], c: CommitmentCheck) {
   const text = TEXT.get(c.commitment.item) ?? c.commitment.item
   const need = c.commitment.side === 1 ? 'agreeing' : 'disagreeing'
+  const failed = c.frames.filter(f => f.verdict === 'fail')
   return (
-    <li key={`${arch.slug}-${c.commitment.item}-${f.frame}`}>
-      You answered <strong>{label(f.answer)}</strong> to “{text}” ({FRAME[f.frame]}). {arch.name} requires {need}:{' '}
-      {c.commitment.why}
+    <li key={`${arch.slug}-${c.commitment.item}`}>
+      You answered{' '}
+      {failed.map((f: FrameCheck, k) => (
+        <span key={f.frame}>
+          {k > 0 && ' and '}
+          <strong>{label(f.answer)}</strong> ({FRAME[f.frame]})
+        </span>
+      ))}{' '}
+      to “{text}”{/[.?!]$/.test(text) ? '' : '.'} {arch.name} requires {need}: {c.commitment.why}
     </li>
   )
 }
@@ -66,7 +75,7 @@ export function CoreCommitments({ r, checks }: { r: Results; checks: ReadonlyMap
   const rows = r.matchesIdeal.map(m => ({ m, check: checks.get(m.arch.slug) ?? { slug: m.arch.slug, all: 'none' as const, checks: [] } }))
   const cols = Math.min(MAX_COMMITMENTS, Math.max(1, ...rows.map(x => x.check.checks.length)))
   const fails = rows.flatMap(({ m, check }) =>
-    check.checks.flatMap(c => (c.verdict === 'fail' ? c.frames.filter(f => f.verdict === 'fail').map(f => failLine(m.arch, c, f)) : [])),
+    check.checks.filter(c => c.verdict === 'fail').map(c => failLine(m.arch, c)),
   )
   return (
     <section className={`${rcss.section} ${css.section}`} aria-labelledby="core-commitments">

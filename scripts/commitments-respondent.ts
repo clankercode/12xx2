@@ -5,8 +5,14 @@
 import { readFileSync } from 'node:fs'
 import { mulberry32 } from '../src/engine/prng'
 import { itemsForMode } from '../src/data/items'
-import { archetypeSheet, respond, type Sheets } from './sim'
-import type { Answers } from '../src/engine/types'
+import { archetypeSheet, latentSheet, respond, type Sheets } from './sim'
+import { AXIS_IDS, type Answers } from '../src/engine/types'
+import { computeProfile } from '../src/engine/score'
+import { rank } from '../src/engine/match'
+import { checkArchetype } from '../src/engine/commitments'
+import { CALIBRATION } from '../src/data/calibration'
+import { CATALOGUE } from '../src/data/archetypes'
+import { COMMITMENTS } from '../src/data/commitments'
 
 export const SHOT_MODE = 'standard' as const
 
@@ -15,6 +21,24 @@ export function shotAnswers(slug = 'social-democracy', seed = 4): Answers {
   const rng = mulberry32(seed)
   const items = itemsForMode(SHOT_MODE)
   return respond(rng, items, archetypeSheet(rng, items, sheets[slug]!, 'both'), { p: 0.5, pass: 0.05 })
+}
+
+/**
+ * A typical (latent, non-adherent) respondent whose nearest ideal match the SHIPPED commitments
+ * rule out: the first such seed, so the real-data screenshots show a rule-out.
+ */
+export function ruledOutLatentAnswers(): Answers {
+  const items = itemsForMode(SHOT_MODE)
+  const asked = new Set(items.map(i => i.id))
+  for (let seed = 1; seed < 500; seed++) {
+    const rng = mulberry32(seed)
+    const ans = respond(rng, items, latentSheet(rng, items), { p: 0.5, pass: 0.05 })
+    const prof = computeProfile(items, ans, CALIBRATION)
+    if (prof.careless) continue
+    const top = rank(AXIS_IDS.map(a => prof.I[a].score), CATALOGUE, 'ideal')[0]!.arch.slug
+    if (checkArchetype(top, COMMITMENTS, ans, asked).all === 'fail') return ans
+  }
+  throw new Error('no latent respondent with a ruled-out nearest match')
 }
 
 if (process.argv[1]?.endsWith('commitments-respondent.ts')) {

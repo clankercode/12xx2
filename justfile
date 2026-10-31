@@ -17,8 +17,9 @@ test:
 typecheck:
     pnpm tsc --noEmit -p tsconfig.json
 
-calibrate:
-    pnpm tsx scripts/calibrate.ts
+# Committed calibration uses 8000 draws: `CAL_DATE=<date> just calibrate --draws 8000`.
+calibrate *args:
+    pnpm tsx scripts/calibrate.ts {{args}}
 
 # Core commitments vs simulated sincere adherents; add --write to move any over 2% into `dropped`.
 commitments-audit *args:
