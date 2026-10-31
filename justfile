@@ -17,6 +17,10 @@ test:
 typecheck:
     pnpm tsc --noEmit -p tsconfig.json
 
+# Summarise a pasted full diagnostic report (header plus JSON, or JSON alone).
+report file:
+    pnpm tsx scripts/report.ts {{quote(file)}}
+
 # Committed calibration uses 8000 draws: `CAL_DATE=<date> just calibrate --draws 8000`.
 calibrate *args:
     pnpm tsx scripts/calibrate.ts {{args}}

@@ -35,6 +35,32 @@ export function distance(u: Vec, a: readonly number[], w: readonly number[]): nu
   return den === 0 ? 1 : Math.sqrt(num / den) / 200
 }
 
+/** Diagnostic breakdown of distance(). Missing axes contribute zero; shares describe the squared gap, not the RMS distance. Not for hot paths. */
+export function explainDistance(u: Vec, a: readonly number[], w: readonly number[]) {
+  let num = 0
+  let den = 0
+  const terms = u.map((score, i) => {
+    const covered = score !== null && score !== undefined
+    const weight = w[i] ?? 1
+    const weightedSquaredGap = covered ? weight * (score - a[i]!) ** 2 : 0
+    if (covered) {
+      num += weightedSquaredGap
+      den += weight
+    }
+    return { score: score ?? null, target: a[i]!, weight, covered, weightedSquaredGap }
+  })
+  return {
+    distance: den === 0 ? 1 : Math.sqrt(num / den) / 200,
+    coveredWeight: den,
+    squaredWeightedGap: num,
+    terms: terms.map(t => ({
+      ...t,
+      share: num ? t.weightedSquaredGap / num : 0,
+      distanceSquaredContribution: den ? t.weightedSquaredGap / den / 200 ** 2 : 0,
+    })),
+  }
+}
+
 export function jointDistance(uI: Vec, uN: Vec, a: Archetype): number {
   return distance([...uI, ...uN], [...a.ideal, ...a.now], [...a.weight, ...a.weight])
 }

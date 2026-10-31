@@ -34,6 +34,7 @@ export function PrivacyPage() {
         </li>
       </ul>
       <h2>Exporting</h2>
+      <p>The full diagnostic report includes your answers and only goes where you paste it.</p>
       <p>
         “Export my runs” downloads a JSON file of every saved run, with all answers, to your device. It is never uploaded. You
         can import it in another browser to move your history there. If you choose to share it — for example to help validate the

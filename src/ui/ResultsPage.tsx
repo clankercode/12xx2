@@ -6,6 +6,7 @@ import { CALIBRATION } from '../data/calibration'
 import { AXES } from '../data/axes'
 import { useStore } from './App'
 import { ResultsView } from './ResultsView'
+import { ReportDetails } from './ReportDetails'
 import { ShareSheet } from './ShareSheet'
 import { YourRedLines } from './Commitments'
 import { downloadExport } from './HistoryPage'
@@ -167,6 +168,7 @@ export function ResultsPage({ own }: { own: Own }) {
         )}
         <ComparePaste mine={mine} />
       </section>
+      <ReportDetails own={own} session={s} />
     </>
   )
 
